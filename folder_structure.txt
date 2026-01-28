@@ -10,7 +10,13 @@ entitled-auth/
 │   └── package.json
 │
 ├── frontend/
-│   ├── src/
+│   ├── src/src/
+        ├─ admin/
+        │   ├─ AdminLogin.jsx
+        │   ├─ AdminDashboard.jsx
+        │   ├─ MembersTable.jsx
+        │   └─ api.js
+        └─ App.jsx
 │   │   ├── pages/
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
