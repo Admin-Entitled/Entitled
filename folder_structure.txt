@@ -11,12 +11,12 @@ entitled-auth/
 │
 ├── frontend/
 │   ├── src/src/
-        ├─ admin/
-        │   ├─ AdminLogin.jsx
-        │   ├─ AdminDashboard.jsx
-        │   ├─ MembersTable.jsx
-        │   └─ api.js
-        └─ App.jsx
+│   │   ├─ admin/
+│   │   │   ├─ AdminLogin.jsx
+│   │   │   ├─ AdminDashboard.jsx
+│   │   │   ├─ MembersTable.jsx
+│   │   │   └─ api.js
+│   │   └─ App.jsx
 │   │   ├── pages/
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
@@ -25,6 +25,17 @@ entitled-auth/
 │   │   ├── api.js
 │   │   ├── App.jsx
 │   │   └── main.jsx
+│   │     ├─ user-ui/
+│   │     │   ├─ src/
+│   │     │   │   ├─ pages/
+│   │     │   │   │   ├─ Landing.jsx
+│   │     │   │   │   ├─ Register.jsx
+│   │     │   │   │   ├─ Login.jsx
+│   │     │   │   │   ├─ Pending.jsx
+│   │     │   │   ├─ services/
+│   │     │   │   │   └─ auth.js
+│   │     │   │   ├─ App.jsx
+│   │     │   │   └─ main.jsx
 │   └── package.json
 │
 └── README.md

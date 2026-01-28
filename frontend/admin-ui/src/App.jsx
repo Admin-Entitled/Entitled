@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Protected from "./components/Protected";
 import {
   fetchMembers,
   approveMember,
@@ -39,13 +40,11 @@ const styles = {
   },
 };
 
-function App() {
+function AdminPanel() {
   const [view, setView] = useState("members");
-
   const [members, setMembers] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [bulkPhones, setBulkPhones] = useState("");
 
   const [filters, setFilters] = useState({
     status: "pending",
@@ -99,7 +98,7 @@ function App() {
         </button>
       </div>
 
-      {/* MEMBERS VIEW */}
+      {/* MEMBERS */}
       {view === "members" && (
         <>
           <div style={{ marginBottom: 10 }}>
@@ -126,9 +125,7 @@ function App() {
             <input
               placeholder="City"
               value={filters.city}
-              onChange={(e) =>
-                setFilters({ ...filters, city: e.target.value })
-              }
+              onChange={(e) => setFilters({ ...filters, city: e.target.value })}
               style={{ marginLeft: 8 }}
             />
 
@@ -136,11 +133,17 @@ function App() {
               Apply
             </button>
 
-            <button style={styles.approve} onClick={() => approveAll(filters)}>
+            <button
+              style={styles.approve}
+              onClick={() => approveAll(filters).then(loadMembers)}
+            >
               Approve All
             </button>
 
-            <button style={styles.danger} onClick={() => removeAll(filters)}>
+            <button
+              style={styles.danger}
+              onClick={() => removeAll(filters).then(loadMembers)}
+            >
               Remove All
             </button>
           </div>
@@ -174,26 +177,31 @@ function App() {
                     {m.status === "pending" && (
                       <button
                         style={styles.approve}
-                        onClick={() => approveMember(m.id)}
+                        onClick={() => approveMember(m.id).then(loadMembers)}
                       >
                         Approve
                       </button>
                     )}
                     <button
                       style={styles.danger}
-                      onClick={() => removeMember(m.id)}
+                      onClick={() => removeMember(m.id).then(loadMembers)}
                     >
                       Remove
                     </button>
                   </td>
                 </tr>
               ))}
+              {members.length === 0 && (
+                <tr>
+                  <td colSpan="6">No users found</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </>
       )}
 
-      {/* AUDIT VIEW */}
+      {/* AUDIT LOGS */}
       {view === "audit" && (
         <>
           {loading && <p>Loading audit logs...</p>}
@@ -219,6 +227,11 @@ function App() {
                   </td>
                 </tr>
               ))}
+              {auditLogs.length === 0 && (
+                <tr>
+                  <td colSpan="4">No audit logs</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </>
@@ -227,4 +240,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <Protected>
+      <AdminPanel />
+    </Protected>
+  );
+}

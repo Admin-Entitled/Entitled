@@ -7,33 +7,36 @@ router.get("/access", async (req, res) => {
   const { token } = req.query;
 
   if (!token) {
-    return res.status(400).send("Missing access token");
+    return res.status(401).json({});
   }
 
   const { data, error } = await supabase
     .from("access_sessions")
-    .select("*")
+    .select("expires_at, used")
     .eq("token", token)
-    .gt("expires_at", new Date().toISOString())
     .single();
 
   if (error || !data) {
-    return res.status(401).send("Invalid or expired access");
+    return res.status(401).json({});
   }
 
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-      <body>
-        <form method="POST" action="https://${process.env.SHOPIFY_DOMAIN}/password">
-          <input type="hidden" name="form_type" value="storefront_password" />
-          <input type="hidden" name="utf8" value="✓" />
-          <input type="password" name="password" value="${process.env.SHOPIFY_PASSWORD}" />
-        </form>
-        <script>document.forms[0].submit();</script>
-      </body>
-    </html>
-  `);
+  if (data.used) {
+    return res.status(401).json({});
+  }
+
+  if (new Date(data.expires_at) < new Date()) {
+    return res.status(401).json({});
+  }
+
+  // Mark token as used (one-time)
+  await supabase
+    .from("access_sessions")
+    .update({ used: true })
+    .eq("token", token);
+
+  res.json({
+    password: process.env.SHOPIFY_PASSWORD,
+  });
 });
 
 export default router;
