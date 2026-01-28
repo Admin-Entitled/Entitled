@@ -1,83 +1,88 @@
 import express from "express";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
 import { supabase } from "../supabase.js";
+import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
 
 /**
  * ADMIN LOGIN
+ * POST /admin/auth/login
+ * body: { phone, password }
  */
-router.post("/auth/login", async (req, res) => {
-  const { phone, password } = req.body;
+router.post("/login", async (req, res) => {
+  try {
+    const { phone, password } = req.body;
 
-  const { data: admin } = await supabase
-    .from("admin_users")
-    .select("*")
-    .eq("phone", phone)
-    .single();
+    if (!phone || !password) {
+      return res.status(400).json({ error: "Missing credentials" });
+    }
 
-  if (!admin) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    // Fetch admin user
+    const { data: admin, error } = await supabase
+      .from("admin_users")
+      .select("id, phone, password_hash, is_active")
+      .eq("phone", phone)
+      .single();
+
+    if (error || !admin) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    if (!admin.is_active) {
+      return res.status(403).json({ error: "Admin access disabled" });
+    }
+
+    // Verify password
+    const passwordOk = await bcrypt.compare(
+      password,
+      admin.password_hash
+    );
+
+    if (!passwordOk) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // Create session
+    const sessionId = uuidv4();
+
+    await supabase.from("admin_sessions").insert({
+      session_id: sessionId,
+      admin_id: admin.id,
+      created_at: new Date(),
+    });
+
+    // Set cookie
+    res.cookie("admin_session", sessionId, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return res.json({ status: "ok" });
+  } catch (err) {
+    console.error("Admin login error:", err);
+    return res.status(500).json({ error: "Server error" });
   }
-
-  const valid = await bcrypt.compare(password, admin.password_hash);
-  if (!valid) {
-    return res.status(401).json({ error: "Invalid credentials" });
-  }
-
-  const token = crypto.randomUUID();
-
-  await supabase.from("admin_sessions").insert({
-    admin_phone: phone,
-    token,
-  });
-
-  res.cookie("admin_session", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
-
-  res.json({ status: "ok" });
 });
 
 /**
  * ADMIN LOGOUT
+ * POST /admin/auth/logout
  */
-router.post("/auth/logout", async (req, res) => {
-  const token = req.cookies.admin_session;
+router.post("/logout", async (req, res) => {
+  const sessionId = req.cookies?.admin_session;
 
-  if (token) {
-    await supabase.from("admin_sessions").delete().eq("token", token);
+  if (sessionId) {
+    await supabase
+      .from("admin_sessions")
+      .delete()
+      .eq("session_id", sessionId);
   }
 
   res.clearCookie("admin_session");
   res.json({ status: "logged_out" });
-});
-
-/**
- * ADMIN ME
- */
-router.get("/auth/me", async (req, res) => {
-  const token = req.cookies.admin_session;
-
-  if (!token) {
-    return res.status(401).json({ error: "Not logged in" });
-  }
-
-  const { data } = await supabase
-    .from("admin_sessions")
-    .select("admin_phone")
-    .eq("token", token)
-    .single();
-
-  if (!data) {
-    return res.status(401).json({ error: "Invalid session" });
-  }
-
-  res.json({ phone: data.admin_phone });
 });
 
 export default router;
