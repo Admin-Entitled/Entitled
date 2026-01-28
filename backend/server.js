@@ -1,6 +1,6 @@
 import express from "express";
-import cookieParser from "cookie-parser";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import adminRoutes from "./routes/admin.js";
 import adminAuthRoutes from "./routes/adminAuth.js";
@@ -8,17 +8,22 @@ import publicRoutes from "./routes/public.js";
 
 const app = express();
 
-/**
- * CORS — SINGLE SOURCE OF TRUTH
- */
+const allowedOrigins = [
+  "https://entitled-admin-ui.onrender.com",
+  "https://auth.entitledclub.com",
+  "https://entitledclub.com",
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    origin: [
-      "https://entitled-admin-ui.onrender.com",
-      "https://auth.entitledclub.com",
-      "https://entitledclub.com",
-      "http://localhost:5173",
-    ],
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
@@ -32,6 +37,7 @@ app.use(cookieParser());
 app.use("/admin", adminRoutes);
 app.use("/admin/auth", adminAuthRoutes);
 app.use("/api", publicRoutes);
+app.use("/", publicRoutes);
 
 /**
  * HEALTH CHECK (important for Render)

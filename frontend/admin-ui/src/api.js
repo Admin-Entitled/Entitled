@@ -1,6 +1,8 @@
 import axios from "axios";
 
-export const api = axios.create({
+const api = axios.create({
   baseURL: "https://auth.entitledclub.com",
-  withCredentials: true, // REQUIRED for cookies
+  withCredentials: true,
 });
+
+export default api;
