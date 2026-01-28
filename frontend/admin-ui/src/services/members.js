@@ -1,12 +1,13 @@
-import { api } from "../api";
+import api from "../api";
 
 export async function fetchMembers(filters = {}) {
-  const params = {};
-  if (filters.status) params.status = filters.status;
-  if (filters.state) params.state = filters.state;
-  if (filters.city) params.city = filters.city;
+  const params = new URLSearchParams();
 
-  const res = await api.get("/admin/members", { params });
+  if (filters.status) params.append("status", filters.status);
+  if (filters.state) params.append("state", filters.state);
+  if (filters.city) params.append("city", filters.city);
+
+  const res = await api.get(`/admin/members?${params.toString()}`);
   return res.data;
 }
 
@@ -30,7 +31,7 @@ export async function removeAll(filters = {}) {
   return res.data;
 }
 
-export async function removeByPhones(phones = []) {
+export async function removeByPhones(phones) {
   const res = await api.post("/admin/remove-by-phones", { phones });
   return res.data;
 }
