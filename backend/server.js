@@ -18,11 +18,14 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
+      // allow server-to-server / curl / postman
       if (!origin) return callback(null, true);
+
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      return callback(new Error("Not allowed by CORS"));
+
+      return callback(new Error("CORS not allowed"), false);
     },
     credentials: true,
   })
