@@ -2,8 +2,19 @@ import express from "express";
 import { supabase } from "../supabase.js";
 import { adminAuth } from "../middleware/adminAuth.js";
 import { v4 as uuidv4 } from "uuid";
+import { logAudit } from "../utils/audit.js";
 
 const router = express.Router();
+
+router.get("/audit-logs", adminAuth, async (req, res) => {
+  const { data } = await supabase
+    .from("admin_audit_logs")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(200);
+
+  res.json(data);
+});
 
 /**
  * GET MEMBERS (with filters)
@@ -33,6 +44,8 @@ router.get("/members", adminAuth, async (req, res) => {
 router.post("/approve/:id", adminAuth, async (req, res) => {
   const { id } = req.params;
 
+  await logAudit(req.adminPhone, "APPROVE_SINGLE", { member_id: id });
+
   await supabase
     .from("members")
     .update({ status: "approved", approved_at: new Date() })
@@ -58,6 +71,8 @@ router.post("/approve/:id", adminAuth, async (req, res) => {
  */
 router.post("/approve-all", adminAuth, async (req, res) => {
   const { status, state, city } = req.body;
+
+  await logAudit(req.adminPhone, "APPROVE_ALL", { filters: req.body });
 
   let query = supabase
     .from("members")
@@ -97,6 +112,8 @@ router.post("/approve-all", adminAuth, async (req, res) => {
 router.delete("/remove/:id", adminAuth, async (req, res) => {
   const { id } = req.params;
 
+  await logAudit(req.adminPhone, "REMOVE_SINGLE", { member_id: id });
+
   await supabase.from("access_sessions").delete().eq("member_id", id);
   await supabase.from("members").delete().eq("id", id);
 
@@ -109,6 +126,8 @@ router.delete("/remove/:id", adminAuth, async (req, res) => {
  */
 router.post("/remove-all", adminAuth, async (req, res) => {
   const { status, state, city } = req.body;
+
+  await logAudit(req.adminPhone, "REMOVE_ALL", { filters: req.body });
 
   let q = supabase.from("members").select("id");
   if (status) q = q.eq("status", status);
@@ -135,6 +154,8 @@ router.post("/remove-all", adminAuth, async (req, res) => {
  */
 router.post("/remove-by-phones", adminAuth, async (req, res) => {
   const { phones } = req.body;
+
+  await logAudit(req.adminPhone, "REMOVE_BY_PHONES", { phones });
 
   if (!Array.isArray(phones) || phones.length === 0) {
     return res.status(400).json({ error: "phones array required" });

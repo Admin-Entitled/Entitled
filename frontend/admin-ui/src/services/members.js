@@ -19,3 +19,18 @@ export async function approveAll(filters = {}) {
   const res = await api.post("/admin/approve-all", filters);
   return res.data;
 }
+
+export async function removeMember(id) {
+  const res = await api.delete(`/admin/remove/${id}`);
+  return res.data;
+}
+
+export async function removeAll(filters = {}) {
+  const res = await api.post("/admin/remove-all", filters);
+  return res.data;
+}
+
+export async function removeByPhones(phones = []) {
+  const res = await api.post("/admin/remove-by-phones", { phones });
+  return res.data;
+}
