@@ -1,12 +1,15 @@
 import express from "express";
 import { supabase } from "../supabase.js";
-import { adminAuth } from "../middleware/adminAuth.js";
+import { adminSessionAuth } from "../utils/adminAuth.js";
 import { v4 as uuidv4 } from "uuid";
 import { logAudit } from "../utils/audit.js";
 
 const router = express.Router();
 
-router.get("/audit-logs", adminAuth, async (req, res) => {
+/**
+ * GET AUDIT LOGS
+ */
+router.get("/audit-logs", adminSessionAuth, async (req, res) => {
   const { data } = await supabase
     .from("admin_audit_logs")
     .select("*")
@@ -18,11 +21,8 @@ router.get("/audit-logs", adminAuth, async (req, res) => {
 
 /**
  * GET MEMBERS (with filters)
- * ?status=pending
- * ?state=Maharashtra
- * ?city=Mumbai
  */
-router.get("/members", adminAuth, async (req, res) => {
+router.get("/members", adminSessionAuth, async (req, res) => {
   let query = supabase.from("members").select("*");
 
   const { status, state, city } = req.query;
@@ -41,7 +41,7 @@ router.get("/members", adminAuth, async (req, res) => {
 /**
  * APPROVE SINGLE MEMBER
  */
-router.post("/approve/:id", adminAuth, async (req, res) => {
+router.post("/approve/:id", adminSessionAuth, async (req, res) => {
   const { id } = req.params;
 
   await logAudit(req.adminPhone, "APPROVE_SINGLE", { member_id: id });
@@ -55,13 +55,11 @@ router.post("/approve/:id", adminAuth, async (req, res) => {
   const expires = new Date();
   expires.setDate(expires.getDate() + 30);
 
-  await supabase.from("access_sessions").insert([
-    {
-      member_id: id,
-      token,
-      expires_at: expires,
-    },
-  ]);
+  await supabase.from("access_sessions").insert({
+    member_id: id,
+    token,
+    expires_at: expires,
+  });
 
   res.json({ status: "approved", token });
 });
@@ -69,7 +67,7 @@ router.post("/approve/:id", adminAuth, async (req, res) => {
 /**
  * APPROVE ALL (FILTERED)
  */
-router.post("/approve-all", adminAuth, async (req, res) => {
+router.post("/approve-all", adminSessionAuth, async (req, res) => {
   const { status, state, city } = req.body;
 
   await logAudit(req.adminPhone, "APPROVE_ALL", { filters: req.body });
@@ -94,13 +92,11 @@ router.post("/approve-all", adminAuth, async (req, res) => {
       .update({ status: "approved", approved_at: new Date() })
       .eq("id", m.id);
 
-    await supabase.from("access_sessions").insert([
-      {
-        member_id: m.id,
-        token,
-        expires_at: expires,
-      },
-    ]);
+    await supabase.from("access_sessions").insert({
+      member_id: m.id,
+      token,
+      expires_at: expires,
+    });
   }
 
   res.json({ approved_count: members.length });
@@ -109,7 +105,7 @@ router.post("/approve-all", adminAuth, async (req, res) => {
 /**
  * REMOVE SINGLE MEMBER
  */
-router.delete("/remove/:id", adminAuth, async (req, res) => {
+router.delete("/remove/:id", adminSessionAuth, async (req, res) => {
   const { id } = req.params;
 
   await logAudit(req.adminPhone, "REMOVE_SINGLE", { member_id: id });
@@ -122,9 +118,8 @@ router.delete("/remove/:id", adminAuth, async (req, res) => {
 
 /**
  * REMOVE ALL (FILTERED)
- * body: { status?, state?, city? }
  */
-router.post("/remove-all", adminAuth, async (req, res) => {
+router.post("/remove-all", adminSessionAuth, async (req, res) => {
   const { status, state, city } = req.body;
 
   await logAudit(req.adminPhone, "REMOVE_ALL", { filters: req.body });
@@ -150,9 +145,8 @@ router.post("/remove-all", adminAuth, async (req, res) => {
 
 /**
  * REMOVE BY PHONE NUMBERS (BULK)
- * body: { phones: ["9000...", "9111..."] }
  */
-router.post("/remove-by-phones", adminAuth, async (req, res) => {
+router.post("/remove-by-phones", adminSessionAuth, async (req, res) => {
   const { phones } = req.body;
 
   await logAudit(req.adminPhone, "REMOVE_BY_PHONES", { phones });
