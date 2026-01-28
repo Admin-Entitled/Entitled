@@ -34,3 +34,8 @@ export async function removeByPhones(phones = []) {
   const res = await api.post("/admin/remove-by-phones", { phones });
   return res.data;
 }
+
+export async function fetchAuditLogs() {
+  const res = await api.get("/admin/audit-logs");
+  return res.data;
+}

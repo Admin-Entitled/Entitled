@@ -6,10 +6,44 @@ import {
   removeMember,
   removeAll,
   removeByPhones,
+  fetchAuditLogs,
 } from "./services/members";
 
+const styles = {
+  approve: {
+    background: "#1b5e20",
+    color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    cursor: "pointer",
+  },
+  danger: {
+    background: "#b71c1c",
+    color: "#fff",
+    border: "none",
+    padding: "6px 10px",
+    cursor: "pointer",
+    marginLeft: 6,
+  },
+  badgePending: { color: "#e65100", fontWeight: "bold" },
+  badgeApproved: { color: "#1b5e20", fontWeight: "bold" },
+  tab: {
+    padding: "8px 14px",
+    cursor: "pointer",
+    border: "1px solid #ccc",
+    marginRight: 6,
+  },
+  tabActive: {
+    background: "#000",
+    color: "#fff",
+  },
+};
+
 function App() {
+  const [view, setView] = useState("members");
+
   const [members, setMembers] = useState([]);
+  const [auditLogs, setAuditLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [bulkPhones, setBulkPhones] = useState("");
 
@@ -21,155 +55,174 @@ function App() {
 
   async function loadMembers() {
     setLoading(true);
-    try {
-      const data = await fetchMembers(filters);
-      setMembers(data);
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchMembers(filters);
+    setMembers(data);
+    setLoading(false);
   }
 
-  async function handleApprove(id) {
-    await approveMember(id);
-    loadMembers();
-  }
-
-  async function handleApproveAll() {
-    if (!confirm("Approve ALL matching filters?")) return;
-    await approveAll(filters);
-    loadMembers();
-  }
-
-  async function handleRemove(id) {
-    if (!confirm("Remove this user permanently?")) return;
-    await removeMember(id);
-    loadMembers();
-  }
-
-  async function handleRemoveAll() {
-    if (!confirm("REMOVE ALL users matching filters? This is irreversible.")) return;
-    await removeAll(filters);
-    loadMembers();
-  }
-
-  async function handleRemoveByPhones() {
-    const phones = bulkPhones
-      .split(/[\s,]+/)
-      .map(p => p.trim())
-      .filter(Boolean);
-
-    if (phones.length === 0) return alert("Enter phone numbers");
-    if (!confirm(`Remove ${phones.length} users by phone?`)) return;
-
-    await removeByPhones(phones);
-    setBulkPhones("");
-    loadMembers();
+  async function loadAuditLogs() {
+    setLoading(true);
+    const data = await fetchAuditLogs();
+    setAuditLogs(data);
+    setLoading(false);
   }
 
   useEffect(() => {
-    loadMembers();
+    view === "members" ? loadMembers() : loadAuditLogs();
     // eslint-disable-next-line
-  }, []);
+  }, [view]);
 
   return (
     <div style={{ padding: 20, fontFamily: "sans-serif" }}>
       <h1>Entitled Club — Admin Panel</h1>
 
-      {/* FILTERS */}
-      <div style={{ marginBottom: 12 }}>
-        <select
-          value={filters.status}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+      {/* TABS */}
+      <div style={{ marginBottom: 20 }}>
+        <button
+          style={{
+            ...styles.tab,
+            ...(view === "members" ? styles.tabActive : {}),
+          }}
+          onClick={() => setView("members")}
         >
-          <option value="">All</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-        </select>
-
-        <input
-          placeholder="State (MH)"
-          value={filters.state}
-          onChange={(e) => setFilters({ ...filters, state: e.target.value })}
-          style={{ marginLeft: 8 }}
-        />
-
-        <input
-          placeholder="City (Mumbai)"
-          value={filters.city}
-          onChange={(e) => setFilters({ ...filters, city: e.target.value })}
-          style={{ marginLeft: 8 }}
-        />
-
-        <button onClick={loadMembers} style={{ marginLeft: 8 }}>
-          Apply
+          Members
         </button>
 
-        <button onClick={handleApproveAll} style={{ marginLeft: 8 }}>
-          Approve All
-        </button>
-
-        <button onClick={handleRemoveAll} style={{ marginLeft: 8 }}>
-          Remove All
+        <button
+          style={{
+            ...styles.tab,
+            ...(view === "audit" ? styles.tabActive : {}),
+          }}
+          onClick={() => setView("audit")}
+        >
+          Audit Logs
         </button>
       </div>
 
-      {/* BULK PHONE REMOVE */}
-      <div style={{ marginBottom: 12 }}>
-        <textarea
-          placeholder="Paste phone numbers (comma / space separated)"
-          value={bulkPhones}
-          onChange={(e) => setBulkPhones(e.target.value)}
-          rows={3}
-          style={{ width: 400 }}
-        />
-        <br />
-        <button onClick={handleRemoveByPhones} style={{ marginTop: 6 }}>
-          Remove by Phone Numbers
-        </button>
-      </div>
+      {/* MEMBERS VIEW */}
+      {view === "members" && (
+        <>
+          <div style={{ marginBottom: 10 }}>
+            <select
+              value={filters.status}
+              onChange={(e) =>
+                setFilters({ ...filters, status: e.target.value })
+              }
+            >
+              <option value="">All</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+            </select>
 
-      {loading && <p>Loading...</p>}
+            <input
+              placeholder="State"
+              value={filters.state}
+              onChange={(e) =>
+                setFilters({ ...filters, state: e.target.value })
+              }
+              style={{ marginLeft: 8 }}
+            />
 
-      {/* TABLE */}
-      <table border="1" cellPadding="8" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {members.map((m) => (
-            <tr key={m.id}>
-              <td>{m.name}</td>
-              <td>{m.phone}</td>
-              <td>{m.city}</td>
-              <td>{m.state}</td>
-              <td>{m.status}</td>
-              <td>
-                {m.status === "pending" && (
-                  <button onClick={() => handleApprove(m.id)}>Approve</button>
-                )}
-                <button
-                  onClick={() => handleRemove(m.id)}
-                  style={{ marginLeft: 6 }}
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-          ))}
-          {members.length === 0 && (
-            <tr>
-              <td colSpan="6">No users found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            <input
+              placeholder="City"
+              value={filters.city}
+              onChange={(e) =>
+                setFilters({ ...filters, city: e.target.value })
+              }
+              style={{ marginLeft: 8 }}
+            />
+
+            <button style={styles.approve} onClick={loadMembers}>
+              Apply
+            </button>
+
+            <button style={styles.approve} onClick={() => approveAll(filters)}>
+              Approve All
+            </button>
+
+            <button style={styles.danger} onClick={() => removeAll(filters)}>
+              Remove All
+            </button>
+          </div>
+
+          <table border="1" cellPadding="8">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {members.map((m) => (
+                <tr key={m.id}>
+                  <td>{m.name}</td>
+                  <td>{m.phone}</td>
+                  <td>{m.city}</td>
+                  <td>{m.state}</td>
+                  <td>
+                    {m.status === "pending" ? (
+                      <span style={styles.badgePending}>PENDING</span>
+                    ) : (
+                      <span style={styles.badgeApproved}>APPROVED</span>
+                    )}
+                  </td>
+                  <td>
+                    {m.status === "pending" && (
+                      <button
+                        style={styles.approve}
+                        onClick={() => approveMember(m.id)}
+                      >
+                        Approve
+                      </button>
+                    )}
+                    <button
+                      style={styles.danger}
+                      onClick={() => removeMember(m.id)}
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      {/* AUDIT VIEW */}
+      {view === "audit" && (
+        <>
+          {loading && <p>Loading audit logs...</p>}
+          <table border="1" cellPadding="8">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Admin Phone</th>
+                <th>Action</th>
+                <th>Payload</th>
+              </tr>
+            </thead>
+            <tbody>
+              {auditLogs.map((log) => (
+                <tr key={log.id}>
+                  <td>{new Date(log.created_at).toLocaleString()}</td>
+                  <td>{log.admin_phone}</td>
+                  <td>{log.action}</td>
+                  <td>
+                    <pre style={{ margin: 0 }}>
+                      {JSON.stringify(log.payload, null, 2)}
+                    </pre>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
     </div>
   );
 }
