@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import dotenv from 'dotenv'
 import adminRoutes from "./routes/admin.js";
 import adminAuthRoutes from "./routes/adminAuth.js";
 import publicRoutes from "./routes/public.js";
@@ -15,17 +15,15 @@ const allowedOrigins = [
   "http://localhost:5173",
 ];
 
+dotenv.config()
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow server-to-server / curl / postman
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-
-      return callback(new Error("CORS not allowed"), false);
+      return callback(new Error("CORS blocked"), false);
     },
     credentials: true,
   })

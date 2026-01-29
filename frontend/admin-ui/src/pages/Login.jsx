@@ -1,63 +1,82 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api";
 
-const API = "https://api.entitledclub.com";
-
-export default function Login() {
+export default function Login({ onSuccess }) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [show, setShow] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      await axios.post(
-        `${API}/admin/auth/login`,
-        { phone, password },
-        { withCredentials: true }
-      );
+      await api.post("/admin/auth/login", {
+        phone,
+        password,
+      });
 
-      window.location.href = "/";
-    } catch {
+      onSuccess();
+    } catch (err) {
       setError("Invalid phone or password");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div style={{ padding: 60, fontFamily: "sans-serif" }}>
+    <div
+      style={{ maxWidth: 360, margin: "80px auto", fontFamily: "sans-serif" }}
+    >
       <h2>Admin Login</h2>
 
       <form onSubmit={handleSubmit}>
         <input
-          placeholder="Phone number"
+          placeholder="Phone"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          required
+          style={{ width: "100%", marginBottom: 10, padding: 8 }}
         />
-        <br /><br />
 
-        <input
-          type={show ? "text" : "password"}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ width: "100%", padding: 8 }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            style={{
+              position: "absolute",
+              right: 6,
+              top: 6,
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+            }}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
+        </div>
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
         <button
-          type="button"
-          onClick={() => setShow(!show)}
-          style={{ marginLeft: 8 }}
+          type="submit"
+          disabled={loading}
+          style={{ marginTop: 12, width: "100%", padding: 10 }}
         >
-          {show ? "Hide" : "Show"}
+          {loading ? "Logging in..." : "Login"}
         </button>
-
-        <br /><br />
-        <button type="submit">Login</button>
       </form>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }
