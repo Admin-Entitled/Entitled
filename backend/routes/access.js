@@ -12,7 +12,7 @@ router.get("/access", async (req, res) => {
 
   const { data, error } = await supabase
     .from("access_sessions")
-    .select("expires_at, used")
+    .select("*")
     .eq("token", token)
     .single();
 
@@ -20,7 +20,7 @@ router.get("/access", async (req, res) => {
     return res.status(401).json({});
   }
 
-  if (data.used) {
+  if (data.used === true) {
     return res.status(401).json({});
   }
 
@@ -28,11 +28,17 @@ router.get("/access", async (req, res) => {
     return res.status(401).json({});
   }
 
-  // Mark token as used (one-time)
-  await supabase
-    .from("access_sessions")
-    .update({ used: true })
-    .eq("token", token);
+  // Mark token as used (one-time) if the column exists
+  if (Object.prototype.hasOwnProperty.call(data, "used")) {
+    const { error: useErr } = await supabase
+      .from("access_sessions")
+      .update({ used: true })
+      .eq("token", token);
+
+    if (useErr) {
+      return res.status(500).json({ error: "Failed to activate access" });
+    }
+  }
 
   res.json({
     password: process.env.SHOPIFY_PASSWORD,

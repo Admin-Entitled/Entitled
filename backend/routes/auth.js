@@ -61,11 +61,15 @@ router.post("/login", async (req, res) => {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + SESSION_DAYS);
 
-  await supabase.from("access_sessions").insert([{
+  const { error: insErr } = await supabase.from("access_sessions").insert([{
     member_id: member.id,
     token,
     expires_at: expiresAt
   }]);
+
+  if (insErr) {
+    return res.status(500).json({ error: insErr.message });
+  }
 
   res.json({
     status: "approved",

@@ -1,82 +1,92 @@
 import { useState } from "react";
-import api from "../api";
+import { adminLogin } from "../services/adminAuth";
+import wordmark from "../assets/entitled-wordmark.jpg";
 
 export default function Login({ onSuccess }) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
+    setErr("");
     setLoading(true);
-
     try {
-      await api.post("/admin/auth/login", {
-        phone,
-        password,
-      });
-
-      onSuccess();
-    } catch (err) {
-      setError("Invalid phone or password");
+      await adminLogin(phone.trim(), password);
+      onSuccess?.();
+    } catch (e2) {
+      setErr(e2?.response?.data?.error || "Login failed");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div
-      style={{ maxWidth: 360, margin: "80px auto", fontFamily: "sans-serif" }}
-    >
-      <h2>Admin Login</h2>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          required
-          style={{ width: "100%", marginBottom: 10, padding: 8 }}
-        />
-
-        <div style={{ position: "relative" }}>
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((v) => !v)}
-            style={{
-              position: "absolute",
-              right: 6,
-              top: 6,
-              border: "none",
-              background: "none",
-              cursor: "pointer",
-            }}
-          >
-            {showPassword ? "🙈" : "👁️"}
-          </button>
+    <div className="container loginPage">
+      <div className="shell loginShell">
+        <div className="topbar">
+          <div className="wordmarkSlot">
+            <img className="wordmarkImg" src={wordmark} alt="Entitled Club" />
+            <span className="badge">Admin Access</span>
+          </div>
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="loginBody">
+          <div className="grid2 loginGrid">
+            <div className="card loginCard">
+              <h1 className="h1">Admin Login</h1>
+              <p className="sub">
+                Sign in to approve members, revoke access, and audit activity.
+              </p>
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{ marginTop: 12, width: "100%", padding: 10 }}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+              <form onSubmit={handleSubmit}>
+                <div className="field">
+                  <div className="label">Phone</div>
+                  <input
+                    className="control"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    inputMode="numeric"
+                    autoComplete="off"
+                  />
+                </div>
+
+                <div className="field">
+                  <div className="label">Password</div>
+                  <div className="row">
+                    <input
+                      className="control"
+                      style={{ flex: 1 }}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      type={showPw ? "text" : "password"}
+                      autoComplete="off"
+                    />
+                    <button
+                      type="button"
+                      className="btn btnMetal"
+                      onClick={() => setShowPw((s) => !s)}
+                      title="Show/Hide"
+                    >
+                      {showPw ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                </div>
+
+                {err && <div className="toast">⚠️ {err}</div>}
+
+                <div className="rowWrap" style={{ marginTop: 14 }}>
+                  <button className="btn btnPrimary" disabled={loading}>
+                    {loading ? "Signing in..." : "Sign In"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

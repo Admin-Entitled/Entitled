@@ -8,6 +8,7 @@ export function adminAuth(req, res, next) {
   if (!phone || !adminPhones.includes(phone)) {
     return res.status(403).json({ error: "Admin access denied" });
   }
+  console.log("phone",phone)
 
   next();
 }
