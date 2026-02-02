@@ -1,0 +1,15 @@
+services:
+  - type: cron
+    name: entitled-supabase-keepalive
+    env: node
+    rootDir: backend
+    schedule: "*/10 * * * *"
+    buildCommand: npm ci
+    startCommand: npm run keepalive
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_KEEPALIVE_TABLE
+        value: members
