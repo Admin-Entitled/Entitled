@@ -2,6 +2,17 @@ import { useState } from "react";
 import { exchangeAccess, login } from "../services/auth";
 import wordmark from "../assets/entitled-wordmark.jpg";
 
+function buildShopifyAccessUrl(shopUrlOrDomain, password) {
+  if (!shopUrlOrDomain) return null;
+
+  const raw = shopUrlOrDomain.trim();
+  const hasProtocol = /^https?:\/\//i.test(raw);
+  const base = hasProtocol ? raw : `https://${raw}`;
+  const target = new URL(base);
+  target.searchParams.set("password", password);
+  return target.toString();
+}
+
 export default function Login() {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,15 +39,25 @@ export default function Login() {
 
         const accessRes = await exchangeAccess(token);
         const password = accessRes?.data?.password;
+        const backendShopUrl = accessRes?.data?.shop_url;
 
         if (!password) {
           setErr("Access token invalid");
           return;
         }
 
-        const shopDomain =
-          import.meta.env.VITE_SHOPIFY_DOMAIN || "www.entitledclub.com";
-        window.location.href = `https://${shopDomain}?password=${encodeURIComponent(password)}`;
+        const configuredShopTarget =
+          backendShopUrl ||
+          import.meta.env.VITE_SHOPIFY_URL ||
+          import.meta.env.VITE_SHOPIFY_DOMAIN;
+        const redirectUrl = buildShopifyAccessUrl(configuredShopTarget, password);
+
+        if (!redirectUrl) {
+          setErr("Shopify URL is not configured. Please contact support.");
+          return;
+        }
+
+        window.location.href = redirectUrl;
         setOk("Access granted.");
       } else if (status === "pending") {
         setErr("Membership is pending approval.");

@@ -42,6 +42,7 @@ router.get("/access", async (req, res) => {
 
   res.json({
     password: process.env.SHOPIFY_PASSWORD,
+    shop_url: process.env.SHOPIFY_STORE_URL || null,
   });
 });
 
