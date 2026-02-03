@@ -86,9 +86,12 @@
     text-transform:uppercase;
   }
   .wordmarkImg{
-    height:28px;
+    height:16px;
     width:auto;
     filter:contrast(1.05) saturate(1.05);
+  }
+  @media (max-width: 767px){
+    .wordmarkImg{height:12px}
   }
   
   .badge{

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { adminLogin } from "../services/adminAuth";
-import wordmark from "../assets/entitled-wordmark.jpg";
+import Wordmark from "../components/Wordmark";
 
 export default function Login({ onSuccess }) {
   const [phone, setPhone] = useState("");
@@ -28,7 +28,7 @@ export default function Login({ onSuccess }) {
       <div className="shell loginShell">
         <div className="topbar">
           <div className="wordmarkSlot">
-            <img className="wordmarkImg" src={wordmark} alt="Entitled Club" />
+            <Wordmark />
             <span className="badge">Admin Access</span>
           </div>
         </div>

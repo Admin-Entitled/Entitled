@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import wordmark from "../assets/entitled-wordmark.jpg";
+import Wordmark from "../components/Wordmark";
 
 export default function Landing() {
   const nav = useNavigate();
@@ -9,7 +9,7 @@ export default function Landing() {
       <div className="shell">
         <div className="topbar">
           <div className="wordmarkSlot">
-            <img className="wordmarkImg" src={wordmark} alt="Entitled Club" />
+            <Wordmark />
             <span className="badge">Members-only Access</span>
           </div>
           <div className="rowWrap">

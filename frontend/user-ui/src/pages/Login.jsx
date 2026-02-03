@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { exchangeAccess, login } from "../services/auth";
-import wordmark from "../assets/entitled-wordmark.jpg";
+import Wordmark from "../components/Wordmark";
 
 function buildShopifyAccessUrl(shopUrlOrDomain, password) {
   if (!shopUrlOrDomain) return null;
@@ -77,7 +77,7 @@ export default function Login() {
       <div className="shell">
         <div className="topbar">
           <div className="wordmarkSlot">
-            <img className="wordmarkImg" src={wordmark} alt="Entitled Club" />
+            <Wordmark />
             <span className="badge">Member Login</span>
           </div>
           <span className="kbd">Entitled Club</span>

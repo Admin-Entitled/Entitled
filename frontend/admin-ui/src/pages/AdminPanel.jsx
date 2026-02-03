@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import wordmark from "../assets/entitled-wordmark.jpg";
+import Wordmark from "../components/Wordmark";
 import {
   fetchMembers,
   approveMember,
@@ -154,7 +154,7 @@ export default function AdminPanel() {
       <div className="shell">
         <div className="topbar">
           <div className="wordmarkSlot">
-            <img className="wordmarkImg" src={wordmark} alt="Entitled Club" />
+            <Wordmark />
             <span className="badge">Admin Panel</span>
           </div>
 

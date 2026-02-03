@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { register } from "../services/auth";
-import wordmark from "../assets/entitled-wordmark.jpg";
+import Wordmark from "../components/Wordmark";
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -41,7 +41,7 @@ export default function Register() {
       <div className="shell">
         <div className="topbar">
           <div className="wordmarkSlot">
-            <img className="wordmarkImg" src={wordmark} alt="Entitled Club" />
+            <Wordmark />
             <span className="badge">Membership Application</span>
           </div>
           <a className="btn btnMetal" href="/login">
