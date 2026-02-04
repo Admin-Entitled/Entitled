@@ -7,9 +7,6 @@ export default function Register() {
     name: "",
     email: "",
     phone: "",
-    address: "",
-    city: "",
-    state: "",
     pincode: "",
   });
 
@@ -84,25 +81,14 @@ export default function Register() {
                   <div className="label">Pincode</div>
                   <input className="control" value={form.pincode} onChange={(e)=>set("pincode", e.target.value)} inputMode="numeric" />
                 </div>
-                <div className="field">
-                  <div className="label">State</div>
-                  <input className="control" value={form.state} onChange={(e)=>set("state", e.target.value)} />
-                </div>
-                <div className="field">
-                  <div className="label">City</div>
-                  <input className="control" value={form.city} onChange={(e)=>set("city", e.target.value)} />
-                </div>
               </div>
 
-              <div className="field">
-                <div className="label">Address</div>
-                <textarea
-                  className="control"
-                  rows={3}
-                  value={form.address}
-                  onChange={(e) => set("address", e.target.value)}
-                />
-              </div>
+              {/*
+              Temporarily hidden fields:
+              - State
+              - City
+              - Address
+              */}
 
               {err && <div className="toast toastWarn">⚠️ {err}</div>}
               {msg && <div className="toast">✅ {msg}</div>}

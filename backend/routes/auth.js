@@ -9,7 +9,7 @@ const SESSION_DAYS = 30;
  * REGISTER — Request Access
  */
 router.post("/register", async (req, res) => {
-  const { name, phone, email, address, city, state, pincode } = req.body;
+  const { name, phone, email, pincode } = req.body;
 
   if (!name || !phone) {
     return res.status(400).json({ error: "Name and phone are required" });
@@ -18,11 +18,13 @@ router.post("/register", async (req, res) => {
   const { error } = await supabase.from("members").insert([{
     name,
     phone,
-    email,
-    address,
-    city,
-    state,
-    pincode
+    email: email || null,
+    pincode: pincode || null,
+    // Keep legacy columns populated so registration doesn't fail
+    // if these columns are still NOT NULL in the database schema.
+    address: "",
+    city: "",
+    state: ""
   }]);
 
   if (error) {
