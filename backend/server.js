@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv'
+import { runKeepAlive } from "./scripts/supabaseKeepAlive.js";
 import adminRoutes from "./routes/admin.js";
 import adminAuthRoutes from "./routes/adminAuth.js";
 import publicRoutes from "./routes/public.js";
@@ -56,6 +57,60 @@ app.get("/health", (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
+const keepAliveEnabled = process.env.ENABLE_INTERNAL_KEEPALIVE === "true";
+const keepAliveIntervalMs = Number(process.env.KEEPALIVE_INTERVAL_MS || 10 * 60 * 1000);
+const keepAliveToken = process.env.KEEPALIVE_TOKEN;
+let keepAliveRunning = false;
+
+const executeKeepAlive = async (label) => {
+  if (keepAliveRunning) return false;
+  keepAliveRunning = true;
+  try {
+    await runKeepAlive();
+    return true;
+  } catch (error) {
+    console.error(
+      `[${new Date().toISOString()}] keepalive ${label} failed: ${error.message}`
+    );
+    return false;
+  } finally {
+    keepAliveRunning = false;
+  }
+};
+
+app.get("/internal/keepalive", async (req, res) => {
+  if (!keepAliveToken) {
+    return res.status(500).json({ error: "KEEPALIVE_TOKEN is not configured" });
+  }
+
+  const token = req.get("x-keepalive-token") || req.query.token;
+  if (token !== keepAliveToken) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  if (keepAliveRunning) {
+    return res.status(202).json({ status: "already_running" });
+  }
+
+  const ok = await executeKeepAlive("endpoint");
+  if (!ok) {
+    return res.status(500).json({ status: "failed" });
+  }
+  return res.json({ status: "ok" });
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Backend running on port ${PORT}`);
+
+  if (!keepAliveEnabled) {
+    return;
+  }
+
+  console.log(`🫀 Internal keepalive enabled (interval=${keepAliveIntervalMs}ms)`);
+
+  executeKeepAlive("startup");
+
+  setInterval(() => {
+    executeKeepAlive("loop");
+  }, keepAliveIntervalMs);
 });

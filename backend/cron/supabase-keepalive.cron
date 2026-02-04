@@ -1,4 +1,4 @@
-# Prevent Supabase project pause by touching the DB every 10 minutes
+# Prevent Supabase/Render inactivity pause by touching both every 10 minutes
 # Add with: crontab backend/cron/supabase-keepalive.cron
 
 SHELL=/bin/bash
