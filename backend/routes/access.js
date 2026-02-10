@@ -28,11 +28,6 @@ function normalizeShopUrl(rawShopUrl) {
     parsedUrl.hash = "";
   }
 
-  // Keep the canonical production storefront host.
-  if (parsedUrl.hostname.toLowerCase() === "www.entitledclub.com") {
-    parsedUrl.hostname = "entitledclub.com";
-  }
-
   return parsedUrl.toString();
 }
 
