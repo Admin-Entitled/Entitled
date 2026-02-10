@@ -6,7 +6,10 @@ const router = express.Router();
 router.get("/access", async (req, res) => {
   const { token } = req.query;
   const shopUrl = process.env.SHOPIFY_STORE_URL;
-  const shopPassword = process.env.SHOPIFY_PASSWORD;
+  const rawShopPassword = process.env.SHOPIFY_PASSWORD;
+  const shopPassword = String(rawShopPassword || "")
+    .trim()
+    .replace(/^['"]|['"]$/g, "");
 
   if (!token) {
     return res.status(401).json({});
@@ -33,7 +36,8 @@ router.get("/access", async (req, res) => {
   if (!shopUrl || !shopPassword) {
     console.error("[ACCESS] Missing Shopify configuration", {
       hasShopUrl: Boolean(shopUrl),
-      hasShopPassword: Boolean(shopPassword),
+      hasShopPassword: Boolean(rawShopPassword),
+      hasUsableShopPassword: Boolean(shopPassword),
     });
     return res.status(500).json({
       error: "Shopify access is not configured on server. Please contact support.",
