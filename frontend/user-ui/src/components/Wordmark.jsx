@@ -2,7 +2,7 @@ import mobileWordmark from "../assets/entitled-wordmark-mobile.png";
 import desktopWordmark from "../assets/entitled-wordmark-desktop.png";
 
 export default function Wordmark({ alt = "Entitled", className = "" }) {
-  const productionUrl = "https://www.auth.entitledclub.com";
+  const productionUrl = "https://auth.entitledclub.com";
   const localTestUrl = import.meta.env.VITE_LOCAL_WORDMARK_URL;
   const href = import.meta.env.DEV ? (localTestUrl || "/") : productionUrl;
 
