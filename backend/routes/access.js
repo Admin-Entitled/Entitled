@@ -41,6 +41,25 @@ router.get("/access", async (req, res) => {
     });
   }
 
+  let normalizedShopUrl;
+  try {
+    normalizedShopUrl = /^https?:\/\//i.test(shopUrl) ? shopUrl : `https://${shopUrl}`;
+    const host = new URL(normalizedShopUrl).hostname.toLowerCase();
+    if (host === "auth.entitledclub.com" || host === "www.auth.entitledclub.com") {
+      console.error("[ACCESS] Invalid Shopify store URL points to auth domain", { host });
+      return res.status(500).json({
+        error: "Shopify store URL is misconfigured on server. Please contact support.",
+        code: "SHOPIFY_CONFIG_INVALID_URL",
+      });
+    }
+  } catch (parseErr) {
+    console.error("[ACCESS] Invalid Shopify store URL format", { message: parseErr?.message });
+    return res.status(500).json({
+      error: "Shopify store URL format is invalid on server. Please contact support.",
+      code: "SHOPIFY_CONFIG_INVALID_URL",
+    });
+  }
+
   // Mark token as used (one-time) if the column exists
   if (Object.prototype.hasOwnProperty.call(data, "used")) {
     const { error: useErr } = await supabase
@@ -55,7 +74,7 @@ router.get("/access", async (req, res) => {
 
   res.json({
     password: shopPassword,
-    shop_url: shopUrl,
+    shop_url: normalizedShopUrl,
   });
 });
 
