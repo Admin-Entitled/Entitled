@@ -44,7 +44,8 @@ router.get("/access", async (req, res) => {
   let normalizedShopUrl;
   try {
     normalizedShopUrl = /^https?:\/\//i.test(shopUrl) ? shopUrl : `https://${shopUrl}`;
-    const host = new URL(normalizedShopUrl).hostname.toLowerCase();
+    const parsedUrl = new URL(normalizedShopUrl);
+    const host = parsedUrl.hostname.toLowerCase();
     if (host === "auth.entitledclub.com" || host === "www.auth.entitledclub.com") {
       console.error("[ACCESS] Invalid Shopify store URL points to auth domain", { host });
       return res.status(500).json({
@@ -52,6 +53,20 @@ router.get("/access", async (req, res) => {
         code: "SHOPIFY_CONFIG_INVALID_URL",
       });
     }
+
+    // Prevent redirect loops back to the Shopify password page.
+    if (parsedUrl.pathname.toLowerCase() === "/password") {
+      parsedUrl.pathname = "/";
+      parsedUrl.search = "";
+      parsedUrl.hash = "";
+    }
+
+    // Keep the canonical production storefront host.
+    if (parsedUrl.hostname.toLowerCase() === "www.entitledclub.com") {
+      parsedUrl.hostname = "entitledclub.com";
+    }
+
+    normalizedShopUrl = parsedUrl.toString();
   } catch (parseErr) {
     console.error("[ACCESS] Invalid Shopify store URL format", { message: parseErr?.message });
     return res.status(500).json({
