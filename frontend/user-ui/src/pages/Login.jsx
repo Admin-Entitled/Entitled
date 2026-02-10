@@ -25,6 +25,18 @@ function submitShopifyPassword(shopUrlOrDomain, password) {
   form.action = endpoint;
   form.style.display = "none";
 
+  const formTypeField = document.createElement("input");
+  formTypeField.type = "hidden";
+  formTypeField.name = "form_type";
+  formTypeField.value = "storefront_password";
+  form.appendChild(formTypeField);
+
+  const utf8Field = document.createElement("input");
+  utf8Field.type = "hidden";
+  utf8Field.name = "utf8";
+  utf8Field.value = "✓";
+  form.appendChild(utf8Field);
+
   const passwordField = document.createElement("input");
   passwordField.type = "hidden";
   passwordField.name = "password";
