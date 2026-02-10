@@ -4,15 +4,49 @@ import { exchangeAccess, login } from "../services/auth";
 import Wordmark from "../components/Wordmark";
 import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
 
-function buildShopifyAccessUrl(shopUrlOrDomain, password) {
+function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
   if (!shopUrlOrDomain) return null;
-
   const raw = shopUrlOrDomain.trim();
   const hasProtocol = /^https?:\/\//i.test(raw);
   const base = hasProtocol ? raw : `https://${raw}`;
   const target = new URL(base);
-  target.searchParams.set("password", password);
+  target.pathname = "/password";
+  target.search = "";
+  target.hash = "";
   return target.toString();
+}
+
+function submitShopifyPassword(shopUrlOrDomain, password) {
+  const endpoint = buildShopifyPasswordEndpoint(shopUrlOrDomain);
+  if (!endpoint || !password) return false;
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = endpoint;
+  form.style.display = "none";
+
+  const passwordField = document.createElement("input");
+  passwordField.type = "hidden";
+  passwordField.name = "password";
+  passwordField.value = password;
+  form.appendChild(passwordField);
+
+  // Ask Shopify to send users to the storefront after unlocking.
+  const redirectField = document.createElement("input");
+  redirectField.type = "hidden";
+  redirectField.name = "redirect";
+  redirectField.value = "/";
+  form.appendChild(redirectField);
+
+  const returnToField = document.createElement("input");
+  returnToField.type = "hidden";
+  returnToField.name = "return_to";
+  returnToField.value = "/";
+  form.appendChild(returnToField);
+
+  document.body.appendChild(form);
+  form.submit();
+  return true;
 }
 
 function normalizePhone(raw) {
@@ -74,20 +108,14 @@ export default function Login() {
           return;
         }
 
-        const redirectUrl = buildShopifyAccessUrl(backendShopUrl, password);
-
-        if (!redirectUrl) {
+        if (!submitShopifyPassword(backendShopUrl, password)) {
           console.error("[LOGIN] Missing Shopify URL config", {
             hasBackendShopUrl: Boolean(backendShopUrl),
           });
           setErr("Shopify URL is not configured. Please contact support.");
           return;
         }
-
-        console.log("[LOGIN] Redirecting to Shopify", {
-          redirectHost: new URL(redirectUrl).host,
-        });
-        window.location.href = redirectUrl;
+        console.log("[LOGIN] Redirecting to Shopify password endpoint");
         setOk("Access granted.");
       } else if (status === "pending") {
         console.warn("[LOGIN] Membership pending approval");

@@ -12,14 +12,48 @@ function normalizePhone(raw) {
   return digits;
 }
 
-function buildShopifyAccessUrl(shopUrlOrDomain, password) {
+function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
   if (!shopUrlOrDomain) return null;
   const raw = shopUrlOrDomain.trim();
   const hasProtocol = /^https?:\/\//i.test(raw);
   const base = hasProtocol ? raw : `https://${raw}`;
   const target = new URL(base);
-  target.searchParams.set("password", password);
+  target.pathname = "/password";
+  target.search = "";
+  target.hash = "";
   return target.toString();
+}
+
+function submitShopifyPassword(shopUrlOrDomain, password) {
+  const endpoint = buildShopifyPasswordEndpoint(shopUrlOrDomain);
+  if (!endpoint || !password) return false;
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = endpoint;
+  form.style.display = "none";
+
+  const passwordField = document.createElement("input");
+  passwordField.type = "hidden";
+  passwordField.name = "password";
+  passwordField.value = password;
+  form.appendChild(passwordField);
+
+  const redirectField = document.createElement("input");
+  redirectField.type = "hidden";
+  redirectField.name = "redirect";
+  redirectField.value = "/";
+  form.appendChild(redirectField);
+
+  const returnToField = document.createElement("input");
+  returnToField.type = "hidden";
+  returnToField.name = "return_to";
+  returnToField.value = "/";
+  form.appendChild(returnToField);
+
+  document.body.appendChild(form);
+  form.submit();
+  return true;
 }
 
 export default function Landing() {
@@ -51,11 +85,9 @@ export default function Landing() {
     const accessRes = await exchangeAccess(token);
     const password = accessRes?.data?.password;
     const backendShopUrl = accessRes?.data?.shop_url;
-    const redirectUrl = buildShopifyAccessUrl(backendShopUrl, password);
-    if (!redirectUrl) {
+    if (!submitShopifyPassword(backendShopUrl, password)) {
       throw new Error("Shopify URL is not configured.");
     }
-    window.location.href = redirectUrl;
   }
 
   async function handleContinue(e) {
