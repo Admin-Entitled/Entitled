@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get("/access", async (req, res) => {
   const { token } = req.query;
+  const shopUrl = process.env.SHOPIFY_STORE_URL;
+  const shopPassword = process.env.SHOPIFY_PASSWORD;
 
   if (!token) {
     return res.status(401).json({});
@@ -28,6 +30,17 @@ router.get("/access", async (req, res) => {
     return res.status(401).json({});
   }
 
+  if (!shopUrl || !shopPassword) {
+    console.error("[ACCESS] Missing Shopify configuration", {
+      hasShopUrl: Boolean(shopUrl),
+      hasShopPassword: Boolean(shopPassword),
+    });
+    return res.status(500).json({
+      error: "Shopify access is not configured on server. Please contact support.",
+      code: "SHOPIFY_CONFIG_MISSING",
+    });
+  }
+
   // Mark token as used (one-time) if the column exists
   if (Object.prototype.hasOwnProperty.call(data, "used")) {
     const { error: useErr } = await supabase
@@ -41,8 +54,8 @@ router.get("/access", async (req, res) => {
   }
 
   res.json({
-    password: process.env.SHOPIFY_PASSWORD,
-    shop_url: process.env.SHOPIFY_STORE_URL || null,
+    password: shopPassword,
+    shop_url: shopUrl,
   });
 });
 
