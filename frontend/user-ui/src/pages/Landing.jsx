@@ -27,6 +27,7 @@ function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
 function submitShopifyPassword(shopUrlOrDomain, password) {
   const endpoint = buildShopifyPasswordEndpoint(shopUrlOrDomain);
   if (!endpoint || !password) return false;
+  const returnTo = new URL("/", endpoint).pathname;
 
   const form = document.createElement("form");
   form.method = "POST";
@@ -51,16 +52,10 @@ function submitShopifyPassword(shopUrlOrDomain, password) {
   passwordField.value = password;
   form.appendChild(passwordField);
 
-  const redirectField = document.createElement("input");
-  redirectField.type = "hidden";
-  redirectField.name = "redirect";
-  redirectField.value = "/";
-  form.appendChild(redirectField);
-
   const returnToField = document.createElement("input");
   returnToField.type = "hidden";
   returnToField.name = "return_to";
-  returnToField.value = "/";
+  returnToField.value = returnTo;
   form.appendChild(returnToField);
 
   document.body.appendChild(form);
