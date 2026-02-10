@@ -1,7 +1,0 @@
-# Prevent Supabase/Render inactivity pause by touching both every 10 minutes
-# Add with: crontab backend/cron/supabase-keepalive.cron
-
-SHELL=/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-*/10 * * * * cd /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/backend && /usr/bin/env node scripts/supabaseKeepAlive.js >> /tmp/supabase-keepalive.log 2>&1

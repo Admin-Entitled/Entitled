@@ -45,6 +45,7 @@ app.use(cookieParser());
 app.use("/admin", adminRoutes);
 app.use("/admin/auth", adminAuthRoutes);
 app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/", accessRoutes);
 app.use("/api", publicRoutes);
 app.use("/", publicRoutes);
@@ -101,6 +102,8 @@ app.get("/internal/keepalive", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`✅ Backend running on port ${PORT}`);
+  console.log(`📍 CWD: ${process.cwd()}`);
+  console.log("🧭 Auth routes mounted at: /auth/* and /api/auth/*");
 
   if (!keepAliveEnabled) {
     return;
