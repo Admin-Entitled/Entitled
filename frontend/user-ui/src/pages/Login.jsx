@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { exchangeAccess, login } from "../services/auth";
 import Wordmark from "../components/Wordmark";
 import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
@@ -24,6 +24,7 @@ function normalizePhone(raw) {
 }
 
 export default function Login() {
+  const nav = useNavigate();
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
@@ -41,7 +42,8 @@ export default function Login() {
     });
     try {
       const res = await login({ phone: trimmedPhone });
-      const status = res?.data?.status;
+      const statusRaw = res?.data?.status;
+      const status = typeof statusRaw === "string" ? statusRaw.toLowerCase() : "";
       console.log("[LOGIN] /auth/login response", {
         status,
         hasToken: Boolean(res?.data?.token),
@@ -89,10 +91,13 @@ export default function Login() {
         setOk("Access granted.");
       } else if (status === "pending") {
         console.warn("[LOGIN] Membership pending approval");
-        setErr("Membership is pending approval.");
+        nav("/pending");
+      } else if (status === "not_found") {
+        console.warn("[LOGIN] Membership not found, redirecting to register");
+        nav("/register", { state: { phone: trimmedPhone } });
       } else {
         console.warn("[LOGIN] Non-approved status received", { status });
-        setOk("Login checked.");
+        setErr("Could not verify membership status. Please try again.");
       }
     } catch (e2) {
       console.error("[LOGIN] Request failed", {
