@@ -51,11 +51,7 @@ export default function Landing() {
     const accessRes = await exchangeAccess(token);
     const password = accessRes?.data?.password;
     const backendShopUrl = accessRes?.data?.shop_url;
-    const configuredShopTarget =
-      backendShopUrl ||
-      import.meta.env.VITE_SHOPIFY_URL ||
-      import.meta.env.VITE_SHOPIFY_DOMAIN;
-    const redirectUrl = buildShopifyAccessUrl(configuredShopTarget, password);
+    const redirectUrl = buildShopifyAccessUrl(backendShopUrl, password);
     if (!redirectUrl) {
       throw new Error("Shopify URL is not configured.");
     }

@@ -72,17 +72,11 @@ export default function Login() {
           return;
         }
 
-        const configuredShopTarget =
-          backendShopUrl ||
-          import.meta.env.VITE_SHOPIFY_URL ||
-          import.meta.env.VITE_SHOPIFY_DOMAIN;
-        const redirectUrl = buildShopifyAccessUrl(configuredShopTarget, password);
+        const redirectUrl = buildShopifyAccessUrl(backendShopUrl, password);
 
         if (!redirectUrl) {
           console.error("[LOGIN] Missing Shopify URL config", {
             hasBackendShopUrl: Boolean(backendShopUrl),
-            hasEnvShopifyUrl: Boolean(import.meta.env.VITE_SHOPIFY_URL),
-            hasEnvShopifyDomain: Boolean(import.meta.env.VITE_SHOPIFY_DOMAIN),
           });
           setErr("Shopify URL is not configured. Please contact support.");
           return;
