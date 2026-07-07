@@ -1,0 +1,751 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify FAQ section with a modern, premium layout.
+    
+    SECTION STRUCTURE
+    - Two-column layout on desktop:
+      - Left side: FAQ items (50% width)
+      - Right side: FAQ items (50% width)
+    - Split the FAQs evenly between left and right columns
+    - On mobile: stack into a single column (left first, then right)
+    - Use accordion-style FAQs (click to expand/collapse)
+    
+    FUNCTIONAL REQUIREMENTS
+    - Disable any theme slider, carousel, or auto-rotation for this section
+    - FAQs must open/close smoothly with animation
+    - Only one FAQ open at a time per column (optional but preferred)
+    - Lightweight hover effects on FAQ cards (subtle lift or glow)
+    
+    CONTENT (USE EXACT TEXT)
+    LEFT COLUMN FAQs:
+    Q: What is Entitled?
+    A: A members-only storefront for curated, limited-quantity clothing — top-tier quality, always.
+    
+    Q: Is membership paid?
+    A: No. Membership is free and granted through approval.
+    
+    Q: How do I become a member?
+    A: Apply with your details. Approval is typically granted within 10–15 days.
+    
+    Q: Can I shop without membership?
+    A: No. If you are not a member, you cannot access the store.
+    
+    Q: Who is a customer?
+    A: Only members. If you are not a member, you are not a customer.
+    
+    Q: What details do you collect for membership?
+    A: Name, mobile number, email address, and shipping address.
+    
+    RIGHT COLUMN FAQs:
+    Q: What do members get?
+    A: Membership is the customer identity. It grants store access and members-first support.
+    
+    Q: How is access priced?
+    A: Pricing reflects member access, verification, and availability.
+    
+    Q: Are the products authentic?
+    A: Yes. We handpick from select authentic channels and verify quality before listing.
+    
+    Q: Do you sell factory rejects or quality rejects?
+    A: No. Items that fail our quality standard are not listed.
+    
+    Q: Are drops restocked?
+    A: By default, no. Drops open and close. When they close, they become archive.
+    
+    Q: What is your return policy?
+    A: No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.
+    
+    Q: Do you have purchase limits?
+    A: No purchase limits at this time. Limits may be introduced later if needed.
+    
+    Q: How can I contact support?
+    A: WhatsApp customer support (details on the website). Members-first resolution.
+    
+    DESIGN & STYLE
+    - Background:
+      - Plain gradient grey color palette
+      - Example: soft light grey → dark grey gradient
+      - Add very subtle texture overlay if possible
+      - Optional faint T-shirt doodle or fabric-style texture in the background (low opacity, non-distracting)
+    - FAQ Cards:
+      - Slightly darker/lighter than background for contrast
+      - Rounded corners
+      - Soft shadow
+    - Typography:
+      - Bold questions
+      - Clean, readable answers
+    - Hover Effect:
+      - Smooth transition
+      - Slight upward movement or glow
+    - Animation:
+      - Accordion open/close animation (ease-in-out)
+      - Hover transitions under 300ms
+    
+    GENERAL NOTES
+    - Keep the section premium, minimal, and modern
+    - No flashy colors
+    - No sliders
+    - No autoplay
+    - Focus on clarity and exclusivity
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, {{ block.settings.gradient_start }} 0%, {{ block.settings.gradient_end }} 100%);
+    padding: {{ block.settings.section_padding }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-faq-section-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect x="0" y="0" width="1" height="1" fill="rgba(0,0,0,0.02)"/></svg>');
+    background-size: 4px 4px;
+    opacity: {{ block.settings.texture_opacity }};
+    pointer-events: none;
+  }
+
+  .ai-faq-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ai-faq-title-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px;
+    letter-spacing: 0.5px;
+  }
+
+  .ai-faq-subtitle-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.subtitle_size }}px;
+    color: {{ block.settings.subtitle_color }};
+    margin: 0 0 {{ block.settings.content_spacing }}px;
+    opacity: 0.9;
+  }
+
+  .ai-faq-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+  }
+
+  .ai-faq-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.item_gap }}px;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }} {
+    background: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_radius }}px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}:hover {
+    transform: translateY(-{{ block.settings.hover_lift }}px);
+    box-shadow: 0 {{ block.settings.hover_lift | times: 2 }}px {{ block.settings.hover_lift | times: 3 }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity | times: 1.5 }});
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    width: 100%;
+    padding: {{ block.settings.question_padding }}px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    font-size: {{ block.settings.question_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.question_color }};
+    transition: color 0.25s ease;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.question_hover_color }};
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: {{ block.settings.icon_color }};
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 500px;
+    padding: 0 {{ block.settings.question_padding }}px {{ block.settings.question_padding }}px;
+  }
+
+  .ai-faq-answer-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.answer_size }}px;
+    line-height: 1.6;
+    color: {{ block.settings.answer_color }};
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-faq-grid-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-faq-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+
+    .ai-faq-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.9 }}px;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      font-size: {{ block.settings.question_size | times: 0.9 }}px;
+      padding: {{ block.settings.question_padding | times: 0.8 }}px;
+    }
+
+    .ai-faq-answer-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.answer_size | times: 0.9 }}px;
+    }
+
+    .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+      padding: 0 {{ block.settings.question_padding | times: 0.8 }}px {{ block.settings.question_padding | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<faq-section-{{ ai_gen_id }} class="ai-faq-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-faq-container-{{ ai_gen_id }}">
+    {% if block.settings.section_title != blank %}
+      <h2 class="ai-faq-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+    {% endif %}
+    
+    {% if block.settings.section_subtitle != blank %}
+      <p class="ai-faq-subtitle-{{ ai_gen_id }}">{{ block.settings.section_subtitle }}</p>
+    {% endif %}
+
+    <div class="ai-faq-grid-{{ ai_gen_id }}">
+      <div class="ai-faq-column-{{ ai_gen_id }}" data-column="left">
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="1">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>What is Entitled?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">A members-only storefront for curated, limited-quantity clothing — top-tier quality, always.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="2">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Is membership paid?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No. Membership is free and granted through approval.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="3">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>How do I become a member?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Apply with your details. Approval is typically granted within 10–15 days.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="4">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Can I shop without membership?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No. If you are not a member, you cannot access the store.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="5">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Who is a customer?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Only members. If you are not a member, you are not a customer.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="6">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>What details do you collect for membership?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Name, mobile number, email address, and shipping address.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-faq-column-{{ ai_gen_id }}" data-column="right">
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="7">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>What do members get?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Membership is the customer identity. It grants store access and members-first support.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="8">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>How is access priced?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Pricing reflects member access, verification, and availability.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="9">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Are the products authentic?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Yes. We handpick from select authentic channels and verify quality before listing.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="10">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Do you sell factory rejects or quality rejects?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No. Items that fail our quality standard are not listed.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="11">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Are drops restocked?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">By default, no. Drops open and close. When they close, they become archive.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="12">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>What is your return policy?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="13">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>Do you have purchase limits?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No purchase limits at this time. Limits may be introduced later if needed.</p>
+          </div>
+        </div>
+
+        <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="14">
+          <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+            <span>How can I contact support?</span>
+            <span class="ai-faq-icon-{{ ai_gen_id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </button>
+          <div class="ai-faq-answer-{{ ai_gen_id }}">
+            <p class="ai-faq-answer-text-{{ ai_gen_id }}">WhatsApp customer support (details on the website). Members-first resolution.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</faq-section-{{ ai_gen_id }}>
+
+<script>
+(function() {
+  class FaqSection{{ ai_gen_id }} extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this.faqItems = this.querySelectorAll('.ai-faq-item-{{ ai_gen_id }}');
+      this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+      this.faqItems.forEach((item) => {
+        const button = item.querySelector('.ai-faq-question-{{ ai_gen_id }}');
+        const answer = item.querySelector('.ai-faq-answer-{{ ai_gen_id }}');
+        
+        button.addEventListener('click', () => {
+          const isActive = item.classList.contains('active');
+          const column = item.closest('.ai-faq-column-{{ ai_gen_id }}');
+          
+          column.querySelectorAll('.ai-faq-item-{{ ai_gen_id }}').forEach((otherItem) => {
+            if (otherItem !== item) {
+              otherItem.classList.remove('active');
+              otherItem.querySelector('.ai-faq-question-{{ ai_gen_id }}').setAttribute('aria-expanded', 'false');
+            }
+          });
+          
+          if (isActive) {
+            item.classList.remove('active');
+            button.setAttribute('aria-expanded', 'false');
+          } else {
+            item.classList.add('active');
+            button.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    }
+  }
+
+  customElements.define('faq-section-{{ ai_gen_id }}', FaqSection{{ ai_gen_id }});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section content"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to know about membership and our process"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "gradient_start",
+      "label": "Gradient start color",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "gradient_end",
+      "label": "Gradient end color",
+      "default": "#b8b8b8"
+    },
+    {
+      "type": "range",
+      "id": "texture_opacity",
+      "label": "Texture opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Item gap",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "label": "Shadow opacity",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "hover_lift",
+      "label": "Hover lift",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Title spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "range",
+      "id": "content_spacing",
+      "label": "Content spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "question_size",
+      "label": "Question size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "question_hover_color",
+      "label": "Question hover color",
+      "default": "#d63612"
+    },
+    {
+      "type": "range",
+      "id": "question_padding",
+      "label": "Question padding",
+      "min": 10,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "answer_size",
+      "label": "Answer size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer color",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#d63612"
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ section"
+    }
+  ]
+}
+{% endschema %}

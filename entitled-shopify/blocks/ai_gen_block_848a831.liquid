@@ -1,0 +1,685 @@
+{% doc %}
+  @prompt
+    Create a modern FAQ section for a Shopify storefront called Entitled with the following requirements:
+    
+    Layout
+    
+    Split the section into two horizontal halves (50% / 50%)
+    
+    Left column: FAQ items 1–7
+    
+    Right column: FAQ items 8–14
+    
+    Desktop: two columns
+    
+    Mobile: stack into a single column automatically
+    
+    Design Style
+    
+    Minimal, premium, members-only aesthetic
+    
+    Clean typography, strong hierarchy
+    
+    Neutral dark or off-white background
+    
+    Subtle dividers between questions
+    
+    Looks luxury and exclusive, not loud
+    
+    Interaction & Animation
+    
+    Each FAQ question expands/collapses on click
+    
+    Smooth accordion animation (ease-in-out)
+    
+    Hover effect on questions:
+    
+    Slight text color shift
+    
+    Subtle underline or left border animation
+    
+    Cursor changes to pointer
+    
+    Only one FAQ open at a time per column
+    
+    Content (Use exactly as written)
+    
+    Q: What is Entitled?
+    A: A members-only storefront for curated, limited-quantity clothing — top-tier quality, always.
+    
+    Q: Is membership paid?
+    A: No. Membership is free and granted through approval.
+    
+    Q: How do I become a member?
+    A: Apply with your details. Approval is typically granted within 10–15 days.
+    
+    Q: Can I shop without membership?
+    A: No. If you are not a member, you cannot access the store.
+    
+    Q: Who is a customer?
+    A: Only members. If you are not a member, you are not a customer.
+    
+    Q: What details do you collect for membership?
+    A: Name, mobile number, email address, and shipping address.
+    
+    Q: What do members get?
+    A: Membership is the customer identity. It grants store access and members-first support.
+    
+    Q: How is access priced?
+    A: Pricing reflects member access, verification, and availability.
+    
+    Q: Are the products authentic?
+    A: Yes. We handpick from select authentic channels and verify quality before listing.
+    
+    Q: Do you sell factory rejects or quality rejects?
+    A: No. Items that fail our quality standard are not listed.
+    
+    Q: Are drops restocked?
+    A: By default, no. Drops open and close. When they close, they become archive.
+    
+    Q: What is your return policy?
+    A: No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.
+    
+    Q: Do you have purchase limits?
+    A: No purchase limits at this time. Limits may be introduced later if needed.
+    
+    Q: How can I contact support?
+    A: WhatsApp customer support (details on the website). Members-first resolution., please check in that also in the background sowing slider please revoew that i want plan gradient color in background that use in code , plase check that in this the background slider please remove that the slider is hide after in second section i want gradient color for this section background 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-section-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px 20px;
+    background: linear-gradient({{ block.settings.gradient_angle }}deg, {{ block.settings.gradient_color_1 }}, {{ block.settings.gradient_color_2 }});
+    margin: 0 auto;
+  }
+
+  .ai-faq-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-faq-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }} {
+    border-bottom: 1px solid {{ block.settings.divider_color }};
+    padding: {{ block.settings.item_padding }}px 0;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }} {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    color: {{ block.settings.question_color }};
+    font-size: {{ block.settings.question_font_size }}px;
+    font-weight: {{ block.settings.question_font_weight }};
+    line-height: 1.4;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+  }
+
+  .ai-faq-question-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.question_hover_color }};
+  }
+
+  .ai-faq-question-{{ ai_gen_id }}:hover::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background-color: {{ block.settings.question_hover_color }};
+    opacity: 0.6;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .ai-faq-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-icon-{{ ai_gen_id }} {
+    transform: rotate(180deg);
+  }
+
+  .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+    color: {{ block.settings.answer_color }};
+    font-size: {{ block.settings.answer_font_size }}px;
+    line-height: 1.6;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
+    max-height: 500px;
+    padding-top: 12px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-faq-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .ai-faq-question-{{ ai_gen_id }} {
+      font-size: {{ block.settings.question_font_size | times: 0.9 }}px;
+    }
+
+    .ai-faq-answer-{{ ai_gen_id }} {
+      font-size: {{ block.settings.answer_font_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<faq-accordion-{{ ai_gen_id }} class="ai-faq-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-faq-container-{{ ai_gen_id }}">
+    <div class="ai-faq-column-{{ ai_gen_id }}" data-column="1">
+      {% for i in (1..7) %}
+        {% liquid
+          assign question_key = 'question_' | append: i
+          assign answer_key = 'answer_' | append: i
+          assign question = block.settings[question_key]
+          assign answer = block.settings[answer_key]
+        %}
+        {% if question != blank and answer != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span>{{ question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              {{ answer }}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-faq-column-{{ ai_gen_id }}" data-column="2">
+      {% for i in (8..14) %}
+        {% liquid
+          assign question_key = 'question_' | append: i
+          assign answer_key = 'answer_' | append: i
+          assign question = block.settings[question_key]
+          assign answer = block.settings[answer_key]
+        %}
+        {% if question != blank and answer != blank %}
+          <div class="ai-faq-item-{{ ai_gen_id }}" data-faq-item>
+            <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+              <span>{{ question }}</span>
+              <span class="ai-faq-icon-{{ ai_gen_id }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div class="ai-faq-answer-{{ ai_gen_id }}">
+              {{ answer }}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</faq-accordion-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FaqAccordion{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.columns = this.querySelectorAll('[data-column]');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.columns.forEach((column) => {
+          const items = column.querySelectorAll('[data-faq-item]');
+          
+          items.forEach((item) => {
+            const question = item.querySelector('.ai-faq-question-{{ ai_gen_id }}');
+            
+            question.addEventListener('click', () => {
+              const isActive = item.classList.contains('active');
+              
+              items.forEach((otherItem) => {
+                if (otherItem !== item) {
+                  otherItem.classList.remove('active');
+                  const otherQuestion = otherItem.querySelector('.ai-faq-question-{{ ai_gen_id }}');
+                  otherQuestion.setAttribute('aria-expanded', 'false');
+                }
+              });
+              
+              if (isActive) {
+                item.classList.remove('active');
+                question.setAttribute('aria-expanded', 'false');
+              } else {
+                item.classList.add('active');
+                question.setAttribute('aria-expanded', 'true');
+              }
+            });
+          });
+        });
+      }
+    }
+
+    customElements.define('faq-accordion-{{ ai_gen_id }}', FaqAccordion{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ accordion",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "Item padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Start color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "End color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "gradient_angle",
+      "label": "Gradient angle",
+      "min": 0,
+      "max": 360,
+      "step": 5,
+      "unit": "deg",
+      "default": 135
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "question_hover_color",
+      "label": "Question hover",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer",
+      "default": "#4a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "question_font_size",
+      "label": "Question font size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "select",
+      "id": "question_font_weight",
+      "label": "Question font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "range",
+      "id": "answer_font_size",
+      "label": "Answer font size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "FAQ 1"
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question",
+      "default": "What is Entitled?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_1",
+      "label": "Answer",
+      "default": "A members-only storefront for curated, limited-quantity clothing — top-tier quality, always."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 2"
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question",
+      "default": "Is membership paid?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_2",
+      "label": "Answer",
+      "default": "No. Membership is free and granted through approval."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 3"
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question",
+      "default": "How do I become a member?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_3",
+      "label": "Answer",
+      "default": "Apply with your details. Approval is typically granted within 10–15 days."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 4"
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question",
+      "default": "Can I shop without membership?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_4",
+      "label": "Answer",
+      "default": "No. If you are not a member, you cannot access the store."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 5"
+    },
+    {
+      "type": "text",
+      "id": "question_5",
+      "label": "Question",
+      "default": "Who is a customer?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_5",
+      "label": "Answer",
+      "default": "Only members. If you are not a member, you are not a customer."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 6"
+    },
+    {
+      "type": "text",
+      "id": "question_6",
+      "label": "Question",
+      "default": "What details do you collect for membership?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_6",
+      "label": "Answer",
+      "default": "Name, mobile number, email address, and shipping address."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 7"
+    },
+    {
+      "type": "text",
+      "id": "question_7",
+      "label": "Question",
+      "default": "What do members get?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_7",
+      "label": "Answer",
+      "default": "Membership is the customer identity. It grants store access and members-first support."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 8"
+    },
+    {
+      "type": "text",
+      "id": "question_8",
+      "label": "Question",
+      "default": "How is access priced?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_8",
+      "label": "Answer",
+      "default": "Pricing reflects member access, verification, and availability."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 9"
+    },
+    {
+      "type": "text",
+      "id": "question_9",
+      "label": "Question",
+      "default": "Are the products authentic?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_9",
+      "label": "Answer",
+      "default": "Yes. We handpick from select authentic channels and verify quality before listing."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 10"
+    },
+    {
+      "type": "text",
+      "id": "question_10",
+      "label": "Question",
+      "default": "Do you sell factory rejects or quality rejects?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_10",
+      "label": "Answer",
+      "default": "No. Items that fail our quality standard are not listed."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 11"
+    },
+    {
+      "type": "text",
+      "id": "question_11",
+      "label": "Question",
+      "default": "Are drops restocked?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_11",
+      "label": "Answer",
+      "default": "By default, no. Drops open and close. When they close, they become archive."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 12"
+    },
+    {
+      "type": "text",
+      "id": "question_12",
+      "label": "Question",
+      "default": "What is your return policy?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_12",
+      "label": "Answer",
+      "default": "No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 13"
+    },
+    {
+      "type": "text",
+      "id": "question_13",
+      "label": "Question",
+      "default": "Do you have purchase limits?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_13",
+      "label": "Answer",
+      "default": "No purchase limits at this time. Limits may be introduced later if needed."
+    },
+    {
+      "type": "header",
+      "content": "FAQ 14"
+    },
+    {
+      "type": "text",
+      "id": "question_14",
+      "label": "Question",
+      "default": "How can I contact support?"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_14",
+      "label": "Answer",
+      "default": "WhatsApp customer support (details on the website). Members-first resolution."
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ accordion"
+    }
+  ]
+}
+{% endschema %}
