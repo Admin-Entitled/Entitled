@@ -1,0 +1,22 @@
+{
+  "name": "entitled-collection-placement-manager",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "server": "npm run dev --workspace server",
+    "client": "npm run dev --workspace client",
+    "dev": "concurrently --kill-others-on-fail --names SERVER,CLIENT --prefix-colors blue,green \"npm run server\" \"npm run client\"",
+    "build": "npm run build --workspace client",
+    "start": "npm run start --workspace server",
+    "health": "curl http://localhost:4000/api/debug/shopify",
+    "verify": "npm run health && echo 'System Ready'"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}

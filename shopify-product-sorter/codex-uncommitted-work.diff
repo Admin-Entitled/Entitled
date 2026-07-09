@@ -1,0 +1,1204 @@
+diff --git a/ToDo b/ToDo
+index e69de29..85f84fd 100644
+--- a/ToDo
++++ b/ToDo
+@@ -0,0 +1 @@
++//todo: make a version 0 for the trading bot
+\ No newline at end of file
+diff --git a/backend/routes/auth.js b/backend/routes/auth.js
+index 86bb499..d8423df 100644
+--- a/backend/routes/auth.js
++++ b/backend/routes/auth.js
+@@ -5,22 +5,28 @@ import { v4 as uuidv4 } from "uuid";
+ const router = express.Router();
+ const SESSION_DAYS = 30;
+ 
+-function normalizePhone(raw) {
+-  let digits = String(raw || "").replace(/\D/g, "");
+-  if (digits.startsWith("91") && digits.length > 10) {
+-    digits = digits.slice(2);
+-  }
+-  return digits;
++function normalizePhoneToIndian10(raw) {
++  const digits = String(raw || "").replace(/\D/g, "");
++  if (digits.length === 10) return digits;
++  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
++  return "";
++}
++
++function toCanonicalIndianPhone(raw) {
++  const local = normalizePhoneToIndian10(raw);
++  return local ? `+91${local}` : "";
+ }
+ 
+ function buildPhoneCandidates(rawPhone) {
+-  const normalized = normalizePhone(rawPhone);
++  const normalized = normalizePhoneToIndian10(rawPhone);
++  if (!normalized) return [];
+   const raw = String(rawPhone || "").trim();
++  const canonical = `+91${normalized}`;
+   const candidates = [
+     raw,
+-    normalized,
++    canonical,
+     `91${normalized}`,
+-    `+91${normalized}`,
++    normalized,
+   ].filter(Boolean);
+   return [...new Set(candidates)];
+ }
+@@ -34,14 +40,15 @@ router.get("/health", (req, res) => {
+  */
+ router.post("/register", async (req, res) => {
+   const { name, phone, email, pincode } = req.body || {};
++  const canonicalPhone = toCanonicalIndianPhone(phone);
+ 
+-  if (!name || !phone) {
++  if (!name || !canonicalPhone) {
+     return res.status(400).json({ error: "Name and phone are required" });
+   }
+ 
+   const { error } = await supabase.from("members").insert([{
+     name,
+-    phone,
++    phone: canonicalPhone,
+     email: email || null,
+     pincode: pincode || null,
+     // Keep legacy columns populated so registration doesn't fail
+@@ -71,7 +78,7 @@ router.post("/login", async (req, res) => {
+     candidateCount: phoneCandidates.length,
+   });
+ 
+-  if (!phone) {
++  if (!phoneCandidates.length) {
+     console.warn("[AUTH_LOGIN] Missing phone in request body");
+     return res.status(400).json({ error: "Phone is required" });
+   }
+diff --git a/backend/routes/public.js b/backend/routes/public.js
+index baceedf..7afca7a 100644
+--- a/backend/routes/public.js
++++ b/backend/routes/public.js
+@@ -3,12 +3,18 @@ import { supabase } from "../supabase.js";
+ 
+ const router = express.Router();
+ 
+-function normalizePhone(raw) {
+-  let digits = String(raw || "").replace(/\D/g, "");
+-  if (digits.startsWith("91") && digits.length > 10) {
+-    digits = digits.slice(2);
+-  }
+-  return digits;
++function normalizePhoneToIndian10(raw) {
++  const digits = String(raw || "").replace(/\D/g, "");
++  if (digits.length === 10) return digits;
++  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
++  return "";
++}
++
++function buildPhoneCandidates(raw) {
++  const normalized = normalizePhoneToIndian10(raw);
++  if (!normalized) return [];
++  const canonical = `+91${normalized}`;
++  return [canonical, `91${normalized}`, normalized];
+ }
+ 
+ /**
+@@ -26,16 +32,16 @@ router.get("/", (req, res) => {
+ });
+ 
+ router.get("/membership/status", async (req, res) => {
+-  const normalizedPhone = normalizePhone(req.query.phone);
++  const phoneCandidates = buildPhoneCandidates(req.query.phone);
+ 
+-  if (normalizedPhone.length !== 10) {
++  if (!phoneCandidates.length) {
+     return res.status(400).json({ error: "Valid 10-digit phone is required" });
+   }
+ 
+   const { data: approvedRows, error: approvedErr } = await supabase
+     .from("members")
+     .select("id")
+-    .eq("phone", normalizedPhone)
++    .in("phone", phoneCandidates)
+     .eq("status", "approved")
+     .limit(1);
+ 
+@@ -50,7 +56,7 @@ router.get("/membership/status", async (req, res) => {
+   const { data: pendingRows, error: pendingErr } = await supabase
+     .from("members")
+     .select("id")
+-    .eq("phone", normalizedPhone)
++    .in("phone", phoneCandidates)
+     .neq("status", "approved")
+     .limit(1);
+ 
+diff --git a/entitled-shopify/assets/style.scss.liquid b/entitled-shopify/assets/style.scss.liquid
+index 5947a5e..490170c 100644
+--- a/entitled-shopify/assets/style.scss.liquid
++++ b/entitled-shopify/assets/style.scss.liquid
+@@ -1337,8 +1337,8 @@ hr {
+ /*============================================================================
+ #Rich Text Editor
+ ==============================================================================*/
+-.rte {
+-  margin-bottom: $gutter / 2;
++.rte {
++  margin-bottom: $gutter / 2;
+ 
+   a {
+     text-decoration: underline;
+@@ -1357,41 +1357,14 @@ hr {
+     }
+   }
+ 
+-  > div {
+-    margin-bottom: $gutter / 2;
+-  }
+-}
+-
+-.page-content {
+-  ul,
+-  ol {
+-    margin: 0 0 1.25em 1.5em;
+-    padding-left: 0.25em;
+-  }
+-
+-  ul {
+-    list-style: disc outside;
+-  }
+-
+-  ol {
+-    list-style: decimal outside;
+-  }
+-
+-  li {
+-    margin-bottom: 0.6em;
+-  }
+-
+-  mark,
+-  span[style*="background"],
+-  span[style*="background-color"] {
+-    background: transparent !important;
+-    color: inherit !important;
+-  }
+-}
+-
+-.rte--header {
+-  margin-bottom: 0;
+-}
++  > div {
++    margin-bottom: $gutter / 2;
++  }
++}
++
++.rte--header {
++  margin-bottom: 0;
++}
+ 
+ /*============================================================================
+ #Links and Buttons
+diff --git a/entitled-shopify/blocks/ai_gen_block_57dc957.liquid b/entitled-shopify/blocks/ai_gen_block_57dc957.liquid
+index 3f415a0..c3d9ebf 100644
+--- a/entitled-shopify/blocks/ai_gen_block_57dc957.liquid
++++ b/entitled-shopify/blocks/ai_gen_block_57dc957.liquid
+@@ -18,7 +18,7 @@
+     
+     CONTENT (USE EXACT TEXT)
+     LEFT COLUMN FAQs:
+-    Q: What is Entitled?
++    Q: What is Entitled Club?
+     A: A members-only storefront for curated, limited-quantity clothing — top-tier quality, always.
+     
+     Q: Is membership paid?
+@@ -40,8 +40,8 @@
+     Q: What do members get?
+     A: Membership is the customer identity. It grants store access and members-first support.
+     
+-    Q: How is access priced?
+-    A: Pricing reflects member access, verification, and availability.
++    Q: Do you run discounts or sales?
++    A: No. We do not position releases as discounts.
+     
+     Q: Are the products authentic?
+     A: Yes. We handpick from select authentic channels and verify quality before listing.
+@@ -53,7 +53,7 @@
+     A: By default, no. Drops open and close. When they close, they become archive.
+     
+     Q: What is your return policy?
+-    A: No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.
++    A: No-questions-asked returns, subject to basic condition verification and fair use.
+     
+     Q: Do you have purchase limits?
+     A: No purchase limits at this time. Limits may be introduced later if needed.
+@@ -259,7 +259,7 @@
+       <div class="ai-faq-column-{{ ai_gen_id }}" data-column="left">
+         <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="1">
+           <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+-            <span>What is Entitled?</span>
++            <span>What is Entitled Club?</span>
+             <span class="ai-faq-icon-{{ ai_gen_id }}">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <polyline points="6 9 12 15 18 9"></polyline>
+@@ -359,7 +359,7 @@
+ 
+         <div class="ai-faq-item-{{ ai_gen_id }}" data-faq="8">
+           <button class="ai-faq-question-{{ ai_gen_id }}" aria-expanded="false">
+-            <span>How is access priced?</span>
++            <span>Do you run discounts or sales?</span>
+             <span class="ai-faq-icon-{{ ai_gen_id }}">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <polyline points="6 9 12 15 18 9"></polyline>
+@@ -367,7 +367,7 @@
+             </span>
+           </button>
+           <div class="ai-faq-answer-{{ ai_gen_id }}">
+-            <p class="ai-faq-answer-text-{{ ai_gen_id }}">Pricing reflects member access, verification, and availability.</p>
++            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No. We do not position releases as discounts.</p>
+           </div>
+         </div>
+ 
+@@ -423,7 +423,7 @@
+             </span>
+           </button>
+           <div class="ai-faq-answer-{{ ai_gen_id }}">
+-            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.</p>
++            <p class="ai-faq-answer-text-{{ ai_gen_id }}">No-questions-asked returns, subject to basic condition verification and fair use.</p>
+           </div>
+         </div>
+ 
+diff --git a/entitled-shopify/blocks/ai_gen_block_848a831.liquid b/entitled-shopify/blocks/ai_gen_block_848a831.liquid
+index 9da41da..aec0662 100644
+--- a/entitled-shopify/blocks/ai_gen_block_848a831.liquid
++++ b/entitled-shopify/blocks/ai_gen_block_848a831.liquid
+@@ -1,6 +1,6 @@
+ {% doc %}
+   @prompt
+-    Create a modern FAQ section for a Shopify storefront called Entitled with the following requirements:
++    Create a modern FAQ section for a Shopify storefront called Entitled Club with the following requirements:
+     
+     Layout
+     
+@@ -44,7 +44,7 @@
+     
+     Content (Use exactly as written)
+     
+-    Q: What is Entitled?
++    Q: What is Entitled Club?
+     A: A members-only storefront for curated, limited-quantity clothing — top-tier quality, always.
+     
+     Q: Is membership paid?
+@@ -65,8 +65,8 @@
+     Q: What do members get?
+     A: Membership is the customer identity. It grants store access and members-first support.
+     
+-    Q: How is access priced?
+-    A: Pricing reflects member access, verification, and availability.
++    Q: Do you run discounts or sales?
++    A: No. We do not position releases as discounts.
+     
+     Q: Are the products authentic?
+     A: Yes. We handpick from select authentic channels and verify quality before listing.
+@@ -78,7 +78,7 @@
+     A: By default, no. Drops open and close. When they close, they become archive.
+     
+     Q: What is your return policy?
+-    A: No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.
++    A: No-questions-asked returns, subject to basic condition verification and fair use.
+     
+     Q: Do you have purchase limits?
+     A: No purchase limits at this time. Limits may be introduced later if needed.
+@@ -459,7 +459,7 @@
+       "type": "text",
+       "id": "question_1",
+       "label": "Question",
+-      "default": "What is Entitled?"
++      "default": "What is Entitled Club?"
+     },
+     {
+       "type": "textarea",
+@@ -571,13 +571,13 @@
+       "type": "text",
+       "id": "question_8",
+       "label": "Question",
+-      "default": "How is access priced?"
++      "default": "Do you run discounts or sales?"
+     },
+     {
+       "type": "textarea",
+       "id": "answer_8",
+       "label": "Answer",
+-      "default": "Pricing reflects member access, verification, and availability."
++      "default": "No. We do not position releases as discounts."
+     },
+     {
+       "type": "header",
+@@ -641,7 +641,7 @@
+       "type": "textarea",
+       "id": "answer_12",
+       "label": "Answer",
+-      "default": "No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only."
++      "default": "No-questions-asked returns, subject to basic condition verification and fair use."
+     },
+     {
+       "type": "header",
+@@ -682,4 +682,4 @@
+     }
+   ]
+ }
+-{% endschema %}
++{% endschema %}
+\ No newline at end of file
+diff --git a/entitled-shopify/blocks/ai_gen_block_d3dbb19.liquid b/entitled-shopify/blocks/ai_gen_block_d3dbb19.liquid
+index 558f57b..b03f921 100644
+--- a/entitled-shopify/blocks/ai_gen_block_d3dbb19.liquid
++++ b/entitled-shopify/blocks/ai_gen_block_d3dbb19.liquid
+@@ -16,7 +16,7 @@
+     FAQ CONTENT:
+     
+     Membership:
+-    What is Entitled?
++    What is Entitled Club?
+     A members-only storefront for curated, limited-quantity clothing — top-tier quality, always.
+     
+     Is membership paid?
+@@ -38,8 +38,8 @@
+     Membership is the customer identity. It grants store access and members-first support.
+     
+     Products:
+-    How is access priced?
+-    Pricing reflects member access, verification, and availability.
++    Do you run discounts or sales?
++    No. We do not position releases as discounts.
+     
+     Are the products authentic?
+     Yes. We handpick from select authentic channels and verify quality before listing.
+@@ -53,7 +53,7 @@
+     
+     Shipping & Returns:
+     What is your return policy?
+-    No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.
++    No-questions-asked returns, subject to basic condition verification and fair use.
+     
+     Support:
+     Do you have purchase limits?
+@@ -178,7 +178,7 @@
+     
+     <div class="ai-faq-accordion__item-{{ ai_gen_id }}" data-faq-item>
+       <button class="ai-faq-accordion__header-{{ ai_gen_id }}" aria-expanded="false">
+-        <h3 class="ai-faq-accordion__question-{{ ai_gen_id }}">What is Entitled?</h3>
++        <h3 class="ai-faq-accordion__question-{{ ai_gen_id }}">What is Entitled Club?</h3>
+         <span class="ai-faq-accordion__icon-{{ ai_gen_id }}" aria-hidden="true">
+           {% if block.settings.icon_style == 'plus' %}
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+@@ -327,7 +327,7 @@
+ 
+     <div class="ai-faq-accordion__item-{{ ai_gen_id }}" data-faq-item>
+       <button class="ai-faq-accordion__header-{{ ai_gen_id }}" aria-expanded="false">
+-        <h3 class="ai-faq-accordion__question-{{ ai_gen_id }}">How is access priced?</h3>
++        <h3 class="ai-faq-accordion__question-{{ ai_gen_id }}">Do you run discounts or sales?</h3>
+         <span class="ai-faq-accordion__icon-{{ ai_gen_id }}" aria-hidden="true">
+           {% if block.settings.icon_style == 'plus' %}
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+@@ -342,7 +342,7 @@
+         </span>
+       </button>
+       <div class="ai-faq-accordion__content-{{ ai_gen_id }}">
+-        <p class="ai-faq-accordion__answer-{{ ai_gen_id }}">Pricing reflects member access, verification, and availability.</p>
++        <p class="ai-faq-accordion__answer-{{ ai_gen_id }}">No. We do not position releases as discounts.</p>
+       </div>
+     </div>
+ 
+@@ -430,7 +430,7 @@
+         </span>
+       </button>
+       <div class="ai-faq-accordion__content-{{ ai_gen_id }}">
+-        <p class="ai-faq-accordion__answer-{{ ai_gen_id }}">No-questions-asked returns, subject to basic condition verification and fair use. Approved returns are issued as store credits only.</p>
++        <p class="ai-faq-accordion__answer-{{ ai_gen_id }}">No-questions-asked returns, subject to basic condition verification and fair use.</p>
+       </div>
+     </div>
+ 
+@@ -767,4 +767,4 @@
+     }
+   ]
+ }
+-{% endschema %}
++{% endschema %}
+\ No newline at end of file
+diff --git a/entitled-shopify/sections/page.liquid b/entitled-shopify/sections/page.liquid
+index efadcba..17ec81d 100644
+--- a/entitled-shopify/sections/page.liquid
++++ b/entitled-shopify/sections/page.liquid
+@@ -23,11 +23,9 @@
+           <div class="section_title">
+             <h1>{{ page.title }}</h1>
+           </div>
+-          <div class="rte page-content">
+-            {{ page.content }}
+-          </div>
++          {{ page.content }}
+         </div>
+       </div>
+     </div>
+   </div>
+-</div>
++</div>
+\ No newline at end of file
+diff --git a/frontend/user-ui/src/pages/Landing.jsx b/frontend/user-ui/src/pages/Landing.jsx
+index b6a353d..515c934 100644
+--- a/frontend/user-ui/src/pages/Landing.jsx
++++ b/frontend/user-ui/src/pages/Landing.jsx
+@@ -3,14 +3,7 @@ import { useNavigate } from "react-router-dom";
+ import Wordmark from "../components/Wordmark";
+ import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
+ import { exchangeAccess, login } from "../services/auth";
+-
+-function normalizePhone(raw) {
+-  let digits = String(raw || "").replace(/\D/g, "");
+-  if (digits.startsWith("91") && digits.length > 10) {
+-    digits = digits.slice(2);
+-  }
+-  return digits;
+-}
++import { coercePhoneInput, normalizePhoneToIndian10 } from "../utils/phone";
+ 
+ function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
+   if (!shopUrlOrDomain) return null;
+@@ -70,8 +63,8 @@ export default function Landing() {
+   const [err, setErr] = useState("");
+   const [ok, setOk] = useState("");
+ 
+-  const normalizedPhone = normalizePhone(phone);
+-  const isValidPhone = normalizedPhone.length === 10;
++  const normalizedPhone = normalizePhoneToIndian10(phone);
++  const isValidPhone = Boolean(normalizedPhone);
+ 
+   async function tryLoginCandidates(normalized) {
+     const result = await login({ phone: normalized });
+@@ -220,11 +213,12 @@ export default function Landing() {
+                     <input
+                       className="field-input h-10 px-4 placeholder:text-white/30"
+                       value={phone}
+-                      onChange={(e) => setPhone(e.target.value)}
+-                      placeholder="e.g. +91 90000 00000"
++                      onChange={(e) => setPhone(coercePhoneInput(e.target.value))}
++                      placeholder="e.g. 8770199124"
+                       type="tel"
+                       autoComplete="tel"
+-                      inputMode="tel"
++                      inputMode="numeric"
++                      maxLength={10}
+                       aria-invalid={Boolean(err)}
+                       disabled={loading}
+                     />
+diff --git a/frontend/user-ui/src/pages/Login.jsx b/frontend/user-ui/src/pages/Login.jsx
+index 1b5da40..10c228d 100644
+--- a/frontend/user-ui/src/pages/Login.jsx
++++ b/frontend/user-ui/src/pages/Login.jsx
+@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
+ import { exchangeAccess, login } from "../services/auth";
+ import Wordmark from "../components/Wordmark";
+ import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
++import { coercePhoneInput, normalizePhoneToIndian10 } from "../utils/phone";
+ 
+ function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
+   if (!shopUrlOrDomain) return null;
+@@ -55,14 +56,6 @@ function submitShopifyPassword(shopUrlOrDomain, password) {
+   return true;
+ }
+ 
+-function normalizePhone(raw) {
+-  let digits = String(raw || "").replace(/\D/g, "");
+-  if (digits.startsWith("91") && digits.length > 10) {
+-    digits = digits.slice(2);
+-  }
+-  return digits;
+-}
+-
+ export default function Login() {
+   const nav = useNavigate();
+   const [phone, setPhone] = useState("");
+@@ -75,7 +68,12 @@ export default function Login() {
+     setErr("");
+     setOk("");
+     setLoading(true);
+-    const trimmedPhone = normalizePhone(phone);
++    const trimmedPhone = normalizePhoneToIndian10(phone);
++    if (!trimmedPhone) {
++      setErr("Enter a valid 10-digit phone number.");
++      setLoading(false);
++      return;
++    }
+     console.log("[LOGIN] Submit started", {
+       phoneLength: trimmedPhone.length,
+       phonePreview: trimmedPhone ? `***${trimmedPhone.slice(-4)}` : "",
+@@ -234,11 +232,12 @@ export default function Login() {
+                   id="login-phone"
+                   name="phone"
+                   value={phone}
+-                  onChange={(e) => setPhone(e.target.value)}
+-                  placeholder="e.g. 9000000000"
++                  onChange={(e) => setPhone(coercePhoneInput(e.target.value))}
++                  placeholder="e.g. 8770199124"
+                   type="tel"
+                   autoComplete="tel"
+                   inputMode="numeric"
++                  maxLength={10}
+                   aria-describedby="login-instructions login-status"
+                   aria-invalid={Boolean(err)}
+                   required
+diff --git a/frontend/user-ui/src/pages/Register.jsx b/frontend/user-ui/src/pages/Register.jsx
+index fb4f57c..e864324 100644
+--- a/frontend/user-ui/src/pages/Register.jsx
++++ b/frontend/user-ui/src/pages/Register.jsx
+@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
+ import { register } from "../services/auth";
+ import Wordmark from "../components/Wordmark";
+ import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
++import { coercePhoneInput, normalizePhoneToIndian10 } from "../utils/phone";
+ 
+ export default function Register() {
+   const location = useLocation();
+@@ -20,7 +21,7 @@ export default function Register() {
+   useEffect(() => {
+     const prefillPhone = location?.state?.phone;
+     if (typeof prefillPhone === "string" && prefillPhone) {
+-      setForm((p) => ({ ...p, phone: prefillPhone }));
++      setForm((p) => ({ ...p, phone: coercePhoneInput(prefillPhone) }));
+     }
+   }, [location?.state?.phone]);
+ 
+@@ -34,7 +35,18 @@ export default function Register() {
+     setErr("");
+     setLoading(true);
+     try {
+-      const res = await register(form);
++      const normalizedPhone = normalizePhoneToIndian10(form.phone);
++      if (!normalizedPhone) {
++        setErr("Enter a valid 10-digit phone number.");
++        setLoading(false);
++        return;
++      }
++
++      const payload = {
++        ...form,
++        phone: normalizedPhone,
++      };
++      const res = await register(payload);
+       setMsg(res?.data?.status ? "Application submitted for approval." : "Submitted.");
+     } catch (e2) {
+       setErr(e2?.response?.data?.error || "Registration failed");
+@@ -114,10 +126,12 @@ export default function Register() {
+                   <input
+                     className="field-input"
+                     value={form.phone}
+-                    onChange={(e) => set("phone", e.target.value)}
++                    onChange={(e) => set("phone", coercePhoneInput(e.target.value))}
+                     type="tel"
+                     autoComplete="tel"
+                     inputMode="numeric"
++                    maxLength={10}
++                    placeholder="8770199124"
+                   />
+                 </div>
+                 <div>
+diff --git a/package-lock.json b/package-lock.json
+index e0cea0f..bfc0795 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -4,12 +4,490 @@
+   "requires": true,
+   "packages": {
+     "": {
++      "dependencies": {
++        "sharp": "^0.34.5"
++      },
+       "devDependencies": {
+         "autoprefixer": "^10.4.24",
+         "postcss": "^8.5.6",
+         "tailwindcss": "^4.1.18"
+       }
+     },
++    "node_modules/@emnapi/runtime": {
++      "version": "1.8.1",
++      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.8.1.tgz",
++      "integrity": "sha512-mehfKSMWjjNol8659Z8KxEMrdSJDDot5SXMq00dM8BN4o+CLNXQ0xH2V7EchNHV4RmbZLmmPdEaXZc5H2FXmDg==",
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
++    "node_modules/@img/colour": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
++      "integrity": "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@img/sharp-darwin-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.34.5.tgz",
++      "integrity": "sha512-imtQ3WMJXbMY4fxb/Ndp6HBTNVtWCUI0WdobyheGf5+ad6xX8VIDO8u2xE4qc/fr08CKG/7dDseFtn6M6g/r3w==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-arm64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-darwin-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.34.5.tgz",
++      "integrity": "sha512-YNEFAF/4KQ/PeW0N+r+aVVsoIY0/qxxikF2SWdp+NRkmMB7y9LBZAVqQ4yhGCm/H3H270OSykqmQMKLBhBJDEw==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-x64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-arm64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz",
++      "integrity": "sha512-zqjjo7RatFfFoP0MkQ51jfuFZBnVE2pRiaydKJ1G/rHZvnsrHAOcQALIi9sA5co5xenQdTugCvtb1cuf78Vf4g==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-x64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.2.4.tgz",
++      "integrity": "sha512-1IOd5xfVhlGwX+zXv2N93k0yMONvUlANylbJw1eTah8K/Jtpi15KC+WSiaX/nBmbm2HxRM1gZ0nSdjSsrZbGKg==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.2.4.tgz",
++      "integrity": "sha512-bFI7xcKFELdiNCVov8e44Ia4u2byA+l3XtsAj+Q8tfCwO6BQ8iDojYdvoPMqsKDkuoOo+X6HZA0s0q11ANMQ8A==",
++      "cpu": [
++        "arm"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.2.4.tgz",
++      "integrity": "sha512-excjX8DfsIcJ10x1Kzr4RcWe1edC9PquDRRPx3YVCvQv+U5p7Yin2s32ftzikXojb1PIFc/9Mt28/y+iRklkrw==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-ppc64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.2.4.tgz",
++      "integrity": "sha512-FMuvGijLDYG6lW+b/UvyilUWu5Ayu+3r2d1S8notiGCIyYU/76eig1UfMmkZ7vwgOrzKzlQbFSuQfgm7GYUPpA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-riscv64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.2.4.tgz",
++      "integrity": "sha512-oVDbcR4zUC0ce82teubSm+x6ETixtKZBh/qbREIOcI3cULzDyb18Sr/Wcyx7NRQeQzOiHTNbZFF1UwPS2scyGA==",
++      "cpu": [
++        "riscv64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-s390x": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.2.4.tgz",
++      "integrity": "sha512-qmp9VrzgPgMoGZyPvrQHqk02uyjA0/QrTO26Tqk6l4ZV0MPWIW6LTkqOIov+J1yEu7MbFQaDpwdwJKhbJvuRxQ==",
++      "cpu": [
++        "s390x"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-x64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.2.4.tgz",
++      "integrity": "sha512-tJxiiLsmHc9Ax1bz3oaOYBURTXGIRDODBqhveVHonrHJ9/+k89qbLl0bcJns+e4t4rvaNBxaEZsFtSfAdquPrw==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-arm64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.2.4.tgz",
++      "integrity": "sha512-FVQHuwx1IIuNow9QAbYUzJ+En8KcVm9Lk5+uGUQJHaZmMECZmOlix9HnH7n1TRkXMS0pGxIJokIVB9SuqZGGXw==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-x64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz",
++      "integrity": "sha512-+LpyBk7L44ZIXwz/VYfglaX/okxezESc6UxDSoyo2Ks6Jxc4Y7sGjpgU9s4PMgqgjj1gZCylTieNamqA1MF7Dg==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm/-/sharp-linux-arm-0.34.5.tgz",
++      "integrity": "sha512-9dLqsvwtg1uuXBGZKsxem9595+ujv0sJ6Vi8wcTANSFpwV/GONat5eCkzQo/1O6zRIkh0m/8+5BjrRr7jDUSZw==",
++      "cpu": [
++        "arm"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.34.5.tgz",
++      "integrity": "sha512-bKQzaJRY/bkPOXyKx5EVup7qkaojECG6NLYswgktOZjaXecSAeCWiZwwiFf3/Y+O1HrauiE3FVsGxFg8c24rZg==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-ppc64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.34.5.tgz",
++      "integrity": "sha512-7zznwNaqW6YtsfrGGDA6BRkISKAAE1Jo0QdpNYXNMHu2+0dTrPflTLNkpc8l7MUP5M16ZJcUvysVWWrMefZquA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-ppc64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-riscv64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.34.5.tgz",
++      "integrity": "sha512-51gJuLPTKa7piYPaVs8GmByo7/U7/7TZOq+cnXJIHZKavIRHAP77e3N2HEl3dgiqdD/w0yUfiJnII77PuDDFdw==",
++      "cpu": [
++        "riscv64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-riscv64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-s390x": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.34.5.tgz",
++      "integrity": "sha512-nQtCk0PdKfho3eC5MrbQoigJ2gd1CgddUMkabUj+rBevs8tZ2cULOx46E7oyX+04WGfABgIwmMC0VqieTiR4jg==",
++      "cpu": [
++        "s390x"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-s390x": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.34.5.tgz",
++      "integrity": "sha512-MEzd8HPKxVxVenwAa+JRPwEC7QFjoPWuS5NZnBt6B3pu7EG2Ge0id1oLHZpPJdn3OQK+BQDiw9zStiHBTJQQQQ==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-x64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.34.5.tgz",
++      "integrity": "sha512-fprJR6GtRsMt6Kyfq44IsChVZeGN97gTD331weR1ex1c1rypDEABN6Tm2xa1wE6lYb5DdEnk03NZPqA7Id21yg==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-arm64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.34.5.tgz",
++      "integrity": "sha512-Jg8wNT1MUzIvhBFxViqrEhWDGzqymo3sV7z7ZsaWbZNDLXRJZoRGrjulp60YYtV4wfY8VIKcWidjojlLcWrd8Q==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-x64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-wasm32": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-wasm32/-/sharp-wasm32-0.34.5.tgz",
++      "integrity": "sha512-OdWTEiVkY2PHwqkbBI8frFxQQFekHaSSkUIJkwzclWZe64O1X4UlUjqqqLaPbUpMOQk6FBu/HtlGXNblIs0huw==",
++      "cpu": [
++        "wasm32"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
++      "optional": true,
++      "dependencies": {
++        "@emnapi/runtime": "^1.7.0"
++      },
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.34.5.tgz",
++      "integrity": "sha512-WQ3AgWCWYSb2yt+IG8mnC6Jdk9Whs7O0gxphblsLvdhSpSTtmu69ZG1Gkb6NuvxsNACwiPV6cNSZNzt0KPsw7g==",
++      "cpu": [
++        "arm64"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-ia32": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.34.5.tgz",
++      "integrity": "sha512-FV9m/7NmeCmSHDD5j4+4pNI8Cp3aW+JvLoXcTUo0IqyjSfAZJ8dIUmijx1qaJsIiU+Hosw6xM5KijAWRJCSgNg==",
++      "cpu": [
++        "ia32"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-x64/-/sharp-win32-x64-0.34.5.tgz",
++      "integrity": "sha512-+29YMsqY2/9eFEiW93eqWnuLcWcufowXewwSNIT6UwZdUUCrM3oFjMWH/Z6/TMmb4hlFenmfAVbpWeup2jryCw==",
++      "cpu": [
++        "x64"
++      ],
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
+     "node_modules/autoprefixer": {
+       "version": "10.4.24",
+       "resolved": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.24.tgz",
+@@ -113,6 +591,15 @@
+       ],
+       "license": "CC-BY-4.0"
+     },
++    "node_modules/detect-libc": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
++      "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
++      "license": "Apache-2.0",
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/electron-to-chromium": {
+       "version": "1.5.286",
+       "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.286.tgz",
+@@ -214,6 +701,62 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/semver": {
++      "version": "7.7.4",
++      "resolved": "https://registry.npmjs.org/semver/-/semver-7.7.4.tgz",
++      "integrity": "sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==",
++      "license": "ISC",
++      "bin": {
++        "semver": "bin/semver.js"
++      },
++      "engines": {
++        "node": ">=10"
++      }
++    },
++    "node_modules/sharp": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/sharp/-/sharp-0.34.5.tgz",
++      "integrity": "sha512-Ou9I5Ft9WNcCbXrU9cMgPBcCK8LiwLqcbywW3t4oDV37n1pzpuNLsYiAV8eODnjbtQlSDwZ2cUEeQz4E54Hltg==",
++      "hasInstallScript": true,
++      "license": "Apache-2.0",
++      "dependencies": {
++        "@img/colour": "^1.0.0",
++        "detect-libc": "^2.1.2",
++        "semver": "^7.7.3"
++      },
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-darwin-arm64": "0.34.5",
++        "@img/sharp-darwin-x64": "0.34.5",
++        "@img/sharp-libvips-darwin-arm64": "1.2.4",
++        "@img/sharp-libvips-darwin-x64": "1.2.4",
++        "@img/sharp-libvips-linux-arm": "1.2.4",
++        "@img/sharp-libvips-linux-arm64": "1.2.4",
++        "@img/sharp-libvips-linux-ppc64": "1.2.4",
++        "@img/sharp-libvips-linux-riscv64": "1.2.4",
++        "@img/sharp-libvips-linux-s390x": "1.2.4",
++        "@img/sharp-libvips-linux-x64": "1.2.4",
++        "@img/sharp-libvips-linuxmusl-arm64": "1.2.4",
++        "@img/sharp-libvips-linuxmusl-x64": "1.2.4",
++        "@img/sharp-linux-arm": "0.34.5",
++        "@img/sharp-linux-arm64": "0.34.5",
++        "@img/sharp-linux-ppc64": "0.34.5",
++        "@img/sharp-linux-riscv64": "0.34.5",
++        "@img/sharp-linux-s390x": "0.34.5",
++        "@img/sharp-linux-x64": "0.34.5",
++        "@img/sharp-linuxmusl-arm64": "0.34.5",
++        "@img/sharp-linuxmusl-x64": "0.34.5",
++        "@img/sharp-wasm32": "0.34.5",
++        "@img/sharp-win32-arm64": "0.34.5",
++        "@img/sharp-win32-ia32": "0.34.5",
++        "@img/sharp-win32-x64": "0.34.5"
++      }
++    },
+     "node_modules/source-map-js": {
+       "version": "1.2.1",
+       "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz",
+@@ -231,6 +774,13 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/tslib": {
++      "version": "2.8.1",
++      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz",
++      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==",
++      "license": "0BSD",
++      "optional": true
++    },
+     "node_modules/update-browserslist-db": {
+       "version": "1.2.3",
+       "resolved": "https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz",
+diff --git a/package.json b/package.json
+index 99c117c..7c9d69f 100644
+--- a/package.json
++++ b/package.json
+@@ -3,5 +3,8 @@
+     "autoprefixer": "^10.4.24",
+     "postcss": "^8.5.6",
+     "tailwindcss": "^4.1.18"
++  },
++  "dependencies": {
++    "sharp": "^0.34.5"
+   }
+ }
