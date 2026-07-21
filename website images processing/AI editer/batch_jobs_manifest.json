@@ -1,0 +1,62 @@
+{
+  "jobs": [
+    {
+      "job_id": "batches/m107e0n0ugr5ojq7pn1v6dbuq0wbm4nlcop7",
+      "status": "JOB_STATE_EXPIRED",
+      "model_id": "models/gemini-3.1-flash-image",
+      "batch_input_file": "batch_jobs/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f.jsonl",
+      "task_fingerprint": "6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f",
+      "config_fingerprint": "96f078da52bfb1f9f14944347a7f941274c4f9682702faa354cc0793f7722ab5",
+      "api_mode": "batch",
+      "included_product_folders": [
+        "product-17",
+        "product-18"
+      ],
+      "included_output_tasks": [
+        {
+          "product_folder": "product-17",
+          "role": "front",
+          "input_file_path": "input/product-17/front.jpg",
+          "reference_file_path": "references/front.webp",
+          "expected_output_path": "results/product-17/front.jpg",
+          "reason_pending": "manifest_partial"
+        },
+        {
+          "product_folder": "product-17",
+          "role": "back",
+          "input_file_path": "input/product-17/back.jpg",
+          "reference_file_path": "references/back.webp",
+          "expected_output_path": "results/product-17/back.jpg",
+          "reason_pending": "manifest_partial"
+        },
+        {
+          "product_folder": "product-18",
+          "role": "front",
+          "input_file_path": "input/product-18/front.jpg",
+          "reference_file_path": "references/front.webp",
+          "expected_output_path": "results/product-18/front.jpg",
+          "reason_pending": "manifest_partial"
+        },
+        {
+          "product_folder": "product-18",
+          "role": "back",
+          "input_file_path": "input/product-18/back.jpg",
+          "reference_file_path": "references/back.webp",
+          "expected_output_path": "results/product-18/back.jpg",
+          "reason_pending": "manifest_partial"
+        }
+      ],
+      "created_at": "2026-06-03T21:26:15.199347+00:00",
+      "last_checked_at": "2026-06-05T10:46:31.052944+00:00",
+      "estimated_cost": 14.0,
+      "state_terminal": true,
+      "state_active": false,
+      "create_time": "2026-06-03T21:26:10.569287Z",
+      "update_time": "2026-06-05T05:42:28.866561Z",
+      "end_time": "2026-06-05T05:42:28.866561Z",
+      "error_or_status": null,
+      "expired": true,
+      "inspect_file": "batch_jobs/batches_m107e0n0ugr5ojq7pn1v6dbuq0wbm4nlcop7_inspect.json"
+    }
+  ]
+}

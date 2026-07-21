@@ -1,0 +1,26 @@
+{
+  "name": "popular-collection-rotator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Render cron job to refresh Shopify Popular collection weekly",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "dev:dry-run": "DRY_RUN=true tsx src/index.ts",
+    "start:dry-run": "DRY_RUN=true node dist/index.js",
+    "setup:env": "cp -n .env.example .env 2>/dev/null || true"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

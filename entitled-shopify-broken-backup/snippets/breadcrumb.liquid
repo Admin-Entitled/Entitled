@@ -1,0 +1,61 @@
+<!-- /snippets/breadcrumb.liquid -->
+{% comment %}
+  Documentation - http://docs.shopify.com/support/your-website/navigation/creating-a-breadcrumb-navigation
+{% endcomment %}
+<ul>
+{% unless template == 'index' %}
+<li><a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+  
+  
+   
+  {% if template contains 'product' %}
+
+    {% if collection %}
+     
+      {% if collection.handle %}
+        {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+ 			 <li>{{ collection.title | link_to: url | capitalize   }}</li>
+      {% endif %}
+    {% endif %}
+    
+ 	 <li>{{ product.title | capitalize}}</li>
+
+  {% elsif template contains 'collection' and collection.handle %}
+
+    {% if current_tags %}
+      {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
+ 	   <li>{{ collection.title | link_to: url | capitalize  }}</li>
+    {% else %}
+      <li>{{ collection.title | capitalize  }}</li>
+    {% endif %}
+
+  {% elsif template == 'blog' %}
+
+    
+    {% if current_tags %}
+     <li> {{ blog.title | link_to: blog.url | capitalize   }} </li>
+      <span>{{ current_tags | join: " + " }}</span>
+    {% else %}
+    <li>{{ blog.title | capitalize  }}</li>
+    {% endif %}
+
+  {% elsif template == 'article' %}
+
+   
+  <li>{{ blog.title | link_to: blog.url }}</li>
+    
+    <li>{{ article.title | capitalize }}</li>
+
+  {% elsif template contains 'page' %}
+  <li><a href="#">Pages</a></li>
+  <li>{{ page.title | capitalize  }}</li>
+
+  {% else %}
+
+ 
+   <li>{{ page_title  | capitalize }}</li>
+
+  {% endif %}
+
+{% endunless %}
+</ul>

@@ -1,0 +1,78 @@
+<div class="header_height"></div>
+
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="content">
+  <!-- Content Start -->
+  <div class="container">
+    <div class="grid">
+      {% if settings.blog_sidebar_enable %}
+        <div class="grid__item three-twelfths small--one-whole medium--one-whole">
+          {%  include 'blog-sidebar' %}
+        </div>
+      {% endif %}
+      {% paginate blog.articles by settings.blog_pagination_limit %}
+        <div class="grid__item {% if settings.blog_sidebar_enable %}nine-twelfths{% else %}one-whole{% endif %} small--one-whole medium--one-whole">
+
+          <div class="blog_listing">
+
+            <div class="blog_grid_list grid">
+              {% for article in blog.articles %}
+                <div class="grid__item {% if settings.blog_sidebar_enable %}one-half{% else %}one-third{% endif %} small--one-whole medium--one-whole">
+
+                  <div class="blog_item">
+                    <a href="{{ article.url }}" class="blog_img">
+                      {% if article.image %}<img src="{{ article.image.src | img_url: 'original' }}" alt="{{ article.image.alt | escape }}"/>
+                      {% else %}
+                        {{ 'image' | placeholder_svg_tag: 'icon icon--placeholder' }}{% endif %}
+                    </a>
+
+                    <div class="blog_desc">
+                      <a href="{{ article.url }}">{{ article.title }}</a>
+                      <h6>By
+                        <span>{{ article.author }}</span>
+                        On
+                        <span>{{ article.published_at | date: "%d,%m,%Y" }}</span>
+                        Comments
+                        <span>({{ article.comments_count }})</span>
+                      </h6>
+                      {% if article.excerpt.size > 0 %}
+                        <p>{{ article.excerpt }}</p>
+                      {% else %}
+                        <p>{{ article.content | strip_html | truncatewords: 20 }}</p>
+                      {% endif %}
+
+                    </div>
+                  </div>
+
+                </div>
+              {% endfor %}
+
+            </div>
+
+          </div>
+
+          {% if paginate.pages > 1 %}
+            <div class="pagination">
+              <!-- Pagination Start -->
+              {% include 'pagination' %}
+            </div>
+          {% endif %}
+          <!-- Pagination End -->
+
+        </div>
+      {% endpaginate %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entitled size preference QA fixture</title>
+  <link rel="stylesheet" href="../../assets/entitled-overrides.css">
+  <style>
+    body { margin: 0; padding: 24px; font-family: Arial, sans-serif; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #fff; }
+    main { max-width: 1100px; margin: 32px auto; }
+    .fixture-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .product_item { padding: 16px; background: #fff; }
+    @media (max-width: 767px) { .fixture-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>ENTITLED</strong>
+    <button type="button" class="size-preference-control" data-size-preference-open>
+      <span data-size-preference-control-label>Choose size</span>
+    </button>
+  </header>
+  <main>
+    <button type="button" class="size-preference-control size-preference-control--toolbar" data-size-preference-open>
+      <span data-size-preference-control-label>Choose size</span>
+    </button>
+    <div class="fixture-grid">
+      <article class="product_item" data-size-product data-product-options='[{"name":"Color","values":["Black"]},{"name":"Size","values":["S","M"]}]' data-product-variants='[{"id":1,"available":true,"options":["Black","M"]},{"id":2,"available":true,"options":["Black","S"]}]'>
+        <script type="application/json" data-product-variants>[{"id":1,"available":true,"options":["Black","M"]},{"id":2,"available":true,"options":["Black","S"]}]</script>
+        <h2>Available</h2><p class="product-size-status" data-size-preference-status hidden></p>
+      </article>
+      <article class="product_item" data-size-product data-product-options='[{"name":"Size","values":["M","L"]}]' data-product-variants='[{"id":3,"available":false,"options":["M"]},{"id":4,"available":true,"options":["L"]}]'>
+        <script type="application/json" data-product-variants>[{"id":3,"available":false,"options":["M"]},{"id":4,"available":true,"options":["L"]}]</script>
+        <h2>Sold out in M</h2><p class="product-size-status" data-size-preference-status hidden></p>
+      </article>
+      <article class="product_item" data-size-product data-product-options='[{"name":"Size","values":["S","L"]}]' data-product-variants='[{"id":5,"available":true,"options":["S"]},{"id":6,"available":true,"options":["L"]}]'>
+        <script type="application/json" data-product-variants>[{"id":5,"available":true,"options":["S"]},{"id":6,"available":true,"options":["L"]}]</script>
+        <h2>M unavailable</h2><p class="product-size-status" data-size-preference-status hidden></p>
+      </article>
+      <article class="product_item" data-size-product data-product-options='[{"name":"Color","values":["Medium Blue"]}]' data-product-variants='[{"id":7,"available":true,"options":["Medium Blue"]}]'>
+        <script type="application/json" data-product-variants>[{"id":7,"available":true,"options":["Medium Blue"]}]</script>
+        <h2>Not applicable</h2><p class="product-size-status" data-size-preference-status hidden></p>
+      </article>
+    </div>
+  </main>
+  <div class="size-preference" data-size-preference-root data-label-choose="Choose size" data-label-selected="Size: {{ size }}" data-status-available="Your size {{ size }} is available" data-status-sold-out="Sold out in {{ size }}" data-status-unavailable="{{ size }} unavailable" data-status-one-size="One size" data-status-not-applicable="Size preference not applicable" data-status-saved="Preferred size updated to {{ size }}">
+    <div class="size-preference__backdrop" data-size-preference-dialog role="dialog" aria-modal="true" aria-labelledby="SizePreferenceTitle" aria-describedby="SizePreferenceDescription" tabindex="-1" hidden>
+      <div class="size-preference__panel">
+        <button type="button" class="size-preference__close" data-size-preference-close aria-label="Close size selection">×</button>
+        <span class="size-preference__eyebrow">Your fit</span>
+        <h2 id="SizePreferenceTitle">What size do you usually wear?</h2>
+        <p id="SizePreferenceDescription">Choose your usual clothing size. We’ll show its availability without hiding any products.</p>
+        <form data-size-preference-form>
+          <fieldset><legend class="visually-hidden">Choose your preferred clothing size</legend><div class="size-preference__choices" data-size-preference-choices></div></fieldset>
+          <div class="size-preference__actions">
+            <button type="submit" class="size-preference__confirm" data-size-preference-confirm disabled>Save my size</button>
+            <button type="button" class="size-preference__skip" data-size-preference-skip>Skip for now</button>
+            <button type="button" class="size-preference__clear" data-size-preference-clear>Clear preferred size</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <p class="visually-hidden" aria-live="polite" data-size-preference-live></p>
+  </div>
+  <script src="../../assets/size-preference.js"></script>
+</body>
+</html>

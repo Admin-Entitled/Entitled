@@ -1,0 +1,135 @@
+{
+  "task_fingerprint": "6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f",
+  "config_fingerprint": "19f967ba6a68e3435dc9ad37fc0538d1961fbee5e2038c394274d13097094fc5",
+  "profile": {
+    "name": "flash_image",
+    "label": "Gemini 3.1 Flash Image",
+    "model_id": "gemini-3.1-flash-image",
+    "quality": "good",
+    "speed": "fast",
+    "estimated_standard_cost_inr_per_image": 7.0,
+    "description": "Recommended for bulk ecommerce image editing. Faster and cheaper."
+  },
+  "pending_tasks_log": {
+    "scan_timestamp": "2026-06-05T11:19:05.427194+00:00",
+    "total_product_folders_scanned": 2,
+    "top_processing_paused": true,
+    "selected_completion_rule": "front_back_only",
+    "pending_tasks": [
+      {
+        "product_folder": "product-17",
+        "role": "front",
+        "input_file_path": "input/product-17/front.jpg",
+        "reference_file_path": "references/front.webp",
+        "expected_output_path": "results/product-17/front.jpg",
+        "reason_pending": "manifest_partial"
+      },
+      {
+        "product_folder": "product-17",
+        "role": "back",
+        "input_file_path": "input/product-17/back.jpg",
+        "reference_file_path": "references/back.webp",
+        "expected_output_path": "results/product-17/back.jpg",
+        "reason_pending": "manifest_partial"
+      },
+      {
+        "product_folder": "product-18",
+        "role": "front",
+        "input_file_path": "input/product-18/front.jpg",
+        "reference_file_path": "references/front.webp",
+        "expected_output_path": "results/product-18/front.jpg",
+        "reason_pending": "manifest_partial"
+      },
+      {
+        "product_folder": "product-18",
+        "role": "back",
+        "input_file_path": "input/product-18/back.jpg",
+        "reference_file_path": "references/back.webp",
+        "expected_output_path": "results/product-18/back.jpg",
+        "reason_pending": "manifest_partial"
+      }
+    ],
+    "skipped_folders": [],
+    "estimated_standard_api_cost": 28.0,
+    "estimated_batch_api_cost": 14.0,
+    "estimated_standard_completion_time": "~360 seconds",
+    "estimated_batch_completion_time": "asynchronous, target within 24 hours",
+    "pending_front_outputs": 2,
+    "pending_back_outputs": 2,
+    "total_pending_outputs": 4,
+    "products": [
+      {
+        "product_folder": "product-17",
+        "input_fingerprint": "0a04123a752815201b90fc96fcff9b3eadc69e84581c23553cfa44d7faf1ef14",
+        "input_files": [
+          {
+            "name": "back.jpg",
+            "size": 10125974,
+            "mtime_ns": 1768320666000000000
+          },
+          {
+            "name": "front.jpg",
+            "size": 11081896,
+            "mtime_ns": 1768319520000000000
+          },
+          {
+            "name": "top.jpg",
+            "size": 3745195,
+            "mtime_ns": 1768319484000000000
+          }
+        ],
+        "front_input_found": true,
+        "back_input_found": true,
+        "top_processing_paused": true,
+        "expected_outputs": [
+          "results/product-17/back.jpg",
+          "results/product-17/front.jpg"
+        ],
+        "front_output_found": false,
+        "back_output_found": false,
+        "manifest_success_fingerprint_unchanged": false,
+        "output_status_per_role": {
+          "front": "missing",
+          "back": "missing",
+          "top": "paused_top_processing"
+        }
+      },
+      {
+        "product_folder": "product-18",
+        "input_fingerprint": "1901ad20efe932a1442772d05be45b675d985609cc1e0b89632b01c3c09b17d3",
+        "input_files": [
+          {
+            "name": "back.jpg",
+            "size": 10596527,
+            "mtime_ns": 1768319230000000000
+          },
+          {
+            "name": "front.jpg",
+            "size": 7205705,
+            "mtime_ns": 1768318898000000000
+          },
+          {
+            "name": "top.jpg",
+            "size": 2399892,
+            "mtime_ns": 1768319134000000000
+          }
+        ],
+        "front_input_found": true,
+        "back_input_found": true,
+        "top_processing_paused": true,
+        "expected_outputs": [
+          "results/product-18/back.jpg",
+          "results/product-18/front.jpg"
+        ],
+        "front_output_found": false,
+        "back_output_found": false,
+        "manifest_success_fingerprint_unchanged": false,
+        "output_status_per_role": {
+          "front": "missing",
+          "back": "missing",
+          "top": "paused_top_processing"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "source_image_path": "product-4/top.jpg",
+  "reference_path": "references/top.webp",
+  "bbox": [
+    109,
+    115,
+    914,
+    911
+  ],
+  "reference_bbox": [
+    0,
+    0,
+    1024,
+    1024
+  ],
+  "bbox_aspect_ratio": 1.0113,
+  "reference_aspect_ratio": 1.0,
+  "scale_used": 0.5831,
+  "rembg_success": true,
+  "reference_mismatch_score": 2.5496,
+  "accepted": false,
+  "rejection_reason": "Reference mismatch too high. Final output skipped.",
+  "attempt": 1
+}

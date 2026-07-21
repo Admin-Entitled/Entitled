@@ -1,0 +1,289 @@
+{% doc %}
+  @prompt
+    Create a Shopify section named “FAQ Membership Flow”.
+    
+    Layout:
+    - Horizontal strip on desktop
+    - Vertical stacked on mobile
+    
+    Content:
+    Apply → Approval (10–15 days) → Access Granted
+    
+    Settings:
+    - Background color or gradient picker
+    - Font family picker
+    - Font size control
+    - Alignment control
+    - Animation toggle (slide-in)
+    
+    Design:
+    - Clean divider-style strip
+    - No icons required
+    - No slider
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-faq-membership-flow-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+    {% if block.settings.use_gradient %}
+      background: linear-gradient(to right, {{ block.settings.gradient_color_1 }}, {{ block.settings.gradient_color_2 }});
+    {% else %}
+      background-color: {{ block.settings.background_color }};
+    {% endif %}
+  }
+
+  .ai-faq-membership-flow__container-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: {{ block.settings.alignment }};
+    align-items: center;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    {% if block.settings.enable_animation %}
+      opacity: 0;
+      transform: translateX(-30px);
+      animation: ai-faq-slide-in-{{ ai_gen_id }} 0.8s ease-out forwards;
+    {% endif %}
+  }
+
+  {% if block.settings.enable_animation %}
+    @keyframes ai-faq-slide-in-{{ ai_gen_id }} {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  {% endif %}
+
+  .ai-faq-membership-flow__step-{{ ai_gen_id }} {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+
+  .ai-faq-membership-flow__step-text-{{ ai_gen_id }} {
+    font-family: {{ block.settings.font_family.family }}, {{ block.settings.font_family.fallback_families }};
+    font-weight: {{ block.settings.font_family.weight }};
+    font-size: {{ block.settings.font_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .ai-faq-membership-flow__divider-{{ ai_gen_id }} {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 2px;
+    background-color: {{ block.settings.divider_color }};
+    position: relative;
+  }
+
+  .ai-faq-membership-flow__divider-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid {{ block.settings.divider_color }};
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-faq-membership-flow__container-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ai-faq-membership-flow__divider-{{ ai_gen_id }} {
+      width: 2px;
+      height: 40px;
+      transform: rotate(90deg);
+    }
+
+    .ai-faq-membership-flow__divider-{{ ai_gen_id }}::after {
+      right: auto;
+      top: auto;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-90deg);
+    }
+
+    .ai-faq-membership-flow__step-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<faq-membership-flow-{{ ai_gen_id }} class="ai-faq-membership-flow-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-faq-membership-flow__container-{{ ai_gen_id }}">
+    <div class="ai-faq-membership-flow__step-{{ ai_gen_id }}">
+      <p class="ai-faq-membership-flow__step-text-{{ ai_gen_id }}">{{ block.settings.step_1_text }}</p>
+    </div>
+
+    <div class="ai-faq-membership-flow__divider-{{ ai_gen_id }}"></div>
+
+    <div class="ai-faq-membership-flow__step-{{ ai_gen_id }}">
+      <p class="ai-faq-membership-flow__step-text-{{ ai_gen_id }}">{{ block.settings.step_2_text }}</p>
+    </div>
+
+    <div class="ai-faq-membership-flow__divider-{{ ai_gen_id }}"></div>
+
+    <div class="ai-faq-membership-flow__step-{{ ai_gen_id }}">
+      <p class="ai-faq-membership-flow__step-text-{{ ai_gen_id }}">{{ block.settings.step_3_text }}</p>
+    </div>
+  </div>
+</faq-membership-flow-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FaqMembershipFlow{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        if (this.querySelector('.ai-faq-membership-flow__container-{{ ai_gen_id }}')) {
+          this.style.display = 'block';
+        }
+      }
+    }
+
+    customElements.define('faq-membership-flow-{{ ai_gen_id }}', FaqMembershipFlow{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Membership Flow",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "step_1_text",
+      "label": "Step 1 text",
+      "default": "Apply"
+    },
+    {
+      "type": "text",
+      "id": "step_2_text",
+      "label": "Step 2 text",
+      "default": "Approval (10–15 days)"
+    },
+    {
+      "type": "text",
+      "id": "step_3_text",
+      "label": "Step 3 text",
+      "default": "Access Granted"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use gradient background",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_1",
+      "label": "Gradient start color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "gradient_color_2",
+      "label": "Gradient end color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "font_family",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable slide-in animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Membership Flow"
+    }
+  ]
+}
+{% endschema %}

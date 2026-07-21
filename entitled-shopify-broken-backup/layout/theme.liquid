@@ -1,0 +1,667 @@
+<!doctype html>
+<!--[if IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]> <html class="ie9 no-js"> <![endif]-->
+<!-- [if (gt IE 9)|!(IE)]><! -->
+<html class="no-js">
+  <!-- <![endif] -->
+  <head>
+    <meta name="google-site-verification" content="UPFbmqeC541XFiKo5IBK3VuA0ZYJ6U0c4_zTBO1BZ7o">
+    <!-- Basic page needs ================================================== -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    {% if settings.favicon_enable %}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url:'icon' }}" type="image/png">
+    {% endif %}
+
+    <!-- Title and description ================================================== -->
+    <title>
+      {{ page_title }}
+      {% if current_tags -%}
+        {%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+      {%- endif %}
+      {% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}
+      {% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+    </title>
+
+    {% if page_description %}
+      <meta name="description" content="{{ page_description | escape }}">
+      <meta name="keywords" content="{{ page_description | escape }}">
+    {% endif %}
+
+    <!-- Helpers ================================================== -->
+    {% include 'social-meta-tags' %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_primary }}">
+
+    <!-- CSS ================================================== -->
+
+    {{ 'style.scss.css' | asset_url | stylesheet_tag }}
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu:400,400italic,300,500,700"
+      rel="stylesheet"
+      type="text/css"
+    >
+    {{ 'font-awesome.css' | asset_url | stylesheet_tag }}
+    {{ 'owl.carousel.css' | asset_url | stylesheet_tag }}
+    {{ 'jquery-ui.css' | asset_url | stylesheet_tag }}
+    <!-- js ================================================== -->
+    {{ 'jquery.min.js' | asset_url | script_tag }}
+    {{ 'jquery.bxslider.js' | asset_url | script_tag }}
+    {{ 'owl.carousel.min.js' | asset_url | script_tag }}
+    {{ 'parallax.js' | asset_url | script_tag }}
+    {{ 'jquery.meanmenu.js' | asset_url | script_tag }}
+    {{ 'jquery.simplr.smoothscroll.min.js' | asset_url | script_tag }}
+    {{ 'jquery.mousewheel.min.js' | asset_url | script_tag }}
+    {{ 'jquery-ui.js' | asset_url | script_tag }}
+    {{ 'grids.js' | asset_url | script_tag }}
+    {{ 'jquery.cookie.js' | asset_url | script_tag }}
+
+    <!-- Header hook for plugins ================================================== -->
+    {{ content_for_header }}
+
+    {% include 'oldIE-js' %}
+
+    <!-- Body font -->
+    {% assign google_font_url = '' %}
+
+    {% if settings.body_custom_font != blank %}
+      {% assign words = settings.body_custom_font | split: ',' %}
+      {% assign google_font_url = google_font_url
+        | append: '|'
+        | append: words.first
+        | replace: ' ', '+'
+        | replace: "'", ''
+        | append: ':400,400italic,500,500italic,700,700italic,900,900italic,300,300italic'
+      %}
+    {% endif %}
+
+    {% if google_font_url != blank %}
+      {{ google_font_url | remove_first: '|' | prepend: '//fonts.googleapis.com/css?family=' | stylesheet_tag }}
+    {% endif %}
+
+    {% if settings.heading_font != blank %}
+      {% assign words = settings.heading_custom_font | split: ',' %}
+      {% assign google_font_url = google_font_url
+        | append: '|'
+        | append: words.first
+        | replace: ' ', '+'
+        | replace: "'", ''
+        | append: ':400,400italic,500,500italic,700,700italic,900,900italic,300,300italic'
+      %}
+    {% endif %}
+
+    {% if google_font_url != blank %}
+      {{ google_font_url | remove_first: '|' | prepend: '//fonts.googleapis.com/css?family=' | stylesheet_tag }}
+    {% endif %}
+
+    {{ 'modernizr.min.js' | asset_url | script_tag }}
+    {{ 'hulkthemes.js' | asset_url | script_tag }}
+
+    {% if settings.enable_google_map and template == 'page.contact' %}
+      {{ '//maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false' | script_tag }}
+    {% endif %}
+
+    {% comment %}
+      If you store has customer accounts disabled, you can remove the following JS file
+    {% endcomment %}
+    {% if template contains 'customers' %}
+      {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+      {{ 'customer_area.js' | shopify_asset_url | script_tag }}
+    {% endif %}
+
+    <!-- Ubuntu Google Font -->
+
+    <script>
+      document.createElement('footer');
+      document.createElement('section');
+      document.createElement('header');
+      document.createElement('figure');
+      document.createElement('figcaption');
+    </script>
+    {{ 'entitled-overrides.css' | asset_url | stylesheet_tag }}
+  </head>
+
+  {% comment %}
+    Add the page template as a class for easy page or template specific styling.
+  {% endcomment %}
+
+  <body
+    data-shop="{{ shop.name }}"
+    id="{{ page_title | handle }}"
+    class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}"
+  >
+    {% unless template == 'password' %}
+      {% if settings.newsletter_enable %}
+        <div class="newsletter_popup">
+          <div class="newsletter_form">
+            <h2>{{ settings.popup_newsletter_title }}</h2>
+            <p>{{ settings.popup_descrition }}</p>
+
+            <span class="close_pop"><i class="fa fa-times"></i></span>
+
+            {% if settings.newsletter_form_action != blank %}
+              {% assign form_action = settings.newsletter_form_action %}
+              <form
+                action="{{ form_action}}"
+                method="post"
+                id="mc-embedded-subscribe-form"
+                name="mc-embedded-subscribe-form"
+                target="_blank"
+              >
+                <div class="row">
+                  <input type="email" placeholder="Enter your E-mail" required>
+                </div>
+                <div class="submit_row">
+                  <button type="submit">
+                    Subscribe <span><i class="fa fa-angle-right"></i></span>
+                  </button>
+                </div>
+              </form>
+            {% else %}
+              {% form 'customer' %}
+                {{ form.errors | default_errors }}
+                {% if form.posted_successfully? %}
+                  <p class="form--success">{{ 'contact.form.post_success' | t }}</p>
+                {% else %}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <div class="row">
+                    <input
+                      type="email"
+                      class="input-group-field"
+                      value="{% if customer %}{{ customer.email }}{% endif %}"
+                      placeholder="Enter your E-mail"
+                      name="contact[email]"
+                      id="mail"
+                      required
+                    >
+                  </div>
+                  <div class="submit_row">
+                    <button type="submit">
+                      Subscribe <span><i class="fa fa-angle-right"></i></span>
+                    </button>
+                  </div>
+                {% endif %}
+              {% endform %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endunless %}
+
+    {% if template == '404' or template == 'password' %}
+      {{ content_for_layout }}
+    {% endif %}
+
+    {% unless template == '404' or template == 'password' %}
+      <div id="PageContainer">
+        {% include 'header' %}
+
+        {{ content_for_layout }}
+
+        {% include 'footer' %}
+      </div>
+    {% endunless %}
+
+    {% unless template == '404' or template == 'password' %}
+      <div id="CartDrawer" class="drawer drawer--right">
+        <div class="drawer__header">
+          <div class="drawer__title h3">{{ 'cart.general.title' | t }}</div>
+          <div class="drawer__close js-drawer-close">
+            <button type="button" class="icon-fallback-text">
+              <span class="icon icon-x" aria-hidden="true"></span>
+              <span class="fallback-text">{{ 'cart.general.close_cart' | t | json }}</span>
+            </button>
+          </div>
+        </div>
+        <div id="CartContainer"></div>
+      </div>
+    {% endunless %}
+
+    {{ 'jquery.history.js' | asset_url | script_tag }}
+    {{ 'fastclick.min.js' | asset_url | script_tag }}
+    {{ 'chicago.js' | asset_url | script_tag }}
+    <script src="{{ 'header-search.js' | asset_url }}" defer></script>
+    <script src="{{ 'collection-filters.js' | asset_url }}" defer></script>
+
+    {% comment %}
+      Template-specific js
+    {% endcomment %}
+
+    <script>
+      {% if newHash %}
+        $(function() {
+          hulkthemes.updateHash('{{ newHash }}');
+        });
+      {% endif %}
+      {% if resetPassword %}
+        $(function() {
+          hulkthemes.resetPasswordSuccess();
+        });
+      {% endif %}
+    </script>
+
+    {% comment %}
+      Ajaxify your cart with this plugin.
+      Documentation:
+        - http://shopify.com/plhulkthemesanetx#ajax-cart
+    {% endcomment %}
+
+    {% if settings.enable_product_image_zoom %}
+      {{ 'jquery.zoom.js' | asset_url | script_tag }}
+    {% endif %}
+
+    {% if settings.ajax_cart_enable %}
+      {{ 'handlebars.min.js' | asset_url | script_tag }}
+
+      {% include 'ajax-cart-template' %}
+      {{ 'ajax-cart.js' | asset_url | script_tag }}
+      <script>
+         jQuery(function($) {
+           ajaxCart.init({
+             formSelector: '#AddToCartForm',
+             cartContainer: '#CartContainer',
+             addToCartSelector: '#AddToCart',
+             cartCountSelector: '#CartCount',
+             cartCostSelector: '#CartCost',
+             moneyFormat: {{ shop.money_format | json }}
+           });
+         });
+
+         jQuery('body').on('ajaxCart.afterCartLoad', function(evt, cart) {
+           // Bind to 'ajaxCart.afterCartLoad' to run any javascript after the cart has loaded in the DOM
+           hulkthemes.RightDrawer.open();
+        });
+      </script>
+    {% endif %}
+
+    <script>
+      // ========= swatch =============
+      jQuery(function () {
+        jQuery('.swatch :radio').change(function () {
+          var optionIndex = jQuery(this).closest('.swatch').attr('data-option-index');
+          var optionValue = jQuery(this).val();
+          jQuery(this)
+            .closest('form')
+            .find('.single-option-selector')
+            .eq(optionIndex)
+            .val(optionValue)
+            .trigger('change');
+        });
+      });
+    </script>
+
+    <div id="messageBox"></div>
+    <div class="loading-modal" data-translate="cart.ajax_cart.loading" style="display: none;">Loading...</div>
+    <div class="body_overlay"></div>
+
+    <style>
+      /* Product image click cursor */
+      .template-product .product_slider li img {
+        cursor: zoom-in !important;
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+      }
+
+      /* Fullscreen image popup */
+      .entitled-image-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.92);
+        z-index: 999999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        box-sizing: border-box;
+      }
+
+      .entitled-image-modal.is-open {
+        display: flex;
+      }
+
+      .entitled-image-modal img {
+        max-width: 94vw;
+        max-height: 90vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        background: #f4f1ed;
+        cursor: default !important;
+      }
+
+      .entitled-image-modal-close {
+        position: fixed;
+        top: 18px;
+        right: 22px;
+        z-index: 1000001;
+        background: transparent !important;
+        color: #ffffff !important;
+        border: 0 !important;
+        font-size: 38px;
+        line-height: 1;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .entitled-modal-arrow {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1000001;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.94) !important;
+        color: #111111 !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 34px;
+        line-height: 1;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .entitled-modal-prev {
+        left: 24px;
+      }
+
+      .entitled-modal-next {
+        right: 24px;
+      }
+
+      @media screen and (max-width: 767px) {
+        .entitled-image-modal {
+          padding: 14px;
+        }
+
+        .entitled-image-modal img {
+          max-width: 92vw;
+          max-height: 84vh;
+        }
+
+        .entitled-modal-arrow {
+          width: 36px;
+          height: 36px;
+          font-size: 28px;
+        }
+
+        .entitled-modal-prev {
+          left: 10px;
+        }
+
+        .entitled-modal-next {
+          right: 10px;
+        }
+
+        .entitled-image-modal-close {
+          top: 12px;
+          right: 16px;
+          font-size: 34px;
+        }
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!document.body.classList.contains("template-product")) return;
+
+        const slider = document.querySelector(".product_slider");
+        const slides = Array.from(document.querySelectorAll(".product_slider li"));
+        const pagerLinks = Array.from(document.querySelectorAll("#bx-pager a"));
+        const sliderPart = document.querySelector(".product_slider_section .slider_part");
+
+        if (!slider || !slides.length || !sliderPart) return;
+
+        let currentIndex = 0;
+        let lastTouchOpenTime = 0;
+
+        slides.forEach(function (slide, index) {
+          if (slide.classList.contains("active")) {
+            currentIndex = index;
+          }
+        });
+
+        function showSlide(index) {
+          if (index < 0) index = slides.length - 1;
+          if (index >= slides.length) index = 0;
+
+          currentIndex = index;
+
+          slides.forEach(function (slide, i) {
+            slide.classList.toggle("active", i === currentIndex);
+            slide.style.display = i === currentIndex ? "flex" : "none";
+            slide.style.zIndex = i === currentIndex ? "50" : "0";
+          });
+
+          pagerLinks.forEach(function (link, i) {
+            link.classList.toggle("active", i === currentIndex);
+          });
+        }
+
+        pagerLinks.forEach(function (link, index) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showSlide(index);
+          });
+        });
+
+        if (!sliderPart.querySelector(".entitled-gallery-prev")) {
+          const prevBtn = document.createElement("button");
+          prevBtn.type = "button";
+          prevBtn.className = "entitled-gallery-arrow entitled-gallery-prev";
+          prevBtn.innerHTML = "‹";
+
+          const nextBtn = document.createElement("button");
+          nextBtn.type = "button";
+          nextBtn.className = "entitled-gallery-arrow entitled-gallery-next";
+          nextBtn.innerHTML = "›";
+
+          sliderPart.appendChild(prevBtn);
+          sliderPart.appendChild(nextBtn);
+
+          prevBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showSlide(currentIndex - 1);
+          });
+
+          nextBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            showSlide(currentIndex + 1);
+          });
+        }
+
+        showSlide(currentIndex);
+
+        const modal = document.createElement("div");
+        modal.className = "entitled-image-modal";
+        modal.innerHTML = `
+          <button type="button" class="entitled-image-modal-close" aria-label="Close">×</button>
+          <button type="button" class="entitled-modal-arrow entitled-modal-prev" aria-label="Previous image">‹</button>
+          <img src="" alt="Product image">
+          <button type="button" class="entitled-modal-arrow entitled-modal-next" aria-label="Next image">›</button>
+        `;
+        document.body.appendChild(modal);
+
+        const modalImg = modal.querySelector("img");
+        const closeBtn = modal.querySelector(".entitled-image-modal-close");
+        const modalPrev = modal.querySelector(".entitled-modal-prev");
+        const modalNext = modal.querySelector(".entitled-modal-next");
+
+        function getLargeShopifyImage(src) {
+          if (!src) return "";
+
+          src = src.startsWith("//") ? "https:" + src : src;
+
+          return src.replace(
+            /_(pico|icon|thumb|small|compact|medium|large|grande|1024x1024|2048x2048|\d+x\d+)(\.[a-zA-Z0-9]+)(\?v=\d+)?/,
+            "$2$3"
+          );
+        }
+
+        function getSlideImage(index) {
+          const slide = slides[index];
+          if (!slide) return null;
+          return slide.querySelector("img");
+        }
+
+        function updateModalImage(index) {
+          if (index < 0) index = slides.length - 1;
+          if (index >= slides.length) index = 0;
+
+          currentIndex = index;
+
+          const img = getSlideImage(currentIndex);
+          if (!img) return;
+
+          const src = img.currentSrc || img.getAttribute("src");
+          modalImg.src = getLargeShopifyImage(src);
+
+          showSlide(currentIndex);
+        }
+
+        function openModal(index) {
+          updateModalImage(index);
+          modal.classList.add("is-open");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal() {
+          modal.classList.remove("is-open");
+          modalImg.src = "";
+          document.body.style.overflow = "";
+        }
+
+        function getClickedProductImage(target) {
+          return target && target.closest
+            ? target.closest(".template-product .product_slider li img")
+            : null;
+        }
+
+        function openFromProductImage(e) {
+          const img = getClickedProductImage(e.target);
+          if (!img) return;
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          const clickedSlide = img.closest("li");
+          const index = slides.indexOf(clickedSlide);
+
+          openModal(index >= 0 ? index : currentIndex);
+        }
+
+        /* Desktop click */
+        document.addEventListener(
+          "click",
+          function (e) {
+            if (Date.now() - lastTouchOpenTime < 600) return;
+            openFromProductImage(e);
+          },
+          true
+        );
+
+        /* Mobile tap fix */
+        document.addEventListener(
+          "touchend",
+          function (e) {
+            const img = getClickedProductImage(e.target);
+            if (!img) return;
+
+            lastTouchOpenTime = Date.now();
+            openFromProductImage(e);
+          },
+          { passive: false, capture: true }
+        );
+
+        closeBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeModal();
+        });
+
+        modalPrev.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          updateModalImage(currentIndex - 1);
+        });
+
+        modalNext.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          updateModalImage(currentIndex + 1);
+        });
+
+        closeBtn.addEventListener(
+          "touchend",
+          function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeModal();
+          },
+          { passive: false }
+        );
+
+        modalPrev.addEventListener(
+          "touchend",
+          function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            updateModalImage(currentIndex - 1);
+          },
+          { passive: false }
+        );
+
+        modalNext.addEventListener(
+          "touchend",
+          function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            updateModalImage(currentIndex + 1);
+          },
+          { passive: false }
+        );
+
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+        modal.addEventListener(
+          "touchend",
+          function (e) {
+            if (e.target === modal) {
+              e.preventDefault();
+              closeModal();
+            }
+          },
+          { passive: false }
+        );
+
+        document.addEventListener("keydown", function (e) {
+          if (!modal.classList.contains("is-open")) return;
+
+          if (e.key === "Escape") {
+            closeModal();
+          }
+
+          if (e.key === "ArrowLeft") {
+            updateModalImage(currentIndex - 1);
+          }
+
+          if (e.key === "ArrowRight") {
+            updateModalImage(currentIndex + 1);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

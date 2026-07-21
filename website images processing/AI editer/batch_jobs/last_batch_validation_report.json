@@ -1,0 +1,101 @@
+{
+  "validated_at": "2026-06-05T11:23:21.863228+00:00",
+  "batch_input_mode_requested": "auto",
+  "batch_payload_type_selected": "inline",
+  "batch_request_size_bytes": 710792,
+  "batch_task_count": 4,
+  "image_data_included": true,
+  "reference_image_included": true,
+  "image_output_config_included": true,
+  "valid": true,
+  "tasks": [
+    {
+      "product_folder": "product-17",
+      "role": "front",
+      "checks": {
+        "product_folder_exists": true,
+        "role_front_back_only": true,
+        "input_image_exists": true,
+        "reference_image_exists": true,
+        "input_mime_type_exists": true,
+        "reference_mime_type_exists": true,
+        "prompt_exists": true,
+        "output_path_exists": true,
+        "image_data_included": true,
+        "reference_image_included": true,
+        "actual_image_bytes_or_file_reference_included": true,
+        "not_local_file_path_only": true,
+        "image_generation_output_config_present": true,
+        "response_modality_matches_standard_api": true
+      },
+      "errors": [],
+      "valid": true
+    },
+    {
+      "product_folder": "product-17",
+      "role": "back",
+      "checks": {
+        "product_folder_exists": true,
+        "role_front_back_only": true,
+        "input_image_exists": true,
+        "reference_image_exists": true,
+        "input_mime_type_exists": true,
+        "reference_mime_type_exists": true,
+        "prompt_exists": true,
+        "output_path_exists": true,
+        "image_data_included": true,
+        "reference_image_included": true,
+        "actual_image_bytes_or_file_reference_included": true,
+        "not_local_file_path_only": true,
+        "image_generation_output_config_present": true,
+        "response_modality_matches_standard_api": true
+      },
+      "errors": [],
+      "valid": true
+    },
+    {
+      "product_folder": "product-18",
+      "role": "front",
+      "checks": {
+        "product_folder_exists": true,
+        "role_front_back_only": true,
+        "input_image_exists": true,
+        "reference_image_exists": true,
+        "input_mime_type_exists": true,
+        "reference_mime_type_exists": true,
+        "prompt_exists": true,
+        "output_path_exists": true,
+        "image_data_included": true,
+        "reference_image_included": true,
+        "actual_image_bytes_or_file_reference_included": true,
+        "not_local_file_path_only": true,
+        "image_generation_output_config_present": true,
+        "response_modality_matches_standard_api": true
+      },
+      "errors": [],
+      "valid": true
+    },
+    {
+      "product_folder": "product-18",
+      "role": "back",
+      "checks": {
+        "product_folder_exists": true,
+        "role_front_back_only": true,
+        "input_image_exists": true,
+        "reference_image_exists": true,
+        "input_mime_type_exists": true,
+        "reference_mime_type_exists": true,
+        "prompt_exists": true,
+        "output_path_exists": true,
+        "image_data_included": true,
+        "reference_image_included": true,
+        "actual_image_bytes_or_file_reference_included": true,
+        "not_local_file_path_only": true,
+        "image_generation_output_config_present": true,
+        "response_modality_matches_standard_api": true
+      },
+      "errors": [],
+      "valid": true
+    }
+  ]
+}

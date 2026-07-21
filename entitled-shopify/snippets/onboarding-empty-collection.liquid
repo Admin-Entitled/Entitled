@@ -1,0 +1,22 @@
+<!-- snippets/onboarding-empty-collection.liquid -->
+{% for i in (1..8) %}
+<div class="grid__item {{ grid_item_width }} {{template}}">
+  <div class="product_item">
+    <a href="/admin/products">
+      <div class="product_image">
+        <span class="product_overlay"></span>
+        {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+        {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+	  </div>
+    </a>
+    <div class="product_desc">
+      
+      <h3><a href="/admin/products">{{ 'homepage.onboarding.product_title' | t }}</a></h3>
+
+      <h4>$19.99</h4>
+      
+    </div>  
+
+  </div>
+</div>
+{% endfor %}

@@ -1,0 +1,133 @@
+<div class="header_height"></div>
+
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="content">
+
+  <div id="customer-account">
+
+    <div class="container">
+      <div class="row">
+        <div class="section_title black_border">
+          <h1>{{ 'customer.account.title' | t }}</h1>
+          <span class="title_border black_border"></span>
+        </div>
+      </div>
+
+
+      <div class="grid">
+
+        <div class="grid__item one-whole">
+          <div class="user_name">
+            <p class="email">{{ customer.email }}<a href="/account/logout">{{ 'layout.customer.log_out' | t }}</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="row grid__item large--four-twelfths medium-down--one-whole">
+
+          <div id="customer_sidebar" class="span4">
+
+            <div class="address">
+              <p>
+                {{ customer.first_name }} {{customer.last_name }}
+                <br/>
+                {% if customer.default_address != nil %}
+                  {{ customer.default_address.address1 }}
+
+                  {% if customer.default_address.address2 != "" %}
+                    <br/> {{ customer.default_address.address2 }}
+                  {% endif %}
+
+                  {% if customer.default_address.city != "" %}
+                    <br/>{{ customer.default_address.city }}
+                  {% endif %}
+
+                  {% if customer.default_address.province_code != "" %}
+                    <br/>{{ customer.default_address.province_code | upcase }}
+                  {% endif %}
+
+                  {% if customer.default_address.zip != "" %}
+                    <br/> {{ customer.default_address.zip | upcase }}
+                  {% endif %}
+
+                  {% if customer.default_address.country != "" %}
+                    <br/>{{ customer.default_address.country }}
+                  {% endif %}
+
+                  {% if customer.default_address.phone != "" %}
+                    <br/> {{ customer.default_address.phone }}
+                  {% endif %}
+                </p>
+
+              {% endif %}
+              <a href="/account/addresses" id="view_address" class="add-new-address btn">{{ 'customer.account.view_addresses' | t }}
+                <span>
+                  <i class="fa fa-angle-right"></i>
+                </span>
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+        {% paginate customer.orders by 20 %}
+          {% if customer.orders.size != 0 %}
+            <div class="row grid__item large--eight-twelfths">
+
+              <div id="customer_orders" class="span8">
+                <div class="table-wrap">
+                  <table class="full">
+                    <tr>
+                      <th>{{ 'customer.orders.order_number' | t }}</th>
+                      <th>{{ 'customer.orders.date' | t }}</th>
+                      <th>{{ 'customer.orders.payment_status' | t }}</th>
+                      <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                      <th>{{ 'customer.orders.total' | t }}</th>
+                    </tr>
+
+                    {% for order in customer.orders %}
+                      <tr>
+                        <td>{{ order.name | link_to: order.customer_url }}</td>
+                        <td>{{ order.created_at | date: format: 'month_day_year' }}</td>
+                        <td>{{ order.financial_status_label }}</td>
+                        <td>{{ order.fulfillment_status_label }}</td>
+                        <td>{{ order.total_price | money }}</td>
+                      </tr>
+                    {% endfor %}
+
+
+                  </table>
+                </div>
+              </div>
+            {% else %}
+
+              <p>{{ 'customer.orders.none' | t }}</p>
+            {% endif %}
+
+            {% include 'pagination' %}
+          {% endpaginate %}
+        </div>
+
+
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>

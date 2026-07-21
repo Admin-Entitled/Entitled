@@ -1,0 +1,13 @@
+<!-- snippets/onboarding-featured-collections.liquid -->
+{% for i in (1..3) %}
+<div class="grid__item large--four-twelfths small--one-whole medium--one-whole max-medium--four-twelfths">
+
+  <a href="/admin/collections/" class="collection_item">
+    {% capture current %}{% cycle 1, 2, 3 %}{% endcapture %}
+    {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+    <span class="collection_overlay"></span>
+    <h2>Collection Name</h2>
+  </a>
+
+</div>
+{% endfor %}

@@ -1,0 +1,52 @@
+{% if settings.featured-products != empty %}
+<div class="home_coll_section">
+
+  <div class="container">
+  
+    <div class="grid">
+
+      <div class="home_collection">
+
+        <h1>{{ settings.Collection_title }}</h1>
+
+        <div class="collection_list">
+          {% assign is_empty = true %}
+          {% for i in (1..3) %}
+          {% assign link = 'collection_' | append: i %}
+          {% assign col_name = settings[link] %}
+          {% if col_name != blank %}
+          	{% assign is_empty = false %}
+          {% endif %}
+          
+          
+          {% for collection in collections %}
+          {% if collection.handle == col_name %}
+          <div class="grid__item large--four-twelfths small--one-whole medium--one-whole max-medium--four-twelfths">
+
+            <a href="{{collection.url}}" class="collection_item">
+
+              <img src="{{ collection.image | img_url: '450x450' }}" alt="{{ collection.title | escape }}" />
+              <span class="collection_overlay"></span>
+              <h2>{{collection.title}}</h2>
+            </a>
+
+          </div>
+          {% endif %}  
+          {% endfor %}  
+          {% endfor %}
+          
+          {% if is_empty == true %}
+            {% include 'onboarding-featured-collections' %}
+          {% endif %}
+        </div>
+
+
+
+      </div>
+
+    </div>
+    
+  </div>
+  
+</div>
+{% endif %}

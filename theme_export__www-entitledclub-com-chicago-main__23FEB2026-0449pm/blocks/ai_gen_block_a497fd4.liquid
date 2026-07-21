@@ -1,0 +1,1566 @@
+{% doc %}
+  @prompt
+    Create a premium “About Us” section for a Shopify store with a strong private-membership identity.
+    The section should feel minimal, exclusive, and editorial — not corporate or friendly.
+    
+    HERO (TOP OF SECTION)
+    - Full-width hero area
+    - Headline (large, bold, uppercase):
+      PRIVATE CLOTHING. MEMBERS ONLY.
+    - Subline (smaller, spaced, muted):
+      Entry is granted. Releases are curated.
+    - Center-aligned text
+    - Add subtle fade-in or slide-up animation on load
+    - No buttons in hero
+    
+    LAYOUT & STRUCTURE
+    - Content-based vertical layout
+    - Each section clearly separated with spacing
+    - Desktop: generous margins and breathing room
+    - Mobile: stacked, clean, no clutter
+    - No sliders, carousels, or auto-rotating elements
+    
+    SECTION 1 – WHAT WE ARE
+    Title: What We Are
+    Content:
+    Entitled Club is a private clothing brand built on selection. We handpick menswear that meets a strict
+    standard, then release it in controlled drops. We prioritise quality over quantity — so every collection
+    feels exclusive by design.
+    
+    SECTION 2 – HOW ACCESS WORKS
+    Title: How Access Works
+    Content:
+    Access is members-only. To enter, you apply with your details. Approvals are typically granted within
+    10–15 days. Once approved, you have always-on access to the storefront.
+    
+    SECTION 3 – CURATION PHILOSOPHY
+    Title: Curation Philosophy
+    Content:
+    We do not stock at scale. We curate. Our drops are built around scarcity that is real: few pieces, limited
+    quantities, and clean selection. We keep the storefront quiet so the product stays primary.
+    
+    SECTION 4 – AUTHENTICITY & QUALITY
+    Title: Authenticity & Quality
+    Content:
+    We source only through select authentic channels. Every piece is checked for legitimacy and overall
+    quality before it is listed. We do not pass on quality rejects or defective inventory.
+    
+    SECTION 5 – DROPS & ARCHIVE
+    Title: Drops & Archive
+    Content:
+    Most of our releases follow the drop model. A drop opens, members shop, and then the drop closes.
+    When it closes, it becomes archive. We do not restock by default. The chapter ends.
+    
+    SECTION 6 – THE MEANING OF ENTITLED
+    Title: The Meaning of Entitled
+    Content:
+    Entitled is not arrogance. It is authority. It signals confidence, taste, and access — without noise.
+    Membership is the boundary between public retail and private selection.
+    
+    DESIGN & STYLE
+    - Background:
+      - Soft grey-to-dark-grey gradient
+      - Very subtle fabric or textile texture (low opacity)
+      - Optional abstract clothing or T-shirt outline texture, barely visible
+    - Typography:
+      - Serif or modern editorial sans-serif
+      - Headings bold and confident
+      - Body text calm and readable
+    - Color palette:
+      - Grey, charcoal, off-white
+      - No bright or accent colors
+    - Dividers:
+      - Thin lines or subtle spacing only
+    - Animation:
+      - Gentle fade-up animation per section
+      - No aggressive motion
+    
+    EXPERIENCE GOALS
+    - Quiet luxury
+    - Editorial brand story
+    - Clear boundary between public and members-only access
+    - No sales language
+    - No calls to action inside this section
+    , make a seperate section for all sections also use images split section in 2 part one side is image and one side text also add the hero section slider , okay now the first section what we are make background black gradient increae the text 
+    next section how access work make background grey gradient and increase the font size 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-about-premium-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-about-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 2;
+  }
+
+  .ai-hero-slider-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.hero_height_mobile }}px;
+    overflow: hidden;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-hero-slider-{{ ai_gen_id }} {
+      height: {{ block.settings.hero_height_desktop }}px;
+    }
+  }
+
+  .ai-hero-slides-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-hero-slide-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity {{ block.settings.slide_transition_speed }}s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-hero-slide-{{ ai_gen_id }}.ai-active-{{ ai_gen_id }} {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  .ai-hero-slide-bg-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-hero-slide-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #2a2a2a;
+  }
+
+  .ai-hero-slide-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  .ai-hero-slide-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: {{ block.settings.hero_overlay_color }};
+    opacity: {{ block.settings.hero_overlay_opacity }};
+  }
+
+  .ai-hero-slide-content-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    padding: 20px;
+    max-width: 900px;
+  }
+
+  .ai-hero-headline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-size: {{ block.settings.hero_headline_size_mobile }}px;
+    line-height: 1.1;
+    letter-spacing: {{ block.settings.hero_letter_spacing }}em;
+    text-transform: uppercase;
+    color: {{ block.settings.hero_text_color }};
+    margin: 0 0 {{ block.settings.hero_spacing }}px 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-hero-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.hero_headline_size_desktop }}px;
+    }
+  }
+
+  .ai-hero-subline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    font-size: {{ block.settings.hero_subline_size_mobile }}px;
+    line-height: 1.6;
+    letter-spacing: {{ block.settings.subline_letter_spacing }}em;
+    color: {{ block.settings.hero_text_color }};
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-hero-subline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.hero_subline_size_desktop }}px;
+    }
+  }
+
+  .ai-hero-dots-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 4;
+  }
+
+  .ai-hero-dot-{{ ai_gen_id }} {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: {{ block.settings.hero_text_color }};
+    opacity: 0.4;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-hero-dot-{{ ai_gen_id }}.ai-active-{{ ai_gen_id }} {
+    opacity: 1;
+  }
+
+  .ai-split-section-{{ ai_gen_id }} {
+    width: 100%;
+    padding: {{ block.settings.section_spacing_mobile }}px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    position: relative;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-split-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_spacing_desktop }}px 0;
+    }
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-visible-{{ ai_gen_id }} {
+    animation: ai-fade-up-{{ ai_gen_id }} 0.8s ease-out forwards;
+  }
+
+  .ai-split-section-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-section-1-{{ ai_gen_id }}::before {
+    background: linear-gradient(135deg, {{ block.settings.section_1_bg_top }} 0%, {{ block.settings.section_1_bg_bottom }} 100%);
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-section-2-{{ ai_gen_id }}::before {
+    background: linear-gradient(135deg, {{ block.settings.section_2_bg_top }} 0%, {{ block.settings.section_2_bg_bottom }} 100%);
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-section-3-{{ ai_gen_id }}::before {
+    background: linear-gradient(135deg, {{ block.settings.section_3_bg_top }} 0%, {{ block.settings.section_3_bg_bottom }} 100%);
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-section-4-{{ ai_gen_id }}::before {
+    background: linear-gradient(135deg, {{ block.settings.section_4_bg_top }} 0%, {{ block.settings.section_4_bg_bottom }} 100%);
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-section-5-{{ ai_gen_id }}::before {
+    background: linear-gradient(135deg, {{ block.settings.section_5_bg_top }} 0%, {{ block.settings.section_5_bg_bottom }} 100%);
+  }
+
+  .ai-split-section-{{ ai_gen_id }}.ai-section-6-{{ ai_gen_id }}::before {
+    background: linear-gradient(135deg, {{ block.settings.section_6_bg_top }} 0%, {{ block.settings.section_6_bg_bottom }} 100%);
+  }
+
+  .ai-split-container-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    max-width: {{ block.settings.content_max_width }}px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-split-container-{{ ai_gen_id }} {
+      flex-direction: row;
+      align-items: center;
+      gap: {{ block.settings.split_gap }}px;
+    }
+
+    .ai-split-container-{{ ai_gen_id }}.ai-reverse-{{ ai_gen_id }} {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .ai-split-image-{{ ai_gen_id }} {
+    width: 100%;
+    position: relative;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-split-image-{{ ai_gen_id }} {
+      width: 50%;
+      flex-shrink: 0;
+    }
+  }
+
+  .ai-split-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%;
+    overflow: hidden;
+  }
+
+  .ai-split-image-wrapper-{{ ai_gen_id }} img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-split-image-placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #3a3a3a;
+  }
+
+  .ai-split-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+  }
+
+  .ai-split-text-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-split-text-{{ ai_gen_id }} {
+      width: 50%;
+      padding: 40px;
+    }
+  }
+
+  .ai-split-title-{{ ai_gen_id }} {
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    line-height: 1.3;
+    letter-spacing: {{ block.settings.title_letter_spacing }}em;
+    margin: 0 0 {{ block.settings.title_spacing }}px 0;
+    text-transform: {{ block.settings.title_transform }};
+  }
+
+  .ai-section-1-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_1_title_size_mobile }}px;
+    color: {{ block.settings.section_1_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-1-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_1_title_size_desktop }}px;
+    }
+  }
+
+  .ai-section-2-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_2_title_size_mobile }}px;
+    color: {{ block.settings.section_2_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-2-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_2_title_size_desktop }}px;
+    }
+  }
+
+  .ai-section-3-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size_mobile }}px;
+    color: {{ block.settings.section_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-3-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size_desktop }}px;
+    }
+  }
+
+  .ai-section-4-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size_mobile }}px;
+    color: {{ block.settings.section_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-4-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size_desktop }}px;
+    }
+  }
+
+  .ai-section-5-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size_mobile }}px;
+    color: {{ block.settings.section_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-5-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size_desktop }}px;
+    }
+  }
+
+  .ai-section-6-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size_mobile }}px;
+    color: {{ block.settings.section_title_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-6-{{ ai_gen_id }} .ai-split-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size_desktop }}px;
+    }
+  }
+
+  .ai-split-content-{{ ai_gen_id }} {
+    font-family: {{ block.settings.body_font.family }}, {{ block.settings.body_font.fallback_families }};
+    font-weight: {{ block.settings.body_font.weight }};
+    line-height: {{ block.settings.body_line_height }};
+    margin: 0;
+  }
+
+  .ai-section-1-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_1_text_size_mobile }}px;
+    color: {{ block.settings.section_1_text_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-1-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_1_text_size_desktop }}px;
+    }
+  }
+
+  .ai-section-2-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_2_text_size_mobile }}px;
+    color: {{ block.settings.section_2_text_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-2-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_2_text_size_desktop }}px;
+    }
+  }
+
+  .ai-section-3-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_text_size_mobile }}px;
+    color: {{ block.settings.body_text_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-3-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_text_size_desktop }}px;
+    }
+  }
+
+  .ai-section-4-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_text_size_mobile }}px;
+    color: {{ block.settings.body_text_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-4-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_text_size_desktop }}px;
+    }
+  }
+
+  .ai-section-5-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_text_size_mobile }}px;
+    color: {{ block.settings.body_text_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-5-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_text_size_desktop }}px;
+    }
+  }
+
+  .ai-section-6-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_text_size_mobile }}px;
+    color: {{ block.settings.body_text_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-section-6-{{ ai_gen_id }} .ai-split-content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_text_size_desktop }}px;
+    }
+  }
+
+  @keyframes ai-fade-up-{{ ai_gen_id }} {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+{% endstyle %}
+
+<about-premium-{{ ai_gen_id }} class="ai-about-premium-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-about-content-{{ ai_gen_id }}">
+    <div class="ai-hero-slider-{{ ai_gen_id }}">
+      <div class="ai-hero-slides-{{ ai_gen_id }}">
+        {% for i in (1..3) %}
+          {% liquid
+            assign slide_enabled_key = 'slide_' | append: i | append: '_enabled'
+            assign slide_image_key = 'slide_' | append: i | append: '_image'
+            assign slide_headline_key = 'slide_' | append: i | append: '_headline'
+            assign slide_subline_key = 'slide_' | append: i | append: '_subline'
+
+            assign slide_enabled = block.settings[slide_enabled_key]
+            assign slide_image = block.settings[slide_image_key]
+            assign slide_headline = block.settings[slide_headline_key]
+            assign slide_subline = block.settings[slide_subline_key]
+          %}
+
+          {% if slide_enabled %}
+            <div class="ai-hero-slide-{{ ai_gen_id }} {% if forloop.first %}ai-active-{{ ai_gen_id }}{% endif %}" data-slide="{{ i }}">
+              {% if slide_image %}
+                <img
+                  src="{{ slide_image | image_url: width: 1920 }}"
+                  alt="{{ slide_image.alt | escape }}"
+                  class="ai-hero-slide-bg-{{ ai_gen_id }}"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  width="{{ slide_image.width }}"
+                  height="{{ slide_image.height }}"
+                >
+              {% else %}
+                <div class="ai-hero-slide-placeholder-{{ ai_gen_id }}">
+                  {{ 'hero-apparel-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
+              <div class="ai-hero-slide-overlay-{{ ai_gen_id }}"></div>
+              <div class="ai-hero-slide-content-{{ ai_gen_id }}">
+                {% if slide_headline != blank %}
+                  <h1 class="ai-hero-headline-{{ ai_gen_id }}">{{ slide_headline }}</h1>
+                {% endif %}
+                {% if slide_subline != blank %}
+                  <p class="ai-hero-subline-{{ ai_gen_id }}">{{ slide_subline }}</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if block.settings.show_dots %}
+        <div class="ai-hero-dots-{{ ai_gen_id }}">
+          {% for i in (1..3) %}
+            {% liquid
+              assign slide_enabled_key = 'slide_' | append: i | append: '_enabled'
+              assign slide_enabled = block.settings[slide_enabled_key]
+            %}
+            {% if slide_enabled %}
+              <button
+                class="ai-hero-dot-{{ ai_gen_id }} {% if forloop.first %}ai-active-{{ ai_gen_id }}{% endif %}"
+                data-slide="{{ i }}"
+                aria-label="Go to slide {{ i }}"
+              ></button>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% for i in (1..6) %}
+      {% liquid
+        assign section_enabled_key = 'section_' | append: i | append: '_enabled'
+        assign section_title_key = 'section_' | append: i | append: '_title'
+        assign section_content_key = 'section_' | append: i | append: '_content'
+        assign section_image_key = 'section_' | append: i | append: '_image'
+        assign section_layout_key = 'section_' | append: i | append: '_layout'
+
+        assign section_enabled = block.settings[section_enabled_key]
+        assign section_title = block.settings[section_title_key]
+        assign section_content = block.settings[section_content_key]
+        assign section_image = block.settings[section_image_key]
+        assign section_layout = block.settings[section_layout_key]
+      %}
+
+      {% if section_enabled and section_title != blank %}
+        <div class="ai-split-section-{{ ai_gen_id }} ai-section-{{ i }}-{{ ai_gen_id }}" data-section="{{ i }}">
+          <div class="ai-split-container-{{ ai_gen_id }} {% if section_layout == 'text_left' %}ai-reverse-{{ ai_gen_id }}{% endif %}">
+            <div class="ai-split-image-{{ ai_gen_id }}">
+              <div class="ai-split-image-wrapper-{{ ai_gen_id }}">
+                {% if section_image %}
+                  <img
+                    src="{{ section_image | image_url: width: 1000 }}"
+                    alt="{{ section_image.alt | escape }}"
+                    loading="lazy"
+                    width="{{ section_image.width }}"
+                    height="{{ section_image.height }}"
+                  >
+                {% else %}
+                  <div class="ai-split-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-apparel-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="ai-split-text-{{ ai_gen_id }}">
+              <h2 class="ai-split-title-{{ ai_gen_id }}">{{ section_title }}</h2>
+              <div class="ai-split-content-{{ ai_gen_id }}">{{ section_content }}</div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</about-premium-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AboutPremium{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.slides = this.querySelectorAll('.ai-hero-slide-{{ ai_gen_id }}');
+        this.dots = this.querySelectorAll('.ai-hero-dot-{{ ai_gen_id }}');
+        this.sections = this.querySelectorAll('.ai-split-section-{{ ai_gen_id }}');
+        this.autoplaySpeed = {{ block.settings.autoplay_speed | times: 1000 }};
+        this.autoplayEnabled = {{ block.settings.enable_autoplay }};
+        this.autoplayTimer = null;
+      }
+
+      connectedCallback() {
+        this.setupSlider();
+        this.setupIntersectionObserver();
+      }
+
+      setupSlider() {
+        if (this.slides.length <= 1) return;
+
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            this.goToSlide(index);
+            if (this.autoplayEnabled) {
+              this.resetAutoplay();
+            }
+          });
+        });
+
+        if (this.autoplayEnabled) {
+          this.startAutoplay();
+        }
+      }
+
+      goToSlide(index) {
+        this.slides.forEach(slide => slide.classList.remove('ai-active-{{ ai_gen_id }}'));
+        this.dots.forEach(dot => dot.classList.remove('ai-active-{{ ai_gen_id }}'));
+
+        this.slides[index].classList.add('ai-active-{{ ai_gen_id }}');
+        this.dots[index].classList.add('ai-active-{{ ai_gen_id }}');
+        this.currentSlide = index;
+      }
+
+      startAutoplay() {
+        this.autoplayTimer = setInterval(() => {
+          const nextSlide = (this.currentSlide + 1) % this.slides.length;
+          this.goToSlide(nextSlide);
+        }, this.autoplaySpeed);
+      }
+
+      resetAutoplay() {
+        clearInterval(this.autoplayTimer);
+        this.startAutoplay();
+      }
+
+      setupIntersectionObserver() {
+        if (!('IntersectionObserver' in window)) {
+          this.sections.forEach(section => {
+            section.classList.add('ai-visible-{{ ai_gen_id }}');
+          });
+          return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('ai-visible-{{ ai_gen_id }}');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.15,
+          rootMargin: '0px 0px -50px 0px'
+        });
+
+        this.sections.forEach(section => {
+          observer.observe(section);
+        });
+      }
+
+      disconnectedCallback() {
+        if (this.autoplayTimer) {
+          clearInterval(this.autoplayTimer);
+        }
+      }
+    }
+
+    customElements.define('about-premium-{{ ai_gen_id }}', AboutPremium{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "About us premium split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero slider"
+    },
+    {
+      "type": "range",
+      "id": "hero_height_desktop",
+      "label": "Height (desktop)",
+      "min": 400,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "hero_height_mobile",
+      "label": "Height (mobile)",
+      "min": 300,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "default": 450
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "slide_transition_speed",
+      "label": "Transition speed",
+      "min": 0.5,
+      "max": 2,
+      "step": 0.5,
+      "unit": "s",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show navigation dots",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "hero_overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "hero_overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0.4
+    },
+    {
+      "type": "color",
+      "id": "hero_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "hero_headline_size_desktop",
+      "label": "Headline size (desktop)",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "hero_headline_size_mobile",
+      "label": "Headline size (mobile)",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "hero_subline_size_desktop",
+      "label": "Subline size (desktop)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "hero_subline_size_mobile",
+      "label": "Subline size (mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "hero_spacing",
+      "label": "Spacing between headline and subline",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "hero_letter_spacing",
+      "label": "Headline letter spacing",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "subline_letter_spacing",
+      "label": "Subline letter spacing",
+      "min": 0,
+      "max": 0.3,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_1_enabled",
+      "label": "Enable slide 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_headline",
+      "label": "Headline",
+      "default": "PRIVATE CLOTHING. MEMBERS ONLY."
+    },
+    {
+      "type": "text",
+      "id": "slide_1_subline",
+      "label": "Subline",
+      "default": "Entry is granted. Releases are curated."
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_2_enabled",
+      "label": "Enable slide 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_headline",
+      "label": "Headline",
+      "default": "CURATED DROPS. CONTROLLED ACCESS."
+    },
+    {
+      "type": "text",
+      "id": "slide_2_subline",
+      "label": "Subline",
+      "default": "Quality over quantity. Exclusivity by design."
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_3_enabled",
+      "label": "Enable slide 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_headline",
+      "label": "Headline",
+      "default": "AUTHORITY. NOT ARROGANCE."
+    },
+    {
+      "type": "text",
+      "id": "slide_3_subline",
+      "label": "Subline",
+      "default": "Membership defines the boundary."
+    },
+    {
+      "type": "header",
+      "content": "Section 1 – What we are"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_1_enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_1_title",
+      "label": "Title",
+      "default": "What We Are"
+    },
+    {
+      "type": "textarea",
+      "id": "section_1_content",
+      "label": "Content",
+      "default": "Entitled Club is a private clothing brand built on selection. We handpick menswear that meets a strict standard, then release it in controlled drops. We prioritise quality over quantity — so every collection feels exclusive by design."
+    },
+    {
+      "type": "image_picker",
+      "id": "section_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "section_1_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Image left"
+        },
+        {
+          "value": "text_left",
+          "label": "Text left"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "color",
+      "id": "section_1_bg_top",
+      "label": "Background gradient top",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "section_1_bg_bottom",
+      "label": "Background gradient bottom",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "section_1_title_color",
+      "label": "Title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "section_1_text_color",
+      "label": "Text color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "section_1_title_size_desktop",
+      "label": "Title size (desktop)",
+      "min": 28,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "section_1_title_size_mobile",
+      "label": "Title size (mobile)",
+      "min": 24,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_1_text_size_desktop",
+      "label": "Text size (desktop)",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "range",
+      "id": "section_1_text_size_mobile",
+      "label": "Text size (mobile)",
+      "min": 15,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "header",
+      "content": "Section 2 – How access works"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_2_enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_2_title",
+      "label": "Title",
+      "default": "How Access Works"
+    },
+    {
+      "type": "textarea",
+      "id": "section_2_content",
+      "label": "Content",
+      "default": "Access is members-only. To enter, you apply with your details. Approvals are typically granted within 10–15 days. Once approved, you have always-on access to the storefront."
+    },
+    {
+      "type": "image_picker",
+      "id": "section_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "section_2_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Image left"
+        },
+        {
+          "value": "text_left",
+          "label": "Text left"
+        }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "color",
+      "id": "section_2_bg_top",
+      "label": "Background gradient top",
+      "default": "#b8b8b8"
+    },
+    {
+      "type": "color",
+      "id": "section_2_bg_bottom",
+      "label": "Background gradient bottom",
+      "default": "#7a7a7a"
+    },
+    {
+      "type": "color",
+      "id": "section_2_title_color",
+      "label": "Title color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "section_2_text_color",
+      "label": "Text color",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "range",
+      "id": "section_2_title_size_desktop",
+      "label": "Title size (desktop)",
+      "min": 28,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "section_2_title_size_mobile",
+      "label": "Title size (mobile)",
+      "min": 24,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "section_2_text_size_desktop",
+      "label": "Text size (desktop)",
+      "min": 16,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 19
+    },
+    {
+      "type": "range",
+      "id": "section_2_text_size_mobile",
+      "label": "Text size (mobile)",
+      "min": 15,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 17
+    },
+    {
+      "type": "header",
+      "content": "Section 3 – Curation philosophy"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_3_enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_3_title",
+      "label": "Title",
+      "default": "Curation Philosophy"
+    },
+    {
+      "type": "textarea",
+      "id": "section_3_content",
+      "label": "Content",
+      "default": "We do not stock at scale. We curate. Our drops are built around scarcity that is real: few pieces, limited quantities, and clean selection. We keep the storefront quiet so the product stays primary."
+    },
+    {
+      "type": "image_picker",
+      "id": "section_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "section_3_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Image left"
+        },
+        {
+          "value": "text_left",
+          "label": "Text left"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "color",
+      "id": "section_3_bg_top",
+      "label": "Background gradient top",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "section_3_bg_bottom",
+      "label": "Background gradient bottom",
+      "default": "#c0c0c0"
+    },
+    {
+      "type": "header",
+      "content": "Section 4 – Authenticity & quality"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_4_enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_4_title",
+      "label": "Title",
+      "default": "Authenticity & Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "section_4_content",
+      "label": "Content",
+      "default": "We source only through select authentic channels. Every piece is checked for legitimacy and overall quality before it is listed. We do not pass on quality rejects or defective inventory."
+    },
+    {
+      "type": "image_picker",
+      "id": "section_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "section_4_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Image left"
+        },
+        {
+          "value": "text_left",
+          "label": "Text left"
+        }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "color",
+      "id": "section_4_bg_top",
+      "label": "Background gradient top",
+      "default": "#d0d0d0"
+    },
+    {
+      "type": "color",
+      "id": "section_4_bg_bottom",
+      "label": "Background gradient bottom",
+      "default": "#a0a0a0"
+    },
+    {
+      "type": "header",
+      "content": "Section 5 – Drops & archive"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_5_enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_5_title",
+      "label": "Title",
+      "default": "Drops & Archive"
+    },
+    {
+      "type": "textarea",
+      "id": "section_5_content",
+      "label": "Content",
+      "default": "Most of our releases follow the drop model. A drop opens, members shop, and then the drop closes. When it closes, it becomes archive. We do not restock by default. The chapter ends."
+    },
+    {
+      "type": "image_picker",
+      "id": "section_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "section_5_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Image left"
+        },
+        {
+          "value": "text_left",
+          "label": "Text left"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "color",
+      "id": "section_5_bg_top",
+      "label": "Background gradient top",
+      "default": "#b8b8b8"
+    },
+    {
+      "type": "color",
+      "id": "section_5_bg_bottom",
+      "label": "Background gradient bottom",
+      "default": "#8a8a8a"
+    },
+    {
+      "type": "header",
+      "content": "Section 6 – The meaning of entitled"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_6_enabled",
+      "label": "Enable section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_6_title",
+      "label": "Title",
+      "default": "The Meaning of Entitled"
+    },
+    {
+      "type": "textarea",
+      "id": "section_6_content",
+      "label": "Content",
+      "default": "Entitled is not arrogance. It is authority. It signals confidence, taste, and access — without noise. Membership is the boundary between public retail and private selection."
+    },
+    {
+      "type": "image_picker",
+      "id": "section_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "section_6_layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "image_left",
+          "label": "Image left"
+        },
+        {
+          "value": "text_left",
+          "label": "Text left"
+        }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "color",
+      "id": "section_6_bg_top",
+      "label": "Background gradient top",
+      "default": "#a0a0a0"
+    },
+    {
+      "type": "color",
+      "id": "section_6_bg_bottom",
+      "label": "Background gradient bottom",
+      "default": "#707070"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max width",
+      "min": 800,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_spacing_desktop",
+      "label": "Section spacing (desktop)",
+      "min": 60,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_spacing_mobile",
+      "label": "Section spacing (mobile)",
+      "min": 40,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "split_gap",
+      "label": "Gap between image and text",
+      "min": 30,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "section_title_size_desktop",
+      "label": "Section title size (desktop)",
+      "min": 24,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "section_title_size_mobile",
+      "label": "Section title size (mobile)",
+      "min": 20,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "body_text_size_desktop",
+      "label": "Body text size (desktop)",
+      "min": 14,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "body_text_size_mobile",
+      "label": "Body text size (mobile)",
+      "min": 14,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "body_line_height",
+      "label": "Body line height",
+      "min": 1.4,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.7
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Title letter spacing",
+      "min": 0,
+      "max": 0.2,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "select",
+      "id": "title_transform",
+      "label": "Title text transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "Capitalize"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Space below title",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Default colors (sections 3-6)"
+    },
+    {
+      "type": "color",
+      "id": "section_title_color",
+      "label": "Section title",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Body text",
+      "default": "#4a4a4a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About us premium split"
+    }
+  ]
+}
+{% endschema %}

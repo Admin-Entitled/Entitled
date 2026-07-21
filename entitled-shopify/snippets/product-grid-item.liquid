@@ -6,21 +6,21 @@
 {% unless grid_item_width %}
 
 {% if template == 'list-collections' %}
-	{% assign grid_item_width = 'three-twelfths small--one-whole medium--one-half' %}
+	{% assign grid_item_width = 'three-twelfths small--one-half medium--one-half' %}
 {% endif %}
 
 
 {% if template == 'collection' %}
 {% if settings.products_per_row == '3' %}
-{% assign grid_item_width = 'four-twelfths small--one-whole medium--one-half medium-large--four-twelfths' %}
+{% assign grid_item_width = 'four-twelfths small--one-half medium--one-half medium-large--four-twelfths' %}
 {% endif %}
 
 {% if settings.products_per_row == '4' %}
-{% assign grid_item_width = 'three-twelfths small--one-whole medium--one-half medium-large--four-twelfths' %}
+{% assign grid_item_width = 'three-twelfths small--one-half medium--one-half medium-large--four-twelfths' %}
 {% endif %}
 
 {% if settings.products_per_row == '5' %}
-{% assign grid_item_width = 'two-tenths small--one-whole medium--one-half medium-large--four-twelfths' %}
+{% assign grid_item_width = 'two-tenths small--one-half medium--one-half medium-large--four-twelfths' %}
 {% endif %}
 
 {% endif %}
@@ -33,15 +33,12 @@
 {% if product.available %}
   {% assign sold_out = false %}
 {% endif %}
-{% assign hover_image = blank %}
-{% if product.images.size > 1 %}
-  {% assign hover_image = product.images[1] %}
-{% endif %}
-
+{% capture product_size_variants %}{% include 'product-size-data', size_product: product %}{% endcapture %}
 <div class="grid__item {{ grid_item_width }} {{template}}">
   <div
     class="product_item"
     data-collection-product
+    data-size-product
     data-product-id="{{ product.id }}"
     data-product-title="{{ product.title | escape }}"
     data-product-url="{{ product.url | within: collection | escape }}"
@@ -49,26 +46,49 @@
     data-product-type="{{ product.type | escape }}"
     data-product-tags="{{ product.tags | json | escape }}"
     data-product-options="{{ product.options_with_values | json | escape }}"
+    data-product-variants="{{ product_size_variants | strip_newlines | escape }}"
     data-product-price="{{ product.price | money_without_currency | replace: ',', '' }}"
     data-product-image="{{ product.featured_image | img_url: 'large' | escape }}"
     data-product-available="{% if product.available %}true{% else %}false{% endif %}"
   >
-    <script type="application/json" data-product-variants>{{ product.variants | json }}</script>
-    <a href="{{ product.url | within: collection  }}">
+    <div class="product_card_media">
       <div class="product_image">
-        <div class="product_image__track{% if product.images.size > 1 %} has-gallery{% endif %}">
-          {% for image in product.images limit: 4 %}
-            <img
-              class="product_image__slide{% if forloop.first %} is-primary{% endif %}{% if forloop.index == 2 %} is-secondary{% endif %}"
-              src="{{ image.src | img_url: 'large' }}"
-              alt="{{ product.title | escape }}"
-              loading="lazy"
-            />
-          {% endfor %}
-          {% if product.images.size == 0 %}
-            <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.title | escape }}" loading="lazy" />
-          {% endif %}
-        </div>
+        <a href="{{ product.url | within: collection  }}" class="product_image__link" aria-label="{{ product.title | escape }}">
+          <div class="product_image__track{% if product.images.size > 1 %} has-gallery{% endif %}"{% if product.images.size > 1 %} data-product-card-track{% endif %}>
+            {% for image in product.images limit: 4 %}
+              <img
+                class="product_image__slide{% if forloop.first %} is-primary{% endif %}{% if forloop.index == 2 %} is-secondary{% endif %}"
+                src="{{ image.src | img_url: 'large' }}"
+                alt="{{ product.title | escape }}"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+                loading="lazy"
+              />
+            {% endfor %}
+            {% if product.images.size == 0 %}
+              <img
+                src="{{ product.featured_image.src | img_url: 'large' }}"
+                alt="{{ product.title | escape }}"
+                width="{{ product.featured_image.width }}"
+                height="{{ product.featured_image.height }}"
+                loading="lazy"
+              />
+            {% endif %}
+          </div>
+        </a>
+        {% if product.images.size > 1 %}
+          <div class="product_image__indicator" data-product-card-indicator>
+            {% for image in product.images limit: 4 %}
+              <button
+                type="button"
+                class="product_image__indicator-dot{% if forloop.first %} is-active{% endif %}"
+                data-product-card-indicator-dot
+                data-product-card-indicator-index="{{ forloop.index0 }}"
+                aria-label="View image {{ forloop.index }}"
+              ></button>
+            {% endfor %}
+          </div>
+        {% endif %}
 
         {% if settings.collections_show_sold_out_square %}
         {% if sold_out %}<span class="sold_out">{{ 'products.product.sold_out' | t }} </span>{% endif %}
@@ -89,17 +109,34 @@
         {% endfor %}
         {% endif %}
       </div>
-    </a>
+    </div>
     <div class="product_desc">
-      <h3><a href="{{ product.url | within: collection }}">{{ product.title | capitalize }}</a></h3>
-
-      <h4>{{ product.price | money }}
-        {% if product.compare_at_price %}
-        {% endif %}
-      </h4>
-      <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
-     
-    </div>  
+      <div class="product_card_copy">
+        <h3><a href="{{ product.url | within: collection }}" aria-describedby="ProductSizeStatus-{{ product.id }}">{{ product.title | capitalize }}</a></h3>
+        <h4>{{ product.price | money }}
+          {% if product.compare_at_price > product.price %}
+            <span><del>{{ product.compare_at_price | money }}</del></span>
+          {% endif %}
+        </h4>
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+        <p id="ProductSizeStatus-{{ product.id }}" class="product-size-status" data-size-preference-status hidden></p>
+      </div>
+      <div data-size-preference-card-action>
+      {% if sold_out %}
+        <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
+          <button type="button" class="product_card_button is-disabled" disabled>{{ 'products.product.sold_out' | t }}</button>
+        </form>
+      {% elsif product.has_only_default_variant %}
+        <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" name="add" class="product_card_button">{{ 'products.product.add_to_cart' | t }}</button>
+        </form>
+      {% else %}
+        <a href="{{ product.url | within: collection }}" class="product_card_button">{{ 'products.product.choose_options' | t }}</a>
+      {% endif %}
+      </div>
+    </div>
 
   </div>
 </div>

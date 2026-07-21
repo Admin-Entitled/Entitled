@@ -1,0 +1,14 @@
+{
+  "mode": "api",
+  "ga4": {
+    "status": "Awaiting Credentials",
+    "error": "Missing GA4_PROPERTY_ID env variable.",
+    "lastSynced": null
+  },
+  "clarity": {
+    "status": "Awaiting Credentials",
+    "error": "Missing Clarity API variables.",
+    "lastSynced": null
+  },
+  "lastUpdated": null
+}

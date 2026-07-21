@@ -1,0 +1,53 @@
+<!--======  #BLOG LIST  ===============-->
+{% if settings.featured-blogs != empty %}
+
+  <div class="blog_section">
+
+    <div class="container">
+
+      <div class="grid">
+		{% if settings.blog_title != blank %}
+        	<h1>{{ settings.blog_title }}</h1>
+		{% endif %}	
+        <div class="blog_list">
+        
+          {% for article in blogs[settings.blog_1].articles limit:2 %}
+        	
+            <div class="grid__item one-half small--one-whole medium--one-whole">
+
+              <div class="blog_item">
+
+                <div class="blog_img">
+                  <a href="{{ article.url }}">
+                    {% if article.image %}<img src="{{ article.image.src | img_url: 'grande' }}" alt="{{ article.title | escape }}" />{% else %}{{ 'image' | placeholder_svg_tag: 'icon icon--placeholder' }}{% endif %}
+                  </a>
+                </div>
+
+                <h2> <a href="{{ article.url }}">{{ article.title }}</a></h2>
+                <h5>{{ article.published_at | date: "%d,%m,%Y" }}</h5>
+
+                {% if article.excerpt.size > 0 %}
+                {{ article.excerpt | strip_html | truncatewords: 20  }}
+                {% else %}
+                <p> {{ article.content | strip_html | truncatewords: 20 }}</p>
+                {% endif %}
+
+                <a href="{{ article.url }}" class="blog_read_more">Read more 
+                  <span><i class="fa fa-angle-right"></i></span></a>
+
+              </div>
+
+            </div>
+         {% endfor %}	
+		</div>
+
+        <div class="more_blog_btn">
+          <a href="/blogs/news" class="btn">VIEW ALL <span><i class="fa fa-angle-right"></i></span></a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  {% endif %}

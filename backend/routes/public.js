@@ -3,12 +3,18 @@ import { supabase } from "../supabase.js";
 
 const router = express.Router();
 
-function normalizePhone(raw) {
-  let digits = String(raw || "").replace(/\D/g, "");
-  if (digits.startsWith("91") && digits.length > 10) {
-    digits = digits.slice(2);
-  }
-  return digits;
+function normalizePhoneToIndian10(raw) {
+  const digits = String(raw || "").replace(/\D/g, "");
+  if (digits.length === 10) return digits;
+  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
+  return "";
+}
+
+function buildPhoneCandidates(raw) {
+  const normalized = normalizePhoneToIndian10(raw);
+  if (!normalized) return [];
+  const canonical = `+91${normalized}`;
+  return [canonical, `91${normalized}`, normalized];
 }
 
 /**
@@ -26,16 +32,16 @@ router.get("/", (req, res) => {
 });
 
 router.get("/membership/status", async (req, res) => {
-  const normalizedPhone = normalizePhone(req.query.phone);
+  const phoneCandidates = buildPhoneCandidates(req.query.phone);
 
-  if (normalizedPhone.length !== 10) {
+  if (!phoneCandidates.length) {
     return res.status(400).json({ error: "Valid 10-digit phone is required" });
   }
 
   const { data: approvedRows, error: approvedErr } = await supabase
     .from("members")
     .select("id")
-    .eq("phone", normalizedPhone)
+    .in("phone", phoneCandidates)
     .eq("status", "approved")
     .limit(1);
 
@@ -50,7 +56,7 @@ router.get("/membership/status", async (req, res) => {
   const { data: pendingRows, error: pendingErr } = await supabase
     .from("members")
     .select("id")
-    .eq("phone", normalizedPhone)
+    .in("phone", phoneCandidates)
     .neq("status", "approved")
     .limit(1);
 

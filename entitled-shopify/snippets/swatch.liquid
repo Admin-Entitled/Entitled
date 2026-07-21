@@ -1,0 +1,102 @@
+{% if swatch == blank %}
+  <div class="swatch error">
+    <p>You must include the snippet swatch.liquid with the name of a product option.</p>
+    <p>Use: <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+    <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+  </div>
+{% else %}
+
+  {% assign found_option = false %}
+  {% assign is_color = false %}
+  {% assign option_index = 0 %}
+
+  {% for option in product.options %}
+    {% if option == swatch %}
+      {% assign found_option = true %}
+      {% assign option_index = forloop.index0 %}
+      <style>
+        label[for="product-select-option-{{ option_index }}"] { display: none; }
+        #product-select-option-{{ option_index }} { display: none; }
+        #product-select-option-{{ option_index }} + .custom-style-select-box { display: none !important; }
+      </style>
+      <script>$(window).load(function() { $('.selector-wrapper:eq({{ option_index }})').hide(); });</script>
+      {% assign downcased_option = swatch | downcase %}
+      {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+        {% assign is_color = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% unless found_option %}
+    <div class="swatch error">
+      <p>You included the snippet swatch.liquid with the name of a product option — <code>'{{ swatch }}'</code> — that does not belong to your product.</p>
+      <p>Use <code>{% raw %}{% include 'swatch' with 'name of your product option here' %}{% endraw %}</code></p>
+      <p>Example: <code>{% raw %}{% include 'swatch' with 'Color' %}{% endraw %}</code></p>
+      <p><strong>This is case-sensitive!</strong> Do not put in <code>'color'</code> if your product option name is <code>'Color'</code>.</p>
+    </div>
+  {% else %}
+
+    <h4>{% if swatch == 'Color' %}<span>Color </span>:{% else %}<span>{{ swatch }}</span>:{% endif %}</h4>
+
+    <div class="swatch {{ swatch }} clearfix color_form" data-option-index="{{ option_index }}" data-option-name="{{ swatch | escape }}">
+      {% assign values = '|' %}
+
+      {% for variant in product.variants %}
+        {% assign value = variant.options[option_index] %}
+
+        {% capture value_token %}|{{ value }}|{% endcapture %}
+        {% unless values contains value_token %}
+          {% assign values = values | append: value | append: '|' %}
+
+          {% assign option_available = false %}
+          {% assign option_variant = blank %}
+
+          {% for option_variant_loop in product.variants %}
+            {% if option_variant_loop.options[option_index] == value %}
+              {% if option_variant == blank %}
+                {% assign option_variant = option_variant_loop %}
+              {% endif %}
+              {% if option_variant_loop.available %}
+                {% assign option_available = true %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+
+          <div
+            data-value="{{ value | escape }}"
+            class="row swatch-element {% if is_color %}color {% endif %}{{ value | handle }} {% unless option_available %}soldout{% endunless %}"
+          >
+            <input
+              id="swatch-{{ option_index }}-{{ value | handle }}"
+              type="radio"
+              name="option-{{ option_index }}"
+              value="{{ value | escape }}"
+              {% if current_variant.options[option_index] == value %}checked{% endif %}
+              {% unless option_available %}disabled="disabled"{% endunless %}
+            />
+
+            {% if is_color %}
+              <label
+                for="swatch-{{ option_index }}-{{ value | handle }}"
+                class="chk_color"
+                style="background: {{ value | split: ' ' | last | handle }}; background: url({% if option_variant and option_variant.image %}{{ option_variant.image.src | img_url:'small' }}{% endif %}) center;"
+              >
+                {% unless option_available %}
+                  <span class="soldout_text">Sold Out</span>
+                {% endunless %}
+              </label>
+            {% else %}
+              <label for="swatch-{{ option_index }}-{{ value | handle }}"{% unless option_available %} aria-disabled="true"{% endunless %}>
+                <span class="swatch_value">{{ value }}</span>
+                {% unless option_available %}
+                  <span class="soldout_text">Sold Out</span>
+                {% endunless %}
+              </label>
+            {% endif %}
+          </div>
+        {% endunless %}
+      {% endfor %}
+    </div>
+
+  {% endunless %}
+{% endif %}

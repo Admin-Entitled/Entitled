@@ -1,0 +1,214 @@
+2026-06-29 14:15:29,113 [INFO] ============================================================
+2026-06-29 14:15:29,114 [INFO] PDF Thermal Sorter & Converter Started (Blue Dart & Amazon)
+2026-06-29 14:15:29,114 [INFO] Input directory: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shipping/shipping-label-sorter/input
+2026-06-29 14:15:29,114 [INFO] Output directory: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shipping/shipping-label-sorter/output
+2026-06-29 14:15:29,114 [INFO] ============================================================
+2026-06-29 14:15:29,114 [INFO] Files found in input directory: 1
+2026-06-29 14:15:29,114 [INFO]  - [PDF] b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf
+2026-06-29 14:15:29,114 [INFO] ----------------------------------------
+2026-06-29 14:15:29,114 [INFO] Processing PDF file: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf
+2026-06-29 14:15:29,115 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 1
+2026-06-29 14:15:29,121 [INFO] Detected courier: bluedart
+2026-06-29 14:15:29,123 [INFO] Order ID: 1109
+2026-06-29 14:15:29,648 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:29,655 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:29,662 [INFO]   Rewrote right-side details: Awb=90567614115, Routing=TRA/TRA, Wt: 0.40 kg | Dim: 4*20*30 cm, Cluster=GAC
+2026-06-29 14:15:29,663 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:29,666 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:29,692 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:29,724 [INFO] Saved: output/1109_bluedart_4x6.pdf
+2026-06-29 14:15:29,733 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 2
+2026-06-29 14:15:29,741 [INFO] Detected courier: bluedart
+2026-06-29 14:15:29,741 [INFO] Order ID: 1101
+2026-06-29 14:15:30,274 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:30,281 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:30,288 [INFO]   Rewrote right-side details: Awb=77853622663, Routing=HYD/SEC, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=SEC
+2026-06-29 14:15:30,288 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:30,292 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:30,313 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:30,346 [INFO] Saved: output/1101_bluedart_4x6.pdf
+2026-06-29 14:15:30,359 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 3
+2026-06-29 14:15:30,363 [INFO] Detected courier: bluedart
+2026-06-29 14:15:30,363 [INFO] Order ID: 1111
+2026-06-29 14:15:30,919 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:30,926 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:30,932 [INFO]   Rewrote right-side details: Awb=77857637841, Routing=NBR/NBR, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=CSH
+2026-06-29 14:15:30,932 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:30,935 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:30,955 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:30,989 [INFO] Saved: output/1111_bluedart_4x6.pdf
+2026-06-29 14:15:31,001 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 4
+2026-06-29 14:15:31,006 [INFO] Detected courier: bluedart
+2026-06-29 14:15:31,007 [INFO] Order ID: 1112
+2026-06-29 14:15:31,602 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:31,609 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:31,615 [INFO]   Rewrote right-side details: Awb=77854590601, Routing=DEL/NED, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=NED
+2026-06-29 14:15:31,616 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:31,619 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:31,641 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:31,679 [INFO] Saved: output/1112_bluedart_4x6.pdf
+2026-06-29 14:15:31,694 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 5
+2026-06-29 14:15:31,699 [INFO] Detected courier: bluedart
+2026-06-29 14:15:31,700 [INFO] Order ID: 1113
+2026-06-29 14:15:32,251 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:32,258 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:32,264 [INFO]   Rewrote right-side details: Awb=77857767422, Routing=JAI/JKR, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=JKR
+2026-06-29 14:15:32,264 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:32,267 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:32,288 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:32,322 [INFO] Saved: output/1113_bluedart_4x6.pdf
+2026-06-29 14:15:32,333 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 6
+2026-06-29 14:15:32,341 [INFO] Detected courier: bluedart
+2026-06-29 14:15:32,342 [INFO] Order ID: 1114
+2026-06-29 14:15:32,927 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:32,934 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:32,940 [INFO]   Rewrote right-side details: Awb=77854590085, Routing=DIP/DIP, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=GUB
+2026-06-29 14:15:32,940 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:32,943 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:32,965 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:33,005 [INFO] Saved: output/1114_bluedart_4x6.pdf
+2026-06-29 14:15:33,018 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 7
+2026-06-29 14:15:33,023 [INFO] Detected courier: bluedart
+2026-06-29 14:15:33,024 [INFO] Order ID: 1118
+2026-06-29 14:15:33,587 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:33,594 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:33,602 [INFO]   Rewrote right-side details: Awb=77043477103, Routing=IND/PCD, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=PCD
+2026-06-29 14:15:33,602 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:33,606 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:33,628 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:33,664 [INFO] Saved: output/1118_bluedart_4x6.pdf
+2026-06-29 14:15:33,704 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 8
+2026-06-29 14:15:33,712 [INFO] Detected courier: Xpressbees
+2026-06-29 14:15:33,712 [INFO] Order ID: 1120
+2026-06-29 14:15:33,712 [INFO] Using Blue Dart-like processing pipeline for Xpressbees
+2026-06-29 14:15:34,327 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:34,334 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:34,334 [INFO] Applying right-side Wt/Dim block
+2026-06-29 14:15:34,334 [INFO] Xpressbees order_id: 1120
+2026-06-29 14:15:34,335 [INFO] Xpressbees awb: 14112365809321
+2026-06-29 14:15:34,335 [INFO] Xpressbees routing_code_1: N/S-09/2C/020 RTO
+2026-06-29 14:15:34,335 [INFO] Xpressbees routing_code_2: NA
+2026-06-29 14:15:34,335 [INFO] Xpressbees weight: 0.10 kg
+2026-06-29 14:15:34,335 [INFO] Xpressbees dimensions: 30*20*1 cm
+2026-06-29 14:15:34,341 [INFO] Applied Xpressbees right-side detail rewrite
+2026-06-29 14:15:34,341 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:34,341 [INFO] Applying final left-side Dimensions/Weight overlay
+2026-06-29 14:15:34,344 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:34,344 [INFO] Applied final left-side Dimensions/Weight overlay
+2026-06-29 14:15:34,344 [INFO] Applying logo replacement
+2026-06-29 14:15:34,365 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:34,367 [INFO] Applied Xpressbees Shipped By divider fix
+2026-06-29 14:15:34,401 [INFO] Saved: output/1120_xpressbees_4x6.pdf
+2026-06-29 14:15:34,413 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 9
+2026-06-29 14:15:34,418 [INFO] Detected courier: Xpressbees
+2026-06-29 14:15:34,418 [INFO] Order ID: 1121
+2026-06-29 14:15:34,418 [INFO] Using Blue Dart-like processing pipeline for Xpressbees
+2026-06-29 14:15:34,979 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:34,986 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:34,986 [INFO] Applying right-side Wt/Dim block
+2026-06-29 14:15:34,987 [INFO] Xpressbees order_id: 1121
+2026-06-29 14:15:34,987 [INFO] Xpressbees awb: 14112365349404
+2026-06-29 14:15:34,987 [INFO] Xpressbees routing_code_1: N/S-11/2B/003 RTO
+2026-06-29 14:15:34,987 [INFO] Xpressbees routing_code_2: NA
+2026-06-29 14:15:34,987 [INFO] Xpressbees weight: 0.20 kg
+2026-06-29 14:15:34,987 [INFO] Xpressbees dimensions: 30*20*2 cm
+2026-06-29 14:15:34,993 [INFO] Applied Xpressbees right-side detail rewrite
+2026-06-29 14:15:34,993 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:34,993 [INFO] Applying final left-side Dimensions/Weight overlay
+2026-06-29 14:15:34,996 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:34,997 [INFO] Applied final left-side Dimensions/Weight overlay
+2026-06-29 14:15:34,997 [INFO] Applying logo replacement
+2026-06-29 14:15:35,018 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:35,020 [INFO] Applied Xpressbees Shipped By divider fix
+2026-06-29 14:15:35,054 [INFO] Saved: output/1121_xpressbees_4x6.pdf
+2026-06-29 14:15:35,066 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 10
+2026-06-29 14:15:35,071 [INFO] Detected courier: bluedart
+2026-06-29 14:15:35,071 [INFO] Order ID: 1122
+2026-06-29 14:15:35,609 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:35,616 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:35,622 [INFO]   Rewrote right-side details: Awb=77858080974, Routing=HYD/MGE, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=MGE
+2026-06-29 14:15:35,622 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:35,625 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:35,648 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:35,681 [INFO] Saved: output/1122_bluedart_4x6.pdf
+2026-06-29 14:15:35,693 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 11
+2026-06-29 14:15:35,698 [INFO] Detected courier: bluedart
+2026-06-29 14:15:35,699 [INFO] Order ID: 1123
+2026-06-29 14:15:36,239 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:36,246 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:36,252 [INFO]   Rewrote right-side details: Awb=77858039453, Routing=SIT/SIT, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=DCH
+2026-06-29 14:15:36,252 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:36,256 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:36,276 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:36,310 [INFO] Saved: output/1123_bluedart_4x6.pdf
+2026-06-29 14:15:36,331 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 12
+2026-06-29 14:15:36,336 [INFO] Detected courier: bluedart
+2026-06-29 14:15:36,336 [INFO] Order ID: 1124
+2026-06-29 14:15:36,875 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:36,882 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:36,888 [INFO]   Rewrote right-side details: Awb=77858015491, Routing=CTK/CUT, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=CUT
+2026-06-29 14:15:36,888 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:36,891 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:36,912 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:36,947 [INFO] Saved: output/1124_bluedart_4x6.pdf
+2026-06-29 14:15:36,959 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 13
+2026-06-29 14:15:36,964 [INFO] Detected courier: bluedart
+2026-06-29 14:15:36,965 [INFO] Order ID: 1126
+2026-06-29 14:15:37,495 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:37,502 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:37,508 [INFO]   Rewrote right-side details: Awb=77858047400, Routing=BLR/HSR, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=HSR
+2026-06-29 14:15:37,508 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:37,512 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:37,534 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:37,570 [INFO] Saved: output/1126_bluedart_4x6.pdf
+2026-06-29 14:15:37,583 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 14
+2026-06-29 14:15:37,588 [INFO] Detected courier: bluedart
+2026-06-29 14:15:37,588 [INFO] Order ID: 1128
+2026-06-29 14:15:38,113 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:38,120 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:38,126 [INFO]   Rewrote right-side details: Awb=77858043900, Routing=ALL/ALL, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=ALL
+2026-06-29 14:15:38,126 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:38,129 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:38,150 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:38,183 [INFO] Saved: output/1128_bluedart_4x6.pdf
+2026-06-29 14:15:38,196 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 15
+2026-06-29 14:15:38,201 [INFO] Detected courier: bluedart
+2026-06-29 14:15:38,201 [INFO] Order ID: 1129
+2026-06-29 14:15:38,733 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:38,740 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:38,746 [INFO]   Rewrote right-side details: Awb=77858044434, Routing=AHD/BOP, Wt: 0.10 kg | Dim: 30*20*1 cm, Cluster=BOP
+2026-06-29 14:15:38,746 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:38,750 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:38,772 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:38,807 [INFO] Saved: output/1129_bluedart_4x6.pdf
+2026-06-29 14:15:38,825 [INFO] Processing: b242bc4dec8ce5edcdfa9b8447612f22final_labels.pdf page 16
+2026-06-29 14:15:38,830 [INFO] Detected courier: Xpressbees
+2026-06-29 14:15:38,831 [INFO] Order ID: 1130
+2026-06-29 14:15:38,831 [INFO] Using Blue Dart-like processing pipeline for Xpressbees
+2026-06-29 14:15:39,373 [INFO]   Bbox Rect(0.0, 0.0, 288.0, 432.0) scaled by 1.0000 to Rect(0.0, 0.0, 288.0, 432.0)
+2026-06-29 14:15:39,380 [INFO]   Cleared old logo area at Rect(145.0, 15.0, 280.0, 115.0)
+2026-06-29 14:15:39,380 [INFO] Applying right-side Wt/Dim block
+2026-06-29 14:15:39,380 [INFO] Xpressbees order_id: 1130
+2026-06-29 14:15:39,380 [INFO] Xpressbees awb: 14112365851671
+2026-06-29 14:15:39,380 [INFO] Xpressbees routing_code_1: N/S-16/1C/008 RTO
+2026-06-29 14:15:39,380 [INFO] Xpressbees routing_code_2: NA
+2026-06-29 14:15:39,381 [INFO] Xpressbees weight: 0.20 kg
+2026-06-29 14:15:39,381 [INFO] Xpressbees dimensions: 30*20*2 cm
+2026-06-29 14:15:39,388 [INFO] Applied Xpressbees right-side detail rewrite
+2026-06-29 14:15:39,388 [INFO]   Right-side AWB detail block rewritten
+2026-06-29 14:15:39,388 [INFO] Applying final left-side Dimensions/Weight overlay
+2026-06-29 14:15:39,392 [INFO]   Applied final left-side Dimensions/Weight removal and shifted bottom details upwards by 33.3 points.
+2026-06-29 14:15:39,392 [INFO] Applied final left-side Dimensions/Weight overlay
+2026-06-29 14:15:39,392 [INFO] Applying logo replacement
+2026-06-29 14:15:39,413 [INFO]   Overlayed and verified logo at Rect(165.0, 30.0, 265.0, 44.1025641025641) (dark pixel ratio 0.339)
+2026-06-29 14:15:39,415 [INFO] Applied Xpressbees Shipped By divider fix
+2026-06-29 14:15:39,450 [INFO] Saved: output/1130_xpressbees_4x6.pdf
+2026-06-29 14:15:39,472 [INFO] ============================================================
+2026-06-29 14:15:39,472 [INFO] Conversion Job Summary:
+2026-06-29 14:15:39,472 [INFO] Total PDFs found/extracted: 1
+2026-06-29 14:15:39,472 [INFO] Successful conversions/copies: 16
+2026-06-29 14:15:39,473 [INFO] Total files skipped:           0
+2026-06-29 14:15:39,473 [INFO] Total files failed:            0
+2026-06-29 14:15:39,473 [INFO] All operations completed.
+2026-06-29 14:15:39,473 [INFO] Logs have been saved to: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shipping/shipping-label-sorter/output/converter.log
+2026-06-29 14:15:39,473 [INFO] ============================================================

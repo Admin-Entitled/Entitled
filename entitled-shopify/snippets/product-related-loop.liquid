@@ -1,0 +1,68 @@
+<!-- /snippets/product-grid-item.liquid -->
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% comment %}
+  Check if the product is sold out and set a variable to be used below.
+{% endcomment %}
+{% assign sold_out = true %}
+{% if product.available %}
+  {% assign sold_out = false %}
+{% endif %}
+
+
+   <div class="grid__item four-twelfths small--one-half medium--one-third">
+   {% capture related_product_size_variants %}{% render 'product-size-data', size_product: product %}{% endcapture %}
+   <div class="product_item" data-size-product data-product-url="{{ product.url | within: collection | escape }}" data-product-options="{{ product.options_with_values | json | escape }}" data-product-variants="{{ related_product_size_variants | strip | escape }}">
+                     <a href="{{ product.url | within: collection }}" class="product_card_media product_image_link" aria-label="{{ product.title | escape }}">
+                       <div class="product_image">
+
+                         <span class="product_overlay"></span>
+                         <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | default: product.title | escape }}" />
+
+                          {% if settings.collections_show_sold_out_square %}
+                            {% if sold_out %}<span class="sold_out">{{ 'products.product.sold_out' | t }} </span>{% endif %}
+                          {% endif %}
+                          {% if settings.collections_show_sale_square %}
+                            {% if on_sale %}
+                            <span class="onsale">{{ 'products.product.on_sale' | t }}</span>
+                            {% endif %}
+                          {% endif %}
+
+                       </div>
+                     </a>
+
+                        <div class="product_desc">
+                          <div class="product_card_copy">
+                            <h3><a href="{{ product.url | within: collection }}" aria-describedby="RelatedProductSizeStatus-{{ product.id }}">{{ product.title | capitalize }}</a></h3>
+                            <h4>{{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span><del>{{ product.compare_at_price | money }}</del></span>
+                              {% endif %}
+                            </h4>
+                            <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+                            <p id="RelatedProductSizeStatus-{{ product.id }}" class="product-size-status" data-size-preference-status hidden></p>
+                          </div>
+                          <div data-size-preference-card-action>
+                          {% if sold_out %}
+                            <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
+                              <button type="button" class="product_card_button is-disabled" disabled>{{ 'products.product.sold_out' | t }}</button>
+                            </form>
+                          {% elsif product.has_only_default_variant %}
+                            <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
+                              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                              <input type="hidden" name="quantity" value="1">
+                              <button type="submit" name="add" class="product_card_button">{{ 'products.product.add_to_cart' | t }}</button>
+                            </form>
+                          {% else %}
+                            <a href="{{ product.url | within: collection }}" class="product_card_button">{{ 'products.product.choose_options' | t }}</a>
+                          {% endif %}
+                          </div>
+                        </div>
+                    
+                    </div>
+                </div>
+         
+       

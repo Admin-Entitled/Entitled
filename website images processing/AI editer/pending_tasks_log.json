@@ -1,0 +1,65 @@
+{
+  "scan_timestamp": "2026-06-24T13:48:44.479286+00:00",
+  "total_product_folders_scanned": 1,
+  "top_processing_paused": true,
+  "selected_completion_rule": "front_back_only",
+  "pending_tasks": [
+    {
+      "product_folder": "Product 1",
+      "role": "front",
+      "input_file_path": "input/Product 1/front.jpeg",
+      "reference_file_path": "references/front.webp",
+      "expected_output_path": "results/Product 1/front.jpeg",
+      "reason_pending": "manifest_partial"
+    },
+    {
+      "product_folder": "Product 1",
+      "role": "back",
+      "input_file_path": "input/Product 1/back.jpeg",
+      "reference_file_path": "references/back.webp",
+      "expected_output_path": "results/Product 1/back.jpeg",
+      "reason_pending": "manifest_partial"
+    }
+  ],
+  "skipped_folders": [],
+  "estimated_standard_api_cost": 14.0,
+  "estimated_batch_api_cost": 7.0,
+  "estimated_standard_completion_time": "~180 seconds",
+  "estimated_batch_completion_time": "asynchronous, target within 24 hours",
+  "pending_front_outputs": 1,
+  "pending_back_outputs": 1,
+  "total_pending_outputs": 2,
+  "products": [
+    {
+      "product_folder": "Product 1",
+      "input_fingerprint": "e971083500a019b02739c029287ef44ae2d66f2afb2a76e36c9df2e4a3443aa4",
+      "input_files": [
+        {
+          "name": "back.jpeg",
+          "size": 7780784,
+          "mtime_ns": 1781682667951137460
+        },
+        {
+          "name": "front.jpeg",
+          "size": 8162042,
+          "mtime_ns": 1781682684437469603
+        }
+      ],
+      "front_input_found": true,
+      "back_input_found": true,
+      "top_processing_paused": true,
+      "expected_outputs": [
+        "results/Product 1/back.jpeg",
+        "results/Product 1/front.jpeg"
+      ],
+      "front_output_found": false,
+      "back_output_found": false,
+      "manifest_success_fingerprint_unchanged": false,
+      "output_status_per_role": {
+        "front": "missing",
+        "back": "missing",
+        "top": "paused_top_processing"
+      }
+    }
+  ]
+}

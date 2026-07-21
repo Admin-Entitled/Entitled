@@ -1,0 +1,24 @@
+{
+  "source_image_path": "product-5/back.jpg",
+  "reference_path": "references/back.webp",
+  "bbox": [
+    173,
+    153,
+    860,
+    880
+  ],
+  "reference_bbox": [
+    146,
+    161,
+    875,
+    865
+  ],
+  "bbox_aspect_ratio": 0.945,
+  "reference_aspect_ratio": 1.0355,
+  "scale_used": 0.5269,
+  "rembg_success": true,
+  "reference_mismatch_score": 0.6002,
+  "accepted": true,
+  "rejection_reason": null,
+  "attempt": 1
+}

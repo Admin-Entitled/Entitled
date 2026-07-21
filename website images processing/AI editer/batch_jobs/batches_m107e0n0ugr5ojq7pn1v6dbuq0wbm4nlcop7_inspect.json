@@ -1,0 +1,15 @@
+{
+  "name": "batches/m107e0n0ugr5ojq7pn1v6dbuq0wbm4nlcop7",
+  "display_name": "shopify-image-batch-20260604-025320",
+  "state": "JOB_STATE_EXPIRED",
+  "error": null,
+  "create_time": "2026-06-03T21:26:10.569287Z",
+  "start_time": null,
+  "end_time": "2026-06-05T05:42:28.866561Z",
+  "update_time": "2026-06-05T05:42:28.866561Z",
+  "model": "models/gemini-3.1-flash-image",
+  "src": null,
+  "dest": null,
+  "completion_stats": null,
+  "output_info": null
+}

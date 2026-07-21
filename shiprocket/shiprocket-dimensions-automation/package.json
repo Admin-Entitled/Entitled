@@ -1,0 +1,50 @@
+{
+  "name": "shiprocket-dimensions-automation",
+  "version": "1.0.0",
+  "description": "Bulk dimensions and weight updates for Shiprocket products and orders",
+  "main": "dist/cli.js",
+  "scripts": {
+    "import-latest-csv": "tsx src/cli.ts import-latest-csv",
+    "inspect-input": "tsx src/cli.ts inspect-input",
+    "prepare-csv": "tsx src/cli.ts prepare-csv",
+    "verify-csv": "tsx src/cli.ts verify-csv",
+    "quick-channel-test": "tsx src/cli.ts quick-channel-test",
+    "doctor": "tsx src/cli.ts doctor",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:shopify": "tsx src/cli.ts test-shopify",
+    "channels": "tsx src/cli.ts channels"
+  },
+  "keywords": [
+    "shiprocket",
+    "dimensions",
+    "automation",
+    "typescript",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.18.0",
+    "commander": "^15.0.0",
+    "dotenv": "^17.4.2",
+    "papaparse": "^5.5.4",
+    "playwright": "^1.61.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.0.0",
+    "@types/papaparse": "^5.5.2",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/tests"
+    ]
+  }
+}

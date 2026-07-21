@@ -1,0 +1,26 @@
+{
+  "source_image_path": "product-10/top.jpg",
+  "reference_path": "references/top.webp",
+  "bbox": [
+    107,
+    145,
+    917,
+    881
+  ],
+  "reference_bbox": [
+    0,
+    0,
+    1024,
+    1024
+  ],
+  "bbox_aspect_ratio": 1.1005,
+  "reference_aspect_ratio": 1.0,
+  "scale_used": 0.5875,
+  "rembg_success": true,
+  "reference_mismatch_score": 2.5601,
+  "threshold": 0.65,
+  "accepted": true,
+  "rejection_reason": null,
+  "warning_reason": "reference_mismatch_warning",
+  "attempt": 1
+}

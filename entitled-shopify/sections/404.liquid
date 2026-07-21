@@ -1,0 +1,40 @@
+<!--background images-->
+<div class="mask" style="background-image: url({% if settings.background_404 != blank %}{{ settings.background_404 | img_url:'master' }}{% else %}{{ 'placeholder_image.png' | asset_url }}{% endif %}); background-size: cover;"></div>
+
+<div class="page_content">
+
+  <div class="container">
+
+    <div class="error-content">
+
+      <div class="brand-name">
+        {% if settings.logo_use_image %}
+          {% capture image_size %}
+            {{ settings.logo_max_width }}x{% endcapture %}
+          <img src="{{ settings.logo | img_url:image_size }}" alt="{{ shop.name }}" class="logo"/>
+        {% else %}
+          <h2>{{ shop.name }}</h2>
+        {% endif %}
+      </div>
+
+      <div class="error_msg">
+        <h2>4<span>O</span>4</h2>
+        <h1>{{ 'general.404.title' | t }}</h1>
+        <p>{{ 'general.404.subtext_html' | t }}</p>
+        <a href="/" class="button-white">{{ settings.btn_404_title | capitalize }}</a>
+        {% if settings.enable_404_sociallink %}
+          <div class="bottom_social">
+            {% include 'social-links' %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!--footer-->
+    </div>
+  </div>
+</div>
+
+
+{{ 'modernizr.js' | asset_url | script_tag }}
+{{ 'jquery.gridrotator.js' | asset_url | script_tag }}
+{{ 'script.js' | asset_url | script_tag }}

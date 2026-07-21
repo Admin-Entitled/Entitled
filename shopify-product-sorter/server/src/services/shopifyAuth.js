@@ -99,6 +99,7 @@ async function requestClientCredentialsToken() {
 }
 
 export async function getAccessToken() {
+  if (env.shopifyAdminAccessToken) return env.shopifyAdminAccessToken;
   if (isTokenFresh()) {
     logInfo("Using cached fresh Shopify access token", {
       expiresAt: new Date(cachedExpiresAt).toISOString(),

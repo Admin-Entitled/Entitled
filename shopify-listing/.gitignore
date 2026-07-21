@@ -1,0 +1,5 @@
+.env
+.ms_token_cache.json
+logs/
+dist/
+node_modules/

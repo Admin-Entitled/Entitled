@@ -1,0 +1,73 @@
+<!-- /templates/customers/register.liquid -->
+
+
+
+
+
+<div class="header_height"></div>
+
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="content"> 
+    <div id="customer-account" class="create_account">  		
+         <div class="container">
+             <div class="grid">
+                  <div class="grid__item large--two-fifths push--large--three-tenths max-large--three-fifths push--max-large--one-fifth medium--four-fifths push--medium--one-tenth text-center max-medium--six-twelfths push--max-medium--three-twelfths">               
+                
+                        <div class="section_title black_border">
+                            <h1>{{ 'customer.register.title' | t }}</h1>
+                            <span class="title_border black_border"></span>
+                        </div>
+
+                    <div class="form-vertical">
+                      {% form 'create_customer' %}                   
+
+                      {{ form.errors | default_errors }}
+
+                      <div class="row">
+                        <input type="text" arial-label="Firstname" name="customer[first_name]" id="FirstName" class="input-full" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} required>
+                      </div>
+
+                      <div class="row">
+                        <input type="text" arial-label="Lastaname" name="customer[last_name]" id="LastName" class="input-full" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} required>
+                      </div>
+
+                      <div class="row">
+                        <input type="email" name="customer[email]" arial-label="Email" id="Email" class="input-full{% if form.errors contains 'email' %} error{% endif %}" placeholder="{{ 'customer.register.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} required>
+                      </div>
+
+                      <div class="row">
+                        <input type="password" arial-label="password" name="customer[password]" id="CreatePassword" class="input-full{% if form.errors contains 'password' %} error{% endif %}" placeholder="{{ 'customer.register.password' | t }}" required>
+                      </div>
+
+                      <div class="submit_row">
+                        <button type="submit" arial-label="submit" class="btn btn--full">{{ 'customer.register.submit' | t }} <span><i class="fa fa-angle-right"></i></span></button>
+                      </div>
+
+                      <a href="{{ shop.url }}"><span><i class="fa fa-angle-left"></i></span>{{ 'customer.register.cancel' | t }}</a>
+
+                      {% endform %}
+                    </div>
+                </div>            
+            </div>  
+         </div>
+    </div>
+</div>
+
+
+
+
+
+

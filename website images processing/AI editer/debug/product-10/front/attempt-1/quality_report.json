@@ -1,0 +1,26 @@
+{
+  "source_image_path": "product-10/front.jpg",
+  "reference_path": "references/front.webp",
+  "bbox": [
+    146,
+    160,
+    877,
+    874
+  ],
+  "reference_bbox": [
+    146,
+    159,
+    876,
+    866
+  ],
+  "bbox_aspect_ratio": 1.0238,
+  "reference_aspect_ratio": 1.0325,
+  "scale_used": 0.5294,
+  "rembg_success": true,
+  "reference_mismatch_score": 0.3011,
+  "threshold": 0.45,
+  "accepted": true,
+  "rejection_reason": null,
+  "warning_reason": null,
+  "attempt": 1
+}

@@ -1,0 +1,45 @@
+{
+  "rules": [
+    {
+      "minUnits": 1,
+      "maxUnits": 1,
+      "length_cm": 28.0,
+      "breadth_cm": 24.0,
+      "height_cm": 4.0,
+      "extraWeight_kg": 0.05
+    },
+    {
+      "minUnits": 2,
+      "maxUnits": 2,
+      "length_cm": 30.0,
+      "breadth_cm": 26.0,
+      "height_cm": 6.0,
+      "extraWeight_kg": 0.10
+    },
+    {
+      "minUnits": 3,
+      "maxUnits": 4,
+      "length_cm": 34.0,
+      "breadth_cm": 28.0,
+      "height_cm": 10.0,
+      "extraWeight_kg": 0.15
+    },
+    {
+      "minUnits": 5,
+      "maxUnits": 10,
+      "length_cm": 40.0,
+      "breadth_cm": 30.0,
+      "height_cm": 15.0,
+      "extraWeight_kg": 0.20
+    },
+    {
+      "minUnits": 11,
+      "maxUnits": 9999,
+      "length_cm": 50.0,
+      "breadth_cm": 40.0,
+      "height_cm": 25.0,
+      "extraWeight_kg": 0.30
+    }
+  ],
+  "defaultExtraWeight_kg": 0.10
+}

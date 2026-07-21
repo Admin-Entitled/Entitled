@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { register } from "../services/auth";
 import Wordmark from "../components/Wordmark";
 import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
+import { coercePhoneInput, normalizePhoneToIndian10 } from "../utils/phone";
 
 export default function Register() {
   const location = useLocation();
@@ -20,7 +21,7 @@ export default function Register() {
   useEffect(() => {
     const prefillPhone = location?.state?.phone;
     if (typeof prefillPhone === "string" && prefillPhone) {
-      setForm((p) => ({ ...p, phone: prefillPhone }));
+      setForm((p) => ({ ...p, phone: coercePhoneInput(prefillPhone) }));
     }
   }, [location?.state?.phone]);
 
@@ -34,7 +35,18 @@ export default function Register() {
     setErr("");
     setLoading(true);
     try {
-      const res = await register(form);
+      const normalizedPhone = normalizePhoneToIndian10(form.phone);
+      if (!normalizedPhone) {
+        setErr("Enter a valid 10-digit phone number.");
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        ...form,
+        phone: normalizedPhone,
+      };
+      const res = await register(payload);
       setMsg(res?.data?.status ? "Application submitted for approval." : "Submitted.");
     } catch (e2) {
       setErr(e2?.response?.data?.error || "Registration failed");
@@ -114,10 +126,12 @@ export default function Register() {
                   <input
                     className="field-input"
                     value={form.phone}
-                    onChange={(e) => set("phone", e.target.value)}
+                    onChange={(e) => set("phone", coercePhoneInput(e.target.value))}
                     type="tel"
                     autoComplete="tel"
                     inputMode="numeric"
+                    maxLength={10}
+                    placeholder="8770199124"
                   />
                 </div>
                 <div>

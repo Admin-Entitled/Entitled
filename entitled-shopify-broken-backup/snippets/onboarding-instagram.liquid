@@ -1,0 +1,36 @@
+<!-- snippets/onboarding-instagram.liquid -->
+<div class="parallax-window insta_section" >
+
+  <span class="insta_overlay"></span>
+
+  <div class="container">
+    
+      <h1>{{settings.instagram_title}}</h1>
+        
+        <div class="insta_list" id="instafeed">
+        {% for i in (1..10) %}
+        <div class="insta_item">
+          <a href="/">
+            <div class="insta_item_overlay">
+              <ul>
+                <li>
+                  <span>
+                    <i class="fa fa-heart"></i>
+                  </span>1
+                </li>
+                <li>
+                  <span>
+                    <i class="fa fa-comment-o"></i>
+                  </span>0
+                </li>
+              </ul>
+            </div>
+            {{ 'image' | placeholder_svg_tag: 'icon icon--placeholder' }}
+           </a>
+          </div>
+        {% endfor %}
+        </div>
+    
+    </div>
+
+</div>

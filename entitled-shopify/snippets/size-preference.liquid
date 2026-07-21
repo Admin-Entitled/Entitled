@@ -1,0 +1,58 @@
+<div
+  class="size-preference"
+  data-size-preference-root
+  data-label-choose="{{ 'size_preference.choose_size' | t | escape }}"
+  data-label-selected="{{ 'size_preference.selected_control' | t | escape }}"
+  data-status-available="{{ 'size_preference.status_available' | t | escape }}"
+  data-status-sold-out="{{ 'size_preference.status_sold_out' | t | escape }}"
+  data-status-unavailable="{{ 'size_preference.status_unavailable' | t | escape }}"
+  data-status-one-size="{{ 'size_preference.status_one_size' | t | escape }}"
+  data-status-not-applicable="{{ 'size_preference.status_not_applicable' | t | escape }}"
+  data-status-saved="{{ 'size_preference.status_saved' | t | escape }}"
+  data-card-add-label="{{ 'products.product.add_to_cart' | t | escape }}"
+  data-card-sold-out-label="{{ 'products.product.sold_out' | t | escape }}"
+  data-card-choose-options-label="{{ 'products.product.choose_options' | t | escape }}"
+  data-card-view-product-label="{{ 'size_preference.view_product' | t | escape }}"
+  data-cart-add-url="{{ routes.cart_add_url }}"
+>
+  <div
+    class="size-preference__backdrop"
+    data-size-preference-dialog
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="SizePreferenceTitle"
+    aria-describedby="SizePreferenceDescription"
+    tabindex="-1"
+    hidden
+  >
+    <div class="size-preference__panel">
+      <button
+        type="button"
+        class="size-preference__close"
+        data-size-preference-close
+        aria-label="{{ 'size_preference.close' | t | escape }}"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M5 5l14 14M19 5 5 19"></path>
+        </svg>
+      </button>
+
+      <span class="size-preference__eyebrow">{{ 'size_preference.eyebrow' | t }}</span>
+      <h2 id="SizePreferenceTitle">{{ 'size_preference.title' | t }}</h2>
+      <p id="SizePreferenceDescription">{{ 'size_preference.description' | t }}</p>
+
+      <form data-size-preference-form>
+        <fieldset>
+          <legend class="visually-hidden">{{ 'size_preference.legend' | t }}</legend>
+          <div class="size-preference__choices" data-size-preference-choices></div>
+        </fieldset>
+        <div class="size-preference__actions">
+          <button type="submit" class="size-preference__confirm needsclick" data-size-preference-confirm disabled>
+            {{ 'size_preference.confirm' | t }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <p class="visually-hidden" aria-live="polite" aria-atomic="true" data-size-preference-live></p>
+</div>

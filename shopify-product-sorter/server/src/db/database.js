@@ -61,6 +61,18 @@ db.exec(`
     scope TEXT,
     updated_at TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS delivery_orders (
+    id INTEGER PRIMARY KEY, shopify_order_id TEXT NOT NULL UNIQUE, shopify_order_name TEXT NOT NULL, shopify_order_number TEXT,
+    order_created_at TEXT NOT NULL, customer_name TEXT, awb TEXT, shopify_fulfillment_status TEXT, cancellation_status TEXT,
+    shopify_updated_at TEXT, logistics_raw_status TEXT, resolution TEXT NOT NULL DEFAULT 'UNRESOLVED', resolution_source TEXT NOT NULL DEFAULT 'NONE',
+    courier TEXT, delivered_at TEXT, shiprocket_order_reference TEXT, shiprocket_channel_reference TEXT, shiprocket_response_id TEXT,
+    logistics_updated_at TEXT, manual_note TEXT, manual_resolved_at TEXT, legacy_import_name TEXT, last_synced_at TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS delivery_orders_order_name ON delivery_orders(shopify_order_name);
+  CREATE INDEX IF NOT EXISTS delivery_orders_awb ON delivery_orders(awb);
+  CREATE TABLE IF NOT EXISTS legacy_imports (id INTEGER PRIMARY KEY, content_hash TEXT NOT NULL UNIQUE, filename TEXT NOT NULL, result_json TEXT NOT NULL, created_at TEXT NOT NULL);
+  CREATE TABLE IF NOT EXISTS delivery_logs (id INTEGER PRIMARY KEY, level TEXT NOT NULL, message TEXT NOT NULL, created_at TEXT NOT NULL);
 `);
 
 try {

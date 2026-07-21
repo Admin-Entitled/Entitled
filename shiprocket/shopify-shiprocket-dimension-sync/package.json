@@ -1,0 +1,48 @@
+{
+  "name": "shopify-shiprocket-dimension-sync",
+  "version": "1.0.0",
+  "description": "Sync Shopify product variant SKUs to Shiprocket and apply universal dimensions",
+  "main": "dist/cli.js",
+  "scripts": {
+    "setup:shiprocket": "tsx src/cli.ts setup",
+    "dry-run": "tsx src/cli.ts dry-run",
+    "sync": "tsx src/cli.ts sync",
+    "verify": "tsx src/cli.ts verify",
+    "test:shopify": "tsx src/cli.ts test-shopify",
+    "test:shiprocket": "tsx src/cli.ts test-shiprocket",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "test": "jest --runInBand --detectOpenHandles"
+  },
+  "keywords": [
+    "shopify",
+    "shiprocket",
+    "dimensions",
+    "sync",
+    "typescript",
+    "playwright"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.18.0",
+    "commander": "^15.0.0",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.61.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/tests"
+    ]
+  }
+}

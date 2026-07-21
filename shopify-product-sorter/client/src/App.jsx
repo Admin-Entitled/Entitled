@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "./api";
-import ActualSalesDashboard from "./ActualSalesDashboard";
+import DeliveryResolution from "./DeliveryResolution";
 import SkuImageManager from "./SkuImageManager";
 
 const sidebarModules = [
   { id: "sorter", label: "Shopify Collection Manager", enabled: true },
-  { id: "actual-sales", label: "Sales Intelligence", enabled: true },
+  { id: "actual-sales", label: "Delivery Resolution", enabled: true },
   { id: "sku-image-manager", label: "SKU Image Manager", enabled: true },
   { id: "meta-ads", label: "Meta Ads Dashboard", enabled: false },
   { id: "analytics", label: "Product Analytics", enabled: false },
@@ -1997,7 +1997,7 @@ export default function App() {
         </section>
       </main>
       ) : activeModule === "actual-sales" ? (
-      <ActualSalesDashboard
+      <DeliveryResolution
         sidebarBridge={{
           updateDiagnostics: updateActualSalesDiagnostics,
           pushLog: pushActualSalesLog,

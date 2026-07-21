@@ -3,7 +3,7 @@ import { logError, logInfo } from "../utils/logger.js";
 import { getShopifyAuthHeaders, getShopifyGraphQLEndpoint } from "./shopifyAuth.js";
 import fs from "node:fs";
 
-async function shopifyGraphQL(query, variables = {}) {
+export async function shopifyGraphQL(query, variables = {}) {
   const endpoint = getShopifyGraphQLEndpoint();
   const { headers } = await getShopifyAuthHeaders();
 

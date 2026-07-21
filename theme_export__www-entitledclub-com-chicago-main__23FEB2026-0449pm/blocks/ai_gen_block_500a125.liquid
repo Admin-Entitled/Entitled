@@ -1,0 +1,1496 @@
+{% doc %}
+  @prompt
+    Create ONE Shopify section named “About – Entitled Club”.
+    
+    IMPORTANT:
+    - This must be a SINGLE section
+    - Inside this section, create MULTIPLE CONTENT BLOCKS
+    - Do NOT merge blocks
+    - Do NOT limit to 2 blocks
+    - Create ALL blocks listed below
+    
+    SECTION STRUCTURE (VERY IMPORTANT)
+    This section contains:
+    - 1 Hero block
+    - 6 Content blocks (total 7 blocks)
+    
+    Each Content block must have:
+    - Independent background settings
+    - Independent font settings
+    - Independent text color settings
+    - Independent image picker
+    - Independent animation toggle
+    
+    -----------------------------------
+    
+    BLOCK 1 – HERO
+    Block type: Hero
+    
+    Content:
+    Headline:
+    PRIVATE CLOTHING. MEMBERS ONLY.
+    
+    Subheading:
+    Entry is granted. Releases are curated.
+    
+    Settings (required):
+    - Background gradient (black → dark charcoal)
+    - Text alignment control
+    - Font family selector
+    - Animation: fade-up on load
+    
+    -----------------------------------
+    
+    BLOCK 2 – CONTENT
+    Title: What We Are
+    Text:
+    Entitled Club is a private clothing brand built on selection. We handpick menswear that meets a strict
+    standard, then release it in controlled drops. We prioritise quality over quantity — so every collection
+    feels exclusive by design.
+    
+    Layout:
+    - Desktop: text left, image right
+    - Mobile: stacked (text first)
+    
+    Settings:
+    - Background gradient selector (default dark grey → soft grey)
+    - Image picker
+    - Font family selector
+    - Hover effect toggle (image zoom)
+    - Animation: fade-in (left/right)
+    
+    -----------------------------------
+    
+    BLOCK 3 – CONTENT
+    Title: How Access Works
+    Text:
+    Access is members-only. To enter, you apply with your details. Approvals are typically granted within
+    10–15 days. Once approved, you have always-on access to the storefront.
+    
+    Layout:
+    - Desktop: image left, text right
+    - Mobile: stacked
+    
+    Settings:
+    - Background gradient selector (default soft grey → off-white)
+    - Image picker
+    - Font selector
+    - Hover effect toggle (card lift)
+    - Animation: fade-in (right/left)
+    
+    -----------------------------------
+    
+    BLOCK 4 – CONTENT
+    Title: Curation Philosophy
+    Text:
+    We do not stock at scale. We curate. Our drops are built around scarcity that is real: few pieces, limited
+    quantities, and clean selection. We keep the storefront quiet so the product stays primary.
+    
+    Layout:
+    - Desktop: text left, image right
+    
+    Settings:
+    - Background gradient selector (default black → graphite)
+    - Image picker
+    - Font selector
+    - Hover effect toggle (title underline)
+    - Animation: fade-up
+    
+    -----------------------------------
+    
+    BLOCK 5 – CONTENT
+    Title: Authenticity & Quality
+    Text:
+    We source only through select authentic channels. Every piece is checked for legitimacy and overall
+    quality before it is listed. We do not pass on quality rejects or defective inventory.
+    
+    Layout:
+    - Desktop: image left, text right
+    
+    Settings:
+    - Background gradient selector (default charcoal → mid-grey)
+    - Image picker
+    - Font selector
+    - Hover effect toggle (image desaturate)
+    - Animation: slide-in
+    
+    -----------------------------------
+    
+    BLOCK 6 – CONTENT
+    Title: Drops & Archive
+    Text:
+    Most of our releases follow the drop model. A drop opens, members shop, and then the drop closes.
+    When it closes, it becomes archive. We do not restock by default. The chapter ends.
+    
+    Layout:
+    - Desktop: text left, image right
+    
+    Settings:
+    - Background gradient selector (default dark steel → ash)
+    - Image picker
+    - Font selector
+    - Hover effect toggle (text reveal)
+    - Animation: staggered fade-in
+    
+    -----------------------------------
+    
+    BLOCK 7 – CONTENT
+    Title: The Meaning of Entitled
+    Text:
+    Entitled is not arrogance. It is authority. It signals confidence, taste, and access — without noise.
+    Membership is the boundary between public retail and private selection.
+    
+    Layout:
+    - Desktop: image left, text right
+    
+    Settings:
+    - Background gradient selector (default black → dark grey)
+    - Image picker
+    - Font selector
+    - Hover effect toggle (title glow)
+    - Animation: slow cinematic fade-up
+    
+    -----------------------------------
+    
+    GLOBAL RULES (DO NOT IGNORE)
+    - No sliders
+    - No carousels
+    - No tabs
+    - No auto-rotation
+    - Clean editorial spacing
+    - Quiet luxury visual tone
+    , add all section image curve setting 
+    also add hero section image add setting
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-about-entitled-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-about-entitled-hero-{{ ai_gen_id }} {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: {{ block.settings.hero_text_align }};
+    background: {{ block.settings.hero_bg_gradient }};
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  {% if block.settings.hero_image %}
+    .ai-about-entitled-hero-{{ ai_gen_id }}::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('{{ block.settings.hero_image | image_url: width: 2000 }}');
+      background-size: cover;
+      background-position: center;
+      opacity: {{ block.settings.hero_image_opacity | divided_by: 100.0 }};
+      z-index: 0;
+    }
+  {% endif %}
+
+  .ai-about-entitled-hero-content-{{ ai_gen_id }} {
+    max-width: 900px;
+    margin: 0 auto;
+    opacity: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  {% if block.settings.hero_enable_animation %}
+    .ai-about-entitled-hero-content-{{ ai_gen_id }}.animated {
+      animation: ai-fade-up-{{ ai_gen_id }} 1.2s ease-out forwards;
+    }
+
+    @keyframes ai-fade-up-{{ ai_gen_id }} {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  {% else %}
+    .ai-about-entitled-hero-content-{{ ai_gen_id }} {
+      opacity: 1;
+    }
+  {% endif %}
+
+  .ai-about-entitled-hero-headline-{{ ai_gen_id }} {
+    font-family: {{ block.settings.hero_font.family }}, {{ block.settings.hero_font.fallback_families }};
+    font-weight: {{ block.settings.hero_font.weight }};
+    font-size: clamp(32px, 6vw, 72px);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    margin: 0 0 24px;
+    color: #ffffff;
+  }
+
+  .ai-about-entitled-hero-subheading-{{ ai_gen_id }} {
+    font-family: {{ block.settings.hero_font.family }}, {{ block.settings.hero_font.fallback_families }};
+    font-size: clamp(16px, 2vw, 24px);
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+    padding: 100px 60px;
+    position: relative;
+    opacity: 0;
+  }
+
+  {% if block.settings.content_1_enable_animation or block.settings.content_2_enable_animation or block.settings.content_3_enable_animation or block.settings.content_4_enable_animation or block.settings.content_5_enable_animation or block.settings.content_6_enable_animation %}
+    .ai-about-entitled-content-block-{{ ai_gen_id }}.animated {
+      animation: ai-fade-in-{{ ai_gen_id }} 1s ease-out forwards;
+    }
+
+    @keyframes ai-fade-in-{{ ai_gen_id }} {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  {% endif %}
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.no-animation {
+    opacity: 1;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.reverse {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ai-about-entitled-content-text-{{ ai_gen_id }} {
+    padding: 40px;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.reverse .ai-about-entitled-content-text-{{ ai_gen_id }} {
+    order: 2;
+  }
+
+  .ai-about-entitled-content-title-{{ ai_gen_id }} {
+    font-size: clamp(24px, 3vw, 42px);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    margin: 0 0 24px;
+    transition: all 0.3s ease;
+  }
+
+  .ai-about-entitled-content-description-{{ ai_gen_id }} {
+    font-size: clamp(14px, 1.5vw, 18px);
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.reverse .ai-about-entitled-content-image-{{ ai_gen_id }} {
+    order: 1;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.6s ease;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-top-left img {
+    border-radius: 60px 0 0 0;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-top-right img {
+    border-radius: 0 60px 0 0;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-bottom-left img {
+    border-radius: 0 0 0 60px;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-bottom-right img {
+    border-radius: 0 0 60px 0;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-all img {
+    border-radius: 60px;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-top img {
+    border-radius: 60px 60px 0 0;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-bottom img {
+    border-radius: 0 0 60px 60px;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-left img {
+    border-radius: 60px 0 0 60px;
+  }
+
+  .ai-about-entitled-content-image-{{ ai_gen_id }}.curve-right img {
+    border-radius: 0 60px 60px 0;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-image-zoom:hover .ai-about-entitled-content-image-{{ ai_gen_id }} img {
+    transform: scale(1.05);
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-card-lift {
+    transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 1s ease-out;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-card-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-title-underline:hover .ai-about-entitled-content-title-{{ ai_gen_id }} {
+    text-decoration: underline;
+    text-underline-offset: 8px;
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-image-desaturate .ai-about-entitled-content-image-{{ ai_gen_id }} img {
+    filter: grayscale(0);
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-image-desaturate:hover .ai-about-entitled-content-image-{{ ai_gen_id }} img {
+    filter: grayscale(100%);
+  }
+
+  .ai-about-entitled-content-block-{{ ai_gen_id }}.hover-title-glow:hover .ai-about-entitled-content-title-{{ ai_gen_id }} {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+
+  .ai-about-entitled-content-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    background-color: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-about-entitled-content-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+    opacity: 0.3;
+  }
+
+  .ai-about-entitled-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-about-entitled-content-block-{{ ai_gen_id }},
+    .ai-about-entitled-content-block-{{ ai_gen_id }}.reverse {
+      grid-template-columns: 1fr;
+      padding: 60px 30px;
+    }
+
+    .ai-about-entitled-content-text-{{ ai_gen_id }} {
+      padding: 20px 0;
+      order: 1 !important;
+    }
+
+    .ai-about-entitled-content-image-{{ ai_gen_id }} {
+      order: 2 !important;
+      min-height: 300px;
+    }
+
+    .ai-about-entitled-hero-{{ ai_gen_id }} {
+      padding: 60px 20px;
+      min-height: 70vh;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-about-entitled-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-about-entitled-hero-{{ ai_gen_id }}">
+    <div class="ai-about-entitled-hero-content-{{ ai_gen_id }}">
+      {% if block.settings.hero_headline != blank %}
+        <h1 class="ai-about-entitled-hero-headline-{{ ai_gen_id }}">
+          {{ block.settings.hero_headline }}
+        </h1>
+      {% endif %}
+      {% if block.settings.hero_subheading != blank %}
+        <p class="ai-about-entitled-hero-subheading-{{ ai_gen_id }}">
+          {{ block.settings.hero_subheading }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% for i in (1..6) %}
+    {% liquid
+      assign title_key = 'content_' | append: i | append: '_title'
+      assign description_key = 'content_' | append: i | append: '_description'
+      assign image_key = 'content_' | append: i | append: '_image'
+      assign layout_key = 'content_' | append: i | append: '_layout'
+      assign bg_key = 'content_' | append: i | append: '_bg_gradient'
+      assign text_color_key = 'content_' | append: i | append: '_text_color'
+      assign font_key = 'content_' | append: i | append: '_font'
+      assign hover_key = 'content_' | append: i | append: '_hover_effect'
+      assign animation_key = 'content_' | append: i | append: '_enable_animation'
+      assign curve_key = 'content_' | append: i | append: '_image_curve'
+
+      assign title = block.settings[title_key]
+      assign description = block.settings[description_key]
+      assign image = block.settings[image_key]
+      assign layout = block.settings[layout_key]
+      assign bg_gradient = block.settings[bg_key]
+      assign text_color = block.settings[text_color_key]
+      assign font = block.settings[font_key]
+      assign hover_effect = block.settings[hover_key]
+      assign enable_animation = block.settings[animation_key]
+      assign image_curve = block.settings[curve_key]
+    %}
+
+    <div 
+      class="ai-about-entitled-content-block-{{ ai_gen_id }} {% if layout == 'image_left' %}reverse{% endif %} hover-{{ hover_effect }} {% unless enable_animation %}no-animation{% endunless %}"
+      style="background: {{ bg_gradient }}; color: {{ text_color }};"
+      data-content-index="{{ i }}"
+      data-animation="{{ enable_animation }}"
+    >
+      <div class="ai-about-entitled-content-text-{{ ai_gen_id }}">
+        {% if title != blank %}
+          <h2 
+            class="ai-about-entitled-content-title-{{ ai_gen_id }}"
+            style="font-family: {{ font.family }}, {{ font.fallback_families }}; font-weight: {{ font.weight }};"
+          >
+            {{ title }}
+          </h2>
+        {% endif %}
+        {% if description != blank %}
+          <div 
+            class="ai-about-entitled-content-description-{{ ai_gen_id }}"
+            style="font-family: {{ font.family }}, {{ font.fallback_families }};"
+          >
+            {{ description }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-about-entitled-content-image-{{ ai_gen_id }} curve-{{ image_curve }}">
+        {% if image %}
+          <img
+            src="{{ image | image_url: width: 1200 }}"
+            alt="{{ image.alt | escape }}"
+            loading="lazy"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+          >
+        {% else %}
+          <div class="ai-about-entitled-content-image-placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-about-entitled-empty-state-{{ ai_gen_id }}">
+              Add an image to complete this section
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+  (function() {
+    const heroContent = document.querySelector('.ai-about-entitled-hero-content-{{ ai_gen_id }}');
+    if (heroContent) {
+      setTimeout(() => {
+        heroContent.classList.add('animated');
+      }, 100);
+    }
+
+    const contentBlocks = document.querySelectorAll('.ai-about-entitled-content-block-{{ ai_gen_id }}');
+    
+    contentBlocks.forEach(block => {
+      const enableAnimation = block.getAttribute('data-animation') === 'true';
+      
+      if (enableAnimation) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animated');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.2
+        });
+        
+        observer.observe(block);
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "About – Entitled Club",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero section"
+    },
+    {
+      "type": "text",
+      "id": "hero_headline",
+      "label": "Headline",
+      "default": "PRIVATE CLOTHING. MEMBERS ONLY."
+    },
+    {
+      "type": "text",
+      "id": "hero_subheading",
+      "label": "Subheading",
+      "default": "Entry is granted. Releases are curated."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "hero_image_opacity",
+      "label": "Background image opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "color_background",
+      "id": "hero_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(40, 40, 40, 1) 100%)"
+    },
+    {
+      "type": "select",
+      "id": "hero_text_align",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "font_picker",
+      "id": "hero_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "checkbox",
+      "id": "hero_enable_animation",
+      "label": "Enable fade-up animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content block 1 – What We Are"
+    },
+    {
+      "type": "text",
+      "id": "content_1_title",
+      "label": "Title",
+      "default": "What We Are"
+    },
+    {
+      "type": "textarea",
+      "id": "content_1_description",
+      "label": "Description",
+      "default": "Entitled Club is a private clothing brand built on selection. We handpick menswear that meets a strict standard, then release it in controlled drops. We prioritise quality over quantity — so every collection feels exclusive by design."
+    },
+    {
+      "type": "image_picker",
+      "id": "content_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "content_1_image_curve",
+      "label": "Image curve style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "all",
+          "label": "All corners"
+        },
+        {
+          "value": "top",
+          "label": "Top corners"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom corners"
+        },
+        {
+          "value": "left",
+          "label": "Left corners"
+        },
+        {
+          "value": "right",
+          "label": "Right corners"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left only"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right only"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left only"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right only"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "content_1_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "text_left",
+          "label": "Text left, image right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image left, text right"
+        }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "color_background",
+      "id": "content_1_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(60, 60, 60, 1) 0%, rgba(100, 100, 100, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "content_1_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_1_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "content_1_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image_zoom",
+          "label": "Image zoom"
+        },
+        {
+          "value": "card_lift",
+          "label": "Card lift"
+        },
+        {
+          "value": "title_underline",
+          "label": "Title underline"
+        },
+        {
+          "value": "image_desaturate",
+          "label": "Image desaturate"
+        },
+        {
+          "value": "title_glow",
+          "label": "Title glow"
+        }
+      ],
+      "default": "image_zoom"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_1_enable_animation",
+      "label": "Enable scroll animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content block 2 – How Access Works"
+    },
+    {
+      "type": "text",
+      "id": "content_2_title",
+      "label": "Title",
+      "default": "How Access Works"
+    },
+    {
+      "type": "textarea",
+      "id": "content_2_description",
+      "label": "Description",
+      "default": "Access is members-only. To enter, you apply with your details. Approvals are typically granted within 10–15 days. Once approved, you have always-on access to the storefront."
+    },
+    {
+      "type": "image_picker",
+      "id": "content_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "content_2_image_curve",
+      "label": "Image curve style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "all",
+          "label": "All corners"
+        },
+        {
+          "value": "top",
+          "label": "Top corners"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom corners"
+        },
+        {
+          "value": "left",
+          "label": "Left corners"
+        },
+        {
+          "value": "right",
+          "label": "Right corners"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left only"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right only"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left only"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right only"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "content_2_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "text_left",
+          "label": "Text left, image right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image left, text right"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "color_background",
+      "id": "content_2_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(100, 100, 100, 1) 0%, rgba(245, 245, 245, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "content_2_text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_2_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "content_2_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image_zoom",
+          "label": "Image zoom"
+        },
+        {
+          "value": "card_lift",
+          "label": "Card lift"
+        },
+        {
+          "value": "title_underline",
+          "label": "Title underline"
+        },
+        {
+          "value": "image_desaturate",
+          "label": "Image desaturate"
+        },
+        {
+          "value": "title_glow",
+          "label": "Title glow"
+        }
+      ],
+      "default": "card_lift"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_2_enable_animation",
+      "label": "Enable scroll animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content block 3 – Curation Philosophy"
+    },
+    {
+      "type": "text",
+      "id": "content_3_title",
+      "label": "Title",
+      "default": "Curation Philosophy"
+    },
+    {
+      "type": "textarea",
+      "id": "content_3_description",
+      "label": "Description",
+      "default": "We do not stock at scale. We curate. Our drops are built around scarcity that is real: few pieces, limited quantities, and clean selection. We keep the storefront quiet so the product stays primary."
+    },
+    {
+      "type": "image_picker",
+      "id": "content_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "content_3_image_curve",
+      "label": "Image curve style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "all",
+          "label": "All corners"
+        },
+        {
+          "value": "top",
+          "label": "Top corners"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom corners"
+        },
+        {
+          "value": "left",
+          "label": "Left corners"
+        },
+        {
+          "value": "right",
+          "label": "Right corners"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left only"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right only"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left only"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right only"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "content_3_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "text_left",
+          "label": "Text left, image right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image left, text right"
+        }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "color_background",
+      "id": "content_3_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(70, 70, 70, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "content_3_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_3_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "content_3_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image_zoom",
+          "label": "Image zoom"
+        },
+        {
+          "value": "card_lift",
+          "label": "Card lift"
+        },
+        {
+          "value": "title_underline",
+          "label": "Title underline"
+        },
+        {
+          "value": "image_desaturate",
+          "label": "Image desaturate"
+        },
+        {
+          "value": "title_glow",
+          "label": "Title glow"
+        }
+      ],
+      "default": "title_underline"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_3_enable_animation",
+      "label": "Enable scroll animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content block 4 – Authenticity & Quality"
+    },
+    {
+      "type": "text",
+      "id": "content_4_title",
+      "label": "Title",
+      "default": "Authenticity & Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "content_4_description",
+      "label": "Description",
+      "default": "We source only through select authentic channels. Every piece is checked for legitimacy and overall quality before it is listed. We do not pass on quality rejects or defective inventory."
+    },
+    {
+      "type": "image_picker",
+      "id": "content_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "content_4_image_curve",
+      "label": "Image curve style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "all",
+          "label": "All corners"
+        },
+        {
+          "value": "top",
+          "label": "Top corners"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom corners"
+        },
+        {
+          "value": "left",
+          "label": "Left corners"
+        },
+        {
+          "value": "right",
+          "label": "Right corners"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left only"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right only"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left only"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right only"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "content_4_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "text_left",
+          "label": "Text left, image right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image left, text right"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "color_background",
+      "id": "content_4_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(50, 50, 50, 1) 0%, rgba(120, 120, 120, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "content_4_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_4_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "content_4_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image_zoom",
+          "label": "Image zoom"
+        },
+        {
+          "value": "card_lift",
+          "label": "Card lift"
+        },
+        {
+          "value": "title_underline",
+          "label": "Title underline"
+        },
+        {
+          "value": "image_desaturate",
+          "label": "Image desaturate"
+        },
+        {
+          "value": "title_glow",
+          "label": "Title glow"
+        }
+      ],
+      "default": "image_desaturate"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_4_enable_animation",
+      "label": "Enable scroll animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content block 5 – Drops & Archive"
+    },
+    {
+      "type": "text",
+      "id": "content_5_title",
+      "label": "Title",
+      "default": "Drops & Archive"
+    },
+    {
+      "type": "textarea",
+      "id": "content_5_description",
+      "label": "Description",
+      "default": "Most of our releases follow the drop model. A drop opens, members shop, and then the drop closes. When it closes, it becomes archive. We do not restock by default. The chapter ends."
+    },
+    {
+      "type": "image_picker",
+      "id": "content_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "content_5_image_curve",
+      "label": "Image curve style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "all",
+          "label": "All corners"
+        },
+        {
+          "value": "top",
+          "label": "Top corners"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom corners"
+        },
+        {
+          "value": "left",
+          "label": "Left corners"
+        },
+        {
+          "value": "right",
+          "label": "Right corners"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left only"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right only"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left only"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right only"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "content_5_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "text_left",
+          "label": "Text left, image right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image left, text right"
+        }
+      ],
+      "default": "text_left"
+    },
+    {
+      "type": "color_background",
+      "id": "content_5_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(65, 75, 85, 1) 0%, rgba(160, 160, 160, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "content_5_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_5_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "content_5_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image_zoom",
+          "label": "Image zoom"
+        },
+        {
+          "value": "card_lift",
+          "label": "Card lift"
+        },
+        {
+          "value": "title_underline",
+          "label": "Title underline"
+        },
+        {
+          "value": "image_desaturate",
+          "label": "Image desaturate"
+        },
+        {
+          "value": "title_glow",
+          "label": "Title glow"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_5_enable_animation",
+      "label": "Enable scroll animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content block 6 – The Meaning of Entitled"
+    },
+    {
+      "type": "text",
+      "id": "content_6_title",
+      "label": "Title",
+      "default": "The Meaning of Entitled"
+    },
+    {
+      "type": "textarea",
+      "id": "content_6_description",
+      "label": "Description",
+      "default": "Entitled is not arrogance. It is authority. It signals confidence, taste, and access — without noise. Membership is the boundary between public retail and private selection."
+    },
+    {
+      "type": "image_picker",
+      "id": "content_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "content_6_image_curve",
+      "label": "Image curve style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "all",
+          "label": "All corners"
+        },
+        {
+          "value": "top",
+          "label": "Top corners"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom corners"
+        },
+        {
+          "value": "left",
+          "label": "Left corners"
+        },
+        {
+          "value": "right",
+          "label": "Right corners"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left only"
+        },
+        {
+          "value": "top-right",
+          "label": "Top right only"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left only"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right only"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "content_6_layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "text_left",
+          "label": "Text left, image right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image left, text right"
+        }
+      ],
+      "default": "image_left"
+    },
+    {
+      "type": "color_background",
+      "id": "content_6_bg_gradient",
+      "label": "Background",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(60, 60, 60, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "content_6_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "content_6_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "select",
+      "id": "content_6_hover_effect",
+      "label": "Hover effect",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "image_zoom",
+          "label": "Image zoom"
+        },
+        {
+          "value": "card_lift",
+          "label": "Card lift"
+        },
+        {
+          "value": "title_underline",
+          "label": "Title underline"
+        },
+        {
+          "value": "image_desaturate",
+          "label": "Image desaturate"
+        },
+        {
+          "value": "title_glow",
+          "label": "Title glow"
+        }
+      ],
+      "default": "title_glow"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_6_enable_animation",
+      "label": "Enable scroll animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "About – Entitled Club"
+    }
+  ]
+}
+{% endschema %}

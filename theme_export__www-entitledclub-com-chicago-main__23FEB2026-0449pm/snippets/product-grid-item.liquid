@@ -1,0 +1,84 @@
+<!-- /snippets/product-grid-item.liquid -->
+{% assign on_sale = false %}
+{% if product.compare_at_price > product.price %}
+  {% assign on_sale = true %}
+{% endif %}
+{% unless grid_item_width %}
+
+{% if template == 'list-collections' %}
+	{% assign grid_item_width = 'three-twelfths small--one-whole medium--one-half' %}
+{% endif %}
+
+
+{% if template == 'collection' %}
+{% if settings.products_per_row == '3' %}
+{% assign grid_item_width = 'four-twelfths small--one-whole medium--one-half medium-large--four-twelfths' %}
+{% endif %}
+
+{% if settings.products_per_row == '4' %}
+{% assign grid_item_width = 'three-twelfths small--one-whole medium--one-half medium-large--four-twelfths' %}
+{% endif %}
+
+{% if settings.products_per_row == '5' %}
+{% assign grid_item_width = 'two-tenths small--one-whole medium--one-half medium-large--four-twelfths' %}
+{% endif %}
+
+{% endif %}
+{% endunless %}
+
+{% comment %}
+  Check if the product is sold out and set a variable to be used below.
+{% endcomment %}
+{% assign sold_out = true %}
+{% if product.available %}
+  {% assign sold_out = false %}
+{% endif %}
+
+<div class="grid__item {{ grid_item_width }} {{template}}">
+  <div class="product_item">
+    <a href="{{ product.url | within: collection  }}">
+      <div class="product_image">
+        <span class="product_overlay"></span>
+        {% if sold_out %}
+        <a href="{{ product.url | within: collection }}" class="btn disabled">Out of Stock</a>
+        {% else %}  
+        <a href="{{ product.url | within: collection }}" class="btn">Shop Now</a>
+        {% endif %}
+        <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.title }}"/>
+
+        {% if settings.collections_show_sold_out_square %}
+        {% if sold_out %}<span class="sold_out">{{ 'products.product.sold_out' | t }} </span>{% endif %}
+        {% endif %}
+        {% if settings.collections_show_sale_square %}
+        {% if on_sale %}
+        <span class="onsale">{{ 'products.product.on_sale' | t }}</span>
+        {% endif %}
+        {% endif %}
+
+
+        {% if settings.collections_show_new_square %}
+        {% for tag in product.tags %}
+        {% if tag == 'new' %}
+        <span class="onnew">New</span>
+        {% endif %}
+
+        {% endfor %}
+        {% endif %}
+      </div>
+    </a>
+    <div class="product_desc">
+      <h3><a href="{{ product.url | within: collection }}">{{ product.title | capitalize }}</a></h3>
+
+      <h4>{{ product.price | money }}
+        {% if product.compare_at_price %}
+        {% endif %}
+      </h4>
+      <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+     
+    </div>  
+
+  </div>
+</div>
+
+       
+

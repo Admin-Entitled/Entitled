@@ -3,14 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Wordmark from "../components/Wordmark";
 import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
 import { exchangeAccess, login } from "../services/auth";
-
-function normalizePhone(raw) {
-  let digits = String(raw || "").replace(/\D/g, "");
-  if (digits.startsWith("91") && digits.length > 10) {
-    digits = digits.slice(2);
-  }
-  return digits;
-}
+import { coercePhoneInput, normalizePhoneToIndian10 } from "../utils/phone";
 
 function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
   if (!shopUrlOrDomain) return null;
@@ -70,8 +63,8 @@ export default function Landing() {
   const [err, setErr] = useState("");
   const [ok, setOk] = useState("");
 
-  const normalizedPhone = normalizePhone(phone);
-  const isValidPhone = normalizedPhone.length === 10;
+  const normalizedPhone = normalizePhoneToIndian10(phone);
+  const isValidPhone = Boolean(normalizedPhone);
 
   async function tryLoginCandidates(normalized) {
     const result = await login({ phone: normalized });
@@ -220,11 +213,12 @@ export default function Landing() {
                     <input
                       className="field-input h-10 px-4 placeholder:text-white/30"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="e.g. +91 90000 00000"
+                      onChange={(e) => setPhone(coercePhoneInput(e.target.value))}
+                      placeholder="e.g. 8770199124"
                       type="tel"
                       autoComplete="tel"
-                      inputMode="tel"
+                      inputMode="numeric"
+                      maxLength={10}
                       aria-invalid={Boolean(err)}
                       disabled={loading}
                     />

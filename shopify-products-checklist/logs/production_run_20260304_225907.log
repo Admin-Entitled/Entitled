@@ -1,0 +1,7 @@
+{"time":"2026-03-04T17:29:07.889Z","mode":"production","level":"INFO","message":"Run started","meta":{"mode":"production","store":"entitled-club-2.myshopify.com","apiVersion":"2025-01"}}
+{"time":"2026-03-04T17:29:08.543Z","mode":"production","level":"INFO","message":"Access token fetched"}
+{"time":"2026-03-04T17:29:10.070Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491184451825","title":"Lacoste |  Polo |  Black"}}
+{"time":"2026-03-04T17:29:10.786Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491184484593","title":"Lacoste |  Polo |  Olive"}}
+{"time":"2026-03-04T17:29:11.504Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491184550129","title":"Lacoste |  Polo |  Navy"}}
+{"time":"2026-03-04T17:29:12.220Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491184615665","title":"Lacoste |  Polo |  Blue"}}
+{"time":"2026-03-04T17:29:12.940Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491184713969","title":"Lacoste |  Polo |  Beige"}}

@@ -1,0 +1,34 @@
+{
+  "source_image_path": "generated_from:back.jpg,front.jpg",
+  "reference_path": "references/top.webp",
+  "bbox": [
+    0,
+    191,
+    1024,
+    1024
+  ],
+  "reference_bbox": [
+    0,
+    0,
+    1024,
+    1024
+  ],
+  "bbox_aspect_ratio": 1.2293,
+  "reference_aspect_ratio": 1.0,
+  "scale_used": 0.64,
+  "rembg_success": true,
+  "reference_mismatch_score": 3.6861,
+  "threshold": 0.65,
+  "accepted": false,
+  "rejection_reason": "failed_generated_top_layout",
+  "warning_reason": "reference_mismatch_warning",
+  "role": "generated_top",
+  "source_images_used": [
+    "back.jpg",
+    "front.jpg"
+  ],
+  "full_garment_detected": false,
+  "hem_visible": false,
+  "neckline_crop_passed": false,
+  "attempt": 1
+}

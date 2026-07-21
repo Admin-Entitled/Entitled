@@ -1,0 +1,63 @@
+<!-- /snippets/site-nav.liquid -->
+<ul>
+ {% for link in linklists[settings.header_menu].links %}
+  {% assign second_handle = link.title | handle %}
+  <li class="{% if linklists[second_handle].links.size > 0 %}has-sub{% endif %} {% if link.active or second_level.active %}active{% endif %}">
+    <a href="{{ link.url }}">{{ link.title }}</a>
+    
+    {% if linklists[second_handle] and linklists[second_handle].links.size > 0 %}
+   
+    
+    <!-- START SECOND LEVEL -->
+   
+    <ul>
+        {% for second_level in linklists[second_handle].links %}
+         {% assign third_handle = second_level.title | handle %}
+       <li class="{% if linklists[third_handle].links.size > 0 %}has-sub{% endif %} {% if second_level.active %}active{% endif %}">
+          <a href="{{ second_level.url }}"> {{ second_level.title }}</a>
+          
+            <!-- START THIRD LEVEL -->
+           
+            
+            {% if linklists[third_handle] and linklists[third_handle].links.size > 0 %}          
+           
+          
+            <ul>
+              {% for third_level in linklists[third_handle].links %}
+              {% assign forth_handle = third_level.title | handle %}
+               <li class="{% if linklists[forth_handle].links.size > 0 %}has-sub{% endif %} {% if third_level.active %}active{% endif %}">
+              
+                <a href="{{ third_level.url }}"> {{ third_level.title }} </a>
+                  
+                  <!-- START FORTH LEVEL -->
+                 
+                  {% if linklists[forth_handle] and linklists[forth_handle].links.size > 0 %}          
+                 
+
+                  <ul>
+                    {% for le in linklists[forth_handle].links %}
+                    <li class="{% if le.active %}active{% endif %}">
+                      <a href="{{ le.url }}"> {{ le.title }}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                    {% else %}
+                  {% endif %}
+                  <!-- END FORTH LEVEL -->
+              </li>
+              {% endfor %}
+            </ul>
+              {% else %}
+            {% endif %}
+            <!-- END THIRD LEVEL -->
+      </li>
+        {% endfor %}
+    </ul>
+	{% else %}
+    {% endif %}  
+    <!-- END SECOND LEVEL -->
+    
+  </li>
+  {% endfor %}
+
+</ul>

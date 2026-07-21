@@ -1,0 +1,101 @@
+<header> <!-- Header Start -->
+   
+  <div class="container">
+    <div class="grid">
+    
+       <div class="grid__item five-twelfths max-large--four-twelfths max-medium--four-twelfths">
+         <div class="logo_section">
+              <a href="/" itemprop="url">
+			      {% capture image_size %}{{ settings.logo_max_width }}{% endcapture %}
+
+                        {% if settings.logo_use_image %}
+                        {% capture image_size %}{{ settings.logo_max_width }}x{% endcapture %}
+                        <img src="{{ settings.logo | img_url: image_size }}" alt="{{ shop.name }}" srcset="{{ settings.logo | img_url: image_size }} 1x, {{ settings.logo | img_url: image_size, scale: 2 }} 2x" itemprop="logo"/>
+                        {% else %}
+                        <h2>{{ shop.name }}</h2>
+                        {% endif %}
+                      </a>
+           </div>
+       </div>  
+      
+      <div class="grid__item seven-twelfths small--one-whole medium--one-whole max-medium--eight-twelfths medium-header max-large--eight-twelfths">
+        <div class="right_header">
+          
+        <div class="header_right_icon">
+            <ul>
+              {% if settings.enable_search_header  %}
+              <li class="search_icon"><a class="btn_icon" id="opened_search"></a><a class="close_btn"></a>
+              </li>
+              {% endif %}
+              
+              {% if settings.enable_login_button %}
+              <li class="account_icon">
+              		<a class="btn_icon small--hide medium--hide max-medium--hide" id="opened_account"></a><a class="close_btn"></a>
+              		{% if customer %}		
+                 	<a href="/account" class="mob_btn_icon hide max-medium--show small--show medium--show"></a>
+              		{% else %}
+               	   <a href="/account/login" class="mob_btn_icon hide max-medium--show small--show medium--show"></a>
+              	
+                 {% endif %}
+              </li>
+              {% endif %}
+              
+              {% if settings.enable_cart_button %}
+              <li>
+                <a href="/cart" class="{% if settings.ajax_cart_enable %}site-header__cart-toggle js-drawer-open-right{% endif %} cart_ico" {% if settings.ajax_cart_enable %}aria-controls="CartDrawer" aria-expanded="false"{% endif %}>
+                 </a>
+               </li>
+              {% endif %}
+            </ul>
+           {% if settings.enable_search_header  %}
+            <div class="opened_search">
+           		{% include 'search-bar' %}
+            </div>
+          {% endif %}
+          
+           {% if shop.customer_accounts_enabled %}
+            <div class="opened_account {% if customer %}login{% endif %}" >
+              
+                  {%  if customer %} 
+                  <a href="/account" class="btn">{{ 'layout.customer.account' | t }}</a>
+                  {% if settings.enable_wishlist %}
+                  <a href="/pages/wishlist" class="btn">Wishlist</a>
+                  {% endif %}
+                  {% else %}
+
+                  {% form 'customer_login' %} 
+
+                  <input type="email" name="customer[email]" id="CustomerEmail" placeholder="Email"> 
+
+                  {% if form.password_needed %}
+                  <input type="password" value="" name="customer[password]" id="CustomerPassword"  placeholder="{{ 'customer.login.password' | t }}">
+                  {% endif %}
+                  <input type="submit" value="Login" />
+                  {% endform %}
+                <p> or <a href="/account/register">Register</a> </p>   
+           
+              
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+          
+         <div class="header_opations">
+           
+            <nav id="main-nav">
+             {% include 'nav-menu' %}
+            </nav>
+           
+           {% if settings.show_multiple_currencies %}
+            <div class="header_currency_filter">
+              
+              	{% include 'currency-picker' %}
+            </div>
+           {% endif %}
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</header>	

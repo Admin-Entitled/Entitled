@@ -1,0 +1,63 @@
+<!-- Sidebar Start -->
+ {% assign tags_selected = current_tags | handleize %}  
+
+<div class="sidebar_section shop_filter">
+  
+  <span class="filter_close hide small--show medium--show"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+
+	{% if settings.enble_categories %}
+     <div class="sidebar-links">
+    
+         <h1>{{ settings.categories_menu_title }}</h1>
+         <ul> 
+           {% for link in linklists[settings.categories_menu].links %} 
+			<li><a href="{{ link.url }}"  {% if link.active %}class="active"{% endif %}> {{ link.title }}</a></li>
+			{% endfor %}
+         </ul>
+      
+       </div>
+   {% endif %}
+
+  
+ <div class="filter_sidebar"> 
+   
+   {% if settings.enble_brand_filter %}
+      <div class="sidebar_item">
+         <h1>{{ settings.vendor_title }}</h1>
+       
+        
+        {% if template == 'product' %}
+         {% unless collection %} 
+          <ul>
+              {% assign vendor_list = '' %}
+              {% for product in collections.all.products %}
+              {% if vendor_list contains product.vendor %}
+              {% else %}
+              <li><a href="/collections/all?constraint={{ product.vendor }}" title="{{ product.vendor }}">{{ product.vendor }}</a></li>
+              {% capture temp %}{{ vendor_list }}{{ product.vendor }}{% endcapture %}{% assign vendor_list = temp %}
+              {% endif %}
+              {% endfor %}
+            </ul>
+        {% else %}
+          <ul> 
+            {% for product_vendor in collection.all_vendors %}
+            {% assign vendor_hand = product_vendor | handleize %}
+            <li {% if tags_selected contains vendor_hand %} class="active"{% endif %}><a href="/collections/{{ collection.handle }}/{{ product_vendor }}">{{ product_vendor }}</a></li>
+            {% endfor %}
+          </ul>   
+        {% endunless %}
+        {% else %}
+		<ul> 
+        {% for product_vendor in collection.all_vendors %}
+          {% assign vendor_hand = product_vendor | handleize %}
+          	 <li {% if tags_selected contains vendor_hand %} class="active"{% endif %}><a href="/collections/{{ collection.handle }}/{{ product_vendor }}">{{ product_vendor }}</a></li>
+         {% endfor %}
+       </ul>   
+        {% endif %}
+     </div>
+	{% endif %}
+   
+</div>
+
+</div>
+

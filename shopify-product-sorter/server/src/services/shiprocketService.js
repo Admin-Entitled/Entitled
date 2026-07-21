@@ -1,223 +1,54 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { env } from "../config/env.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(__dirname, "../../");
-const localTokenCachePath = path.join(repoRoot, ".cache", "shiprocket-token.json");
-const sharedEnvPath = path.resolve(repoRoot, "../../shiprocket/shiprocket-dimensions-automation/.env");
-const sharedTokenCachePath = path.resolve(
-  repoRoot,
-  "../../shiprocket/shiprocket-dimensions-automation/.cache/shiprocket-token.json",
-);
+let token = env.shiprocketToken;
+const timeoutMs = Number(process.env.SHIPROCKET_REQUEST_TIMEOUT_MS || 15_000);
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-let tokenCache = {
-  token: "",
-  expiresAt: 0,
-};
+function configured() { return Boolean(token || (env.shiprocketEmail && env.shiprocketPassword)); }
+function base() { return env.shiprocketBaseUrl.replace(/\/$/, ""); }
 
-function readSharedEnv() {
-  if (!fs.existsSync(sharedEnvPath)) {
-    return {};
-  }
-
-  const values = {};
-  for (const line of fs.readFileSync(sharedEnvPath, "utf8").split("\n")) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#") || !trimmed.includes("=")) {
-      continue;
-    }
-    const [key, ...rest] = trimmed.split("=");
-    values[key] = rest.join("=").trim().replace(/^"|"$/g, "");
-  }
-  return values;
-}
-
-const sharedEnv = readSharedEnv();
-
-function normalizedBaseUrl() {
-  const raw = env.shiprocketBaseUrl || "https://apiv2.shiprocket.in";
-  return raw.startsWith("http://") || raw.startsWith("https://") ? raw : `https://${raw}`;
-}
-
-function getShiprocketCredentials() {
-  return {
-    email: env.shiprocketEmail || sharedEnv.SHIPROCKET_API_EMAIL || "",
-    password: env.shiprocketPassword || sharedEnv.SHIPROCKET_API_PASSWORD || "",
-  };
-}
-
-function isConfigured() {
-  const credentials = getShiprocketCredentials();
-  return Boolean(credentials.email && credentials.password);
-}
-
-function formatDateOnly(value) {
-  return value.toISOString().slice(0, 10);
-}
-
-function readTokenCacheFile(filePath) {
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-
-  try {
-    const payload = JSON.parse(fs.readFileSync(filePath, "utf8"));
-    if (payload?.token && payload?.expiresAt) {
-      return payload;
-    }
-  } catch {
-    return null;
-  }
-
-  return null;
-}
-
-function writeTokenCacheFile(token, expiresAt) {
-  fs.mkdirSync(path.dirname(localTokenCachePath), { recursive: true });
-  fs.writeFileSync(localTokenCachePath, JSON.stringify({ token, expiresAt }, null, 2));
-}
-
-function clearTokenCaches() {
-  tokenCache = { token: "", expiresAt: 0 };
-  for (const cachePath of [localTokenCachePath, sharedTokenCachePath]) {
+async function request(url, options, allowRefresh = true) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      if (fs.existsSync(cachePath)) {
-        fs.unlinkSync(cachePath);
+      const response = await fetch(url, { ...options, signal: controller.signal });
+      const body = await response.json().catch(() => ({}));
+      if (response.status === 401 && allowRefresh && !env.shiprocketToken) { token = ""; await authenticate(); return request(url, options, false); }
+      if (response.ok) return body;
+      if ((response.status === 429 || response.status >= 500) && attempt < 2) {
+        const retryAfter = Number(response.headers.get("retry-after"));
+        await delay(Number.isFinite(retryAfter) ? retryAfter * 1000 : 250 * (2 ** attempt)); continue;
       }
-    } catch {}
+      const error = new Error(response.status === 401 ? "Shiprocket authentication failed" : response.status === 429 ? "Shiprocket rate limit reached" : `Shiprocket API request failed (${response.status})`);
+      error.category = response.status === 401 ? "shiprocket_authentication" : response.status === 429 ? "shiprocket_rate_limit" : "shiprocket_api"; throw error;
+    } catch (error) {
+      if (error.category || attempt === 2) { error.category ||= error.name === "AbortError" ? "shiprocket_timeout" : "shiprocket_network"; throw error; }
+      await delay(250 * (2 ** attempt));
+    } finally { clearTimeout(timer); }
   }
 }
 
-async function authenticateShiprocket() {
-  const credentials = getShiprocketCredentials();
-  const response = await fetch(`${normalizedBaseUrl()}/v1/external/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: credentials.email,
-      password: credentials.password,
-    }),
-  });
-
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok || !payload.token) {
-    throw new Error(payload.message || payload.error || "Shiprocket authentication failed");
-  }
-
-  tokenCache = {
-    token: payload.token,
-    // ponytail: refresh early instead of decoding every JWT shape variation.
-    expiresAt: Date.now() + (9 * 24 * 60 * 60 * 1000),
-  };
-  writeTokenCacheFile(tokenCache.token, tokenCache.expiresAt);
-  return tokenCache.token;
+async function authenticate() {
+  const payload = await request(`${base()}/v1/external/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: env.shiprocketEmail, password: env.shiprocketPassword }) }, false);
+  if (!payload.token) { const error = new Error("Shiprocket authentication failed"); error.category = "shiprocket_authentication"; throw error; }
+  token = payload.token;
 }
 
-async function getShiprocketToken() {
-  if (env.shiprocketToken) {
-    return env.shiprocketToken;
-  }
-
-  if (tokenCache.token && tokenCache.expiresAt > Date.now()) {
-    return tokenCache.token;
-  }
-
-  for (const cachePath of [localTokenCachePath, sharedTokenCachePath]) {
-    const cached = readTokenCacheFile(cachePath);
-    if (cached?.token && cached.expiresAt > Date.now()) {
-      tokenCache = cached;
-      return tokenCache.token;
-    }
-  }
-
-  if (!isConfigured()) {
-    throw new Error("Shiprocket credentials or token are missing");
-  }
-
-  return authenticateShiprocket();
-}
-
-async function shiprocketRequest(pathname, searchParams, retryOn401 = true) {
-  const token = await getShiprocketToken();
-  const url = new URL(`${normalizedBaseUrl()}${pathname}`);
-
-  if (searchParams) {
-    for (const [key, value] of Object.entries(searchParams)) {
-      if (value !== undefined && value !== null && value !== "") {
-        url.searchParams.set(key, String(value));
-      }
-    }
-  }
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  const payload = await response.json().catch(() => ({}));
-  if (response.status === 401 && retryOn401) {
-    clearTokenCaches();
-    return shiprocketRequest(pathname, searchParams, false);
-  }
-  if (!response.ok) {
-    throw new Error(payload.message || payload.error || `Shiprocket request failed (${response.status})`);
-  }
-
-  return payload;
-}
-
-export async function fetchShiprocketOrders({ days = 30 } = {}) {
-  const hasAnyTokenSource =
-    Boolean(env.shiprocketToken) ||
-    Boolean(readTokenCacheFile(localTokenCachePath)?.token) ||
-    Boolean(readTokenCacheFile(sharedTokenCachePath)?.token);
-
-  if (!isConfigured() && !hasAnyTokenSource) {
-    return {
-      configured: false,
-      orders: [],
-      days,
-    };
-  }
-
-  const cappedDays = Math.max(1, Math.min(Number(days) || 30, 30));
-  const to = new Date();
-  const from = new Date();
-  from.setDate(from.getDate() - cappedDays);
-
-  const configuredChannelId = env.shiprocketChannelId || sharedEnv.SHIPROCKET__CHANNEL_ID || "";
-  const channelId = configuredChannelId ? Number(configuredChannelId) : undefined;
-  const orders = [];
-  let page = 1;
-  let totalPages = 1;
-
+export async function fetchShiprocketOrders({ start, end }) {
+  if (!configured()) return { configured: false, shipments: [], pages: 0 };
+  if (!token) await authenticate();
+  const shipments = []; let page = 1; let totalPages = 1;
   while (page <= totalPages) {
-    const payload = await shiprocketRequest("/v1/external/orders", {
-      page,
-      per_page: 100,
-      sort: "DESC",
-      sort_by: "id",
-      from: formatDateOnly(from),
-      to: formatDateOnly(to),
-      channel_id: Number.isFinite(channelId) ? channelId : undefined,
-    });
-
+    const url = new URL(`${base()}/v1/external/orders`);
+    Object.entries({ page, per_page: 100, sort: "DESC", sort_by: "id", from: start, to: end, channel_id: env.shiprocketChannelId || undefined }).forEach(([key, value]) => value && url.searchParams.set(key, value));
+    const payload = await request(url, { headers: { Authorization: `Bearer ${token}` } });
     const batch = Array.isArray(payload.data) ? payload.data : [];
-    orders.push(...batch);
-
-    totalPages = Number(payload.meta?.pagination?.total_pages || 1);
-    page += 1;
+    shipments.push(...batch.flatMap((item) => (Array.isArray(item.shipments) && item.shipments.length ? item.shipments : [item]).map((shipment) => ({
+      responseId: String(shipment.id || shipment.shipment_id || item.id || ""), orderReference: item.order_id || item.order_reference || shipment.order_id || "", channelOrderId: item.channel_order_id || item.channel_order_reference || shipment.channel_order_id || "",
+      awb: shipment.awb_code || shipment.awb || item.awb_code || item.awb || "", courier: shipment.courier_name || item.courier_name || "", rawStatus: shipment.status || shipment.current_status || item.status || item.current_status || "",
+      deliveredAt: shipment.delivered_date || shipment.delivered_at || item.delivered_date || item.delivered_at || "", logisticsUpdatedAt: shipment.updated_at || shipment.updated_on || item.updated_at || item.updated_on || "",
+    }))));
+    totalPages = Number(payload.meta?.pagination?.total_pages || 1); page += 1;
   }
-
-  return {
-    configured: true,
-    orders,
-    days: cappedDays,
-  };
+  return { configured: true, shipments, pages: totalPages };
 }

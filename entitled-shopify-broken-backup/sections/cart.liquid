@@ -1,0 +1,246 @@
+<div class="header_height"></div>
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="cart_section">
+  <!-- Cart Section Start -->
+
+  <div class="container">
+
+    <div class="grid">
+
+      <div class="cart_title grid__item">
+        <span class="cart_page_top_icon"></span>
+        <h1>{{ 'cart.general.title' | t }}</h1>
+
+
+      </div>
+
+
+      {% if cart.item_count > 0 %}
+        <div class="cart_form grid__item">
+
+          <form action="/cart" method="post" id="cartform">
+            <!-- Cart layout --->
+            <div class="cart-layout">
+
+              <div class="grid">
+                <!-- Cart Header --->
+                <div class="grid__item">
+                  <div class="cart-header">
+                    <div class="grid__item two-twelfths small--three-twelfths medium--three-twelfths">
+                      <div class="th cart-item-name">
+                        <h3>{{ 'cart.label.product' | t }}</h3>
+                      </div>
+                    </div>
+
+                    <div class="grid__item four-twelfths small--six-twelfths medium--seven-twelfths">
+                      <div class="th cart-des">
+                        <h3>description</h3>
+                      </div>
+                    </div>
+
+                    <div class="grid__item two-twelfths medium--hide">
+                      <div class="th cart-price">
+                        <h3>{{ 'cart.label.price' | t }}</h3>
+                      </div>
+                    </div>
+
+                    <div class="grid__item two-twelfths medium--hide">
+                      <div class="th cart-qty">
+                        <h3>{{ 'cart.label.quantity' | t }}</h3>
+                      </div>
+                    </div>
+
+                    <div class="grid__item one-twelfth medium--two-twelfths small--two-twelfths">
+                      <div class="th cart-total">
+                        <h3>{{ 'cart.label.total' | t }}</h3>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- Cart Item loop --->
+
+                <div class="grid__item cartItemWrapper">
+                  <div class="cart-items">
+                    {% for item in cart.items %}
+                      <div class="cart-item">
+
+                        <div class="grid__item two-twelfths small--three-twelfths medium--three-twelfths">
+                          <div class="tr cart-item-name">
+                            <a href="{{ item.url | within: collections.all }}">
+
+                              <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
+                            </a>
+
+                          </div>
+                        </div>
+
+                        <div class="grid__item four-twelfths small--nine-twelfths medium--seven-twelfths">
+                          <div class="tr cart-des">
+                            <a href="{{ item.url }}">
+                              {{ item.product.title }}
+                            </a>
+                            {% unless item.variant.title contains 'Default' %}
+                              <br>
+                              <small>{{ item.variant.title }}</small>
+                            {% endunless %}
+
+                            {% if settings.cart_vendor_enable %}
+                              <p>{{ item.vendor }}</p>
+                            {% endif %}
+                            {% comment %}
+                              Optional, loop through custom product line items if available
+
+                              For more info on line item properties, visit:
+                              - http://docs.shopify.com/support/your-store/products/how-do-I-collect-additional-information-on-the-product-page-Like-for-a-monogram-engraving-or-customization
+                            {% endcomment %}
+                            {% assign property_size = item.properties | size %}
+                            {% if property_size > 0 %}
+                              {% for p in item.properties %}
+                                {% unless p.last == blank %}
+                                  {{ p.first }}:
+
+                                  {% comment %}
+                                    Check if there was an uploaded file associated
+                                  {% endcomment %}
+                                  {% if p.last contains '/uploads/' %}
+                                    <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                                  {% else %}
+                                    {{ p.last }}
+                                  {% endif %}
+
+                                  <br>
+                                {% endunless %}
+                              {% endfor %}
+                            {% endif %}
+
+
+                          </div>
+                        </div>
+
+                        <div class="grid__item two-twelfths small--hide medium--hide">
+                          <div class="tr cart-price">
+                            <p>
+                              <span class=money>{{ item.price | money }}</span>
+                            </p>
+                          </div>
+                        </div>
+
+
+                        <div class="grid__item two-twelfths small--seven-twelfths medium--three-twelfths">
+                          <div class="tr cart-qty">
+
+                            <div class="qty_box">
+                              <button type="button" class="plus"></button>
+
+
+                              <input type="text" name="updates[]" id="updates_{{ item.id }}" value="{{ item.quantity }}" min="0" class="product-quantity">
+                              <button type="button" class="minus"></button>
+                            </div>
+
+
+
+                          </div>
+                        </div>
+
+                        <div class="grid__item one-twelfth small--five-twelfths medium--three-twelfths">
+                          <div class="tr cart-total">
+                            <p>
+                              <span class=money>
+                                {{ item.line_price | money }}</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="tr cart-cancel">
+                          <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">
+                            <span>
+                              <i class="fa fa-times"></i>
+                            </span>
+                          </a>
+
+                        </div>
+
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <!-- Checkout section --->
+
+                {% if settings.show_multiple_currencies %}
+                  <p class="grid__item one-whole currency_note">
+                    {{ shop.name }} process all orders in {{ shop.currency }}.
+                    While the content of your cart is currently displayed in
+                    <span class="selected-currency"></span>,
+                    you will checkout using {{ shop.currency }} at the most current exchange rate.
+                  </p>
+                {% endif %}
+
+                <div class="grid__item one-whole small--one-whole medium--one-whole">
+                  <div class="checkout-section grid clearfix">
+
+                    <div class="cart_note grid__item five-twelfths small--one-whole medium--one-whole medium-down--text-left">
+
+                      {% if settings.cart_notes_enable %}
+                        <div class="cart_review">
+                          <h3>{{ 'cart.general.note' | t }}</h3>
+                          <textarea name="note" class="input-full" id="CartSpecialInstructions">{{ cart.note }}</textarea>
+                        </div>
+                      {% endif %}
+
+                      {% include 'shipping-calculator' %}
+
+                    </div>
+
+                    <div class="grid__item seven-twelfths small--one-whole medium--one-whole right">
+                      <h1>{{ 'cart.general.subtotal' | t }} :<span class=money>
+                          <p>{{ cart.total_price | money }}</p>
+                        </span>
+                      </h1>
+                      <input type="submit" id="checkout" name="checkout" class="check_btn" value="{{ 'cart.general.checkout' | t }}"/>
+                      <input type="submit" id="update-cart" name="update" style="display:none;">
+                      <input type="submit" id="con_shopping" class="continue_shopping" value="CONTINUE SHOPPING"/>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+      {% else %}
+        <div class="empty_cart">
+          {% comment %}
+            The cart is empty
+          {% endcomment %}
+          <h2>{{ 'cart.general.title' | t }}</h2>
+          <p>{{ 'cart.general.empty' | t }}</p>
+          <p>{{ 'cart.general.continue_browsing_html' | t }}</p>
+        </div>
+      {% endif %}
+
+
+    </div>
+
+
+  </div>
+
+</div>
+<!-- Cart Section End -->

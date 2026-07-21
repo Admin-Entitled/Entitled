@@ -1,0 +1,68 @@
+<!-- Hero Slider Start -->
+{% if settings.slideshow != empty %}
+<div class="hero-slider">
+ {% if settings.display_slideshow %}
+  <ul class="bxslider" id="slider_show">
+    {% for i in (1..5) %}
+    {% capture show_slide %}display_slide_{{ i }}{% endcapture %}
+    {% capture image %}slideshow_{{ i }}{% endcapture %}
+    {% capture titlename %}slide_title_{{ i }}{% endcapture %}
+    {% capture titleColor %}title_color_{{i}}{% endcapture %}
+    {% capture subtitlename %}slide_sub_title_{{i}}{% endcapture %}
+    {% capture subTitleColor %}sub_title_color_{{i}}{% endcapture %}
+    {% capture  titledetail %}slider_detail_{{ i }}{% endcapture %}
+    {% capture buttonname  %}button_text_{{ i }}{% endcapture %}
+    {% capture button_link %}button{{ i }}_link{% endcapture %}
+	{% capture position %}position_{{ i }}{% endcapture %}
+    
+    
+    {% if settings[show_slide] %} 
+    <li class="hero-banner" style="background:url({% if settings[image] != blank %}{{ settings[image] | img_url:'2048x' }}{% else %}{{ 'placeholder_image.png' | asset_url }}{% endif %})">
+      <span class="slide_overlay"></span>
+	 <div class="container">
+        <div class="caption one-half" style="{% if settings[position] == 'center' %}left:50%;text-align:center;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);{% endif %}{% if settings[position] == 'right' %}left:auto;right:0;text-align:right;-webkit-transform:translate(0%,-50%);transform:translate(0%,-50%);{% endif %}">
+            
+         {% if settings[titlename] != empty %}<h2 {% if settings[titleColor] != blank %}style="color:{{ settings[titleColor] }}"{% endif %}>{{ settings[titlename] }}</h2>{% endif %}
+         {% if settings[titledetail] != empty %}<p {% if settings[subTitleColor] != blank %}style="color:{{ settings[subTitleColor] }}"{% endif %}>{{ settings[titledetail] }}</p>{% endif %}
+          {% if settings[button_link] != empty %}
+          <a href="{{ settings[button_link] }}" class="btn">{{ settings[buttonname] }}
+            <span><i class="fa fa-angle-right"></i></span></a>
+          {% endif %}
+        </div>
+      </div>
+    </li>
+    {% endif %}
+    {% endfor %}   
+
+  </ul> 
+  {% else %}
+  <ul  class="bxslider">
+    {% if settings.display_slide_1 %} 
+    <li class="hero-banner" style="background:url('{{ settings.slideshow_1 | img_url:'master' }}');">
+      <div class="slide_img">
+        <img src="{{ settings.slideshow_1 | img_url:'master' }}" alt="{{ image.alt | escape }}">
+      </div>
+
+      <span class="slide_overlay"></span>
+
+      <div class="container">
+        <div class="caption one-half" style="{% if settings.position_1 == 'center' %}left:50%;text-align:center;-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);{% endif %}{% if settings.position_1 == 'right' %}left:auto;right:0;text-align:right;-webkit-transform:translate(0%,-50%);transform:translate(0%,-50%);{% endif %}">
+        {% if settings.slide_title_1 != empty %}<h2>{{ settings.slide_title_1 }}</h2>{% endif %}
+        {% if settings.slider_detail_1 != empty %}  <p>{{ settings.slider_detail_1 }}</p>{% endif %}
+          {% if settings.button1_link != empty %}
+         	 <a href="{{ settings.button1_link }}" class="btn">
+            {{ settings.button_text_1 }}
+            <span><i class="fa fa-angle-right"></i></span>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </li>
+    {% endif %}
+  </ul>
+  {% endif %}
+</div>
+
+<div class="blank_height"></div>
+<!-- Hero Slider End -->
+{% endif %}

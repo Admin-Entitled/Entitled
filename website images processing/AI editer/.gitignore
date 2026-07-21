@@ -1,0 +1,7 @@
+.env
+__pycache__/
+**/__pycache__/
+*.pyc
+resized_cache/
+process_log.json
+_archive_old/

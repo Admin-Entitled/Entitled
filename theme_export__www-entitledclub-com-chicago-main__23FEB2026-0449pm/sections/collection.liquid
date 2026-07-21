@@ -1,0 +1,129 @@
+<div class="header_height"></div>
+
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% paginate collection.products by settings.pagination_limit %}
+
+  <div class="content">
+    <!-- Content Start -->
+
+    <div class="container">
+      <div class="grid">
+        {% if settings.enable_filter %}
+          <div class="grid__item three-twelfths small--one-whole medium--one-whole">
+            {% include 'collection-sidebar' %}
+          </div>
+        {% endif %}
+        <div class="grid__item  {% if settings.enable_filter %}nine-twelfths{% else %}one-whole{% endif %} small--one-whole medium--one-whole">
+          <div class="shop_product_section">
+            <div class="grid">
+
+              <div class="product_grid">
+
+                <div class="top_bar">
+                  <div class="grid__item one-half small--one-whole medium--one-whole">
+                    <h1>
+                      {% if collection.handle == 'all' %}Products
+                      {% else %}
+                        {{ collection.title }}{% endif %}
+                    </h1>
+                  </div>
+
+                  <div class="grid__item one-half">
+                    <div class="filter_toggle hide small--show medium--show">
+                      <h4>
+                        <span>
+                          <i class="fa fa-plus-square" aria-hidden="true"></i>
+                        </span>Filter</h4>
+                    </div>
+                  </div>
+
+                  <div class="grid__item one-half small--one-half">
+                    {% if settings.enable_sort_by %}
+                      <div class="sorting">
+                        <p class="small--hide">{{ 'collections.sorting.title' | t }}</p>
+                        {% include 'collection-sorting' %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="block-row">
+                  <div class="product_list">
+
+
+                    {% unless grid_item_width %}
+
+                      {% if template == 'list-collections' %}
+                        {% assign grid_item_width = 'three-twelfths small--one-whole medium--one-half' %}
+                      {% endif %}
+
+
+                      {% if template == 'collection' %}
+                        {% if settings.products_per_row == '3' %}
+                          {% assign grid_item_width = 'four-twelfths small--one-whole medium--one-half medium-large--four-twelfths' %}
+                        {% endif %}
+
+                        {% if settings.products_per_row == '4' %}
+                          {% assign grid_item_width = 'three-twelfths small--one-whole medium--one-half medium-large--four-twelfths' %}
+                        {% endif %}
+
+                        {% if settings.products_per_row == '5' %}
+                          {% assign grid_item_width = 'two-tenths small--one-whole medium--one-half medium-large--four-twelfths' %}
+                        {% endif %}
+
+                      {% endif %}
+                    {% endunless %}
+
+
+
+                    {% for product in collection.products %}
+
+                      {% include 'product-grid-item' %}
+
+                    {% else %}
+
+                      {% if collection.handle == 'all' and current_tags == null %}
+
+                        {% comment %}
+                          Add default products to help with onboarding for collections/all only
+                        {% endcomment %}
+                        {% unless emptyState %}
+                          {% assign emptyState = true %}
+                        {% endunless %}
+                        {% include 'onboarding-empty-collection' %}
+
+
+                      {% else %}
+                        <p id="not-found">{{ 'collections.general.no_matches' | t }}</p>
+
+                      {% endif %}
+
+                    {% endfor %}
+                  </div>
+                </div>
+
+
+                {% if paginate.pages > 1 %}
+                  <div class="pagination">
+                    {% include 'pagination' %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Content End -->
+{% endpaginate %}

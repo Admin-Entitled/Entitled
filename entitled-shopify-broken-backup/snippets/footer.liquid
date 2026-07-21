@@ -1,0 +1,120 @@
+<footer> <!-- Footer Start -->
+  
+  <div class="container">
+    <div class="top_footer">
+      <div class="grid">
+        
+        {% if linklists[settings.footer_linklist_1].links != empty %}
+        <div class="grid__item three-twelfths small--one-whole medium--one-half">
+          <div class="column sitemap">
+            <h1>{{ linklists[settings.footer_linklist_1].title }}</h1>
+            <ul>
+               {% for link in linklists[settings.footer_linklist_1].links %}
+                   <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul> 
+          </div>
+        </div>
+        {% endif %}
+        
+         {% if linklists[settings.footer_linklist_2].links != empty %}
+        <div class="grid__item three-twelfths small--one-whole medium--one-half">
+          <div class="column service-column">
+            <h1>{{ linklists[settings.footer_linklist_2].title }}</h1>
+            <ul>
+              {% for link in linklists[settings.footer_linklist_2].links %}
+                   <li> <a href="{{ link.url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+       {% endif %}
+      {% if settings.footer_newsletter_enable %}    
+      
+        <div class="grid__item three-twelfths small--one-whole medium--one-whole">
+          
+          <div class="column newsletter">
+            <h1>{{ settings.newsletter_title }}</h1>
+            <p>{{  settings.newslatter_footer_desc }}</p>
+            {% if settings.newsletter_form_action != blank %}
+            <form action="{{ settings.newsletter_form_action }}" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" >
+              <div class="email_field">
+                <input type="email" value=""  placeholder="Enter email address...." name="EMAIL" id="mail" required>
+              </div>
+              <div class="submit_field">  
+                <button type="submit"  value="Subscribe" name="subscribe" id="subscribe" >SIGN UP 
+                  <span><i class="fa fa-angle-right"></i></span>
+                </button>
+              </div>
+            </form>
+            {% else %}
+              {% form 'customer' %}
+              {{ form.errors | default_errors }}
+                {% if form.posted_successfully? %}
+                  <p class="form--success">{{ 'contact.form.post_success' | t }}</p>
+                {% else %}
+                
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <div class="email_field">
+                    <input type="email" class="input-group-field" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="Enter email address...." name="contact[email]" id="mail" required/> 
+                  </div>
+                  <div class="submit_field">  
+                    <button type="submit"  value="Subscribe" name="subscribe" id="subscribe" >SIGN UP 
+                      <span><i class="fa fa-angle-right"></i></span>
+                    </button>
+                  </div>
+                
+                {% endif %}
+              {% endform %}
+            {% endif %}
+           
+          </div>
+        </div>
+        
+      {% endif %}
+      {% if settings.enable_social_links %}
+        <div class="grid__item three-twelfths small--one-whole medium--one-whole">
+          <div class="column social">
+            <h1>{{ settings.title_social_link }}</h1>
+            <ul>
+              {% include 'social-links' %}
+             
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+      </div>
+      <a href="javascript:;" id="scrollToTop">
+      		<span><i class="fa fa-angle-up"></i></span>
+      </a>
+    </div>
+  </div>
+ {% if settings.copyright_enble %}  
+ <div class="mini_footer">
+    <div class="container">
+      <div class="grid">
+        <div class="grid__item seven-twelfths max-medium--one-half small--one-whole medium--one-whole">
+          <div class="mini_footer_left">
+            <p>{{ settings.copyright_description }}</p>
+            <p>Designed with <i class="fa fa-heart"></i> by <a href="https://www.hulkthemes.com/" target="_blank" >HulkApss</a> <span></p>
+          </div>
+        </div>
+        {% if settings.payment_method_enble %}
+          <div class="grid__item five-twelfths max-medium--one-half small--one-whole medium--one-whole">
+
+            <div class="payment_method">
+              <ul>
+              {% for type in shop.enabled_payment_types %} 
+                <li><img src="{{ type | payment_type_img_url }}" alt="{{type}}"/> </li>
+              {% endfor %}
+              </ul>
+            </div>
+          
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+    {% endif %}
+</footer>	
+

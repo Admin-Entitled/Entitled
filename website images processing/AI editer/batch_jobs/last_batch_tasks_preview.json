@@ -1,0 +1,68 @@
+{
+  "tasks": [
+    {
+      "product_folder": "product-17",
+      "role": "front",
+      "input_file_path": "input/product-17/front.jpg",
+      "reference_file_path": "references/front.webp",
+      "prepared_input_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-17/front_input_front.jpg",
+      "prepared_reference_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-17/front_reference_front.jpg",
+      "expected_output_path": "results/product-17/front.jpg",
+      "model_id": "gemini-3.1-flash-image",
+      "background_color": "#EDEBE8",
+      "payload_image_transport": "inline",
+      "input_mime_type": "image/jpeg",
+      "reference_mime_type": "image/jpeg",
+      "input_bytes": 83460,
+      "reference_bytes": 52785
+    },
+    {
+      "product_folder": "product-17",
+      "role": "back",
+      "input_file_path": "input/product-17/back.jpg",
+      "reference_file_path": "references/back.webp",
+      "prepared_input_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-17/back_input_back.jpg",
+      "prepared_reference_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-17/back_reference_back.jpg",
+      "expected_output_path": "results/product-17/back.jpg",
+      "model_id": "gemini-3.1-flash-image",
+      "background_color": "#EDEBE8",
+      "payload_image_transport": "inline",
+      "input_mime_type": "image/jpeg",
+      "reference_mime_type": "image/jpeg",
+      "input_bytes": 70843,
+      "reference_bytes": 50320
+    },
+    {
+      "product_folder": "product-18",
+      "role": "front",
+      "input_file_path": "input/product-18/front.jpg",
+      "reference_file_path": "references/front.webp",
+      "prepared_input_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-18/front_input_front.jpg",
+      "prepared_reference_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-18/front_reference_front.jpg",
+      "expected_output_path": "results/product-18/front.jpg",
+      "model_id": "gemini-3.1-flash-image",
+      "background_color": "#EDEBE8",
+      "payload_image_transport": "inline",
+      "input_mime_type": "image/jpeg",
+      "reference_mime_type": "image/jpeg",
+      "input_bytes": 87681,
+      "reference_bytes": 52785
+    },
+    {
+      "product_folder": "product-18",
+      "role": "back",
+      "input_file_path": "input/product-18/back.jpg",
+      "reference_file_path": "references/back.webp",
+      "prepared_input_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-18/back_input_back.jpg",
+      "prepared_reference_asset": "batch_jobs/assets/6a4082b85a76bc8250d4e1023b4dc27456641b99e38c99a182aa615092e8c97f/product-18/back_reference_back.jpg",
+      "expected_output_path": "results/product-18/back.jpg",
+      "model_id": "gemini-3.1-flash-image",
+      "background_color": "#EDEBE8",
+      "payload_image_transport": "inline",
+      "input_mime_type": "image/jpeg",
+      "reference_mime_type": "image/jpeg",
+      "input_bytes": 70124,
+      "reference_bytes": 50320
+    }
+  ]
+}

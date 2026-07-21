@@ -1,0 +1,60 @@
+<!-- /snippets/collection-sorting.liquid -->
+
+<div class="sorting_item">
+
+  <button class="sorting_btn"  id="sorting_title" data-toggle="dropdown">
+    {{ 'collections.sorting.title' | t }}
+  </button>
+
+  <ul class="dropdown-sort" id="sort_by" role="menu" style="overflow: hidden; display: none;">
+      <li name="featured">{{ 'collections.sorting.featured' | t }}</li>
+      <li name="best-selling">{{ 'collections.sorting.best_selling' | t }}</li>
+      <li name="title-ascending">{{ 'collections.sorting.az' | t }}</li>
+      <li name="title-descending">{{ 'collections.sorting.za' | t }}</li>
+      <li name="price-ascending">{{ 'collections.sorting.price_ascending' | t }}</li>
+      <li name="price-descending">{{ 'collections.sorting.price_descending' | t }}</li>
+      <li name="created-descending">{{ 'collections.sorting.date_descending' | t }}</li>
+      <li name="created-ascending">{{ 'collections.sorting.date_ascending' | t }}</li>
+   </ul>
+
+</div>
+
+<script>
+  /*============================================================================
+    Inline JS because collection liquid object is only available
+    on collection pages and not external JS files
+  ==============================================================================*/
+  Shopify.queryParams = {};
+  if (location.search.length) {
+    for (var aKeyValue, i = 0, aCouples = location.search.substr(1).split('&'); i < aCouples.length; i++) {
+      aKeyValue = aCouples[i].split('=');
+      if (aKeyValue.length > 1) {
+        Shopify.queryParams[decodeURIComponent(aKeyValue[0])] = decodeURIComponent(aKeyValue[1]);
+      }
+    }
+  }
+
+
+  $("#sort_by li").each(function(index, element) {
+      $(this).click(function(){
+        $("#sort_by li").removeClass("active");
+         $(this).parent().addClass("active");
+          Shopify.queryParams.sort_by = $(this).attr('name');
+          location.search = jQuery.param(Shopify.queryParams);
+      });
+  });
+
+var search_str = location.search; 
+var search = search_str.search("sort_by=");
+$('.sorting_btn').text(Shopify.queryParams.sort_by);
+  
+  $("#sort_by li").each(function(index, element) {
+        if(Shopify.queryParams.sort_by == $(this).attr('name')){
+           $('.sorting_btn').text($(this).text());
+        }
+        
+     
+  });
+  
+
+</script>

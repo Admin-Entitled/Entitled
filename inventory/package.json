@@ -1,0 +1,15 @@
+{
+  "name": "entitled-inventory-sync",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shopify inventory sync from Excel",
+  "main": "inventory_update.js",
+  "scripts": {
+    "dry-run": "node inventory_update.js --dryRun",
+    "live": "node inventory_update.js --live"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "xlsx": "^0.18.5"
+  }
+}

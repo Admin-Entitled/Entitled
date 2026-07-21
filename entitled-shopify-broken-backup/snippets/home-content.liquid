@@ -1,0 +1,19 @@
+{% if settings.home_page_content != empty %}
+<div class="home_about_section">
+
+  <div class="container">
+    
+      <div class="grid">
+        
+          <div class="grid__item large--six-twelfths push--large--three-twelfths">
+            
+                {{ pages[settings.home_page_content].content}}
+                
+            </div>
+        
+        </div>
+    
+    </div>
+
+</div>
+{% endif %}

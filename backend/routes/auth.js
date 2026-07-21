@@ -5,22 +5,28 @@ import { v4 as uuidv4 } from "uuid";
 const router = express.Router();
 const SESSION_DAYS = 30;
 
-function normalizePhone(raw) {
-  let digits = String(raw || "").replace(/\D/g, "");
-  if (digits.startsWith("91") && digits.length > 10) {
-    digits = digits.slice(2);
-  }
-  return digits;
+function normalizePhoneToIndian10(raw) {
+  const digits = String(raw || "").replace(/\D/g, "");
+  if (digits.length === 10) return digits;
+  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
+  return "";
+}
+
+function toCanonicalIndianPhone(raw) {
+  const local = normalizePhoneToIndian10(raw);
+  return local ? `+91${local}` : "";
 }
 
 function buildPhoneCandidates(rawPhone) {
-  const normalized = normalizePhone(rawPhone);
+  const normalized = normalizePhoneToIndian10(rawPhone);
+  if (!normalized) return [];
   const raw = String(rawPhone || "").trim();
+  const canonical = `+91${normalized}`;
   const candidates = [
     raw,
-    normalized,
+    canonical,
     `91${normalized}`,
-    `+91${normalized}`,
+    normalized,
   ].filter(Boolean);
   return [...new Set(candidates)];
 }
@@ -34,14 +40,15 @@ router.get("/health", (req, res) => {
  */
 router.post("/register", async (req, res) => {
   const { name, phone, email, pincode } = req.body || {};
+  const canonicalPhone = toCanonicalIndianPhone(phone);
 
-  if (!name || !phone) {
+  if (!name || !canonicalPhone) {
     return res.status(400).json({ error: "Name and phone are required" });
   }
 
   const { error } = await supabase.from("members").insert([{
     name,
-    phone,
+    phone: canonicalPhone,
     email: email || null,
     pincode: pincode || null,
     // Keep legacy columns populated so registration doesn't fail
@@ -71,7 +78,7 @@ router.post("/login", async (req, res) => {
     candidateCount: phoneCandidates.length,
   });
 
-  if (!phone) {
+  if (!phoneCandidates.length) {
     console.warn("[AUTH_LOGIN] Missing phone in request body");
     return res.status(400).json({ error: "Phone is required" });
   }

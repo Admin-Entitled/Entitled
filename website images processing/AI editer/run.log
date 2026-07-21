@@ -1,0 +1,3 @@
+[product-1/Back.JPG] role=back reference=references/back.webp
+/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/website images processing/AI editer/gemini_batch_process.py:283: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  pixels = list(rgb.getdata())

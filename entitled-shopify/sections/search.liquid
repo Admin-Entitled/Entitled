@@ -1,0 +1,263 @@
+<!-- /templates/search.liquid -->
+{% comment %}
+
+  To return only products or pages in results:
+    - http://docs.shopify.com/manual/configuration/store-customization/return-only-product-in-storefront-search-results
+    - Or manually add type=product or type=page to the search URL as a parameter
+
+{% endcomment %}
+
+{% comment %}
+  Set grid_results to true and set search results as a grid instead of a list.
+  This works well when your search is only for products.
+{% endcomment %}
+{% assign grid_results = false %}
+
+{% comment %}
+  Check to enforce respond.js
+{% endcomment %}
+{% assign respond_js_secret_key = shop.domain | md5 %}
+{% unless search.terms == respond_js_secret_key %}
+
+{% comment %}
+  Avoid accessing search.results before the opening paginate tag.
+  If you do, the pagination of results will be broken.
+{% endcomment %}
+<div class="header_height"></div>
+
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          <ul>        
+            <li><a href="{{ shop.url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+            <li>{{ 'general.search.title'  | t }}</li>
+
+          </ul>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ {%  paginate search.results by settings.search_pagination_limit %}  
+<div class="search_section">
+
+  <div class="container">
+
+        <div class="product_filter">
+
+          <div class="page_item">
+            <h1>{{ 'general.search.title' | t }}</h1>
+
+            {% if search.performed %}
+            {% if search.results_count == 0 %}
+            <p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
+
+              {% if canonical_url contains 'type=product' %}  
+              	{% include 'search-bar' with 'search-product' %}                	
+              {% elsif canonical_url contains 'type=article' %}
+             	 {% include 'search-bar' with 'search-article' %}
+              {% else %}
+             	 {% include 'search-bar' with 'search' %}
+              {% endif %}	
+            
+            {% else %}
+            
+            <p>{{ 'general.search.results_for_html' | t: terms: search.terms }}</p>
+            
+            {% endif %}
+           
+            {% else %}
+            
+            <p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p>
+           
+            {% if canonical_url contains 'type=product' %}  
+           	 {% include 'search-bar' with 'search-product' %}                	
+            {% elsif canonical_url contains 'type=article' %}
+           	 {% include 'search-bar' with 'search-article' %}
+            {% else %}
+            	{% include 'search-bar' with 'search' %}
+            {% endif %}	
+            {% endif %}
+
+          </div>
+          
+
+       </div>
+
+
+        <!--======  #PRODUCT LIST  ============-->      
+
+
+        {% if search.performed %} 
+        {%  if search.results_count > 0  %}
+        <div id="collection">
+          <div class="product_list">
+            <div class="grid">
+            {% for item in search.results  %}
+            {% if item.object_type == 'product' %}
+            {% assign on_sale = false %}
+            {% if item.compare_at_price > item.price %}
+            {% assign on_sale = true %}
+            {% endif %}
+
+            {% assign sold_out = true %}
+            {% if item.available %}
+            {% assign sold_out = false %}
+            {% endif %}
+            {% capture search_product_size_variants %}{% include 'product-size-data', size_product: item %}{% endcapture %}
+
+            
+            <!-- begin grid search results-->
+            <div class="grid__item three-twelfths small--one-half medium--one-half"> 
+
+              <div
+                class="product_item"
+                data-size-product
+                data-product-url="{{ item.url | within: collection | escape }}"
+                data-product-options="{{ item.options_with_values | json | escape }}"
+                data-product-variants="{{ search_product_size_variants | strip_newlines | escape }}"
+              >
+                <a href="{{ item.url | within:collection }}" class="product_card_media" aria-label="{{ item.title | escape }}">
+                  <div class="product_image">
+                    <span class="product_overlay"></span>
+                    {% if item.featured_image %}
+                    {{ item.featured_image.src | img_url: 'medium' | img_tag: item.featured_image.alt }}
+                    {% endif %}
+
+                    {% if settings.collections_show_sold_out_square %}
+                    {% if sold_out %}<span class="sold_out">{{ 'products.product.sold_out' | t }} </span>{% endif %}
+                    {% endif %}
+                    {% if settings.collections_show_sale_square %}
+                    {% if on_sale %}
+                    <span class="onsale">{{ 'products.product.on_sale' | t }} </span>
+                    {% endif %}
+                    {% endif %}
+
+
+                    {% if settings.collections_show_new_square %}
+                    {% for tag in item.tags %}
+                    {% if tag == 'new' %}
+                    <span class="onnew">New</span>
+                    {% endif %}
+
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                </a>
+
+                <div class="product_desc">
+                  <div class="product_card_copy">
+                    <h3><a href="{{  item.url | within:collection }}" aria-describedby="SearchProductSizeStatus-{{ item.id }}">{{ item.title }}</a></h3>
+                    <h4>{{ item.price | money }}
+                      {% if item.compare_at_price > item.price %}
+                        <span><del>{{ item.compare_at_price | money }}</del></span>
+                      {% endif %}
+                    </h4>
+                    <span class="shopify-product-reviews-badge" data-id="{{ item.id }}"></span>
+                    <p id="SearchProductSizeStatus-{{ item.id }}" class="product-size-status" data-size-preference-status hidden></p>
+                  </div>
+                  <div data-size-preference-card-action>
+                  {% if sold_out %}
+                    <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
+                      <button type="button" class="product_card_button is-disabled" disabled>{{ 'products.product.sold_out' | t }}</button>
+                    </form>
+                  {% elsif item.has_only_default_variant %}
+                    <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
+                      <input type="hidden" name="id" value="{{ item.selected_or_first_available_variant.id }}">
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" name="add" class="product_card_button">{{ 'products.product.add_to_cart' | t }}</button>
+                    </form>
+                  {% else %}
+                    <a href="{{ item.url | within: collection }}" class="product_card_button">{{ 'products.product.choose_options' | t }}</a>
+                  {% endif %}
+                  </div>
+     			 </div>
+
+              </div>  
+
+            </div>
+            
+            <!-- //grid search results-->
+
+
+            {% endif %}
+
+            {% endfor %}
+              </div>
+
+          </div>
+        </div>
+
+        <div id="blog">
+          <div class="blog_section">
+		   <div class="blog_listing">
+              <div class="blog_grid_list grid">
+                {% for item in search.results %}
+                {% if item.object_type == 'article' %}
+
+                <div class="grid__item four-twelfths small--one-whole medium--one-half">
+
+
+                  <div class="blog_item">
+                    <a href="{{ item.url }}" class="blog_img">
+                      <img src="{{ item.image.src | img_url: 'large' }}" alt="{{ item.image.alt | escape }}"/>
+                    </a>
+
+                    <div class="blog_desc">
+                      <a href="{{ item.url }}">{{ item.title }}</a>    
+                      <h6>By <span>{{ item.author }}</span> On <span>{{ item.published_at | date: "%Y,%m,%d" }}</span> Comments <span>({{item.comments_count}})</span></h6>
+
+                      {% if item.excerpt.size > 0 %}
+                      {{ item.excerpt }}
+                      {% else %}
+                      <p> {{ item.content | strip_html | truncatewords: 10 }}</p>
+                      {% endif %}  
+
+                    </div>
+                  </div>
+
+                </div>
+
+
+                {% endif %}
+                {% endfor %}
+              </div>				
+            </div>       
+          </div>  
+
+        </div>
+  
+        <div class="container" id="page">
+
+         {% for item in search.results %}
+          {% if item.object_type == 'page' %}	
+          <div class="content">
+            <h3>{{ item.title | link_to: item.url }}</h3>	
+            <p>{{ item.content | strip_html | truncatewords: 50 }}</p>		
+          </div>
+          {% endif %}
+          {% endfor %}
+
+        </div>	
+       
+        {% endif %}
+        {% endif %}
+
+        {% if paginate.pages > 1 %}
+        <div class="pagination">
+          {% include 'pagination' %}
+        </div>
+        {% endif %}
+
+
+    </div>
+
+  </div>
+ {% endpaginate %}
+{% else %}
+  {% include 'respond' %}
+  {% layout none %}
+{% endunless %}

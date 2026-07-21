@@ -1,0 +1,67 @@
+<aside
+  class="collection-filters shop_filter"
+  id="CollectionFilters"
+  data-collection-filters
+  data-active-filter-count="0"
+  data-collection-url="{{ collection.url }}"
+  aria-label="Product filters"
+>
+  <div class="collection-filters__mobile-header">
+    <strong>Filters</strong>
+    <button type="button" class="collection-filters__close" data-filter-drawer-close aria-label="Close filters">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 5l14 14M19 5 5 19"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="collection-filters__heading">
+    <div>
+      <span class="collection-filters__eyebrow">Refine</span>
+      <h2>Filter products</h2>
+      <p class="collection-filters__intro">Search and narrow by size, brand, color, and type across the full collection.</p>
+    </div>
+    <span class="collection-filters__count is-empty" data-filter-selected-count>0</span>
+  </div>
+
+  <div class="collection-filters__active" data-active-filters hidden></div>
+
+  <div class="collection-filter-combobox" data-filter-combobox>
+    <label for="CollectionFilterSearch">Search filters</label>
+    <div class="collection-filter-combobox__control">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="10.5" cy="10.5" r="6.5"></circle>
+        <path d="m15.5 15.5 4.5 4.5"></path>
+      </svg>
+      <input
+        type="text"
+        id="CollectionFilterSearch"
+        placeholder="Search size, brand, color..."
+        autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-controls="CollectionFilterOptions"
+        aria-expanded="false"
+        data-filter-search
+      >
+      <button type="button" data-filter-dropdown-toggle aria-label="Show all filters" tabindex="-1">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m7 9 5 5 5-5"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="collection-filter-dropdown" id="CollectionFilterOptions" data-filter-dropdown>
+      <div class="collection-filter-dropdown__scroll">
+        <div data-client-filter-groups></div>
+        <p class="collection-filter-dropdown__empty" data-filter-empty hidden>No matching filters.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="collection-filter-form__actions collection-filter-form__actions--client">
+    <button type="button" class="collection-filter-apply" data-client-filter-apply>Apply filters</button>
+    <button type="button" class="collection-filter-clear collection-filter-clear--wide" data-client-filter-clear>Clear all</button>
+  </div>
+</aside>
+<div class="collection-filter-backdrop" data-filter-drawer-close aria-hidden="true"></div>

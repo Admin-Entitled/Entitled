@@ -1,0 +1,31 @@
+<!-- /snippets/search-bar.liquid -->
+{% assign search_bar_mode = search-bar | default: search_bar | default: 'header' %}
+
+{% if search_bar_mode contains 'search' %}
+<div class="no-result">
+  <div class="search_form">
+    <form action="{{ routes.search_url }}" method="get" class="input-group search-bar" role="search">
+      {% if search_bar_mode == 'search-product' %}
+      <input type="hidden" name="type" value="product">
+      {% elsif search_bar_mode == 'search-article' %}
+      <input type="hidden" name="type" value="article">
+      {% endif %}
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="input-group-field" aria-label="{{ 'general.search.placeholder' | t }}" required>
+      <span class="input-group-btn">
+        <input type="submit" class="btn icon-fallback-text" value="{{ 'general.search.submit' | t }}">
+      </span>
+    </form>
+  </div>
+</div>
+{% else %}
+<form action="{{ routes.search_url }}" method="get" class="header-search-form" role="search">
+  <input type="search" name="q" id="search-input" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" required>
+  <input type="hidden" name="type" value="product">
+  <button type="submit" class="header-search-form__submit" aria-label="{{ 'general.search.submit' | t }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="10.8" cy="10.8" r="6.8"></circle>
+      <path d="m16 16 4.5 4.5"></path>
+    </svg>
+  </button>
+</form>
+{% endif %}

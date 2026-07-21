@@ -1,0 +1,19 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - strong [ref=e3]: ENTITLED
+    - 'button "Size: M" [ref=e45]'
+  - main [ref=e5]:
+    - 'button "Size: M" [ref=e46]'
+    - generic [ref=e7]:
+      - article [ref=e8]:
+        - heading "Available" [level=2] [ref=e9]
+        - paragraph [ref=e47]: Your size M is available
+      - article [ref=e10]:
+        - heading "Sold out in M" [level=2] [ref=e11]
+        - paragraph [ref=e48]: Sold out in M
+      - article [ref=e12]:
+        - heading "M unavailable" [level=2] [ref=e13]
+        - paragraph [ref=e49]: M unavailable
+      - article [ref=e14]:
+        - heading "Not applicable" [level=2] [ref=e15]
+  - paragraph [ref=e51]: Preferred size updated to M

@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --ec-bg: #0B0B0C;
+    --ec-surface: #17181B;
+    --ec-surface-2: #111215;
+    --ec-text: #F2ECE2;
+    --ec-text-muted: #BDB6AC;
+    --ec-accent: #5B0A19;
+    --ec-accent-soft: rgba(91, 10, 25, 0.28);
+    --ec-metal: #C8B58A;
+    --ec-warning: #C8B58A;
+    --ec-border: #2A2C31;
+    --ec-danger: #7A1F1F;
+    --ec-success: #2F6B4F;
+    --shadow: 0 30px 60px rgba(0, 0, 0, 0.32);
+
+    /* Backward compatibility mappings */
+    --bg: var(--ec-bg);
+    --surface: var(--ec-surface);
+    --surface-2: var(--ec-surface-2);
+    --text: var(--ec-text);
+    --muted: var(--ec-text-muted);
+    --accent: var(--ec-accent);
+    --accent-soft: var(--ec-accent-soft);
+    --metal: var(--ec-metal);
+    --border: var(--ec-border);
+    --success: var(--ec-success);
+    --danger: var(--ec-danger);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top right, rgba(200, 181, 138, 0.08), transparent 30%),
+      radial-gradient(circle at left center, rgba(91, 10, 25, 0.2), transparent 25%),
+      #0B0B0C;
+    color: #F2ECE2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom premium scrollbar mimicking terminal aesthetics */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0B0C;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2C31;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #5B0A19;
+}
+
+/* Restrained animation transitions */
+.transition-luxury {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom visual styling helpers */
+.panel-gradient {
+  background: linear-gradient(180deg, rgba(23, 24, 27, 0.94), rgba(17, 18, 21, 0.94));
+}

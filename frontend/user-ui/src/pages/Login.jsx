@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { exchangeAccess, login } from "../services/auth";
 import Wordmark from "../components/Wordmark";
 import WhatsAppSupportIcon from "../assets/whatsapp-support-icon.png";
+import { coercePhoneInput, normalizePhoneToIndian10 } from "../utils/phone";
 
 function buildShopifyPasswordEndpoint(shopUrlOrDomain) {
   if (!shopUrlOrDomain) return null;
@@ -55,14 +56,6 @@ function submitShopifyPassword(shopUrlOrDomain, password) {
   return true;
 }
 
-function normalizePhone(raw) {
-  let digits = String(raw || "").replace(/\D/g, "");
-  if (digits.startsWith("91") && digits.length > 10) {
-    digits = digits.slice(2);
-  }
-  return digits;
-}
-
 export default function Login() {
   const nav = useNavigate();
   const [phone, setPhone] = useState("");
@@ -75,7 +68,12 @@ export default function Login() {
     setErr("");
     setOk("");
     setLoading(true);
-    const trimmedPhone = normalizePhone(phone);
+    const trimmedPhone = normalizePhoneToIndian10(phone);
+    if (!trimmedPhone) {
+      setErr("Enter a valid 10-digit phone number.");
+      setLoading(false);
+      return;
+    }
     console.log("[LOGIN] Submit started", {
       phoneLength: trimmedPhone.length,
       phonePreview: trimmedPhone ? `***${trimmedPhone.slice(-4)}` : "",
@@ -234,11 +232,12 @@ export default function Login() {
                   id="login-phone"
                   name="phone"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="e.g. 9000000000"
+                  onChange={(e) => setPhone(coercePhoneInput(e.target.value))}
+                  placeholder="e.g. 8770199124"
                   type="tel"
                   autoComplete="tel"
                   inputMode="numeric"
+                  maxLength={10}
                   aria-describedby="login-instructions login-status"
                   aria-invalid={Boolean(err)}
                   required

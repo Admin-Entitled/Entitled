@@ -1,0 +1,33 @@
+:root{
+  --entitled-bg:
+    radial-gradient(1200px at 18% 12%, #5b0a1938, #0000 58%),
+    radial-gradient(900px at 78% 22%, #5b0a1929, #0000 60%),
+    linear-gradient(#0b0b0cf2, #0b0b0c);
+}
+
+/* 1) Put your Tailwind background on the actual page canvas */
+html, body{
+  background-color:#0b0b0c !important;
+  background-image: var(--entitled-bg) !important;
+  background-repeat:no-repeat !important;
+  background-size:cover !important;
+  background-attachment:fixed !important;
+}
+
+/* 2) Your theme is painting section backgrounds.
+      Make only the TOP-LEVEL section wrappers transparent so the global bg shows */
+[id^="shopify-section-"],
+.shopify-section{
+  background: transparent !important;
+}
+
+/* 3) Common OS2 wrapper backgrounds (safe targets) */
+#MainContent,
+.content-for-layout,
+main,
+.page-width,
+.gradient,
+.color-background-1,
+.color-background-2{
+  background: transparent !important;
+}

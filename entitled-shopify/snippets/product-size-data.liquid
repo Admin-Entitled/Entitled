@@ -1,0 +1,1 @@
+[{% for size_variant in size_product.variants %}{"id":{{ size_variant.id | json }},"available":{{ size_variant.available | json }},"options":{{ size_variant.options | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]

@@ -1,0 +1,10 @@
+<ul>
+{% if settings.facebook_link != '' %}<li><a href="{{ settings.facebook_link }}" target="_blank" title="Facebook"> <span><i class="fa fa-facebook"></i></span></a>{% endif %}</li>
+  {% if settings.google_link != '' %}<li><a href="{{ settings.google_link }}" target="_blank" title="Google+" ><span><i class="fa fa-google-plus"></i></span></a></li>{% endif %}
+{% if settings.pinterest_link != '' %}<li><a href="{{ settings.pinterest_link }}" target="_blank" title="Pinterest"><span><i class="fa fa-pinterest-p"></i></span></a></li>{% endif %}
+{% if settings.twitter_link != '' %}<li><a href="{{ settings.twitter_link }}" target="_blank" title="Twitter"><span><i class="fa fa-twitter"></i></span></a></li>{% endif %}
+{% if settings.instagram_link != '' %}<li><a href="{{ settings.instagram_link }}" target="_blank" title="Instagram"><span ><i class="fa fa-instagram"></i></span></a></li>{% endif %}
+{% if settings.vimeo_link != '' %}<li><a href="{{ settings.vimeo_link }}" target="_blank" title="Vimeo"><span class="shopify-social-icon-vimeo-circle"></span></a></li>{% endif %}
+{% if settings.youtube_link != '' %}<li><a href="{{ settings.youtube_link }}" target="_blank" title="Youtube"><span class="shopify-social-icon-youtube-circle"></span></a></li>{% endif %}
+{% if settings.tumblr_link != '' %}<li><a href="{{ settings.tumblr_link }}" target="_blank" title="Tumblr"><span><i class="fa fa-tumblr"></i></span></a></li>{% endif %}
+</ul>

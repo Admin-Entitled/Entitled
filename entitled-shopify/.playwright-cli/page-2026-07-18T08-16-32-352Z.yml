@@ -1,0 +1,48 @@
+- generic [ref=f1e1]:
+  - banner:
+    - strong [ref=f1e3]: ENTITLED
+    - 'button "Size: M" [ref=f1e4]'
+  - main [ref=f1e5]:
+    - 'button "Size: M" [ref=f1e6]'
+    - generic [ref=f1e7]:
+      - article [ref=f1e8]:
+        - heading "Available" [level=2] [ref=f1e9]
+        - paragraph [ref=f1e10]: Your size M is available
+      - article [ref=f1e11]:
+        - heading "Sold out in M" [level=2] [ref=f1e12]
+        - paragraph [ref=f1e13]: Sold out in M
+      - article [ref=f1e14]:
+        - heading "M unavailable" [level=2] [ref=f1e15]
+        - paragraph [ref=f1e16]: M unavailable
+      - article [ref=f1e17]:
+        - heading "Not applicable" [level=2] [ref=f1e18]
+  - generic:
+    - dialog [ref=f1e19]:
+      - generic [ref=f1e20]:
+        - button "Close size selection" [ref=f1e21]: ×
+        - generic [ref=f1e22]: Your fit
+        - heading "What size do you usually wear?" [level=2] [ref=f1e23]
+        - paragraph [ref=f1e24]: Choose your usual clothing size. We’ll show its availability without hiding any products.
+        - generic [ref=f1e25]:
+          - group "Choose your preferred clothing size" [ref=f1e26]:
+            - generic [ref=f1e28]:
+              - generic [ref=f1e29]:
+                - radio "S" [ref=f1e30]
+                - generic [ref=f1e31] [cursor=pointer]: S
+              - generic [ref=f1e32]:
+                - radio "M" [checked] [active] [ref=f1e33]
+                - generic [ref=f1e34] [cursor=pointer]: M
+              - generic [ref=f1e35]:
+                - radio "L" [ref=f1e36]
+                - generic [ref=f1e37] [cursor=pointer]: L
+              - generic [ref=f1e38]:
+                - radio "XL" [ref=f1e39]
+                - generic [ref=f1e40] [cursor=pointer]: XL
+              - generic [ref=f1e41]:
+                - radio "XXL" [ref=f1e42]
+                - generic [ref=f1e43] [cursor=pointer]: XXL
+          - generic [ref=f1e44]:
+            - button "Save my size" [ref=f1e45]
+            - button "Skip for now" [ref=f1e46]
+            - button "Clear preferred size" [ref=f1e47]
+    - paragraph

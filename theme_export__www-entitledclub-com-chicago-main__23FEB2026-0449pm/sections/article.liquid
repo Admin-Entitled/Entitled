@@ -1,0 +1,213 @@
+<div class="header_height"></div>
+{% assign number_of_comments = article.comments_count %}
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="blog_detail_section">
+
+    <div class="container">
+
+      <div class="grid">
+
+        <div class="grid__item nine-twelfths small--one-whole medium--one-whole right">
+
+          <div class="blog_detail_listing grid">
+
+            <div class="blog_detail_item">
+
+              <div class="grid__item one-whole">
+
+                <div class="blog_detail_title">
+                  <h3>{{ article.title | capitalize }}</h3>
+                  <p>{{ article.published_at | date: "%d,%m,%Y" }} | by
+                    <span>{{ article.author | uppercase }}</span>
+                    | ({{article.comments_count}}) Commnets
+                  </p>
+
+                </div>
+
+                {{ article.content }}
+
+                <div class="blog_detail_footer">
+
+                  {% if blog.next_article or blog.previous_article %}
+                    <div class="pagination detail_pagination clearfix">
+                      <ul>
+                        {% if blog.previous_article %}
+                          <li class="prev">
+                            <a href="{{ blog.previous_article }}">
+                              <span>
+                                <i class="fa fa-angle-left"></i>
+                              </span>
+                              {{ 'blogs.article.older_post' | t | capitalize }}</a>
+                          </li>
+                        {% endif %}
+                        {% if blog.next_article %}
+                          <li class="next">
+                            <a href="{{  blog.next_article }}">{{ 'blogs.article.newer_post' | t | capitalize }}<span>
+                                <i class="fa fa-angle-right"></i>
+                              </span>
+                            </a>
+                          </li>
+                        {% endif %}
+                      </ul>
+                    </div>
+                  {% endif %}
+
+                  {% if settings.social_sharing_blog %}
+                    <div class="blog_share">
+                      <h3>{{ settings.blog_share_title }}:</h3>
+                      {% include 'social-sharing' %}
+                    </div>
+                  {% endif %}
+
+                </div>
+              </div>
+
+            </div>
+
+
+            {% if blog.comments_enabled? %}
+              {% paginate article.comments by settings.no_of_comment %}
+                {% if number_of_comments > 0 %}
+                  <div class="comment_list grid">
+
+                    <div class="grid__item one-whole">
+                      <h2>({{ number_of_comments }}) Comments</h2>
+                    </div>
+
+                    {% for comment in article.comments %}
+                      <div class="grid__list one-whole">
+
+                        <div class="comment_item">
+                          <div class="grid__item two-twelfths small--three-twelfths medium--two-twelfths">
+                            <div class="comment_img">
+                              <img src={{ "avatar.png" | asset_url }}/>
+                            </div>
+                          </div>
+
+
+                          <div class="grid__item ten-twelfths small--nine-twelfths medium--ten-twelfths">
+                            <div class="comment_desc">
+                              <h5>{{ comment.author }}<span>{{ comment.created_at | date: '%d %b' }}</span>
+                              </h5>
+                              <p>
+                                {{ comment.content }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+
+
+                  </div>
+                {% endif %}
+
+                <!-- Pagination Start -->
+
+                {% if paginate.pages > 1 %}
+                  <div class="pagination">
+                    {% include 'pagination' %}
+                  </div>
+
+                {% endif %}
+
+
+              {% endpaginate %}
+            {% endif %}
+
+            <div class="comment_section">
+              <h3>{{ 'blogs.comments.title' | t }}</h3>
+              {% form 'new_comment', article %}
+                {% if comment and comment.created_at %}
+                  <p class="note form-success">
+                    {% if blog.moderated? %}
+                      {{ 'blogs.comments.success_moderated' | t }}
+                    {% else %}
+                      {{ 'blogs.comments.success' | t }}
+                    {% endif %}
+                  </p>
+                {% endif %}
+
+
+                <div class="grid__item one-whole">
+                  {{ form.errors | default_errors }}
+                </div>
+
+
+                <div class="comment_form">
+                  <div class="grid__item one-half small--one-whole medium--one-whole">
+                    <div class="row">
+                      <input type="text" arial-label="author" name="comment[author]" id="CommentAuthor" placeholder="{{ 'blogs.comments.name' | t }}" value="{{ form.author }}" required>
+
+                    </div>
+
+                    <div class="row">
+                      <input type="email" arial-label="email" name="comment[email]" id="CommentEmail" placeholder="{{ 'blogs.comments.email' | t }}" value="{{ form.email }}" required>
+
+                    </div>
+
+
+                    <div class="row">
+                      <input type="text" arial-label="website" name="comment[website]" id="CommentWebsite" placeholder="Website"/>
+                    </div>
+
+                  </div>
+                  <div class="grid__item one-half small--one-whole medium--one-whole">
+                    <div class="row">
+                      <textarea name="comment[body]" arial-label="comments" id="CommentBody" placeholder="{{ 'blogs.comments.message' | t }}">{{ form.body }}</textarea>
+                    </div>
+                  </div>
+
+                  <div class="grid__item one-whole">
+                    <div class="row submit_row">
+
+                      <input type="submit" value="{{ 'blogs.comments.post' | t }}">
+                    </div>
+                  </div>
+                </div>
+
+                {% if form.errors %}
+                  {% assign newHash = 'AddCommentTitle' %}
+                {% endif %}
+
+                {% if form.posted_successfully? %}
+                  {% assign newHash = 'Comments' %}
+                {% endif %}
+
+              {% endform %}
+
+            </div>
+
+
+
+          </div>
+
+
+        </div>
+
+        {% if settings.blog_sidebar_enable %}
+          <div class="grid__item three-twelfths small--one-whole medium--one-whole left">
+            {% include 'blog-sidebar' %}
+          </div>
+        {% endif %}
+
+
+      </div>
+
+
+
+    </div>
+  </div>
+</div>

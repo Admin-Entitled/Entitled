@@ -1,0 +1,132 @@
+/* =========================================================
+   ENTITLED — Overrides (single source of truth)
+   Brand black: #0B0B0C | Text: #F2F2F2 | Accent: #5B0A19
+   ========================================================= */
+
+/* 1) Global typography color */
+:root {
+  --entitled-text: #F2F2F2;
+  --entitled-muted: rgba(242, 242, 242, 0.72);
+  --entitled-bg: #0B0B0C;
+  --entitled-accent: #5B0A19;
+}
+
+/* Apply site-wide text color */
+html, body {
+  color: var(--entitled-text) !important;
+}
+
+/* Common text elements */
+body, p, span, li, dt, dd, label, small, strong, em,
+h1, h2, h3, h4, h5, h6,
+input, textarea, select, button {
+  color: var(--entitled-text) !important;
+}
+
+/* Links */
+a, a:visited {
+  color: var(--entitled-text) !important;
+}
+a:hover {
+  color: var(--entitled-accent) !important;
+}
+
+/* Muted helpers */
+.text-muted, .muted, .subtext, .caption, .helper, .note {
+  color: var(--entitled-muted) !important;
+}
+
+/* Placeholders */
+::placeholder {
+  color: rgba(242, 242, 242, 0.55) !important;
+}
+
+/* 2) Slider / hero buttons (scoped only — won’t affect other site buttons) */
+.slideshow a.btn, .slideshow .btn, .slideshow a.button, .slideshow .button,
+.slider a.btn, .slider .btn, .slider a.button, .slider .button,
+.hero a.btn, .hero .btn, .hero a.button, .hero .button,
+.banner a.btn, .banner .btn, .banner a.button, .banner .button,
+[id*="slideshow"] a.btn, [id*="slideshow"] .btn, [id*="slideshow"] a.button, [id*="slideshow"] .button,
+[class*="slideshow"] a.btn, [class*="slideshow"] .btn, [class*="slideshow"] a.button, [class*="slideshow"] .button,
+[class*="slider"] a.btn, [class*="slider"] .btn, [class*="slider"] a.button, [class*="slider"] .button,
+[class*="banner"] a.btn, [class*="banner"] .btn, [class*="banner"] a.button, [class*="banner"] .button,
+[class*="hero"] a.btn, [class*="hero"] .btn, [class*="hero"] a.button, [class*="hero"] .button {
+  background: rgba(242, 242, 242, 0.95) !important;
+  color: #0B0B0C !important;
+  border: 1px solid rgba(242, 242, 242, 0.35) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.30) !important;
+}
+
+.slideshow a.btn:hover, .slideshow .btn:hover, .slideshow a.button:hover, .slideshow .button:hover,
+.slider a.btn:hover, .slider .btn:hover, .slider a.button:hover, .slider .button:hover,
+.hero a.btn:hover, .hero .btn:hover, .hero a.button:hover, .hero .button:hover,
+.banner a.btn:hover, .banner .btn:hover, .banner a.button:hover, .banner .button:hover {
+  background: rgba(242, 242, 242, 1) !important;
+  color: #0B0B0C !important;
+}
+
+/* If slider buttons use SVG icons */
+.slideshow a svg, .slideshow button svg,
+.slider a svg, .slider button svg,
+.hero a svg, .hero button svg,
+.banner a svg, .banner button svg,
+[id*="slideshow"] svg, [class*="slideshow"] svg,
+[class*="slider"] svg, [class*="banner"] svg, [class*="hero"] svg {
+  fill: #0B0B0C !important;
+  stroke: #0B0B0C !important;
+}
+
+/* 3) Header base (keeps header controls readable) */
+#shopify-section-header a,
+#shopify-section-header button {
+  background: transparent !important;
+  border: none !important;
+  color: var(--entitled-text) !important;
+}
+
+/* Header SVG icons (if any) */
+#shopify-section-header svg,
+#shopify-section-header svg * {
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+/* 4) Search + Cart icons in YOUR theme (background-image / pseudo-element icons)
+      - Your search: <a class="btn_icon" id="opened_search"></a>
+      - Your cart:  <a href="/cart" class="site-header__cart-toggle js-drawer-open-right cart_ico"></a>
+
+   IMPORTANT: Do NOT set background-color on these anchors (causes white square).
+   Use filter invert to turn dark icon assets into white.
+*/
+#shopify-section-header a#opened_search,
+#shopify-section-header a.btn_icon#opened_search,
+#shopify-section-header a.site-header__cart-toggle.cart_ico {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: var(--entitled-text) !important;
+  filter: invert(1) brightness(2) !important;
+  -webkit-filter: invert(1) brightness(2) !important;
+}
+
+/* If the icon is actually drawn on ::before/::after */
+#shopify-section-header a#opened_search::before,
+#shopify-section-header a#opened_search::after,
+#shopify-section-header a.site-header__cart-toggle.cart_ico::before,
+#shopify-section-header a.site-header__cart-toggle.cart_ico::after {
+  filter: invert(1) brightness(2) !important;
+  -webkit-filter: invert(1) brightness(2) !important;
+}
+
+/* Safety: prevent accidental background blocks */
+#shopify-section-header a#opened_search,
+#shopify-section-header a.site-header__cart-toggle.cart_ico {
+  box-shadow: none !important;
+}
+
+/* ENTITLED — Make search + cart background-icon SVGs white */
+header .medium-header .right_header .header_right_icon ul li.search_icon a.btn_icon,
+header .medium-header .right_header .header_right_icon ul li a.cart_ico,
+header .medium-header .right_header .header_right_icon ul li a.site-header__cart-toggle.cart_ico {
+  filter: invert(1) brightness(2) !important;
+  -webkit-filter: invert(1) brightness(2) !important;
+}

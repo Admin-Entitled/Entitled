@@ -48,6 +48,7 @@ export const env = {
   shopifyStoreDomain: (process.env.SHOPIFY_STORE_DOMAIN || "").trim(),
   shopifyClientId: (process.env.SHOPIFY_CLIENT_ID || "").trim(),
   shopifyClientSecret: (process.env.SHOPIFY_CLIENT_SECRET || "").trim(),
+  shopifyAdminAccessToken: (process.env.SHOPIFY_ADMIN_ACCESS_TOKEN || "").trim(),
   shopifyApiVersion: (process.env.SHOPIFY_API_VERSION || "2026-04").trim(),
   analyticsDays: Number(process.env.SHOPIFY_ANALYTICS_DAYS || 365),
   shiprocketEmail: (process.env.SHIPROCKET_EMAIL || "").trim(),

@@ -1,0 +1,162 @@
+<div class="header_height"></div>
+
+<div class="breadcrumb_section">
+  <div class="container">
+    <div class="grid">
+      <div class="grid__item one-whole">
+        <div class="breadcrumb_item">
+          {% include 'breadcrumb' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="content">
+
+  <div id="contact_us">
+
+    <div class="section_title black_border">
+      <h1>{{ page.title | capitalize }}</h1>
+      <span class="title_border black_border"></span>
+    </div>
+
+    {% if settings.enable_google_map  %}
+      <div class="con_map" id="map-canvas"></div>
+    {% endif %}
+
+    <div class="container">
+
+      <div class="grid">
+        <div class="grid__item one-whole small--one-whole medium--one-whole">
+
+          <div class="par_contact">
+
+            <p>
+              {{ page.content }}
+            </p>
+
+            {% form 'contact' %}
+
+              {% comment %}
+                Successful message
+              {% endcomment %}
+              {% if form.posted_successfully? %}
+                <p class="note form-success">
+                  {{ 'contact.form.post_success' | t }}
+                </p>
+              {% endif %}
+
+              {{ form.errors | default_errors }}
+
+              {% assign name_attr = 'contact.form.name' | t | handle %}
+
+              <div id="contact-form">
+                <div class="grid">
+
+                  <div class="grid__item large--one-half large-medium--one-half medium--one-whole max-medium--six-twelfths">
+
+                    <div class="row">
+                      <input type="text" arial-label="Name" id="ContactFormName" class="input-group-field" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+                    </div>
+                    <div class="row">
+                      <input type="email" arial-label="Email" id="ContactFormEmail" class="input-group-field" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required>
+                    </div>
+                    <div class="row"><input type="text" arial-label="Location" id="ContactFormLocation" class="input-group-field" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.location' | t }}" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.location }}{% endif %}">
+                    </div>
+                  </div>
+                  <div class="grid__item large--one-half large-medium--one-half medium--one-whole max-medium--six-twelfths row">
+
+                    <textarea rows="10" id="ContactFormMessage" class="input-full" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}">
+                      {% if form.body %}
+                        {{ form.body }}{% endif %}
+                    </textarea>
+                  </div>
+
+                </div>
+              </div>
+              <div class="conact_btn">
+                <button type="submit" value="{{ 'contact.form.send' | t }}">{{ 'contact.form.send' | t }}<span>
+                    <i class="fa fa-angle-right"></i>
+                  </span>
+                </button>
+              </div>
+            {% endform %}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+  var latlng = new google.maps.LatLng(0, 0);
+  var myOptions = {
+    zoom: {{settings.map_zoom_level}},
+    center: latlng,
+
+    scrollwheel: false,
+    scaleControl: true,
+    disableDefaultUI: false,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    styles: [
+      {
+        featureType: 'all',
+        stylers: [
+          {
+            hue: '{{ settings.color_primary }}'
+          }, {
+            saturation: 50
+          }
+        ]
+      }, {
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [
+          {
+            lightness: 100
+          }, {
+            visibility: 'simplified'
+          }
+        ]
+      }, {
+        featureType: 'poi.business',
+        elementType: 'labels',
+        stylers: [
+          {
+            visibility: 'on'
+          }
+        ]
+      }
+    ]
+
+  };
+  var map2 = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+
+  var geocoder_map2 = new google.maps.Geocoder();
+  var address = '{{ settings.google_map_address }}';
+  geocoder_map2.geocode({
+    'address': address
+  }, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      map2.setCenter(results[0].geometry.location);
+
+      var marker = new google.maps.Marker({map: map2, position: map2.getCenter()});
+
+      var contentString = '{{ settings.google_map_address }}';
+      var infowindow = new google.maps.InfoWindow({content: contentString});
+
+
+
+    } else {
+      alert("Geocode was not successful for the following reason: " + status);
+    }
+  });
+</script>

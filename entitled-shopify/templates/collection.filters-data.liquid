@@ -1,0 +1,39 @@
+{% layout none %}
+{% paginate collection.products by 250 %}
+{
+  "collection": {
+    "handle": {{ collection.handle | json }},
+    "title": {{ collection.title | json }},
+    "url": {{ collection.url | json }},
+    "products_count": {{ collection.products_count | json }}
+  },
+  "products": [
+    {% for product in collection.products %}
+      {
+        "id": {{ product.id | json }},
+        "title": {{ product.title | json }},
+        "url": {{ product.url | within: collection | json }},
+        "vendor": {{ product.vendor | json }},
+        "type": {{ product.type | json }},
+        "tags": {{ product.tags | json }},
+        "available": {{ product.available | json }},
+        "price": {{ product.price | divided_by: 100.0 | json }},
+        "featured_image": {{ product.featured_image | img_url: 'large' | json }},
+        "variants": [
+          {% for variant in product.variants %}
+            {
+              "id": {{ variant.id | json }},
+              "title": {{ variant.title | json }},
+              "available": {{ variant.available | json }},
+              "option1": {{ variant.option1 | json }},
+              "option2": {{ variant.option2 | json }},
+              "option3": {{ variant.option3 | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ],
+        "options_with_values": {{ product.options_with_values | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+{% endpaginate %}

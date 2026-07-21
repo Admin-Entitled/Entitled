@@ -1,0 +1,16 @@
+{"time":"2026-03-04T17:30:48.390Z","mode":"production","level":"INFO","message":"Run started","meta":{"mode":"production","store":"entitled-club-2.myshopify.com","apiVersion":"2025-01"}}
+{"time":"2026-03-04T17:30:49.001Z","mode":"production","level":"INFO","message":"Access token fetched"}
+{"time":"2026-03-04T17:30:50.729Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491185107185","title":"Lacoste |  Polo |  Red"}}
+{"time":"2026-03-04T17:30:51.450Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491185205489","title":"Polo Ralph Lauren |  Polo |  Brown"}}
+{"time":"2026-03-04T17:30:52.266Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491185271025","title":"Polo Ralph Lauren |  Polo |  White"}}
+{"time":"2026-03-04T17:30:52.981Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491185402097","title":"Polo Ralph Lauren |  Polo |  Black"}}
+{"time":"2026-03-04T17:30:53.702Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491185991921","title":"Armani Exchange |  Polo |  Black"}}
+{"time":"2026-03-04T17:30:54.420Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186024689","title":"Armani Exchange |  Polo |  White"}}
+{"time":"2026-03-04T17:30:55.234Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186057457","title":"Armani Exchange |  Polo |  Black"}}
+{"time":"2026-03-04T17:30:56.062Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186090225","title":"Armani Exchange |  Polo |  Blue"}}
+{"time":"2026-03-04T17:30:56.774Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186122993","title":"Armani Exchange |  Polo |  Grey"}}
+{"time":"2026-03-04T17:30:57.796Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186221297","title":"Diesel |  Denim Shirt |  Blue"}}
+{"time":"2026-03-04T17:30:58.617Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186254065","title":"Diesel |  Denim Shirt |  Blue"}}
+{"time":"2026-03-04T17:30:59.436Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186286833","title":"Diesel |  Denim Shirt |  Blue"}}
+{"time":"2026-03-04T17:31:00.155Z","mode":"production","level":"INFO","message":"Published product","meta":{"productId":"gid://shopify/Product/9491186319601","title":"Diesel |  Denim Shirt |  Blue"}}
+{"time":"2026-03-04T17:31:00.155Z","mode":"production","level":"INFO","message":"Run completed","meta":{"mode":"production","totalProducts":20,"activeProducts":20,"alreadyPublished":7,"targetProducts":13,"validatedOnly":0,"publishedNow":13,"skippedInactive":0,"failed":0}}

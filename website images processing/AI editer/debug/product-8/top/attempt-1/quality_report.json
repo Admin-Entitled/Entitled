@@ -1,0 +1,24 @@
+{
+  "source_image_path": "product-8/top.webp",
+  "reference_path": "references/top.webp",
+  "bbox": [
+    109,
+    100,
+    914,
+    935
+  ],
+  "reference_bbox": [
+    0,
+    0,
+    1024,
+    1024
+  ],
+  "bbox_aspect_ratio": 0.9641,
+  "reference_aspect_ratio": 1.0,
+  "scale_used": 0.6056,
+  "rembg_success": true,
+  "reference_mismatch_score": 2.5788,
+  "accepted": false,
+  "rejection_reason": "Quality gate failed. Final output skipped.",
+  "attempt": 1
+}

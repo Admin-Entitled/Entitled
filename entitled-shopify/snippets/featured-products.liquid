@@ -1,0 +1,42 @@
+{% if settings.featured-product != empty %}
+<div class="home_coll_section">
+  <div class="container">
+  
+    <div class="grid" id="popular_product">
+      <div class="popular_product_section">
+        {% if collections[settings.featured_collection].title != blank %}
+        	<h1>{{ collections[settings.featured_collection].title }}</h1>
+        {% endif %}
+        <div class="block-row">
+          <div class="product_list">
+            {% for product in collections[settings.featured_collection].products limit:4 %}
+
+            {% include 'product-home-grid-item' %}
+
+
+            {% else %}
+
+            {% comment %}
+            For onboarding new users to your theme, we add some default products and onboarding tutorials to help populate their store
+            {% endcomment %}
+            {% unless emptyState %}
+            {% assign emptyState = true %}
+            {% endunless %}
+
+            {% include 'onboarding-featured-products' %}
+
+            {% endfor %}
+          </div>  
+        </div>
+		<div class="featured_btn">
+        <a href="{{ collections[settings.featured_collection].url }}" class="btn">
+              {{ settings.loadmore_btn_title }} <span><i class="fa fa-angle-right"></i></span>
+            </a>
+        </div>
+      </div>
+
+    </div>     
+  
+  </div>
+</div>
+{% endif %} 

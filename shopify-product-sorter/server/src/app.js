@@ -5,6 +5,7 @@ import cors from "cors";
 import express from "express";
 import { env } from "./config/env.js";
 import apiRouter from "./routes/api.js";
+import deliveryRouter from "./routes/deliveryResolution.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +18,7 @@ app.use(
 );
 app.use(express.json({ limit: "30mb" }));
 app.use("/api", apiRouter);
+app.use("/api/delivery-resolution", deliveryRouter);
 
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));

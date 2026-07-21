@@ -1,0 +1,17 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - strong [ref=e3]: ENTITLED
+    - button "Choose size" [ref=e4]
+  - main [ref=e5]:
+    - button "Choose size" [ref=e6]
+    - generic [ref=e7]:
+      - article [ref=e8]:
+        - heading "Available" [level=2] [ref=e9]
+      - article [ref=e10]:
+        - heading "Sold out in M" [level=2] [ref=e11]
+      - article [ref=e12]:
+        - heading "M unavailable" [level=2] [ref=e13]
+      - article [ref=e14]:
+        - heading "Not applicable" [level=2] [ref=e15]
+  - generic:
+    - paragraph

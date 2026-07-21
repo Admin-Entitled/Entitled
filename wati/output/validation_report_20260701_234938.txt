@@ -1,0 +1,35 @@
+Shopify Abandoned Checkout WATI Validation Report
+Generated at: 2026-07-01T23:49:38
+Input file: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/wati/input/checkouts_export_1.csv
+Detected delimiter: ','
+
+Detected columns:
+- first_name/full name: full=[Billing Name, Shipping Name, Name], first=[(not found)], last=[(not found)]
+- phone: Shipping Phone, Billing Phone, Phone
+- customer_email: Email
+- recovery_url: (not found)
+- order_value: Total
+- abandoned_checkout_created_at: Created at
+
+Shopify API fallback:
+- Needed: True
+- Configured: False
+- Attempted: False
+- Success: False
+- Message: Shopify API credentials not configured; missing SHOPIFY_STORE_DOMAIN, SHOPIFY_ADMIN_ACCESS_TOKEN, SHOPIFY_API_VERSION
+- Fetched checkouts: 0
+- Matched rows: 0
+
+Total rows: 78
+WATI output rows: 40
+Rejected rows: 38
+Duplicate rows removed: 16
+Invalid phone rows: 22
+Missing recovery URL rows in WATI output: 40
+Missing first_name rows in WATI output: 9
+Missing order_value rows in WATI output: 4
+Invalid customer_email rows in WATI output: 0
+
+Final WATI output path: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/wati/output/wati_ready_abandoned_checkouts_20260701_234938.csv
+Rejected rows path: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/wati/output/rejected_rows_20260701_234938.csv
+Report path: /home/shivam/Desktop/Shivam/arkn/Resources/Entitled/wati/output/validation_report_20260701_234938.txt

@@ -1,0 +1,789 @@
+{
+  "product-1": {
+    "product_folder": "product-1",
+    "input_fingerprint": "f80e13a5c6bbbae43c5f31ce1ec8df5ac1bba264b13f5cc9a48d229868c58439",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3463584,
+        "mtime_ns": 1779924476000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3450733,
+        "mtime_ns": 1779924472000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1852323,
+        "mtime_ns": 1779926468000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-1/back.jpg",
+      "results/product-1/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-1/back.jpg",
+      "results/product-1/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-1/back.jpg",
+      "results/product-1/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:12:16.464646+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-10": {
+    "product_folder": "product-10",
+    "input_fingerprint": "76cb804d0fc7dc9b1e82168096151a849aa067c0865386b36cf28be174d204ca",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3206404,
+        "mtime_ns": 1779910494000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 2810476,
+        "mtime_ns": 1779910490000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1235392,
+        "mtime_ns": 1779910298000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-10/back.jpg",
+      "results/product-10/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-10/back.jpg",
+      "results/product-10/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-10/back.jpg",
+      "results/product-10/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:12:20.578684+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-11": {
+    "product_folder": "product-11",
+    "input_fingerprint": "80f1fc6a385c85ebdc9dccaa2c05dbdc6fee0cb019139de1ed618f2393873388",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 2808836,
+        "mtime_ns": 1779910510000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 2662554,
+        "mtime_ns": 1779910508000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1637143,
+        "mtime_ns": 1779910302000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-11/back.jpg",
+      "results/product-11/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-11/back.jpg",
+      "results/product-11/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:15:25.213082+00:00",
+    "gemini_calls_used": 2,
+    "estimated_cost_inr": 14.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-12": {
+    "product_folder": "product-12",
+    "input_fingerprint": "e0ce96822d7216b904e31bbb1a55412f9c4fdcfaa07b1c539c7c61d4dab8f521",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 2746871,
+        "mtime_ns": 1779910528000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3159166,
+        "mtime_ns": 1779910524000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1423310,
+        "mtime_ns": 1779910308000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-12/back.jpg",
+      "results/product-12/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-12/back.jpg",
+      "results/product-12/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:21:25.913122+00:00",
+    "gemini_calls_used": 2,
+    "estimated_cost_inr": 14.0,
+    "failure_reasons": {},
+    "warnings": {
+      "results/product-12/front.jpg": "reference_mismatch_warning"
+    },
+    "paused_top_processing": true
+  },
+  "product-13": {
+    "product_folder": "product-13",
+    "input_fingerprint": "72a6b2966bcc639888f7f08bcb981299b6f92e8409efec3e71b59634d3683b59",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3176438,
+        "mtime_ns": 1779910534000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 2940749,
+        "mtime_ns": 1779910530000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1515063,
+        "mtime_ns": 1779919356000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-13/back.jpg",
+      "results/product-13/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-13/back.jpg",
+      "results/product-13/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:24:14.693330+00:00",
+    "gemini_calls_used": 2,
+    "estimated_cost_inr": 14.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-14": {
+    "product_folder": "product-14",
+    "input_fingerprint": "09e6784e9126ea6aa59273774ef8f17d624aa63939b7a8fcd1025c78b792ce7d",
+    "input_files": [
+      {
+        "name": "back.webp",
+        "size": 80826,
+        "mtime_ns": 1780394796353291111
+      },
+      {
+        "name": "front.webp",
+        "size": 132202,
+        "mtime_ns": 1780394791287380392
+      },
+      {
+        "name": "top.webp",
+        "size": 258126,
+        "mtime_ns": 1780394818549905543
+      }
+    ],
+    "expected_outputs": [
+      "results/product-14/back.webp",
+      "results/product-14/front.webp"
+    ],
+    "successful_outputs": [
+      "results/product-14/back.webp",
+      "results/product-14/front.webp"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-14/back.webp",
+      "results/product-14/front.webp"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:24:18.820009+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-15": {
+    "product_folder": "product-15",
+    "input_fingerprint": "2a692d9a67c47f42081f3ded662ed8f7a8e556788b91e473d4858b9d0aed3171",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3827386,
+        "mtime_ns": 1779910558000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3344301,
+        "mtime_ns": 1779910554000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 2164960,
+        "mtime_ns": 1779910326000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-15/back.jpg",
+      "results/product-15/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-15/back.jpg",
+      "results/product-15/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:27:16.670253+00:00",
+    "gemini_calls_used": 2,
+    "estimated_cost_inr": 14.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-16": {
+    "product_folder": "product-16",
+    "input_fingerprint": "b0c92766e4621b687ced9147e19ea8911f40e5f79cbb34f7ad56b2bf13d6b8c0",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 2826191,
+        "mtime_ns": 1779910616000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 2835890,
+        "mtime_ns": 1779910612000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1944527,
+        "mtime_ns": 1779919318000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-16/back.jpg",
+      "results/product-16/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-16/back.jpg",
+      "results/product-16/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:30:10.961278+00:00",
+    "gemini_calls_used": 2,
+    "estimated_cost_inr": 14.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-2": {
+    "product_folder": "product-2",
+    "input_fingerprint": "5e9427874b1ac4ed3ec02c35157bdf7d7ae4e56262b22688acc845ac7a308fb1",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3911583,
+        "mtime_ns": 1779924484000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3711236,
+        "mtime_ns": 1779924480000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 2321643,
+        "mtime_ns": 1779926472000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-2/back.jpg",
+      "results/product-2/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-2/back.jpg",
+      "results/product-2/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-2/back.jpg",
+      "results/product-2/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:30:15.123442+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-3": {
+    "product_folder": "product-3",
+    "input_fingerprint": "444e100fd26dd338806d3a573a5710752c9e5878bdc988619637ae9e1956bf6f",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3242154,
+        "mtime_ns": 1779925142000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3230014,
+        "mtime_ns": 1779925138000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 2034031,
+        "mtime_ns": 1779926490000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-3/back.jpg",
+      "results/product-3/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-3/back.jpg",
+      "results/product-3/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-3/back.jpg",
+      "results/product-3/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:30:19.284982+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-4": {
+    "product_folder": "product-4",
+    "input_fingerprint": "7bba244cb33cc33398a3fcec2ed31f97c76ce2fb50bc0800ac108034e97f5ccd",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3516383,
+        "mtime_ns": 1779924468000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3424737,
+        "mtime_ns": 1779924464000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1890629,
+        "mtime_ns": 1779926444000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-4/back.jpg",
+      "results/product-4/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-4/back.jpg",
+      "results/product-4/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-4/back.jpg",
+      "results/product-4/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:30:23.432448+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-5": {
+    "product_folder": "product-5",
+    "input_fingerprint": "b605194caeb920839b49dd996f982d8a837fe407843e132ca044085063424ccd",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3746495,
+        "mtime_ns": 1779924452000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3630703,
+        "mtime_ns": 1779924448000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 2345082,
+        "mtime_ns": 1779926430000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-5/back.jpg",
+      "results/product-5/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-5/back.jpg",
+      "results/product-5/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-5/back.jpg",
+      "results/product-5/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:30:27.600615+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-6": {
+    "product_folder": "product-6",
+    "input_fingerprint": "4ad28bc095518132234bc35783505359447857748d4dee2956a8663859e9a86c",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 4140626,
+        "mtime_ns": 1779924436000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3205523,
+        "mtime_ns": 1779924432000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1758691,
+        "mtime_ns": 1779926426000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-6/back.jpg",
+      "results/product-6/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-6/back.jpg",
+      "results/product-6/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-6/back.jpg",
+      "results/product-6/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:30:31.741931+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-7": {
+    "product_folder": "product-7",
+    "input_fingerprint": "4246bbe4ed2f3ea3621a7fde65b672a32a1c5cfe62ad7613cf4006a3bced99db",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 3901272,
+        "mtime_ns": 1779924444000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 3633610,
+        "mtime_ns": 1779924440000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 1982029,
+        "mtime_ns": 1779926438000000000
+      }
+    ],
+    "expected_outputs": [
+      "results/product-7/back.jpg",
+      "results/product-7/front.jpg"
+    ],
+    "successful_outputs": [
+      "results/product-7/back.jpg",
+      "results/product-7/front.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-7/front.jpg"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:31:59.894364+00:00",
+    "gemini_calls_used": 1,
+    "estimated_cost_inr": 7.0,
+    "failure_reasons": {},
+    "warnings": {
+      "results/product-7/back.jpg": "reference_mismatch_warning"
+    },
+    "paused_top_processing": true
+  },
+  "product-8": {
+    "product_folder": "product-8",
+    "input_fingerprint": "5940882a9039976648a5de33d9842654b22b690abf49e69d6f009687cfca3222",
+    "input_files": [
+      {
+        "name": "back.webp",
+        "size": 166398,
+        "mtime_ns": 1780394167755183563
+      },
+      {
+        "name": "front.webp",
+        "size": 32364,
+        "mtime_ns": 1780394178677741567
+      },
+      {
+        "name": "top.webp",
+        "size": 175148,
+        "mtime_ns": 1780394187332396679
+      }
+    ],
+    "expected_outputs": [
+      "results/product-8/back.webp",
+      "results/product-8/front.webp"
+    ],
+    "successful_outputs": [
+      "results/product-8/back.webp",
+      "results/product-8/front.webp"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-8/back.webp"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:33:09.042294+00:00",
+    "gemini_calls_used": 1,
+    "estimated_cost_inr": 7.0,
+    "failure_reasons": {},
+    "warnings": {
+      "results/product-8/front.webp": "reference_mismatch_warning"
+    },
+    "paused_top_processing": true
+  },
+  "product-9": {
+    "product_folder": "product-9",
+    "input_fingerprint": "20371176b634dd75e0bfe311a4c5177a3a28cf7975db1e5fbfac6fcc0478ba37",
+    "input_files": [
+      {
+        "name": "back.webp",
+        "size": 230210,
+        "mtime_ns": 1780394562607000842
+      },
+      {
+        "name": "front.webp",
+        "size": 93456,
+        "mtime_ns": 1780394571193803193
+      },
+      {
+        "name": "top.webp",
+        "size": 87762,
+        "mtime_ns": 1780394590505366492
+      }
+    ],
+    "expected_outputs": [
+      "results/product-9/back.webp",
+      "results/product-9/front.webp"
+    ],
+    "successful_outputs": [
+      "results/product-9/back.webp",
+      "results/product-9/front.webp"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [
+      "results/product-9/back.webp",
+      "results/product-9/front.webp"
+    ],
+    "status": "success",
+    "last_run_at": "2026-06-02T13:33:13.232143+00:00",
+    "gemini_calls_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "warnings": {},
+    "paused_top_processing": true
+  },
+  "product-17": {
+    "product_folder": "product-17",
+    "input_fingerprint": "0a04123a752815201b90fc96fcff9b3eadc69e84581c23553cfa44d7faf1ef14",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 10125974,
+        "mtime_ns": 1768320666000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 11081896,
+        "mtime_ns": 1768319520000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 3745195,
+        "mtime_ns": 1768319484000000000
+      }
+    ],
+    "front_input_found": true,
+    "back_input_found": true,
+    "top_processing_paused": true,
+    "expected_outputs": [
+      "results/product-17/back.jpg",
+      "results/product-17/front.jpg"
+    ],
+    "successful_outputs": [],
+    "missing_outputs": [
+      "results/product-17/front.jpg",
+      "results/product-17/back.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "output_status_per_role": {
+      "front": "missing",
+      "back": "missing",
+      "top": "paused_top_processing"
+    },
+    "status": "partial",
+    "last_processed_timestamp": "2026-06-05T11:19:05.427618+00:00",
+    "gemini_standard_calls_used": 0,
+    "batch_task_count_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "selected_model_profile": "flash_image",
+    "selected_api_mode": "batch",
+    "skipped_reason": null
+  },
+  "product-18": {
+    "product_folder": "product-18",
+    "input_fingerprint": "1901ad20efe932a1442772d05be45b675d985609cc1e0b89632b01c3c09b17d3",
+    "input_files": [
+      {
+        "name": "back.jpg",
+        "size": 10596527,
+        "mtime_ns": 1768319230000000000
+      },
+      {
+        "name": "front.jpg",
+        "size": 7205705,
+        "mtime_ns": 1768318898000000000
+      },
+      {
+        "name": "top.jpg",
+        "size": 2399892,
+        "mtime_ns": 1768319134000000000
+      }
+    ],
+    "front_input_found": true,
+    "back_input_found": true,
+    "top_processing_paused": true,
+    "expected_outputs": [
+      "results/product-18/back.jpg",
+      "results/product-18/front.jpg"
+    ],
+    "successful_outputs": [],
+    "missing_outputs": [
+      "results/product-18/front.jpg",
+      "results/product-18/back.jpg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "output_status_per_role": {
+      "front": "missing",
+      "back": "missing",
+      "top": "paused_top_processing"
+    },
+    "status": "partial",
+    "last_processed_timestamp": "2026-06-05T11:19:05.427654+00:00",
+    "gemini_standard_calls_used": 0,
+    "batch_task_count_used": 0,
+    "estimated_cost_inr": 0.0,
+    "failure_reasons": {},
+    "selected_model_profile": "flash_image",
+    "selected_api_mode": "batch",
+    "skipped_reason": null
+  },
+  "Product 1": {
+    "product_folder": "Product 1",
+    "input_fingerprint": "e971083500a019b02739c029287ef44ae2d66f2afb2a76e36c9df2e4a3443aa4",
+    "input_files": [
+      {
+        "name": "back.jpeg",
+        "size": 7780784,
+        "mtime_ns": 1781682667951137460
+      },
+      {
+        "name": "front.jpeg",
+        "size": 8162042,
+        "mtime_ns": 1781682684437469603
+      }
+    ],
+    "front_input_found": true,
+    "back_input_found": true,
+    "top_processing_paused": true,
+    "expected_outputs": [
+      "results/Product 1/back.jpeg",
+      "results/Product 1/front.jpeg"
+    ],
+    "successful_outputs": [],
+    "missing_outputs": [
+      "results/Product 1/front.jpeg",
+      "results/Product 1/back.jpeg"
+    ],
+    "failed_outputs": [],
+    "skipped_outputs": [],
+    "output_status_per_role": {
+      "front": "missing",
+      "back": "missing",
+      "top": "paused_top_processing"
+    },
+    "status": "partial",
+    "last_processed_timestamp": "2026-06-24T13:48:44.479696+00:00",
+    "gemini_standard_calls_used": 2,
+    "batch_task_count_used": 0,
+    "estimated_cost_inr": 28.0,
+    "failure_reasons": {},
+    "selected_model_profile": "flash_image",
+    "selected_api_mode": "standard",
+    "skipped_reason": null
+  }
+}

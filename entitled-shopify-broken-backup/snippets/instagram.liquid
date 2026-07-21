@@ -1,0 +1,22 @@
+<!--======  #INSTAGRAM  ===============-->
+{% if settings.insta_access_Token != blank %}
+<div class="parallax-window insta_section" >
+
+  <span class="insta_overlay"></span>
+
+  <div class="container">
+    
+      <h1>{{settings.instagram_title}}</h1>
+        
+        <div class="insta_list" id="instafeed" data-access_Token="{{settings.insta_access_Token}}" data-User_Id="{{settings.insta_access_Token | split:'.' | first }}" data-limit="{{settings.insta_limit}}">
+        </div>
+    
+    </div>
+
+</div>
+{{ 'instafeed.min.js' | asset_url | script_tag }}
+{{ 'instagram.js' | asset_url | script_tag }}
+{% else %}
+{% include 'onboarding-instagram' %}
+{% endif %}
+
