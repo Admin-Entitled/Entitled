@@ -43,6 +43,7 @@
     '3xl': 'XXXL',
     'xxx-large': 'XXXL'
   };
+  var publicApi = {};
 
   function cleanLabel(value) {
     return String(value == null ? '' : value).replace(/[\u0000-\u001f\u007f]/g, '').trim().replace(/\s+/g, ' ');
@@ -809,6 +810,10 @@
       updateProductPage(allowPreselect);
     }
 
+    publicApi.refreshProductCards = function () {
+      refresh(false);
+    };
+
     document.addEventListener('click', function (event) {
       var trigger = event.target.closest('[data-size-preference-open]');
       if (trigger) {
@@ -993,18 +998,18 @@
     }
   }
 
-  return {
-    STORAGE_KEY: STORAGE_KEY,
-    PROMPT_COMPLETED_KEY: PROMPT_COMPLETED_KEY,
-    LEGACY_SESSION_KEY: LEGACY_SESSION_KEY,
-    LEGACY_STORAGE_KEY: LEGACY_STORAGE_KEY,
-    normalizeSizeLabel: normalizeSizeLabel,
-    findSizeOptionIndex: findSizeOptionIndex,
-    classifyPreferredSize: classifyPreferredSize,
-    resolvePreferredVariant: resolvePreferredVariant,
-    createStorageAdapter: createStorageAdapter,
-    hasProductContext: hasProductContext,
-    hasValidSessionSizePreference: hasValidSessionSizePreference,
-    resolveProductCardAction: resolveProductCardAction
-  };
+  publicApi.STORAGE_KEY = STORAGE_KEY;
+  publicApi.PROMPT_COMPLETED_KEY = PROMPT_COMPLETED_KEY;
+  publicApi.LEGACY_SESSION_KEY = LEGACY_SESSION_KEY;
+  publicApi.LEGACY_STORAGE_KEY = LEGACY_STORAGE_KEY;
+  publicApi.normalizeSizeLabel = normalizeSizeLabel;
+  publicApi.findSizeOptionIndex = findSizeOptionIndex;
+  publicApi.classifyPreferredSize = classifyPreferredSize;
+  publicApi.resolvePreferredVariant = resolvePreferredVariant;
+  publicApi.createStorageAdapter = createStorageAdapter;
+  publicApi.hasProductContext = hasProductContext;
+  publicApi.hasValidSessionSizePreference = hasValidSessionSizePreference;
+  publicApi.resolveProductCardAction = resolveProductCardAction;
+
+  return publicApi;
 }));

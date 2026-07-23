@@ -1,0 +1,109 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: SHOPIFY OPERATIONS
+      - heading "Order Mapping" [level=1] [ref=e7]
+      - text: Shopify orders, Shiprocket tracking, CSV imports, and manual overrides in one screen.
+    - generic [ref=e8]:
+      - button "Sync Shopify orders" [ref=e9] [cursor=pointer]
+      - button "Refresh tracking" [ref=e10] [cursor=pointer]
+      - generic [ref=e11]:
+        - generic [ref=e12]: Choose CSV
+        - button "Choose CSV" [ref=e13] [cursor=pointer]
+      - button "Preview CSV" [disabled] [ref=e14]
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - text: From
+      - textbox "From" [ref=e17]: 2026-05-24
+    - generic [ref=e18]:
+      - text: To
+      - textbox "To" [ref=e19]: 2026-07-22
+    - generic [ref=e20]:
+      - text: Search
+      - textbox "Search" [ref=e21]:
+        - /placeholder: Order, customer, phone, AWB
+    - generic [ref=e22]:
+      - text: Status
+      - combobox "Status" [ref=e23]:
+        - option "All statuses" [selected]
+        - option "Pending Tracking"
+        - option "Manifested"
+        - option "Pickup Pending"
+        - option "Picked Up"
+        - option "In Transit"
+        - option "Out For Delivery"
+        - option "Delivery Attempted"
+        - option "Undelivered"
+        - option "Delivered To Customer"
+        - option "Rto Initiated"
+        - option "Rto In Transit"
+        - option "Rto Out For Delivery"
+        - option "Rto Delivered"
+        - option "Lost"
+        - option "Damaged"
+        - option "Cancelled"
+        - option "Shipment Exception"
+        - option "Unknown"
+    - generic [ref=e24]:
+      - text: Source
+      - combobox "Source" [ref=e25]:
+        - option "All sources" [selected]
+        - option "Shopify"
+        - option "Shiprocket Api"
+        - option "Csv Import"
+        - option "Manual"
+        - option "Database Cache"
+        - option "Legacy Data"
+    - generic [ref=e26]:
+      - text: Order from
+      - textbox "Order from" [ref=e27]
+    - generic [ref=e28]:
+      - text: Order to
+      - textbox "Order to" [ref=e29]
+  - generic [ref=e30]:
+    - article [ref=e31]:
+      - generic [ref=e32]: Total orders
+      - strong [ref=e33]: "0"
+    - article [ref=e34]:
+      - generic [ref=e35]: In transit
+      - strong [ref=e36]: "0"
+    - article [ref=e37]:
+      - generic [ref=e38]: Out for delivery
+      - strong [ref=e39]: "0"
+    - article [ref=e40]:
+      - generic [ref=e41]: Delivered
+      - strong [ref=e42]: "0"
+    - article [ref=e43]:
+      - generic [ref=e44]: RTO initiated
+      - strong [ref=e45]: "0"
+    - article [ref=e46]:
+      - generic [ref=e47]: RTO in transit
+      - strong [ref=e48]: "0"
+    - article [ref=e49]:
+      - generic [ref=e50]: RTO delivered
+      - strong [ref=e51]: "0"
+    - article [ref=e52]:
+      - generic [ref=e53]: Lost
+      - strong [ref=e54]: "0"
+    - article [ref=e55]:
+      - generic [ref=e56]: Pending tracking
+      - strong [ref=e57]: "0"
+    - article [ref=e58]:
+      - generic [ref=e59]: Manually updated
+      - strong [ref=e60]: "0"
+  - generic [ref=e61]: Loading Order Mapping rows…
+  - generic [ref=e63]:
+    - button "Previous" [disabled] [ref=e64]
+    - generic [ref=e65]: Page 1 · 0 total orders
+    - button "Next" [disabled] [ref=e66]
+  - generic [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - heading "Network Logs" [level=2] [ref=e70]
+        - generic [ref=e71]: Refreshing…
+      - generic [ref=e72]: No network activity recorded yet.
+    - generic [ref=e73]:
+      - generic [ref=e74]:
+        - heading "Action Logs" [level=2] [ref=e75]
+        - generic [ref=e76]: Refreshing…
+      - generic [ref=e77]: No actions recorded yet.

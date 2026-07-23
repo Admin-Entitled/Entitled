@@ -5,7 +5,7 @@ import cors from "cors";
 import express from "express";
 import { env } from "./config/env.js";
 import apiRouter from "./routes/api.js";
-import deliveryRouter from "./routes/deliveryResolution.js";
+import orderMappingRouter from "./routes/orderMapping.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,7 +18,8 @@ app.use(
 );
 app.use(express.json({ limit: "30mb" }));
 app.use("/api", apiRouter);
-app.use("/api/delivery-resolution", deliveryRouter);
+app.use("/api/order-mapping", orderMappingRouter);
+app.get("/delivery-resolution", (req, res) => res.redirect(302, env.orderMappingRoute));
 
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));

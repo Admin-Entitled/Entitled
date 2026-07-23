@@ -1,5 +1,6 @@
 import app from "./app.js";
 import { env, envLoadReport } from "./config/env.js";
+import { runOrderMappingMigrations } from "./services/orderMappingMigrations.js";
 import { getCachedTokenStatus, primeShopifyAuthCache } from "./services/shopifyAuth.js";
 import { warnIfMissingSkuImageScopes } from "./services/shopifyMediaService.js";
 import { fetchShopCounts } from "./services/shopifyService.js";
@@ -12,6 +13,8 @@ async function startServer() {
     shopifyStoreDomainPresent: Boolean(env.shopifyStoreDomain),
     shopifyClientIdPresent: Boolean(env.shopifyClientId),
   });
+
+  await runOrderMappingMigrations();
 
   await primeShopifyAuthCache().catch(() => {});
 

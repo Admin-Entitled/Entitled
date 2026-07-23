@@ -66,7 +66,7 @@
                   </div>
                 </div>
                 <div class="block-row">
-                  <div class="product_list" data-collection-product-list>
+                  <div class="product_list" data-collection-product-list data-infinite-scroll-list>
 
 
                     {% unless grid_item_width %}
@@ -121,8 +121,12 @@
                 </div>
 
 
+                <div class="infinite-scroll-status" data-infinite-scroll-status aria-live="polite" hidden>
+                  Loading more products...
+                </div>
+
                 {% if paginate.pages > 1 %}
-                  <div class="pagination" data-collection-pagination>
+                  <div class="pagination" data-collection-pagination data-infinite-scroll-pagination>
                     {% include 'pagination' %}
                   </div>
                 {% endif %}

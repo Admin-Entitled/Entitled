@@ -15,6 +15,9 @@ const {
   resolveProductCardAction
 } = require('../assets/size-preference.js');
 
+const sizePreferenceRefreshSource = fs.readFileSync('assets/size-preference.js', 'utf8');
+assert.ok(/refreshProductCards/.test(sizePreferenceRefreshSource), 'size preference must expose a refresh hook for appended product cards');
+
 function product(options, variants) {
   return { options_with_values: options, variants: variants };
 }
@@ -309,6 +312,12 @@ const sizePreferenceSource = fs.readFileSync('assets/size-preference.js', 'utf8'
 const sizePreferenceStyles = fs.readFileSync('assets/entitled-overrides.css', 'utf8');
 assert.ok(/<button type="button" class="size-preference__choice needsclick/.test(sizePreferenceSource), 'popup sizes must render as semantic buttons excluded from legacy FastClick synthesis');
 assert.ok(/size-preference__confirm needsclick/.test(fs.readFileSync('snippets/size-preference.liquid', 'utf8')), 'Save must bypass legacy FastClick synthesis');
+const swatchSource = fs.readFileSync('snippets/swatch.liquid', 'utf8');
+assert.ok(/class="chk_color needsclick"/.test(swatchSource), 'colour swatch labels must bypass legacy FastClick synthesis');
+assert.ok(/<label class="needsclick" for="swatch-/.test(swatchSource), 'text swatch labels must bypass legacy FastClick synthesis');
+const productSectionSource = fs.readFileSync('sections/product.liquid', 'utf8');
+assert.ok(/\$\(document\)\.on\('change', '\.swatch :radio'/.test(productSectionSource), 'swatches must update from the radio change path');
+assert.ok(!/\$\(document\)\.on\('click', '\.swatch label'/.test(productSectionSource), 'swatches must not add a second label click path on PDP');
 const sizePreferenceMarkup = fs.readFileSync('snippets/size-preference.liquid', 'utf8');
 assert.ok(!/data-size-preference-(?:skip|clear)/.test(sizePreferenceMarkup), 'initial popup must not render Skip or Clear actions');
 assert.ok(!/<input type="radio" name="preferred-size"/.test(sizePreferenceSource), 'popup selection must not depend on label-forwarded hidden radios');

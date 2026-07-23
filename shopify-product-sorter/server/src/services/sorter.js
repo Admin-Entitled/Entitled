@@ -1,293 +1,326 @@
-function normalize(value, max) {
-  if (!max || max <= 0) {
+import { DEFAULT_STRATEGY, validateStrategy } from "./strategySettings.js";
+
+const clamp = (value, min = 0, max = 1) =>
+  Math.max(min, Math.min(max, Number.isFinite(value) ? value : min));
+
+const logScale = (value, max) => {
+  if (!max || max <= 0 || value <= 0) {
     return 0;
   }
-  return value / max;
+
+  return clamp(Math.log1p(value) / Math.log1p(max));
+};
+
+const dayKey = (value) => new Date(value).toISOString().slice(0, 10);
+
+function deterministicSeed(collectionId, productId, currentDate) {
+  let hash = 2166136261;
+  const input = `${collectionId}:${productId}:${dayKey(currentDate)}`;
+
+  for (const char of input) {
+    hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  }
+
+  return (hash >>> 0) / 4294967295;
 }
 
-function recencyScore(createdAt) {
-  const ageMs = Date.now() - new Date(createdAt).getTime();
-  const ageDays = ageMs / (1000 * 60 * 60 * 24);
-  if (ageDays <= 14) return 1.0;
-  if (ageDays <= 30) return 0.8;
-  if (ageDays <= 60) return 0.5;
-  if (ageDays <= 90) return 0.25;
-  return 0.1;
+function isSizeOption(option) {
+  return option?.name?.toLowerCase() === "size";
 }
 
-const KNOWN_COLOR_PREFIXES = [
-  "old navy",
-  "navy blue",
-  "light blue",
-  "dark blue",
-  "off white",
-  "forest green",
-  "olive green",
-  "sky blue",
-  "royal blue",
-  "maroon",
-  "orange",
-  "beige",
-  "black",
-  "white",
-  "brown",
-  "green",
-  "grey",
-  "gray",
-  "blue",
-  "navy",
-  "red",
-  "pink",
-  "tan",
-];
+function ageInDays(product, currentDate) {
+  const sourceDate = product.publishedAt || product.createdAt;
+  if (!sourceDate) {
+    return Number.POSITIVE_INFINITY;
+  }
 
-function extractTypeAndColor(title) {
-  const normalized = (title || "").trim();
-  const lower = normalized.toLowerCase();
+  return Math.max(0, (new Date(currentDate) - new Date(sourceDate)) / 86400000);
+}
 
-  for (const prefix of KNOWN_COLOR_PREFIXES) {
-    if (!lower.startsWith(prefix)) {
-      continue;
-    }
+function newnessScore(ageDays) {
+  if (!Number.isFinite(ageDays)) {
+    return 0;
+  }
 
-    const color = normalized.slice(0, prefix.length).trim();
-    const type = normalized.slice(prefix.length).trim();
+  if (ageDays <= 7) {
+    return 1;
+  }
+
+  if (ageDays <= 14) {
+    return 0.7;
+  }
+
+  if (ageDays <= 30) {
+    return clamp(0.7 - ((ageDays - 14) / 16) * 0.45);
+  }
+
+  return 0;
+}
+
+function inventoryHealth(product) {
+  const variants = Array.isArray(product.variants) ? product.variants : [];
+  const activeVariants = variants.filter((variant) => variant.active !== false);
+  const availableVariants = activeVariants.filter(
+    (variant) => variant.availableForSale && Number(variant.inventoryQuantity || 0) > 0,
+  );
+  const sizeVariants = activeVariants.filter((variant) =>
+    (variant.selectedOptions || []).some(isSizeOption),
+  );
+  const availableSizeVariants = availableVariants.filter((variant) =>
+    (variant.selectedOptions || []).some(isSizeOption),
+  );
+  const sellableUnits = availableVariants.reduce(
+    (sum, variant) => sum + Math.max(0, Number(variant.inventoryQuantity || 0)),
+    0,
+  );
+
+  return {
+    sellableUnits,
+    availableVariantCount: availableVariants.length,
+    totalVariantCount: activeVariants.length,
+    sizeCoverage:
+      sizeVariants.length > 0
+        ? clamp(availableSizeVariants.length / sizeVariants.length)
+        : activeVariants.length > 0
+          ? clamp(availableVariants.length / activeVariants.length)
+          : 0,
+    fullySoldOut: sellableUnits <= 0,
+    partiallyAvailable: sellableUnits > 0 && availableVariants.length < activeVariants.length,
+  };
+}
+
+function netSales(product) {
+  const sales = product.sales || {};
+  const units7 = Math.max(0, Number(sales.units7 || 0));
+  const units30 = Math.max(0, Number(sales.units30 || 0));
+  const units90 = Math.max(0, Number(sales.units90 || 0));
+  const previous23 = Math.max(0, Number(sales.previous23 || 0));
+  const lifetime = Math.max(0, Number(product.soldQuantity || units90 || units30 || units7 || 0));
+  const grossStrength = units7 * 0.5 + units30 * 0.3 + Math.max(units90 - units30, 0) * 0.2;
+  const recentVelocity = units7 / 7;
+  const previousVelocity = previous23 / 23;
+  const growthRatio =
+    previousVelocity <= 0 ? (units7 > 0 ? 1 : 0) : clamp(recentVelocity / previousVelocity);
+  const recencyBoost = units7 > 0 ? 1 : units30 > 0 ? 0.6 : units90 > 0 ? 0.25 : 0;
+
+  return {
+    units7,
+    units30,
+    units90,
+    previous23,
+    lifetime,
+    grossStrength,
+    momentum: clamp(growthRatio * 0.7 + recencyBoost * 0.3),
+  };
+}
+
+function normalizeStrategy(settings = {}) {
+  const validated = validateStrategy({
+    salesWeight: settings.salesWeight ?? DEFAULT_STRATEGY.salesWeight,
+    inventoryWeight: settings.inventoryWeight ?? DEFAULT_STRATEGY.inventoryWeight,
+    newnessWeight: settings.newnessWeight ?? DEFAULT_STRATEGY.newnessWeight,
+    momentumWeight: settings.momentumWeight ?? DEFAULT_STRATEGY.momentumWeight,
+    rotationWeight: settings.rotationWeight ?? DEFAULT_STRATEGY.rotationWeight,
+  });
+
+  return validated.strategy || DEFAULT_STRATEGY;
+}
+
+function compareScored(left, right) {
+  return (
+    right.finalScore - left.finalScore ||
+    right.salesScore - left.salesScore ||
+    right.momentumScore - left.momentumScore ||
+    right.inventoryScore - left.inventoryScore ||
+    left.previousRank - right.previousRank ||
+    String(left.id).localeCompare(String(right.id))
+  );
+}
+
+function diversify(items) {
+  const queue = [...items];
+  const result = [];
+
+  while (queue.length) {
+    const candidateIndex = queue.findIndex((candidate) => {
+      const previous = result.slice(-2);
+      if (previous.length < 2) {
+        return true;
+      }
+
+      const sameVendor = previous.every((entry) => entry.vendor && entry.vendor === candidate.vendor);
+      const sameType = previous.every(
+        (entry) => entry.productType && entry.productType === candidate.productType,
+      );
+
+      return !sameVendor && !sameType;
+    });
+
+    result.push(...queue.splice(candidateIndex >= 0 ? candidateIndex : 0, 1));
+  }
+
+  return result;
+}
+
+function distributeSlots(products, slotCount, spacingBase) {
+  if (!slotCount || !products.length) {
+    return [];
+  }
+
+  return products.slice(0, slotCount).map((product, index) => ({
+    product,
+    index: Math.min(index * spacingBase + index, spacingBase * slotCount),
+  }));
+}
+
+export function generateOrder(products = [], settings = {}) {
+  const strategy = normalizeStrategy(settings);
+  const firstPageLimit = Math.max(1, Math.min(Number(settings.firstPageLimit || 40), products.length || 1));
+  const currentDate = settings.currentDate || "2026-07-22T00:00:00.000Z";
+
+  const enriched = products.map((product) => {
+    const inventory = inventoryHealth(product);
+    const sales = netSales(product);
+    const ageDays = ageInDays(product, currentDate);
+    const previousRank = Number(product.collectionPosition || 999999);
+
     return {
-      color: color || "Unknown",
-      productType: type || normalized || "Unknown",
-    };
-  }
-
-  return {
-    color: normalized.split(/\s+/)[0] || "Unknown",
-    productType: normalized,
-  };
-}
-
-function inferProductType(product) {
-  if (product.productType?.trim()) {
-    return product.productType.trim();
-  }
-  const parts = product.title.split("|").map((part) => part.trim()).filter(Boolean);
-  if (parts.length >= 3) {
-    return parts[1];
-  }
-  if (parts.length === 2) {
-    return extractTypeAndColor(parts[1]).productType;
-  }
-  return "Unknown";
-}
-
-function inferColor(product) {
-  const parts = product.title.split("|").map((part) => part.trim()).filter(Boolean);
-  if (parts.length >= 3) {
-    return parts[parts.length - 1];
-  }
-  if (parts.length === 2) {
-    return extractTypeAndColor(parts[1]).color;
-  }
-  return "Unknown";
-}
-
-function buildDimensionScores(products, pickKey) {
-  const raw = {};
-
-  for (const product of products) {
-    const key = pickKey(product);
-    if (!key) {
-      continue;
-    }
-
-    if (!raw[key]) {
-      raw[key] = { soldQuantity: 0, salesRevenue: 0 };
-    }
-
-    raw[key].soldQuantity += product.soldQuantity || 0;
-    raw[key].salesRevenue += product.salesRevenue || 0;
-  }
-
-  const maxSold = Math.max(...Object.values(raw).map((entry) => entry.soldQuantity), 0);
-  const maxRevenue = Math.max(...Object.values(raw).map((entry) => entry.salesRevenue), 0);
-  const scores = {};
-
-  for (const [key, entry] of Object.entries(raw)) {
-    scores[key] = normalize(entry.soldQuantity, maxSold) * 0.5 + normalize(entry.salesRevenue, maxRevenue) * 0.5;
-  }
-
-  return scores;
-}
-
-function resolveStrategy(settings = {}) {
-  return {
-    brandPriorityWeight: Number(settings.brandPriorityWeight ?? 0.15),
-    salesWeight: Number(settings.salesWeight ?? 0.25),
-    inventoryWeight: Number(settings.inventoryWeight ?? 0.1),
-    newProductBoost: Number(settings.newProductBoost ?? 0.35),
-    lowSellerPenalty: Number(settings.lowSellerPenalty ?? 0.2),
-    randomnessWeight: Number(settings.randomnessWeight ?? 0.15),
-    brandTrendWeight: Number(settings.brandTrendWeight ?? 0.12),
-    productTypeTrendWeight: Number(settings.productTypeTrendWeight ?? 0.08),
-    colorTrendWeight: Number(settings.colorTrendWeight ?? 0.05),
-  };
-}
-
-function buildProductScore(product, context) {
-  const {
-    maxima,
-    brandPriorities,
-    maxBrandPriority,
-    trendScores,
-    strategy,
-  } = context;
-
-  const salesScore = normalize(product.soldQuantity || 0, maxima.maxSoldQuantity);
-  const inventoryScore = normalize(product.inventoryQuantity || 0, maxima.maxInventory);
-  const freshnessScore = recencyScore(product.createdAt);
-  const brandVal = brandPriorities[product.vendor] || 0;
-  const brandScore = maxBrandPriority > 0 ? brandVal / maxBrandPriority : 0;
-  const brandPriorityContribution = brandVal * strategy.brandPriorityWeight;
-  const productType = inferProductType(product);
-  const color = inferColor(product);
-  const brandTrendScore = trendScores.brand[product.vendor] || 0;
-  const productTypeTrendScore = trendScores.productType[productType] || 0;
-  const colorTrendScore = trendScores.color[color] || 0;
-
-  const baseScore =
-    brandPriorityContribution +
-    freshnessScore * strategy.newProductBoost +
-    salesScore * strategy.salesWeight +
-    inventoryScore * strategy.inventoryWeight +
-    brandTrendScore * strategy.brandTrendWeight +
-    productTypeTrendScore * strategy.productTypeTrendWeight +
-    colorTrendScore * strategy.colorTrendWeight;
-
-  const outOfStockPenalty = (product.inventoryQuantity || 0) <= 0 ? 0.1 : 1.0;
-  const lowSellerFactor = (product.soldQuantity || 0) <= 2
-    ? Math.max(0.25, 1 - strategy.lowSellerPenalty)
-    : 1.0;
-
-  return {
-    baseScore: baseScore * outOfStockPenalty * lowSellerFactor,
-    brandScore,
-    brandPriorityContribution,
-    newnessScore: freshnessScore,
-    salesScore,
-    inventoryScore,
-    brandTrendScore,
-    productTypeTrendScore,
-    colorTrendScore,
-    inferredProductType: productType,
-    inferredColor: color,
-  };
-}
-
-export function generateOrder(products, settings) {
-  const total = products.length;
-  const firstPageLimit = Math.min(settings.firstPageLimit || 40, total);
-  const brandPriorities = settings.brandPriorities || {};
-  const strategy = resolveStrategy(settings);
-
-  const maxima = {
-    maxSoldQuantity: Math.max(...products.map((p) => p.soldQuantity || 0), 0),
-    maxInventory: Math.max(...products.map((p) => p.inventoryQuantity || 0), 0),
-  };
-
-  const maxBrandPriority = Math.max(...products.map((p) => brandPriorities[p.vendor] || 0), 1);
-  const trendScores = {
-    brand: buildDimensionScores(products, (product) => product.vendor || "Unknown"),
-    productType: buildDimensionScores(products, (product) => inferProductType(product)),
-    color: buildDimensionScores(products, (product) => inferColor(product)),
-  };
-
-  const pinnedProducts = [];
-  const eligibleProducts = [];
-  const hiddenProducts = [];
-
-  for (const product of products) {
-    const scores = buildProductScore(product, {
-      maxima,
-      brandPriorities,
-      maxBrandPriority,
-      trendScores,
-      strategy,
-    });
-    const randomScore = Math.random() * strategy.randomnessWeight;
-    const scoredProduct = {
       ...product,
-      baseScore: scores.baseScore,
-      brandScore: scores.brandScore,
-      brandPriorityContribution: scores.brandPriorityContribution,
-      newnessScore: scores.newnessScore,
-      salesScore: scores.salesScore,
-      inventoryScore: scores.inventoryScore,
-      brandTrendScore: scores.brandTrendScore,
-      productTypeTrendScore: scores.productTypeTrendScore,
-      colorTrendScore: scores.colorTrendScore,
-      productType: product.productType || scores.inferredProductType,
-      inferredColor: scores.inferredColor,
-      randomnessScore: randomScore,
-      weightedScore: scores.baseScore + randomScore,
+      inventory,
+      salesMetrics: sales,
+      ageDays,
+      newnessBase: newnessScore(ageDays),
+      previousRank,
+      explorationScore: deterministicSeed(settings.collectionId || "collection", product.id, currentDate),
+      sellableInventory: inventory.sellableUnits,
+      sizeAvailability: inventory.sizeCoverage,
+      fullySoldOut: inventory.fullySoldOut,
+      partiallyAvailable: inventory.partiallyAvailable,
     };
+  });
 
-    if (product.allottedPosition && product.allottedPosition > 0) {
-      pinnedProducts.push(scoredProduct);
-    } else if (product.includeInRotation) {
-      eligibleProducts.push(scoredProduct);
-    } else {
-      hiddenProducts.push(scoredProduct);
+  const maxSales = Math.max(...enriched.map((product) => product.salesMetrics.grossStrength), 0);
+  const maxInventory = Math.max(...enriched.map((product) => product.inventory.sellableUnits), 0);
+
+  const scored = enriched.map((product) => {
+    const salesScore = logScale(product.salesMetrics.grossStrength, maxSales);
+    const inventoryDepth = logScale(product.inventory.sellableUnits, maxInventory);
+    const inventoryScore = clamp(inventoryDepth * 0.65 + product.inventory.sizeCoverage * 0.35);
+    const newnessComponent =
+      product.fullySoldOut && product.newnessBase > 0 ? product.newnessBase * 0.15 : product.newnessBase;
+    const stabilityScore = clamp(1 - Math.min(product.previousRank - 1, firstPageLimit) / Math.max(firstPageLimit, 1)) * 0.03;
+    const finalScore = clamp(
+      salesScore * strategy.salesWeight +
+        inventoryScore * strategy.inventoryWeight +
+        newnessComponent * strategy.newnessWeight +
+        product.salesMetrics.momentum * strategy.momentumWeight +
+        product.explorationScore * strategy.rotationWeight +
+        stabilityScore,
+    );
+
+    return {
+      ...product,
+      salesScore,
+      inventoryScore,
+      newnessScore: newnessComponent,
+      momentumScore: product.salesMetrics.momentum,
+      rotationScore: product.explorationScore,
+      stabilityScore,
+      finalScore,
+      soldOutSocialProof: false,
+    };
+  });
+
+  const pinned = scored
+    .filter((product) => Number(product.allottedPosition) > 0)
+    .sort((left, right) => left.allottedPosition - right.allottedPosition);
+
+  const candidates = scored
+    .filter((product) => !Number(product.allottedPosition) && product.includeInRotation !== false)
+    .sort(compareScored);
+
+  const available = candidates.filter((product) => !product.fullySoldOut);
+  const soldOut = candidates.filter((product) => product.fullySoldOut);
+  const eligibleNew = available.filter((product) => product.ageDays <= 30);
+  const evergreen = available.filter((product) => product.ageDays > 30);
+
+  const reservedPinned = pinned.filter((product) => product.allottedPosition <= firstPageLimit);
+  const remainingSlots = Math.max(0, firstPageLimit - reservedPinned.length);
+  const maxNewSlots = Math.min(
+    eligibleNew.length,
+    Math.max(1, Math.min(4, Math.ceil(firstPageLimit * 0.15))),
+  );
+  const newSlots = distributeSlots(eligibleNew.sort(compareScored), maxNewSlots, Math.max(2, Math.floor(firstPageLimit / Math.max(maxNewSlots, 1))));
+  const usedNewIds = new Set(newSlots.map(({ product }) => product.id));
+
+  const earlyPool = diversify(
+    [
+      ...evergreen,
+      ...available.filter((product) => !usedNewIds.has(product.id) && product.ageDays <= 30),
+    ].sort(compareScored),
+  );
+
+  const firstPage = [...reservedPinned];
+  for (const product of earlyPool) {
+    if (firstPage.length >= firstPageLimit) {
+      break;
     }
-  }
-
-  pinnedProducts.sort((a, b) => a.allottedPosition - b.allottedPosition);
-  eligibleProducts.sort((a, b) => b.weightedScore - a.weightedScore);
-
-  const positivePriorityVendors = Object.entries(brandPriorities)
-    .filter(([, value]) => Number(value) > 0)
-    .sort((left, right) => Number(right[1]) - Number(left[1]));
-  const promotedBrandProducts = [];
-  for (const [vendor] of positivePriorityVendors) {
-    const bestMatch = eligibleProducts.find((product) => product.vendor === vendor);
-    if (bestMatch) {
-      promotedBrandProducts.push(bestMatch);
-    }
-  }
-
-  const firstPage = [];
-  const actualPinnedLimit = Math.min(pinnedProducts.length, firstPageLimit);
-  for (let index = 0; index < actualPinnedLimit; index += 1) {
-    firstPage.push(pinnedProducts[index]);
-  }
-
-  const promotionWindow = Math.min(firstPageLimit, 10);
-  const promotedIds = new Set();
-  while (firstPage.length < promotionWindow && promotedBrandProducts.length > 0) {
-    const nextPromoted = promotedBrandProducts.shift();
-    if (!nextPromoted || promotedIds.has(nextPromoted.id)) {
-      continue;
-    }
-    firstPage.push({
-      ...nextPromoted,
-      manualPriorityPromoted: true,
-    });
-    promotedIds.add(nextPromoted.id);
-  }
-
-  const remainingSlots = firstPageLimit - firstPage.length;
-  const remainingEligible = eligibleProducts.filter((product) => !promotedIds.has(product.id));
-  const eligibleFirstPage = remainingEligible.slice(0, remainingSlots);
-  const eligibleRemaining = remainingEligible.slice(remainingSlots);
-
-  for (const product of eligibleFirstPage) {
     firstPage.push(product);
   }
 
-  eligibleRemaining.sort((a, b) => b.baseScore - a.baseScore);
-  const pinnedRemaining = pinnedProducts.slice(actualPinnedLimit);
-  const remaining = [...pinnedRemaining, ...eligibleRemaining, ...hiddenProducts];
-  const fullOrder = [...firstPage, ...remaining];
+  for (const slot of newSlots) {
+    if (firstPage.some((entry) => entry.id === slot.product.id)) {
+      continue;
+    }
+    const index = Math.max(reservedPinned.length, Math.min(slot.index, firstPage.length));
+    firstPage.splice(index, 0, slot.product);
+    if (firstPage.length > firstPageLimit) {
+      firstPage.pop();
+    }
+  }
 
-  return fullOrder.map((product, index) => ({
+  const soldOutVisibleLimit = products.length >= 60 ? 2 : products.length >= 20 ? 1 : 0;
+  const soldOutVisible = soldOut
+    .filter((product) => product.salesScore >= 0.35)
+    .slice(0, soldOutVisibleLimit)
+    .map((product) => ({ ...product, soldOutSocialProof: true }));
+
+  for (const product of soldOutVisible) {
+    if (firstPage.some((entry) => entry.id === product.id)) {
+      continue;
+    }
+    const insertAt = Math.max(
+      reservedPinned.length,
+      Math.min(firstPage.length, Math.max(4, Math.floor(firstPageLimit * 0.35))),
+    );
+    firstPage.splice(insertAt, 0, product);
+    if (firstPage.length > firstPageLimit) {
+      firstPage.pop();
+    }
+  }
+
+  const usedIds = new Set(firstPage.map((product) => product.id));
+  const remainder = [
+    ...pinned.filter((product) => product.allottedPosition > firstPageLimit),
+    ...available.filter((product) => !usedIds.has(product.id)),
+    ...soldOut.filter((product) => !usedIds.has(product.id)),
+  ];
+
+  return [...firstPage, ...remainder].map((product, index) => ({
     ...product,
     finalPosition: index + 1,
+    primaryReason: Number(product.allottedPosition) > 0
+      ? "Pinned"
+      : product.soldOutSocialProof
+        ? "Visible sold-out urgency"
+        : product.newnessScore >= 0.45 && product.ageDays <= 30
+          ? "New product discovery"
+          : product.salesScore >= product.momentumScore
+            ? "Net sales strength"
+            : product.momentumScore > 0.45
+              ? "Recent momentum"
+              : product.inventoryScore >= 0.45
+                ? "Inventory and size coverage"
+                : "Deterministic exploration",
   }));
 }

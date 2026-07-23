@@ -2398,7 +2398,7 @@ html {
 
 body {
  background-color: var(--ec-bg);
-  color: var(--ec-text);  font-family: 'Ubuntu', sans-serif; }
+  color: var(--ec-text);  font-family: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif; }
 
 [tabindex='-1']:focus {
   outline: none; }
@@ -4163,7 +4163,7 @@ label.error {
   .bx-wrapper .bx-pager {
     text-align: center;
     font-size: .85em;
-    font-family: Arial;
+    font-family: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
     font-weight: bold;
     color: #666666;
     padding-top: 20px; }
@@ -4257,7 +4257,7 @@ label.error {
     width: 100%; }
     .bx-wrapper .bx-caption span {
       color: #fff;
-      font-family: Arial;
+      font-family: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
       display: block;
       font-size: .85em;
       padding: 10px; }
@@ -6641,7 +6641,7 @@ footer {
       font-weight: 500; }
     .comment_section .comment_form textarea {
       height: 172px;
-      font-family: 'Ubuntu', sans-serif;
+      font-family: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
       font-weight: 700; }
       @media screen and (min-width: 1024px) and (max-width: 1340px) {
         .comment_section .comment_form textarea {
@@ -7875,7 +7875,7 @@ h2.title, .title.h2 {
     -webkit-backface-visibility: hidden; }
 #contact-us #contact-form textarea {
   height: 160px;
-  font-family: 'Ubuntu', sans-serif;
+  font-family: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   font-weight: 700; }
   @media screen and (min-width: 767px) and (max-width: 1340px) {
     #contact-us #contact-form textarea {

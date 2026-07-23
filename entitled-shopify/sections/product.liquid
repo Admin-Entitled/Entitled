@@ -415,18 +415,6 @@
       updateChestSize();
     });
 
-    $(document).on('click', '.swatch label', function(e) {
-      var inputId = $(this).attr('for');
-      var input = $('#' + inputId);
-      if (input.length && input.is(':disabled')) {
-        e.preventDefault();
-        return false;
-      }
-      setTimeout(function() {
-        updateChestSize();
-      }, 0);
-    });
-
     $(document).on('click', '[data-product-info-tab]', function() {
       var $tab = $(this);
       var target = $tab.attr('data-product-info-tab');

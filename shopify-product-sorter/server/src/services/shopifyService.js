@@ -1,7 +1,5 @@
-import { env } from "../config/env.js";
 import { logError, logInfo } from "../utils/logger.js";
 import { getShopifyAuthHeaders, getShopifyGraphQLEndpoint } from "./shopifyAuth.js";
-import fs from "node:fs";
 
 export async function shopifyGraphQL(query, variables = {}) {
   const endpoint = getShopifyGraphQLEndpoint();
@@ -146,6 +144,7 @@ export async function fetchCollectionProducts(collectionId) {
               status
               tags
               createdAt
+              publishedAt
               updatedAt
               totalInventory
               featuredImage {
@@ -161,7 +160,11 @@ export async function fetchCollectionProducts(collectionId) {
               variants(first: 100) {
                 edges {
                   node {
+                    id
+                    sku
                     inventoryQuantity
+                    availableForSale
+                    selectedOptions { name value }
                     price
                   }
                 }
@@ -218,6 +221,7 @@ export async function fetchCollectionProducts(collectionId) {
         status: node.status,
         tags: node.tags,
         createdAt: node.createdAt,
+        publishedAt: node.publishedAt,
         updatedAt: node.updatedAt,
         image: node.featuredImage?.url || "",
         imageAlt: node.featuredImage?.altText || node.title,
@@ -225,6 +229,15 @@ export async function fetchCollectionProducts(collectionId) {
         currencyCode: node.priceRangeV2.minVariantPrice.currencyCode,
         inventoryQuantity,
         totalInventory: node.totalInventory,
+        variants: node.variants.edges.map(({ node: variant }) => ({
+          id: variant.id,
+          sku: variant.sku || "",
+          productId: node.id,
+          inventoryQuantity: Math.max(0, Number(variant.inventoryQuantity) || 0),
+          availableForSale: Boolean(variant.availableForSale),
+          selectedOptions: variant.selectedOptions || [],
+          active: node.status === "ACTIVE",
+        })),
         collectionPosition: index + 1,
       };
     }),
@@ -237,7 +250,7 @@ export async function fetchSalesMetrics(productIds) {
   }
 
   const since = new Date();
-  since.setDate(since.getDate() - env.analyticsDays);
+  since.setDate(since.getDate() - 90);
   const queryString = `processed_at:>=${since.toISOString()}`;
 
   const query = `
@@ -247,9 +260,14 @@ export async function fetchSalesMetrics(productIds) {
           cursor
           node {
             id
+            processedAt
+            cancelledAt
+            test
+            refunds(first: 100) { refundLineItems(first: 100) { edges { node { quantity lineItem { id } } } } }
             lineItems(first: 100) {
               edges {
                 node {
+                  id
                   quantity
                   discountedTotalSet {
                     shopMoney {
@@ -257,6 +275,8 @@ export async function fetchSalesMetrics(productIds) {
                     }
                   }
                   variant {
+                    id
+                    sku
                     product {
                       id
                     }
@@ -278,7 +298,17 @@ export async function fetchSalesMetrics(productIds) {
   const metrics = {};
   const edges = await paginate(query, { search: queryString }, (data) => data.orders);
 
+  const now = Date.now();
   for (const { node: order } of edges) {
+    if (order.cancelledAt || order.test) continue;
+    const refunded = new Map();
+    for (const refund of order.refunds || []) {
+      for (const { node } of refund.refundLineItems?.edges || []) {
+        const lineItemId = node.lineItem?.id;
+        refunded.set(lineItemId, (refunded.get(lineItemId) || 0) + (node.quantity || 0));
+      }
+    }
+    const ageDays = (now - new Date(order.processedAt).getTime()) / 86400000;
     for (const lineItemEdge of order.lineItems.edges) {
       const lineItem = lineItemEdge.node;
       const productId = lineItem.variant?.product?.id;
@@ -286,14 +316,21 @@ export async function fetchSalesMetrics(productIds) {
         continue;
       }
 
+      const quantity = Math.max(0, (lineItem.quantity || 0) - (refunded.get(lineItem.id) || 0));
       if (!metrics[productId]) {
-        metrics[productId] = { soldQuantity: 0, salesRevenue: 0 };
+        metrics[productId] = { soldQuantity: 0, salesRevenue: 0, sales: { units7: 0, units30: 0, units90: 0, previous23: 0 }, variants: {} };
       }
 
-      metrics[productId].soldQuantity += lineItem.quantity || 0;
+      metrics[productId].soldQuantity += quantity;
       metrics[productId].salesRevenue += Number(
         lineItem.discountedTotalSet?.shopMoney?.amount || 0,
       );
+      const variantId = lineItem.variant?.id || lineItem.variant?.sku || "unknown";
+      metrics[productId].variants[variantId] = (metrics[productId].variants[variantId] || 0) + quantity;
+      if (ageDays <= 7) metrics[productId].sales.units7 += quantity;
+      if (ageDays <= 30) metrics[productId].sales.units30 += quantity;
+      if (ageDays <= 90) metrics[productId].sales.units90 += quantity;
+      if (ageDays > 7 && ageDays <= 30) metrics[productId].sales.previous23 += quantity;
     }
   }
 
@@ -465,143 +502,83 @@ export async function ensureManualSort(collectionId) {
   return data.collectionUpdate.collection;
 }
 
-export async function applyCollectionOrder(collectionId, oldOrderIds, newOrderIds) {
+export function buildCollectionMoves(currentIds, desiredIds) {
+  if (new Set(currentIds).size !== currentIds.length || new Set(desiredIds).size !== desiredIds.length || currentIds.length !== desiredIds.length || currentIds.some((id) => !desiredIds.includes(id))) {
+    throw new Error("Proposed order must contain every current collection product exactly once.");
+  }
+  const working = [...currentIds];
   const moves = [];
-  const working = [...oldOrderIds];
-
-  for (let targetIndex = 0; targetIndex < newOrderIds.length; targetIndex += 1) {
-    const productId = newOrderIds[targetIndex];
-    const currentIndex = working.indexOf(productId);
-
-    if (currentIndex === -1) {
-      throw new Error(`Product not found in current collection: ${productId}`);
-    }
-
-    if (currentIndex !== targetIndex) {
-      moves.push({
-        id: productId,
-        newPosition: String(targetIndex),
-      });
-      working.splice(currentIndex, 1);
-      working.splice(targetIndex, 0, productId);
-    }
+  for (let position = 0; position < desiredIds.length; position += 1) {
+    const currentPosition = working.indexOf(desiredIds[position]);
+    if (currentPosition === position) continue;
+    moves.push({ id: desiredIds[position], newPosition: String(position) });
+    working.splice(currentPosition, 1);
+    working.splice(position, 0, desiredIds[position]);
   }
-
-  // 5. Log collection id, moves count, and first 5 move objects
-  logInfo("Collection reorder details", {
-    collectionId,
-    movesCount: moves.length,
-    first5Moves: moves.slice(0, 5)
-  });
-
-  if (!moves.length) {
-    return { changed: 0, applied: false, report: { message: "No moves needed" } };
-  }
-
-  const mutation = `
-    mutation ReorderCollection($id: ID!, $moves: [MoveInput!]!) {
-      collectionReorderProducts(id: $id, moves: $moves) {
-        job {
-          id
-          done
-        }
-        userErrors {
-          field
-          message
-        }
-      }
-    }
-  `;
-
-  // 3. Log the exact GraphQL variables
-  logInfo("Sending collectionReorderProducts mutation with variables", {
-    variables: { id: collectionId, moves }
-  });
-
-  const data = await shopifyGraphQL(mutation, { id: collectionId, moves });
-  const errors = data.collectionReorderProducts.userErrors;
-  if (errors.length) {
-    throw new Error(errors.map((item) => item.message).join(", "));
-  }
-
-  // 7. After mutation: capture job id, poll job until done=true, refresh collection order
-  const jobId = data.collectionReorderProducts.job?.id;
-  let jobStatus = "No Job ID returned";
-  if (jobId) {
-    jobStatus = await pollJob(jobId);
-  }
-
-  // Refresh collection order
-  const refreshed = await fetchCollectionProducts(collectionId);
-  const finalCollectionOrder = refreshed.products.map(p => p.id);
-
-  // 8. Verify storefront order changed
-  const orderMatchedExpected = finalCollectionOrder.length === newOrderIds.length &&
-    finalCollectionOrder.every((id, idx) => id === newOrderIds[idx]);
-
-  logInfo("Storefront order verification", {
-    orderMatchedExpected,
-    finalCollectionOrder,
-    expectedOrder: newOrderIds
-  });
-
-  // 9. Produce a test report
-  const report = {
-    productsMoved: moves.map(m => m.id),
-    shopifyJobId: jobId || null,
-    jobCompletionStatus: jobStatus,
-    finalCollectionOrder,
-    orderMatchedExpected
-  };
-
-  logInfo("Collection Reorder Test Report Logged", report);
-
-  const reportMd = `# Collection Reorder Test Report
-- **Collection ID:** ${collectionId}
-- **Shopify Job ID:** ${jobId || "N/A"}
-- **Job Completion Status:** ${jobStatus}
-- **Storefront Order Verification:** ${orderMatchedExpected ? "SUCCESS (Matched Expected Order)" : "FAILED (Mismatch)"}
-- **Products Moved Count:** ${moves.length}
-
-## Products Moved (in order of operations)
-${moves.map(m => `- Product ID: \`${m.id}\` -> New Position: \`${m.newPosition}\``).join("\n")}
-
-## Final Collection Order
-${finalCollectionOrder.map((id, index) => `${index + 1}. \`${id}\``).join("\n")}
-`;
-
-  try {
-    fs.writeFileSync("../reorder_report.md", reportMd, "utf8");
-  } catch (e) {
-    try {
-      fs.writeFileSync("reorder_report.md", reportMd, "utf8");
-    } catch (err) {}
-  }
-
-  return { changed: moves.length, applied: true, report };
+  return moves;
 }
 
-async function pollJob(jobId) {
-  const query = `
-    query PollJob($id: ID!) {
-      job(id: $id) {
-        id
-        done
-      }
-    }
-  `;
+async function validateReorderAccess() {
+  const data = await shopifyGraphQL(`query ReorderAccess { shop { myshopifyDomain } currentAppInstallation { accessScopes { handle } } }`);
+  if (!data.shop?.myshopifyDomain) throw new Error("Shopify shop authentication could not be verified.");
+  if (!data.currentAppInstallation?.accessScopes?.some((scope) => scope.handle === "write_products")) {
+    throw new Error("Shopify app is missing the write_products scope required to reorder collections.");
+  }
+}
 
-  const maxAttempts = 20;
-  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+async function waitForCollectionJob(jobId) {
+  const query = `query PollJob($id: ID!) { job(id: $id) { id done } }`;
+  for (let attempt = 0; attempt < 20; attempt += 1) {
     const data = await shopifyGraphQL(query, { id: jobId });
-    if (data.job?.done) {
-      return "done=true";
-    }
+    if (data.job?.done) return;
     await new Promise((resolve) => setTimeout(resolve, 1500));
   }
+  throw new Error(`Shopify reorder job ${jobId} timed out before completion.`);
+}
 
-  logError("Shopify reorder job timed out", new Error("Timeout"), { jobId });
-  return "timeout";
+async function submitCollectionMoves(collectionId, moves) {
+  const data = await shopifyGraphQL(`mutation ReorderCollection($id: ID!, $moves: [MoveInput!]!) { collectionReorderProducts(id: $id, moves: $moves) { job { id } userErrors { field message } } }`, { id: collectionId, moves });
+  const result = data.collectionReorderProducts;
+  if (result.userErrors?.length) throw new Error(result.userErrors.map((item) => item.message).join(", "));
+  if (!result.job?.id) throw new Error("Shopify did not return a reorder job ID.");
+  return result.job.id;
+}
+
+function verificationError(collection, expected, actual, batches) {
+  const mismatch = expected.findIndex((id, index) => id !== actual[index]);
+  const expectedProduct = collection.products.find((product) => product.id === expected[mismatch]);
+  const actualProduct = collection.products.find((product) => product.id === actual[mismatch]);
+  return new Error(`Shopify order verification failed for ${collection.collection.title}: expected ${expected.length}, received ${actual.length}, mismatch at ${mismatch + 1}: expected ${expectedProduct?.id || "none"} (${expectedProduct?.title || "unknown"}), received ${actualProduct?.id || "none"} (${actualProduct?.title || "unknown"}), batches ${batches}.`);
+}
+
+export async function syncCollectionOrder(collectionId, desiredIds) {
+  await validateReorderAccess();
+  let collection = await fetchCollectionProducts(collectionId);
+  if (collection.collection.sortOrder !== "MANUAL") {
+    const manual = await ensureManualSort(collectionId);
+    if (manual.sortOrder !== "MANUAL") throw new Error("Shopify did not confirm MANUAL collection sorting.");
+    collection = await fetchCollectionProducts(collectionId);
+  }
+  const expected = [...desiredIds];
+  let batches = 0;
+  let changed = 0;
+  for (; batches < 100; batches += 1) {
+    const current = collection.products.map((product) => product.id);
+    const moves = buildCollectionMoves(current, expected);
+    if (!moves.length) {
+      logInfo("Shopify collection order verified", { collectionId, collectionTitle: collection.collection.title, productCount: current.length, batches });
+      return { changed, applied: batches > 0, batches, collection };
+    }
+    const batch = moves.slice(0, 250);
+    changed += batch.length;
+    logInfo("Submitting Shopify collection reorder batch", { collectionId, collectionTitle: collection.collection.title, currentCount: current.length, intendedCount: expected.length, moves: moves.length, batch: batches + 1, batchMoves: batch.length });
+    const jobId = await submitCollectionMoves(collectionId, batch);
+    logInfo("Waiting for Shopify collection reorder job", { collectionId, batch: batches + 1, jobId });
+    await waitForCollectionJob(jobId);
+    collection = await fetchCollectionProducts(collectionId);
+  }
+  const actual = collection.products.map((product) => product.id);
+  throw verificationError(collection, expected, actual, batches);
 }
 
 export async function fetchShopCounts() {

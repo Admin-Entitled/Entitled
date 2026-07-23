@@ -95,7 +95,7 @@
         {%  if search.results_count > 0  %}
         <div id="collection">
           <div class="product_list">
-            <div class="grid">
+            <div class="grid" data-search-product-list data-infinite-scroll-list>
             {% for item in search.results  %}
             {% if item.object_type == 'product' %}
             {% assign on_sale = false %}
@@ -115,6 +115,7 @@
 
               <div
                 class="product_item"
+                data-product-id="{{ item.id }}"
                 data-size-product
                 data-product-url="{{ item.url | within: collection | escape }}"
                 data-product-options="{{ item.options_with_values | json | escape }}"
@@ -189,6 +190,9 @@
               </div>
 
           </div>
+          <div class="infinite-scroll-status" data-infinite-scroll-status aria-live="polite" hidden>
+            Loading more products...
+          </div>
         </div>
 
         <div id="blog">
@@ -247,7 +251,7 @@
         {% endif %}
 
         {% if paginate.pages > 1 %}
-        <div class="pagination">
+        <div class="pagination" data-search-pagination data-infinite-scroll-pagination>
           {% include 'pagination' %}
         </div>
         {% endif %}

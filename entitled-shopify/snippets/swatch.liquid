@@ -78,7 +78,7 @@
             {% if is_color %}
               <label
                 for="swatch-{{ option_index }}-{{ value | handle }}"
-                class="chk_color"
+                class="chk_color needsclick"
                 style="background: {{ value | split: ' ' | last | handle }}; background: url({% if option_variant and option_variant.image %}{{ option_variant.image.src | img_url:'small' }}{% endif %}) center;"
               >
                 {% unless option_available %}
@@ -86,7 +86,7 @@
                 {% endunless %}
               </label>
             {% else %}
-              <label for="swatch-{{ option_index }}-{{ value | handle }}"{% unless option_available %} aria-disabled="true"{% endunless %}>
+              <label class="needsclick" for="swatch-{{ option_index }}-{{ value | handle }}"{% unless option_available %} aria-disabled="true"{% endunless %}>
                 <span class="swatch_value">{{ value }}</span>
                 {% unless option_available %}
                   <span class="soldout_text">Sold Out</span>

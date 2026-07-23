@@ -1,0 +1,552 @@
+- main [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: SHOPIFY OPERATIONS
+      - heading "Order Mapping" [level=1] [ref=e7]
+      - text: Shopify orders, Shiprocket tracking, CSV imports, and manual overrides in one screen.
+    - generic [ref=e8]:
+      - button "Sync Shopify orders" [ref=e9] [cursor=pointer]
+      - button "Refresh tracking" [ref=e10] [cursor=pointer]
+      - generic [ref=e11]:
+        - generic [ref=e12]: Choose CSV
+        - button "Choose CSV" [ref=e13] [cursor=pointer]
+      - button "Preview CSV" [disabled] [ref=e14]
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - text: From
+      - textbox "From" [ref=e17]: 2026-05-24
+    - generic [ref=e18]:
+      - text: To
+      - textbox "To" [ref=e19]: 2026-07-22
+    - generic [ref=e20]:
+      - text: Search
+      - textbox "Search" [ref=e21]:
+        - /placeholder: Order, customer, phone, AWB
+    - generic [ref=e22]:
+      - text: Status
+      - combobox "Status" [ref=e23]:
+        - option "All statuses" [selected]
+        - option "Pending Tracking"
+        - option "Manifested"
+        - option "Pickup Pending"
+        - option "Picked Up"
+        - option "In Transit"
+        - option "Out For Delivery"
+        - option "Delivery Attempted"
+        - option "Undelivered"
+        - option "Delivered To Customer"
+        - option "Rto Initiated"
+        - option "Rto In Transit"
+        - option "Rto Out For Delivery"
+        - option "Rto Delivered"
+        - option "Lost"
+        - option "Damaged"
+        - option "Cancelled"
+        - option "Shipment Exception"
+        - option "Unknown"
+    - generic [ref=e24]:
+      - text: Source
+      - combobox "Source" [ref=e25]:
+        - option "All sources" [selected]
+        - option "Shopify"
+        - option "Shiprocket Api"
+        - option "Csv Import"
+        - option "Manual"
+        - option "Database Cache"
+        - option "Legacy Data"
+    - generic [ref=e26]:
+      - text: Order from
+      - textbox "Order from" [ref=e27]
+    - generic [ref=e28]:
+      - text: Order to
+      - textbox "Order to" [ref=e29]
+  - paragraph [ref=e67]: duplicate key value violates unique constraint "order_mapping_shipments_awb_key"
+  - generic [ref=e30]:
+    - article [ref=e31]:
+      - generic [ref=e32]: Total orders
+      - strong [ref=e33]: "187"
+    - article [ref=e34]:
+      - generic [ref=e35]: In transit
+      - strong [ref=e36]: "0"
+    - article [ref=e37]:
+      - generic [ref=e38]: Out for delivery
+      - strong [ref=e39]: "0"
+    - article [ref=e40]:
+      - generic [ref=e41]: Delivered
+      - strong [ref=e42]: "0"
+    - article [ref=e43]:
+      - generic [ref=e44]: RTO initiated
+      - strong [ref=e45]: "0"
+    - article [ref=e46]:
+      - generic [ref=e47]: RTO in transit
+      - strong [ref=e48]: "0"
+    - article [ref=e49]:
+      - generic [ref=e50]: RTO delivered
+      - strong [ref=e51]: "0"
+    - article [ref=e52]:
+      - generic [ref=e53]: Lost
+      - strong [ref=e54]: "0"
+    - article [ref=e55]:
+      - generic [ref=e56]: Pending tracking
+      - strong [ref=e57]: "76"
+    - article [ref=e58]:
+      - generic [ref=e59]: Manually updated
+      - strong [ref=e60]: "0"
+  - table [ref=e68]:
+    - rowgroup [ref=e69]:
+      - row [ref=e70]:
+        - columnheader [ref=e71]:
+          - button "Order" [ref=e72] [cursor=pointer]
+        - columnheader [ref=e73]:
+          - button "Order date" [ref=e74] [cursor=pointer]
+        - columnheader [ref=e75]:
+          - button "Customer" [ref=e76] [cursor=pointer]
+        - columnheader [ref=e77]:
+          - button "Phone" [ref=e78] [cursor=pointer]
+        - columnheader [ref=e79]:
+          - button "AWB" [ref=e80] [cursor=pointer]
+        - columnheader [ref=e81]:
+          - button "Courier" [ref=e82] [cursor=pointer]
+        - columnheader [ref=e83]:
+          - button "Status" [ref=e84] [cursor=pointer]
+        - columnheader [ref=e85]:
+          - button "Raw status" [ref=e86] [cursor=pointer]
+        - columnheader [ref=e87]:
+          - button "Last tracking update" [ref=e88] [cursor=pointer]
+        - columnheader [ref=e89]:
+          - button "Status source" [ref=e90] [cursor=pointer]
+        - columnheader [ref=e91]:
+          - button "Last Shiprocket sync" [ref=e92] [cursor=pointer]
+        - columnheader [ref=e93]:
+          - button "Manual" [ref=e94] [cursor=pointer]
+        - columnheader "Actions" [ref=e95]
+    - rowgroup [ref=e96]:
+      - row [ref=e97]:
+        - cell "#1237" [ref=e98]
+        - cell "22 Jul 2026" [ref=e99]
+        - cell "Sarthak Badsha" [ref=e100]
+        - cell "—" [ref=e101]
+        - cell "—" [ref=e102]
+        - cell "—" [ref=e103]
+        - cell "Pending Tracking" [ref=e104]
+        - cell "—" [ref=e106]
+        - cell "22 Jul 2026, 1:29 am" [ref=e107]
+        - cell "Shopify" [ref=e108]
+        - cell "—" [ref=e109]
+        - cell "—" [ref=e110]
+        - cell [ref=e111]:
+          - generic [ref=e112]:
+            - button "Details" [ref=e113] [cursor=pointer]
+            - button "Force refresh" [ref=e114] [cursor=pointer]
+      - row [ref=e115]:
+        - cell "#1236" [ref=e116]
+        - cell "22 Jul 2026" [ref=e117]
+        - cell "arnav agarwal" [ref=e118]
+        - cell "—" [ref=e119]
+        - cell "—" [ref=e120]
+        - cell "—" [ref=e121]
+        - cell "Pending Tracking" [ref=e122]
+        - cell "—" [ref=e124]
+        - cell "22 Jul 2026, 1:08 am" [ref=e125]
+        - cell "Shopify" [ref=e126]
+        - cell "—" [ref=e127]
+        - cell "—" [ref=e128]
+        - cell [ref=e129]:
+          - generic [ref=e130]:
+            - button "Details" [ref=e131] [cursor=pointer]
+            - button "Force refresh" [ref=e132] [cursor=pointer]
+      - row [ref=e133]:
+        - cell "#1235" [ref=e134]
+        - cell "21 Jul 2026" [ref=e135]
+        - cell "Daksh Shekhawat" [ref=e136]
+        - cell "—" [ref=e137]
+        - cell "—" [ref=e138]
+        - cell "—" [ref=e139]
+        - cell "Pending Tracking" [ref=e140]
+        - cell "—" [ref=e142]
+        - cell "22 Jul 2026, 3:59 pm" [ref=e143]
+        - cell "Shopify" [ref=e144]
+        - cell "—" [ref=e145]
+        - cell "—" [ref=e146]
+        - cell [ref=e147]:
+          - generic [ref=e148]:
+            - button "Details" [ref=e149] [cursor=pointer]
+            - button "Force refresh" [ref=e150] [cursor=pointer]
+      - row [ref=e151]:
+        - cell "#1234" [ref=e152]
+        - cell "21 Jul 2026" [ref=e153]
+        - cell "Nirupam Mathur" [ref=e154]
+        - cell "—" [ref=e155]
+        - cell "—" [ref=e156]
+        - cell "—" [ref=e157]
+        - cell "Pending Tracking" [ref=e158]
+        - cell "—" [ref=e160]
+        - cell "22 Jul 2026, 2:57 pm" [ref=e161]
+        - cell "Shopify" [ref=e162]
+        - cell "—" [ref=e163]
+        - cell "—" [ref=e164]
+        - cell [ref=e165]:
+          - generic [ref=e166]:
+            - button "Details" [ref=e167] [cursor=pointer]
+            - button "Force refresh" [ref=e168] [cursor=pointer]
+      - row [ref=e169]:
+        - cell "#1233" [ref=e170]
+        - cell "20 Jul 2026" [ref=e171]
+        - cell "Lakshit grover" [ref=e172]
+        - cell "—" [ref=e173]
+        - cell "77886238651" [ref=e174]
+        - cell "—" [ref=e175]
+        - cell "Unknown" [ref=e176]
+        - cell "76.0" [ref=e178]
+        - cell "22 Jul 2026, 11:05 am" [ref=e179]
+        - cell "Shiprocket Api" [ref=e180]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e181]
+        - cell "—" [ref=e182]
+        - cell [ref=e183]:
+          - generic [ref=e184]:
+            - button "Details" [ref=e185] [cursor=pointer]
+            - button "Force refresh" [ref=e186] [cursor=pointer]
+      - row [ref=e187]:
+        - cell "#1232" [ref=e188]
+        - cell "20 Jul 2026" [ref=e189]
+        - cell "SACHIN SHOKEEN" [ref=e190]
+        - cell "—" [ref=e191]
+        - cell "—" [ref=e192]
+        - cell "—" [ref=e193]
+        - cell "Pending Tracking" [ref=e194]
+        - cell "—" [ref=e196]
+        - cell "21 Jul 2026, 9:57 pm" [ref=e197]
+        - cell "Shopify" [ref=e198]
+        - cell "—" [ref=e199]
+        - cell "—" [ref=e200]
+        - cell [ref=e201]:
+          - generic [ref=e202]:
+            - button "Details" [ref=e203] [cursor=pointer]
+            - button "Force refresh" [ref=e204] [cursor=pointer]
+      - row [ref=e205]:
+        - cell "#1231" [ref=e206]
+        - cell "20 Jul 2026" [ref=e207]
+        - cell "Samrat Yadav" [ref=e208]
+        - cell "—" [ref=e209]
+        - cell "77886233180" [ref=e210]
+        - cell "—" [ref=e211]
+        - cell "Unknown" [ref=e212]
+        - cell "76.0" [ref=e214]
+        - cell "22 Jul 2026, 11:07 am" [ref=e215]
+        - cell "Shiprocket Api" [ref=e216]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e217]
+        - cell "—" [ref=e218]
+        - cell [ref=e219]:
+          - generic [ref=e220]:
+            - button "Details" [ref=e221] [cursor=pointer]
+            - button "Force refresh" [ref=e222] [cursor=pointer]
+      - row [ref=e223]:
+        - cell "#1230" [ref=e224]
+        - cell "20 Jul 2026" [ref=e225]
+        - cell "Krrish Bathla" [ref=e226]
+        - cell "—" [ref=e227]
+        - cell "77886242416" [ref=e228]
+        - cell "—" [ref=e229]
+        - cell "Unknown" [ref=e230]
+        - cell "18.0" [ref=e232]
+        - cell "21 Jul 2026, 9:12 pm" [ref=e233]
+        - cell "Shiprocket Api" [ref=e234]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e235]
+        - cell "—" [ref=e236]
+        - cell [ref=e237]:
+          - generic [ref=e238]:
+            - button "Details" [ref=e239] [cursor=pointer]
+            - button "Force refresh" [ref=e240] [cursor=pointer]
+      - row [ref=e241]:
+        - cell "#1229" [ref=e242]
+        - cell "20 Jul 2026" [ref=e243]
+        - cell "Kavya Goyal" [ref=e244]
+        - cell "—" [ref=e245]
+        - cell "77884898556" [ref=e246]
+        - cell "—" [ref=e247]
+        - cell "Unknown" [ref=e248]
+        - cell "18.0" [ref=e250]
+        - cell "21 Jul 2026, 9:58 pm" [ref=e251]
+        - cell "Shiprocket Api" [ref=e252]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e253]
+        - cell "—" [ref=e254]
+        - cell [ref=e255]:
+          - generic [ref=e256]:
+            - button "Details" [ref=e257] [cursor=pointer]
+            - button "Force refresh" [ref=e258] [cursor=pointer]
+      - row [ref=e259]:
+        - cell "#1228" [ref=e260]
+        - cell "20 Jul 2026" [ref=e261]
+        - cell "Bhavik Jaim" [ref=e262]
+        - cell "—" [ref=e263]
+        - cell "77885018304" [ref=e264]
+        - cell "—" [ref=e265]
+        - cell "Unknown" [ref=e266]
+        - cell "18.0" [ref=e268]
+        - cell "21 Jul 2026, 9:58 pm" [ref=e269]
+        - cell "Shiprocket Api" [ref=e270]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e271]
+        - cell "—" [ref=e272]
+        - cell [ref=e273]:
+          - generic [ref=e274]:
+            - button "Details" [ref=e275] [cursor=pointer]
+            - button "Force refresh" [ref=e276] [cursor=pointer]
+      - row [ref=e277]:
+        - cell "#1227" [ref=e278]
+        - cell "20 Jul 2026" [ref=e279]
+        - cell "Jasmeet Singh" [ref=e280]
+        - cell "—" [ref=e281]
+        - cell "77884715753" [ref=e282]
+        - cell "—" [ref=e283]
+        - cell "Unknown" [ref=e284]
+        - cell "76.0" [ref=e286]
+        - cell "22 Jul 2026, 11:03 am" [ref=e287]
+        - cell "Shiprocket Api" [ref=e288]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e289]
+        - cell "—" [ref=e290]
+        - cell [ref=e291]:
+          - generic [ref=e292]:
+            - button "Details" [ref=e293] [cursor=pointer]
+            - button "Force refresh" [ref=e294] [cursor=pointer]
+      - row [ref=e295]:
+        - cell "#1226" [ref=e296]
+        - cell "19 Jul 2026" [ref=e297]
+        - cell "Ashwesh Salgaokar" [ref=e298]
+        - cell "—" [ref=e299]
+        - cell "77884717971" [ref=e300]
+        - cell "—" [ref=e301]
+        - cell "Unknown" [ref=e302]
+        - cell "18.0" [ref=e304]
+        - cell "21 Jul 2026, 9:58 pm" [ref=e305]
+        - cell "Shiprocket Api" [ref=e306]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e307]
+        - cell "—" [ref=e308]
+        - cell [ref=e309]:
+          - generic [ref=e310]:
+            - button "Details" [ref=e311] [cursor=pointer]
+            - button "Force refresh" [ref=e312] [cursor=pointer]
+      - row [ref=e313]:
+        - cell "#1225" [ref=e314]
+        - cell "19 Jul 2026" [ref=e315]
+        - cell "Nimra shaikh" [ref=e316]
+        - cell "—" [ref=e317]
+        - cell "77884718962" [ref=e318]
+        - cell "—" [ref=e319]
+        - cell "Unknown" [ref=e320]
+        - cell "17.0" [ref=e322]
+        - cell "22 Jul 2026, 12:29 pm" [ref=e323]
+        - cell "Shiprocket Api" [ref=e324]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e325]
+        - cell "—" [ref=e326]
+        - cell [ref=e327]:
+          - generic [ref=e328]:
+            - button "Details" [ref=e329] [cursor=pointer]
+            - button "Force refresh" [ref=e330] [cursor=pointer]
+      - row [ref=e331]:
+        - cell "#1224" [ref=e332]
+        - cell "19 Jul 2026" [ref=e333]
+        - cell "Nimra shaikh" [ref=e334]
+        - cell "—" [ref=e335]
+        - cell "—" [ref=e336]
+        - cell "—" [ref=e337]
+        - cell "Pending Tracking" [ref=e338]
+        - cell "—" [ref=e340]
+        - cell "20 Jul 2026, 6:52 pm" [ref=e341]
+        - cell "Shopify" [ref=e342]
+        - cell "—" [ref=e343]
+        - cell "—" [ref=e344]
+        - cell [ref=e345]:
+          - generic [ref=e346]:
+            - button "Details" [ref=e347] [cursor=pointer]
+            - button "Force refresh" [ref=e348] [cursor=pointer]
+      - row [ref=e349]:
+        - cell "#1223" [ref=e350]
+        - cell "19 Jul 2026" [ref=e351]
+        - cell "Surya Bishnoi" [ref=e352]
+        - cell "—" [ref=e353]
+        - cell "—" [ref=e354]
+        - cell "—" [ref=e355]
+        - cell "Pending Tracking" [ref=e356]
+        - cell "—" [ref=e358]
+        - cell "20 Jul 2026, 3:31 pm" [ref=e359]
+        - cell "Shopify" [ref=e360]
+        - cell "—" [ref=e361]
+        - cell "—" [ref=e362]
+        - cell [ref=e363]:
+          - generic [ref=e364]:
+            - button "Details" [ref=e365] [cursor=pointer]
+            - button "Force refresh" [ref=e366] [cursor=pointer]
+      - row [ref=e367]:
+        - cell "#1222" [ref=e368]
+        - cell "19 Jul 2026" [ref=e369]
+        - cell "Aditya Baruva" [ref=e370]
+        - cell "—" [ref=e371]
+        - cell "77083166731" [ref=e372]
+        - cell "—" [ref=e373]
+        - cell "Unknown" [ref=e374]
+        - cell "76.0" [ref=e376]
+        - cell "22 Jul 2026, 11:00 am" [ref=e377]
+        - cell "Shiprocket Api" [ref=e378]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e379]
+        - cell "—" [ref=e380]
+        - cell [ref=e381]:
+          - generic [ref=e382]:
+            - button "Details" [ref=e383] [cursor=pointer]
+            - button "Force refresh" [ref=e384] [cursor=pointer]
+      - row [ref=e385]:
+        - cell "#1221" [ref=e386]
+        - cell "19 Jul 2026" [ref=e387]
+        - cell "Sunny talwar" [ref=e388]
+        - cell "—" [ref=e389]
+        - cell "77884898766" [ref=e390]
+        - cell "—" [ref=e391]
+        - cell "Unknown" [ref=e392]
+        - cell "17.0" [ref=e394]
+        - cell "22 Jul 2026, 2:45 pm" [ref=e395]
+        - cell "Shiprocket Api" [ref=e396]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e397]
+        - cell "—" [ref=e398]
+        - cell [ref=e399]:
+          - generic [ref=e400]:
+            - button "Details" [ref=e401] [cursor=pointer]
+            - button "Force refresh" [ref=e402] [cursor=pointer]
+      - row [ref=e403]:
+        - cell "#1220" [ref=e404]
+        - cell "19 Jul 2026" [ref=e405]
+        - cell "Ayush Singh" [ref=e406]
+        - cell "—" [ref=e407]
+        - cell "77886226563" [ref=e408]
+        - cell "—" [ref=e409]
+        - cell "Unknown" [ref=e410]
+        - cell "18.0" [ref=e412]
+        - cell "21 Jul 2026, 9:12 pm" [ref=e413]
+        - cell "Shiprocket Api" [ref=e414]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e415]
+        - cell "—" [ref=e416]
+        - cell [ref=e417]:
+          - generic [ref=e418]:
+            - button "Details" [ref=e419] [cursor=pointer]
+            - button "Force refresh" [ref=e420] [cursor=pointer]
+      - row [ref=e421]:
+        - cell "#1219" [ref=e422]
+        - cell "19 Jul 2026" [ref=e423]
+        - cell "Nehal bramhe" [ref=e424]
+        - cell "—" [ref=e425]
+        - cell "77884723346" [ref=e426]
+        - cell "—" [ref=e427]
+        - cell "Unknown" [ref=e428]
+        - cell "18.0" [ref=e430]
+        - cell "21 Jul 2026, 9:58 pm" [ref=e431]
+        - cell "Shiprocket Api" [ref=e432]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e433]
+        - cell "—" [ref=e434]
+        - cell [ref=e435]:
+          - generic [ref=e436]:
+            - button "Details" [ref=e437] [cursor=pointer]
+            - button "Force refresh" [ref=e438] [cursor=pointer]
+      - row [ref=e439]:
+        - cell "#1218" [ref=e440]
+        - cell "18 Jul 2026" [ref=e441]
+        - cell "Amjed Ali" [ref=e442]
+        - cell "—" [ref=e443]
+        - cell "14112364978757" [ref=e444]
+        - cell "—" [ref=e445]
+        - cell "Unknown" [ref=e446]
+        - cell "18.0" [ref=e448]
+        - cell "21 Jul 2026, 7:33 pm" [ref=e449]
+        - cell "Shiprocket Api" [ref=e450]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e451]
+        - cell "—" [ref=e452]
+        - cell [ref=e453]:
+          - generic [ref=e454]:
+            - button "Details" [ref=e455] [cursor=pointer]
+            - button "Force refresh" [ref=e456] [cursor=pointer]
+      - row [ref=e457]:
+        - cell "#1217" [ref=e458]
+        - cell "18 Jul 2026" [ref=e459]
+        - cell "SACHIN SHOKEEN" [ref=e460]
+        - cell "—" [ref=e461]
+        - cell "77884688383" [ref=e462]
+        - cell "—" [ref=e463]
+        - cell "Unknown" [ref=e464]
+        - cell "76.0" [ref=e466]
+        - cell "22 Jul 2026, 11:05 am" [ref=e467]
+        - cell "Shiprocket Api" [ref=e468]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e469]
+        - cell "—" [ref=e470]
+        - cell [ref=e471]:
+          - generic [ref=e472]:
+            - button "Details" [ref=e473] [cursor=pointer]
+            - button "Force refresh" [ref=e474] [cursor=pointer]
+      - row [ref=e475]:
+        - cell "#1216" [ref=e476]
+        - cell "18 Jul 2026" [ref=e477]
+        - cell "Himanshu Sapariya" [ref=e478]
+        - cell "—" [ref=e479]
+        - cell "77884698544" [ref=e480]
+        - cell "—" [ref=e481]
+        - cell "Unknown" [ref=e482]
+        - cell "7.0" [ref=e484]
+        - cell "22 Jul 2026, 1:59 pm" [ref=e485]
+        - cell "Shiprocket Api" [ref=e486]
+        - cell "22 Jul 2026, 5:53 pm" [ref=e487]
+        - cell "—" [ref=e488]
+        - cell [ref=e489]:
+          - generic [ref=e490]:
+            - button "Details" [ref=e491] [cursor=pointer]
+            - button "Force refresh" [ref=e492] [cursor=pointer]
+      - row [ref=e493]:
+        - cell "#1215" [ref=e494]
+        - cell "18 Jul 2026" [ref=e495]
+        - cell "Piyush Bariya" [ref=e496]
+        - cell "—" [ref=e497]
+        - cell "—" [ref=e498]
+        - cell "—" [ref=e499]
+        - cell "Pending Tracking" [ref=e500]
+        - cell "—" [ref=e502]
+        - cell "21 Jul 2026, 11:29 am" [ref=e503]
+        - cell "Shopify" [ref=e504]
+        - cell "—" [ref=e505]
+        - cell "—" [ref=e506]
+        - cell [ref=e507]:
+          - generic [ref=e508]:
+            - button "Details" [ref=e509] [cursor=pointer]
+            - button "Force refresh" [ref=e510] [cursor=pointer]
+      - row [ref=e511]:
+        - cell "#1214" [ref=e512]
+        - cell "17 Jul 2026" [ref=e513]
+        - cell "Kavya Goyal" [ref=e514]
+        - cell "—" [ref=e515]
+        - cell "—" [ref=e516]
+        - cell "—" [ref=e517]
+        - cell "Pending Tracking" [ref=e518]
+        - cell "—" [ref=e520]
+        - cell "20 Jul 2026, 12:14 pm" [ref=e521]
+        - cell "Shopify" [ref=e522]
+        - cell "—" [ref=e523]
+        - cell "—" [ref=e524]
+        - cell [ref=e525]:
+          - generic [ref=e526]:
+            - button "Details" [ref=e527] [cursor=pointer]
+            - button "Force refresh" [ref=e528] [cursor=pointer]
+      - row [ref=e529]:
+        - cell "#1213" [ref=e530]
+        - cell "17 Jul 2026" [ref=e531]
+        - cell "Sunny talwar" [ref=e532]
+        - cell "—" [ref=e533]
+        - cell "—" [ref=e534]
+        - cell "—" [ref=e535]
+        - cell "Pending Tracking" [ref=e536]
+        - cell "—" [ref=e538]
+        - cell "20 Jul 2026, 12:15 pm" [ref=e539]
+        - cell "Shopify" [ref=e540]
+        - cell "—" [ref=e541]
+        - cell "—" [ref=e542]
+        - cell [ref=e543]:
+          - generic [ref=e544]:
+            - button "Details" [ref=e545] [cursor=pointer]
+            - button "Force refresh" [ref=e546] [cursor=pointer]
+  - generic [ref=e63]:
+    - button "Previous" [disabled] [ref=e64]
+    - generic [ref=e65]: Page 1 · 187 total orders
+    - button "Next" [ref=e66] [cursor=pointer]

@@ -1,0 +1,4 @@
+/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter/AGENTS.md
+/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter/README.md
+/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter/client/index.html
+/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter/reorder_report.md

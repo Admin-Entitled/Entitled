@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api";
-import DeliveryResolution from "./DeliveryResolution";
+import OrderMapping from "./OrderMapping";
 import SkuImageManager from "./SkuImageManager";
 
 const sidebarModules = [
   { id: "sorter", label: "Shopify Collection Manager", enabled: true },
-  { id: "actual-sales", label: "Delivery Resolution", enabled: true },
+  { id: "order-mapping", label: "Order Mapping", enabled: true },
   { id: "sku-image-manager", label: "SKU Image Manager", enabled: true },
   { id: "meta-ads", label: "Meta Ads Dashboard", enabled: false },
   { id: "analytics", label: "Product Analytics", enabled: false },
@@ -45,16 +45,14 @@ const fallbackImage =
   `);
 
 const strategyFields = [
-  { key: "brandPriorityWeight", label: "Brand priority", step: "0.01" },
-  { key: "newProductBoost", label: "Newness boost", step: "0.01" },
   { key: "salesWeight", label: "Sales performance", step: "0.01" },
-  { key: "inventoryWeight", label: "Inventory weight", step: "0.01" },
-  { key: "brandTrendWeight", label: "Brand sales trend", step: "0.01" },
-  { key: "productTypeTrendWeight", label: "Type sales trend", step: "0.01" },
-  { key: "colorTrendWeight", label: "Color sales trend", step: "0.01" },
-  { key: "randomnessWeight", label: "Randomness", step: "0.01" },
-  { key: "lowSellerPenalty", label: "Low seller penalty", step: "0.01" },
+  { key: "inventoryWeight", label: "Inventory health", step: "0.01" },
+  { key: "newnessWeight", label: "Newness", step: "0.01" },
+  { key: "momentumWeight", label: "Sales momentum", step: "0.01" },
+  { key: "rotationWeight", label: "Controlled rotation", step: "0.01" },
 ];
+
+const strategyTotal = (strategy) => strategyFields.reduce((sum, field) => sum + Number(strategy[field.key] || 0), 0);
 
 function formatMoney(value, currencyCode = "USD") {
   return new Intl.NumberFormat("en-US", {
@@ -352,31 +350,27 @@ export default function App() {
   const [snapshot, setSnapshot] = useState(null);
   const [settings, setSettings] = useState({
     firstPageLimit: 40,
-    brandPriorityWeight: 0.15,
-    salesWeight: 0.25,
-    inventoryWeight: 0.10,
-    newProductBoost: 0.35,
-    lowSellerPenalty: 0.2,
-    randomnessWeight: 0.15,
-    brandTrendWeight: 0.12,
-    productTypeTrendWeight: 0.08,
-    colorTrendWeight: 0.05,
-    brandPriorities: {
-      "AllSaints": 20,
-      "Polo Ralph Lauren": 15,
-      "Armani Exchange": 12,
-      "Lacoste": 10,
-      "GymShark": 5
-    }
+    salesWeight: 0.4,
+    inventoryWeight: 0.25,
+    newnessWeight: 0.2,
+    momentumWeight: 0.1,
+    rotationWeight: 0.05,
   });
+  const [strategyDraft, setStrategyDraft] = useState(null);
   const [filters, setFilters] = useState(defaultFilters);
   const [preview, setPreview] = useState(emptyPreview);
   const [activeTab, setActiveTab] = useState("table"); // "table" or "explainability"
   const [isStrategyEditing, setIsStrategyEditing] = useState(false);
   const [backup, setBackup] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isSyncingAll, setIsSyncingAll] = useState(false);
+  const [reorderAllSummary, setReorderAllSummary] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [networkLogs, setNetworkLogs] = useState([]);
+  const [actionLogs, setActionLogs] = useState([]);
+  const [logsError, setLogsError] = useState("");
+  const initialCollectionsLoadedRef = useRef(false);
   const [diagnostics, setDiagnostics] = useState({
     collectionsLoaded: 0,
     productsLoaded: 0,
@@ -446,23 +440,7 @@ export default function App() {
     [products],
   );
 
-  const uniqueVendors = useMemo(() => {
-    const list = products.map((p) => p.vendor).filter(Boolean);
-    const presetBrands = Object.keys(settings.brandPriorities || {});
-    return [...new Set([...list, ...presetBrands])];
-  }, [products, settings.brandPriorities]);
-
-  const scoringContext = useMemo(() => buildScoringContext(products, settings), [products, settings]);
-
-  const explainabilityData = useMemo(() => {
-    const list = preview.newOrder.length > 0
-      ? preview.newOrder
-      : products.map((product) => ({
-          ...scoreProduct(product, scoringContext),
-          finalPosition: product.collectionPosition,
-        }));
-    return [...list].sort((a, b) => b.weightedScore - a.weightedScore);
-  }, [products, preview.newOrder, scoringContext]);
+  const explainabilityData = preview.newOrder;
 
   const filteredProducts = useMemo(
     () =>
@@ -481,19 +459,32 @@ export default function App() {
   }, [products]);
 
   // 4. Helper functions
-  function logDiagnostic(message, type = "info", payload = null) {
-    const timestamp = new Date().toLocaleTimeString();
-    const formatted = `[${timestamp}] [${type.toUpperCase()}] ${message}`;
-    console.log(formatted);
-    if (payload) {
-      console.log("Payload:", payload);
-    }
-    setDiagnostics((prev) => ({
-      ...prev,
-      lastApiPayload: payload ? JSON.stringify(payload) : prev.lastApiPayload,
-      logs: [formatted, ...prev.logs].slice(0, 50),
-    }));
+function logDiagnostic(message, type = "info", payload = null) {
+  const timestamp = new Date().toLocaleTimeString();
+  const formatted = `[${timestamp}] [${type.toUpperCase()}] ${message}`;
+  console.log(formatted);
+  if (payload) {
+    console.log("Payload:", payload);
   }
+  setDiagnostics((prev) => ({
+    ...prev,
+    lastApiPayload: payload ? JSON.stringify(payload) : prev.lastApiPayload,
+  }));
+}
+
+async function refreshSorterLogs() {
+  try {
+    const [actionResult, networkResult] = await Promise.all([
+      api.getActionLogs({ limit: 30 }),
+      api.getNetworkLogs({ limit: 30 }),
+    ]);
+    setActionLogs(actionResult.logs || []);
+    setNetworkLogs(networkResult.logs || []);
+    setLogsError("");
+  } catch (loadLogsError) {
+    setLogsError(loadLogsError.message);
+  }
+}
 
   const handleDragStart = (e, index) => {
     e.dataTransfer.setData("text/plain", index);
@@ -652,16 +643,35 @@ export default function App() {
     }
   }
 
-  useEffect(() => {
-    loadCollections();
-  }, []);
+useEffect(() => {
+  if (initialCollectionsLoadedRef.current) {
+    return;
+  }
+  initialCollectionsLoadedRef.current = true;
+  loadCollections();
+  refreshSorterLogs();
+}, []);
 
-  useEffect(() => {
-    if (!selectedCollectionId) {
-      return;
-    }
-    loadState(selectedCollectionId);
-  }, [selectedCollectionId]);
+useEffect(() => {
+  if (!selectedCollectionId) {
+    return;
+  }
+  loadState(selectedCollectionId);
+}, [selectedCollectionId]);
+
+useEffect(() => {
+  if (activeModule !== "sorter") {
+    return;
+  }
+
+  const interval = window.setInterval(() => {
+    refreshSorterLogs();
+  }, 4000);
+
+  return () => {
+    window.clearInterval(interval);
+  };
+}, [activeModule]);
 
   async function handleCollectionSelect(collectionId) {
     setSelectedCollectionId(collectionId);
@@ -760,16 +770,11 @@ export default function App() {
       if (stateResult.settings) {
         setSettings({
           firstPageLimit: stateResult.settings.firstPageLimit || 40,
-          brandPriorityWeight: stateResult.settings.brandPriorityWeight ?? 0.15,
-          salesWeight: stateResult.settings.salesWeight ?? 0.25,
-          inventoryWeight: stateResult.settings.inventoryWeight ?? 0.10,
-          newProductBoost: stateResult.settings.newProductBoost ?? 0.35,
-          lowSellerPenalty: stateResult.settings.lowSellerPenalty ?? 0.2,
-          randomnessWeight: stateResult.settings.randomnessWeight ?? 0.15,
-          brandTrendWeight: stateResult.settings.brandTrendWeight ?? 0.12,
-          productTypeTrendWeight: stateResult.settings.productTypeTrendWeight ?? 0.08,
-          colorTrendWeight: stateResult.settings.colorTrendWeight ?? 0.05,
-          brandPriorities: stateResult.settings.brandPriorities || {},
+          salesWeight: stateResult.settings.salesWeight ?? 0.4,
+          inventoryWeight: stateResult.settings.inventoryWeight ?? 0.25,
+          newnessWeight: stateResult.settings.newnessWeight ?? 0.2,
+          momentumWeight: stateResult.settings.momentumWeight ?? 0.1,
+          rotationWeight: stateResult.settings.rotationWeight ?? 0.05,
         });
       }
       setPreview(emptyPreview);
@@ -833,16 +838,11 @@ export default function App() {
         setSnapshot(syncResult.snapshot);
         setSettings({
           firstPageLimit: syncResult.settings.firstPageLimit,
-          brandPriorityWeight: syncResult.settings.brandPriorityWeight ?? 0.15,
-          salesWeight: syncResult.settings.salesWeight,
-          inventoryWeight: syncResult.settings.inventoryWeight,
-          newProductBoost: syncResult.settings.newProductBoost,
-          lowSellerPenalty: syncResult.settings.lowSellerPenalty,
-          randomnessWeight: syncResult.settings.randomnessWeight,
-          brandTrendWeight: syncResult.settings.brandTrendWeight ?? 0.12,
-          productTypeTrendWeight: syncResult.settings.productTypeTrendWeight ?? 0.08,
-          colorTrendWeight: syncResult.settings.colorTrendWeight ?? 0.05,
-          brandPriorities: syncResult.settings.brandPriorities || {},
+          salesWeight: syncResult.settings.salesWeight ?? 0.4,
+          inventoryWeight: syncResult.settings.inventoryWeight ?? 0.25,
+          newnessWeight: syncResult.settings.newnessWeight ?? 0.2,
+          momentumWeight: syncResult.settings.momentumWeight ?? 0.1,
+          rotationWeight: syncResult.settings.rotationWeight ?? 0.05,
         });
         setPreview(emptyPreview);
         setMessage("Live collections loaded and selected collection synced.");
@@ -998,9 +998,10 @@ export default function App() {
     try {
       setLoading(true);
       setError("");
+      setMessage("Updating Shopify — waiting for the reorder job and final verification…");
       const result = await api.applyOrder(selectedCollectionId, orderIds);
       setBackup(result.backup);
-      setMessage(`Order applied to Shopify. ${result.affectedCount} products moved.`);
+      setMessage(result.affectedCount ? `Synced after Shopify verification. ${result.affectedCount} products moved.` : "No Changes Required — Shopify order was verified.");
       logDiagnostic(`Order applied successfully: ${result.affectedCount} products moved`, "success");
       setDiagnostics((prev) => ({
         ...prev,
@@ -1021,7 +1022,53 @@ export default function App() {
     }
   }
 
-  async function handleRollback() {
+  async function handleReorderAll() {
+    if (loading || !window.confirm("Apply the existing sorting strategy to every eligible collection?")) {
+      return;
+    }
+    try {
+      setLoading(true);
+      setError("");
+      setReorderAllSummary(null);
+      setMessage("Updating all eligible collections…");
+      const result = await api.reorderAllCollections();
+      setReorderAllSummary(result);
+      setMessage(`Checked ${result.checked} collections: ${result.updated} updated, ${result.skipped} skipped, ${result.failed} failed. ${result.productsRepositioned} products repositioned.`);
+      await loadCollections();
+    } catch (reorderError) {
+      setError(reorderError.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+async function handleReorderAllLive() {
+  if (
+    isSyncingAll ||
+    !window.confirm("Apply existing sorting strategy to every eligible collection?")
+  ) {
+    return;
+  }
+
+  try {
+    setIsSyncingAll(true);
+    setError("");
+    setReorderAllSummary(null);
+    setMessage("Updating all eligible collections…");
+    const result = await api.reorderAllCollections();
+    setReorderAllSummary(result);
+    setMessage(
+      `Processed ${result.totalCollections} collections: ${result.succeeded} verified, ${result.unchanged} unchanged, ${result.skipped} skipped, ${result.failed} failed.`,
+    );
+    await Promise.all([loadCollections(), refreshSorterLogs()]);
+  } catch (reorderError) {
+    setError(reorderError.message);
+  } finally {
+    setIsSyncingAll(false);
+  }
+}
+
+async function handleRollback() {
     const confirmed = window.confirm("Rollback to the last saved backup?");
     if (!confirmed) {
       return;
@@ -1058,14 +1105,20 @@ export default function App() {
     }
   }
 
-  function clearCurrentLogs() {
-    if (activeModule === "sku-image-manager") {
-      setSkuSidebarState((prev) => ({ ...prev, logs: [] }));
-      return;
-    }
-
-    setDiagnostics((prev) => ({ ...prev, logs: [] }));
+function clearCurrentLogs() {
+  if (activeModule === "sku-image-manager") {
+    setSkuSidebarState((prev) => ({ ...prev, logs: [] }));
+    return;
   }
+
+  if (activeModule === "order-mapping") {
+    setActualSalesSidebarState((prev) => ({ ...prev, logs: [] }));
+    return;
+  }
+
+  setActionLogs([]);
+  setNetworkLogs([]);
+}
 
   function pushSkuLog(entry) {
     setSkuSidebarState((prev) => ({
@@ -1101,12 +1154,39 @@ export default function App() {
     }));
   }
 
-  const currentLogs =
-    activeModule === "sku-image-manager"
-      ? skuSidebarState.logs
-      : activeModule === "actual-sales"
-        ? actualSalesSidebarState.logs
-        : diagnostics.logs;
+const currentLogs =
+  activeModule === "sku-image-manager"
+  ? skuSidebarState.logs
+  : activeModule === "order-mapping"
+  ? actualSalesSidebarState.logs
+  : [...actionLogs, ...networkLogs]
+      .sort((left, right) => {
+        const leftTime = new Date(left.timestamp || left.startedAt || 0).getTime();
+        const rightTime = new Date(right.timestamp || right.startedAt || 0).getTime();
+        return rightTime - leftTime;
+      })
+      .map((log) =>
+        log.actionType
+          ? {
+              timestamp: log.timestamp,
+              status: log.status,
+              module: "action",
+              actionType: log.actionType,
+              message: log.actionLabel,
+              endpoint: log.collectionTitle || "",
+              error: log.errorMessage || "",
+            }
+          : {
+              timestamp: log.startedAt,
+              status: log.status,
+              module: log.provider || "network",
+              actionType: log.operationName,
+              message: log.collectionTitle || log.endpoint || "",
+              endpoint: log.endpoint || "",
+              error: log.errorMessage || "",
+            },
+      )
+      .slice(0, 40);
 
 
 
@@ -1209,7 +1289,7 @@ export default function App() {
                   <span className="diagnostic-value">{skuSidebarState.diagnostics.actionRunning ? "Yes" : "No"}</span>
                 </div>
               </>
-            ) : activeModule === "actual-sales" ? (
+            ) : activeModule === "order-mapping" ? (
               <>
                 <div className="diagnostic-item">
                   <span className="diagnostic-label">Module:</span>
@@ -1280,21 +1360,9 @@ export default function App() {
                   </span>
                 </div>
                 <div className="diagnostic-item">
-                  <span className="diagnostic-label">Selected ID:</span>
-                  <span className="diagnostic-value text-truncate" title={diagnostics.selectedCollectionId}>
-                    {diagnostics.selectedCollectionId}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
                   <span className="diagnostic-label">Last API:</span>
                   <span className="diagnostic-value text-truncate" title={diagnostics.lastApiCall}>
                     {diagnostics.lastApiCall}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Payload:</span>
-                  <span className="diagnostic-value text-truncate" title={diagnostics.lastApiPayload}>
-                    {diagnostics.lastApiPayload}
                   </span>
                 </div>
                 <div className="diagnostic-item">
@@ -1314,10 +1382,13 @@ export default function App() {
                 Clear Logs
               </button>
             </div>
-            <div className="diagnostic-logs">
-              {currentLogs.length === 0 ? (
-                <div className="diagnostic-log-empty">No activity logged.</div>
-              ) : (
+<div className="diagnostic-logs"> 
+{activeModule === "sorter" && logsError ? (
+<div className="error-text">{logsError}</div>
+) : null}
+{currentLogs.length === 0 ? (
+<div className="diagnostic-log-empty">No activity logged.</div>
+) : (
                 currentLogs.map((log, index) => (
                   typeof log === "string" ? (
                     <div key={index} className="diagnostic-log-line">{log}</div>
@@ -1334,7 +1405,7 @@ export default function App() {
                         </span>
                       </div>
                       <div className="diagnostic-log-line">[{log.module}] {log.actionType}</div>
-                      <div className="diagnostic-log-line text-truncate">{log.message}</div>
+                      <div className="diagnostic-log-line">{log.message}</div>
                     </div>
                   )
                 ))
@@ -1359,6 +1430,9 @@ export default function App() {
               <button className="button accent" onClick={handleGenerate} disabled={loading || !snapshot}>
                 Generate Today&apos;s Order
               </button>
+<button type="button" className="button metal" onClick={handleReorderAllLive} disabled={isSyncingAll}>
+                Update All Collections
+              </button>
               <button
                 className="button metal"
                 onClick={handleApply}
@@ -1371,6 +1445,15 @@ export default function App() {
               </button>
             </div>
           </div>
+
+          {reorderAllSummary?.failures?.length > 0 && (
+            <p className="error-text">
+Failed: {reorderAllSummary.results
+  .filter((result) => result.status === "failed")
+  .map((result) => `${result.collectionTitle} — ${result.error}`)
+  .join("; ")}
+            </p>
+          )}
 
           <div className="toolbar-grid">
             <label>
@@ -1432,8 +1515,8 @@ export default function App() {
             <span className="status-chip">{snapshot?.collection?.sortOrder || "Not synced"}</span>
             {snapshot?.syncedAt ? <span className="muted">Last sync: {formatDate(snapshot.syncedAt)}</span> : null}
             {backup?.createdAt ? <span className="muted">Backup: {formatDate(backup.createdAt)}</span> : null}
-            {message ? <span className="success-text">{message}</span> : null}
-            {error ? <span className="error-text">{error}</span> : null}
+            {message ? <span className="success-text" role="status">{message}</span> : null}
+            {error ? <span className="error-text" role="alert">{error}</span> : null}
           </div>
         </section>
 
@@ -1460,7 +1543,7 @@ export default function App() {
           <div className="panel controls-panel">
             <div className="section-heading">
               <h3>Smart sorter controls</h3>
-              <p>Pinned products stay on page 1. Remaining slots are randomly optimized.</p>
+              <p>Pinned products stay fixed. Remaining products use one deterministic daily strategy.</p>
             </div>
 
             <div className="ranking-weights-info">
@@ -1469,21 +1552,24 @@ export default function App() {
                 <button
                   type="button"
                   className={`button ${isStrategyEditing ? "metal" : "ghost"} compact-button`}
-                  onClick={() => setIsStrategyEditing((prev) => !prev)}
+                  onClick={() => {
+                    setStrategyDraft({ ...settings });
+                    setIsStrategyEditing(true);
+                  }}
                 >
-                  {isStrategyEditing ? "Done Editing" : "Edit Strategy"}
+                  Edit Strategy
                 </button>
               </div>
               <div className="weights-badges" style={{ flexWrap: "wrap" }}>
-                <span className="weight-badge">🏷️ Brand Priority: {settings.brandPriorityWeight.toFixed(2)}</span>
-                <span className="weight-badge">🆕 Newness Boost: {settings.newProductBoost.toFixed(2)}</span>
                 <span className="weight-badge">🔥 Sales Performance: {settings.salesWeight.toFixed(2)}</span>
-                <span className="weight-badge">📦 Inventory Weight: {settings.inventoryWeight.toFixed(2)}</span>
-                <span className="weight-badge">📈 Brand Trend: {settings.brandTrendWeight.toFixed(2)}</span>
-                <span className="weight-badge">🧵 Type Trend: {settings.productTypeTrendWeight.toFixed(2)}</span>
-                <span className="weight-badge">🎨 Color Trend: {settings.colorTrendWeight.toFixed(2)}</span>
-                <span className="weight-badge">🎲 Randomness: {settings.randomnessWeight.toFixed(2)}</span>
+                <span className="weight-badge">📦 Inventory Health: {settings.inventoryWeight.toFixed(2)}</span>
+                <span className="weight-badge">🆕 Newness: {settings.newnessWeight.toFixed(2)}</span>
+                <span className="weight-badge">📈 Sales Momentum: {settings.momentumWeight.toFixed(2)}</span>
+                <span className="weight-badge">↻ Controlled Rotation: {settings.rotationWeight.toFixed(2)}</span>
+                <span className="weight-badge">Total Weight: {strategyTotal(settings).toFixed(2)}</span>
               </div>
+              <p className="muted">Products are ranked using SKU-level sales, sellable inventory, size availability, newness and recent momentum.</p>
+              <p className="muted">Pinned products remain fixed · Diversity: Brand and Product Type · Sold-out social proof: up to 2 genuine products.</p>
               {isStrategyEditing ? (
                 <div className="weights-grid">
                   {strategyFields.map((field) => (
@@ -1493,53 +1579,23 @@ export default function App() {
                         type="number"
                         min="0"
                         step={field.step}
-                        value={settings[field.key]}
+                        value={strategyDraft?.[field.key] ?? settings[field.key]}
                         onChange={(event) =>
-                          saveSettings({
-                            ...settings,
+                          setStrategyDraft({
+                            ...strategyDraft,
                             [field.key]: Number(event.target.value || 0),
                           })
                         }
                       />
                     </label>
                   ))}
+                  <p className={Math.abs(strategyTotal(strategyDraft || settings) - 1) < 0.00001 ? "success-text" : "error-text"}>Total: {strategyTotal(strategyDraft || settings).toFixed(2)} (must equal 1.00)</p>
+                  <div className="action-row">
+                    <button type="button" className="button accent" disabled={Math.abs(strategyTotal(strategyDraft || settings) - 1) >= 0.00001 || loading} onClick={async () => { await saveSettings(strategyDraft); setIsStrategyEditing(false); setStrategyDraft(null); }}>Save Strategy</button>
+                    <button type="button" className="button ghost" onClick={() => { setIsStrategyEditing(false); setStrategyDraft(null); }}>Cancel</button>
+                  </div>
                 </div>
               ) : null}
-            </div>
-
-            {/* Brand Priority Settings Panel */}
-            <div className="brand-priorities-section" style={{ marginTop: "15px", marginBottom: "15px", borderTop: "1px solid var(--border)", paddingTop: "15px" }}>
-              <h4 style={{ marginBottom: "5px" }}>Brand Priority Settings Boosts</h4>
-              <p className="muted" style={{ marginBottom: "12px", fontSize: "12px" }}>Set priority boost values for brands. Higher values increase score weight.</p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "8px", maxHeight: "180px", overflowY: "auto", paddingRight: "5px" }}>
-                {uniqueVendors.length === 0 ? (
-                  <div className="muted" style={{ fontSize: "12px", fontStyle: "italic" }}>No brands found.</div>
-                ) : (
-                  uniqueVendors.map((vendor) => (
-                    <div key={vendor} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "var(--surface-2)", padding: "6px 10px", borderRadius: "6px", border: "1px solid var(--border)" }}>
-                      <span style={{ fontSize: "13px", fontWeight: "500" }}>{vendor}</span>
-                      <input
-                        type="number"
-                        className="inline-input"
-                        style={{ width: "65px", padding: "4px 8px", fontSize: "12px", background: "var(--surface-1)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text)" }}
-                        value={settings.brandPriorities?.[vendor] ?? 0}
-                        disabled={!isStrategyEditing}
-                        onChange={(e) => {
-                          const newVal = Number(e.target.value || 0);
-                          const nextBrandPriorities = {
-                            ...(settings.brandPriorities || {}),
-                            [vendor]: newVal
-                          };
-                          saveSettings({
-                            ...settings,
-                            brandPriorities: nextBrandPriorities
-                          });
-                        }}
-                      />
-                    </div>
-                  ))
-                )}
-              </div>
             </div>
 
             <div className="pinned-manager-section">
@@ -1894,7 +1950,7 @@ export default function App() {
                           <option value="hidden">👁️ Hidden</option>
                         </select>
                       </td>
-                      <td className="mono">{calculateScore(product, products, settings)}</td>
+                      <td className="mono">{preview.newOrder.find((item) => item.id === product.id)?.finalScore?.toFixed(2) || "-"}</td>
                       <td>{product.inventoryQuantity}</td>
                       <td>{product.soldQuantity}</td>
                       <td>{formatMoney(product.salesRevenue, product.currencyCode)}</td>
@@ -1913,15 +1969,14 @@ export default function App() {
                 <thead>
                   <tr>
                     <th>Product</th>
-                    <th>Brand Score</th>
-                    <th>Brand Trend</th>
-                    <th>Type Trend</th>
-                    <th>Color Trend</th>
-                    <th>Newness Score</th>
-                    <th>Sales Score</th>
-                    <th>Inventory Score</th>
-                    <th>Randomness Score</th>
+                    <th>Sales</th>
+                    <th>Inventory / size</th>
+                    <th>Newness</th>
+                    <th>Momentum</th>
+                    <th>Rotation</th>
                     <th>Final Score</th>
+                    <th>Reason</th>
+                    <th>Flags</th>
                     <th>Old Pos</th>
                     <th>New Pos</th>
                     <th>Shift</th>
@@ -1941,35 +1996,16 @@ export default function App() {
                             </div>
                           </div>
                         </td>
-                        <td className="mono">
-                          {(item.brandScore || 0).toFixed(4)} <small className="muted">(+{(item.brandScore * scoringContext.strategy.brandPriorityWeight).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {(item.brandTrendScore || 0).toFixed(4)} <small className="muted">(+{(item.brandTrendScore * scoringContext.strategy.brandTrendWeight).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {(item.productTypeTrendScore || 0).toFixed(4)} <small className="muted">(+{(item.productTypeTrendScore * scoringContext.strategy.productTypeTrendWeight).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {(item.colorTrendScore || 0).toFixed(4)} <small className="muted">(+{(item.colorTrendScore * scoringContext.strategy.colorTrendWeight).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {(item.newnessScore || 0).toFixed(4)} <small className="muted">(+{(item.newnessScore * scoringContext.strategy.newProductBoost).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {(item.salesScore || 0).toFixed(4)} <small className="muted">(+{(item.salesScore * scoringContext.strategy.salesWeight).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {(item.inventoryScore || 0).toFixed(4)} <small className="muted">(+{(item.inventoryScore * scoringContext.strategy.inventoryWeight).toFixed(4)})</small>
-                        </td>
-                        <td className="mono">
-                          {preview.newOrder.length > 0 
-                            ? `+${(item.randomnessScore || 0).toFixed(4)}` 
-                            : <span className="muted" style={{ fontStyle: "italic" }}>Pending Gen</span>}
-                        </td>
+                        <td className="mono">{(item.salesScore || 0).toFixed(2)}</td>
+                        <td className="mono">{(item.inventoryScore || 0).toFixed(2)} / {(item.sizeAvailability || 0).toFixed(2)}</td>
+                        <td className="mono">{(item.newnessScore || 0).toFixed(2)}</td>
+                        <td className="mono">{(item.momentumScore || 0).toFixed(2)}</td>
+                        <td className="mono">{(item.rotationScore || 0).toFixed(2)}</td>
                         <td className="mono" style={{ fontWeight: "bold", color: "var(--accent)" }}>
-                          {Number(item.weightedScore || 0).toFixed(4)}
+                          {Number(item.finalScore || 0).toFixed(2)}
                         </td>
+                        <td>{item.primaryReason}</td>
+                        <td>{item.allottedPosition ? "Pinned" : item.soldOutSocialProof ? "Sold-out proof" : "-"}</td>
                         <td className="mono">#{item.collectionPosition}</td>
                         <td className="mono">
                           {preview.newOrder.length > 0 ? `#${item.finalPosition}` : <span className="muted">-</span>}
@@ -1996,8 +2032,8 @@ export default function App() {
           )}
         </section>
       </main>
-      ) : activeModule === "actual-sales" ? (
-      <DeliveryResolution
+      ) : activeModule === "order-mapping" ? (
+      <OrderMapping
         sidebarBridge={{
           updateDiagnostics: updateActualSalesDiagnostics,
           pushLog: pushActualSalesLog,

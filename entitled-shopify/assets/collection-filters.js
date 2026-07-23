@@ -113,6 +113,71 @@
     });
   }
 
+  document.addEventListener('entitled:products-appended', function (event) {
+    initProductCardMedia(event.detail && event.detail.container || document);
+  });
+
+  document.addEventListener('submit', function (event) {
+    var form = event.target && event.target.closest && event.target.closest('.product_card_form');
+    var button;
+
+    if (
+      !form ||
+      event.defaultPrevented ||
+      form.hasAttribute('data-size-preference-card-form') ||
+      !window.ShopifyAPI ||
+      typeof window.ShopifyAPI.addItemFromForm !== 'function'
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    if (form.getAttribute('data-cart-request-pending') === 'true') {
+      return;
+    }
+
+    button = form.querySelector('.product_card_button');
+    form.setAttribute('data-cart-request-pending', 'true');
+    if (button) {
+      button.disabled = true;
+      button.classList.remove('is-added');
+      button.classList.add('is-adding');
+    }
+
+    function finish(success) {
+      form.removeAttribute('data-cart-request-pending');
+      if (button) {
+        button.disabled = false;
+        button.classList.remove('is-adding');
+        button.classList.toggle('is-added', !!success);
+      }
+    }
+
+    window.ShopifyAPI.addItemFromForm(form, function () {
+      if (window.ajaxCart && typeof window.ajaxCart.load === 'function') {
+        window.ajaxCart.load();
+      }
+      window.setTimeout(function () { finish(true); }, 800);
+    }, function (request) {
+      var message = 'Unable to add this item. Please try again.';
+      var error = form.querySelector('[data-product-card-error]') || document.createElement('p');
+
+      try {
+        var payload = JSON.parse(request && request.responseText || '{}');
+        message = payload.description || payload.message || message;
+      } catch (parseError) {}
+
+      error.className = 'errors qty-error product_card_error';
+      error.setAttribute('data-product-card-error', '');
+      error.setAttribute('role', 'alert');
+      error.textContent = message;
+      if (!error.parentNode) {
+        form.insertBefore(error, button || null);
+      }
+      finish(false);
+    });
+  });
+
   function initCollectionFilters() {
     initProductCardMedia(document);
 

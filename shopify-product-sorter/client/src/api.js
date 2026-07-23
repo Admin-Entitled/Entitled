@@ -2,18 +2,18 @@ const API_BASE = "/api";
 
 async function request(path, options = {}) {
   const isFormData = options.body instanceof FormData;
-  const baseHeaders = isFormData ? {} : { "Content-Type": "application/json" };
   const response = await fetch(`${API_BASE}${path}`, {
+    ...options,
     headers: {
-      ...baseHeaders,
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(options.headers || {}),
     },
-    ...options,
   });
 
   const payload = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    throw new Error(payload.detail || payload.error || "Request failed");
+    throw new Error(payload.detail || payload.message || payload.error || "Request failed");
   }
 
   return payload;
@@ -23,7 +23,9 @@ export const api = {
   getActualSalesIntelligence: (days = 30) =>
     request(`/actual-sales-intelligence?days=${encodeURIComponent(days)}`),
   getSalesIntelligenceSummary: (days = 30, refresh = false) =>
-    request(`/sales-intelligence/summary?days=${encodeURIComponent(days)}${refresh ? "&refresh=1" : ""}`),
+    request(
+      `/sales-intelligence/summary?days=${encodeURIComponent(days)}${refresh ? "&refresh=1" : ""}`,
+    ),
   refreshSalesIntelligenceShopify: (days = 30) =>
     request(`/sales-intelligence/refresh-shopify?days=${encodeURIComponent(days)}`, {
       method: "POST",
@@ -47,6 +49,10 @@ export const api = {
     request(`/collection-products?collectionId=${encodeURIComponent(collectionId)}`),
   getState: (collectionId) =>
     request(`/collections/state?collectionId=${encodeURIComponent(collectionId)}`),
+  getActionLogs: ({ afterId = 0, limit = 30 } = {}) =>
+    request(`/collections/logs/actions?afterId=${afterId}&limit=${limit}`),
+  getNetworkLogs: ({ afterId = 0, limit = 30 } = {}) =>
+    request(`/collections/logs/network?afterId=${afterId}&limit=${limit}`),
   syncCollection: (collectionId) =>
     request("/collections/sync", {
       method: "POST",
@@ -71,6 +77,11 @@ export const api = {
     request("/collections/apply", {
       method: "POST",
       body: JSON.stringify({ collectionId, orderIds }),
+    }),
+  reorderAllCollections: () =>
+    request("/collections/reorder-all-v2", {
+      method: "POST",
+      body: JSON.stringify({}),
     }),
   rollback: (collectionId) =>
     request("/collections/rollback", {

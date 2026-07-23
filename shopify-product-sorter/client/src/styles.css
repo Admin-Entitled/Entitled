@@ -49,14 +49,14 @@ textarea {
 .sidebar {
   border-right: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(23, 24, 27, 0.96), rgba(11, 11, 12, 0.98));
-  padding: 32px 24px;
+  padding: 20px 16px;
   position: sticky;
   top: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
+  gap: 12px;
   overflow: hidden;
 }
 
@@ -76,9 +76,10 @@ textarea {
 }
 
 .sidebar-nav {
-  margin-top: 42px;
+  margin-top: 20px;
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .nav-item {
@@ -86,9 +87,12 @@ textarea {
   background: transparent;
   color: var(--muted);
   border: 1px solid transparent;
-  padding: 14px 16px;
-  border-radius: 14px;
+  min-height: 36px;
+  padding: 7px 8px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 11px;
+  line-height: 1.2;
 }
 
 .nav-item.active,
@@ -113,6 +117,7 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 22px;
   box-shadow: var(--shadow);
+  min-width: 0;
 }
 
 .topbar {
@@ -125,6 +130,15 @@ textarea {
   display: flex;
   justify-content: space-between;
   gap: 16px;
+  min-width: 0;
+}
+
+.topbar-header {
+  flex-wrap: wrap;
+}
+
+.topbar-header > * {
+  min-width: 0;
 }
 
 .toolbar-grid,
@@ -187,6 +201,7 @@ textarea:focus {
   cursor: pointer;
   background: transparent;
   color: var(--text);
+  min-height: 44px;
 }
 
 .button.accent {
@@ -201,6 +216,14 @@ textarea:focus {
 
 .button.ghost:hover {
   background: rgba(255, 255, 255, 0.03);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--metal);
+  outline-offset: 2px;
 }
 
 .button:disabled {
@@ -351,7 +374,7 @@ textarea:focus {
 
 .content-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
 
 .controls-panel,
@@ -516,6 +539,29 @@ th {
 }
 
 @media (max-width: 820px) {
+  .sidebar {
+    padding: 16px;
+  }
+
+  .sidebar-nav {
+    margin-top: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .nav-item {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+
+  .sidebar h1 {
+    font-size: 22px;
+  }
+
+  .diagnostic-panel {
+    display: none;
+  }
+
   .dashboard {
     padding: 16px;
   }
@@ -544,17 +590,27 @@ th {
   .topbar-header {
     flex-direction: column;
   }
+
+  .action-row .button {
+    flex: 1 1 100%;
+  }
+
+  .topbar h2 {
+    font-size: 24px;
+    overflow-wrap: anywhere;
+  }
 }
 
 /* Diagnostic Panel styles */
 .diagnostic-panel {
-  margin-top: auto;
+  margin-top: 4px;
   border-top: 1px solid var(--border);
   padding-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   min-height: 0;
+  flex: 1;
 }
 
 .diagnostic-title {
@@ -568,13 +624,13 @@ th {
 .diagnostic-stats {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .diagnostic-item {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 11px;
   gap: 8px;
 }
 
@@ -656,11 +712,13 @@ th {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 8px;
-  height: 160px;
+  padding: 10px;
+  min-height: 180px;
+  height: auto;
+  flex: 1;
   overflow-y: auto;
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 9px;
+  font-size: 11px;
   color: #a5b4fc;
   display: flex;
   flex-direction: column;
@@ -724,9 +782,8 @@ th {
 }
 
 .diagnostic-log-line {
-  word-break: break-all;
-  white-space: pre-wrap;
-  line-height: 1.2;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
 }
 
 /* Smart Sorter Pinned & Movement styles */
@@ -1273,5 +1330,9 @@ th {
 
   .sku-notifier {
     width: 100%;
+  }
+
+  .diagnostic-panel {
+    display: none;
   }
 }
