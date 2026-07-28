@@ -4,8 +4,20 @@ const http = require('http');
 const { chromium } = require('playwright');
 
 const script = fs.readFileSync('assets/size-preference.js');
+function actions() {
+  return `<div class="product_card_actions" data-size-preference-card-action>
+    <form action="/cart/add" method="post" class="product_card_form buy_now_stack buy_now_stack--card" data-product-card-form>
+      <input type="hidden" name="id" data-product-card-variant disabled>
+      <input type="hidden" name="quantity" value="1" data-product-card-quantity disabled>
+      <button type="button" class="product_card_button" data-product-card-primary hidden>Choose size</button>
+      <a href="/products/test" class="product_card_button" data-product-card-primary-link>Choose options</a>
+      <button type="button" class="product_card_button buy_now_button" data-buy-now-trigger hidden>Buy now</button>
+      <a href="/products/test" class="product_card_button product_card_button--secondary" data-product-card-view>View product</a>
+    </form>
+  </div>`;
+}
 function card(name, options, variants, url = '/products/test') {
-  return `<article data-size-product data-product-url="${url}" data-product-options='${JSON.stringify(options)}' data-product-variants='${JSON.stringify(variants)}'><span>${name}</span><p data-size-preference-status hidden></p><div data-size-preference-card-action></div></article>`;
+  return `<article data-size-product data-product-url="${url}" data-product-options='${JSON.stringify(options)}' data-product-variants='${JSON.stringify(variants)}'><span>${name}</span><p data-size-preference-status hidden></p>${actions()}</article>`;
 }
 const cards = [
   card('available', [{ name: 'Size', values: ['M', 'L'] }], [{ id: 101, available: true, options: ['M'] }, { id: 102, available: true, options: ['L'] }]),
@@ -19,7 +31,7 @@ const cards = [
 ].join('');
 
 function fixture(withPreference = true) {
-  return `<!doctype html><html><body><main id="PageContainer"><span id="CartCount">0</span><div id="CartDrawer"></div><div id="cards">${cards}</div></main><div data-size-preference-root data-card-add-label="Add to cart" data-card-sold-out-label="Sold out" data-card-choose-options-label="Choose options" data-cart-add-url="/cart/add" data-status-available="Available {{ size }}" data-status-sold-out="Sold out in {{ size }}" data-status-unavailable="{{ size }} unavailable" data-status-not-applicable="Not applicable"><div data-size-preference-dialog hidden tabindex="-1"><button data-size-preference-close>Close</button><form data-size-preference-form><div data-size-preference-choices></div><button data-size-preference-confirm>Confirm</button><button data-size-preference-skip>Skip</button></form></div><p data-size-preference-live></p></div><script>
+  return `<!doctype html><html><body><main id="PageContainer"><span id="CartCount">0</span><div id="CartDrawer"></div><div id="cards">${cards}</div></main><div data-size-preference-root data-label-choose="Choose size" data-card-add-label="Add to cart" data-card-sold-out-label="Sold out" data-card-choose-another-size-label="Choose another size" data-card-choose-options-label="Choose options" data-card-view-product-label="View product" data-cart-add-url="/cart/add" data-status-available="Available {{ size }}" data-status-sold-out="Size {{ size }} is sold out" data-status-currently-sold-out="Currently sold out" data-status-select-size="Select a size to continue" data-status-unavailable="{{ size }} unavailable" data-status-not-applicable="Not applicable"><div data-size-preference-dialog hidden tabindex="-1"><button data-size-preference-close>Close</button><form data-size-preference-form><div data-size-preference-choices></div><button data-size-preference-confirm>Confirm</button><button data-size-preference-skip>Skip</button></form></div><p data-size-preference-live></p></div><script>
   ${withPreference ? "sessionStorage.setItem('entitled:size-preference:selected-filters:v1', JSON.stringify({version:1,values:['M'],displays:['M']}));sessionStorage.setItem('entitled:size-preference:prompt-completed:v1','true');" : "sessionStorage.removeItem('entitled:size-preference:selected-filters:v1');sessionStorage.removeItem('entitled:size-preference:prompt-completed:v1');"}
   window.__adds=[]; window.__loads=0; window.__drawerOpens=0;
   window.ShopifyAPI={addItemFromForm(form,success,error){const id=Number(new FormData(form).get('id'));window.__adds.push(id);setTimeout(()=>id===999?error({responseText:JSON.stringify({description:'Inventory changed'})}):success({variant_id:id}),50)}};
@@ -36,8 +48,8 @@ async function main() {
       const page = await browser.newPage({ viewport });
       await page.goto(`http://127.0.0.1:${server.address().port}/`);
       assert.strictEqual(await page.inputValue('article:nth-child(1) input[name="id"]'), '101');
-      assert.strictEqual(await page.isDisabled('article:nth-child(2) button'), true);
-      assert.strictEqual(await page.getAttribute('article:nth-child(2) [data-size-preference-card-action]', 'data-card-action-state'), 'sold_out');
+      assert.strictEqual(await page.isDisabled('article:nth-child(2) [data-product-card-primary]'), false);
+      assert.strictEqual(await page.getAttribute('article:nth-child(2) [data-size-preference-card-action]', 'data-card-action-state'), 'size_sold_out');
       assert.strictEqual(await page.getAttribute('article:nth-child(3) [data-size-preference-card-action]', 'data-card-action-state'), 'unavailable');
       assert.strictEqual(await page.inputValue('article:nth-child(4) input[name="id"]'), '401');
       assert.strictEqual(await page.getAttribute('article:nth-child(5) [data-size-preference-card-action]', 'data-card-action-state'), 'choose_options');
@@ -45,7 +57,7 @@ async function main() {
       assert.strictEqual(await page.getAttribute('article:nth-child(7) [data-size-preference-card-action]', 'data-card-action-state'), 'choose_options');
       await page.evaluate(() => document.dispatchEvent(new CustomEvent('entitled:size-filter-change', { detail: { values: [{ value: 'M', display: 'M' }, { value: 'L', display: 'L' }] } })));
       assert.strictEqual(await page.getAttribute('article:nth-child(1) [data-size-preference-card-action]', 'data-card-action-state'), 'choose_options', 'multiple sellable selected sizes must never pick an arbitrary variant');
-      assert.strictEqual(await page.locator('article:nth-child(1) input[name="id"]').count(), 0);
+      assert.strictEqual(await page.isDisabled('article:nth-child(1) input[name="id"]'), true);
       assert.strictEqual(await page.inputValue('article:nth-child(2) input[name="id"]'), '202', 'OR resolution may direct-add only when the selected sizes yield one exact sellable variant');
       assert.strictEqual(await page.textContent('article:nth-child(2) [data-size-preference-status]'), 'Available L', 'multi-size status must name only the size supporting its winning state');
       await page.evaluate(() => document.dispatchEvent(new CustomEvent('entitled:size-filter-change', { detail: { values: [{ value: 'M', display: 'M' }] } })));

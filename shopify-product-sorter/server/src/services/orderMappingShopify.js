@@ -12,6 +12,11 @@ const ORDER_QUERY = `
         updatedAt
         cancelledAt
         displayFulfillmentStatus
+        currentTotalPriceSet {
+          shopMoney {
+            amount
+          }
+        }
         customer {
           firstName
           lastName
@@ -102,6 +107,7 @@ export async function fetchOrderMappingOrders({ start, end }) {
       });
       const connection = data.orders;
       for (const order of connection.nodes) {
+        const orderTotal = order.currentTotalPriceSet?.shopMoney?.amount || "";
         orders.push({
           shopifyOrderId: order.id,
           shopifyOrderName: order.name,
@@ -112,8 +118,17 @@ export async function fetchOrderMappingOrders({ start, end }) {
           shopifyFulfillmentStatus: order.displayFulfillmentStatus || "",
           cancellationStatus: order.cancelledAt || null,
           shopifyUpdatedAt: order.updatedAt || null,
-          latestFulfillment: { count: order.fulfillments.length },
-          shipments: shipmentRows(order),
+          latestFulfillment: {
+            count: order.fulfillments.length,
+            order_total: String(orderTotal || ""),
+          },
+          shipments: shipmentRows(order).map((shipment) => ({
+            ...shipment,
+            latestProviderPayload: {
+              ...(shipment.latestProviderPayload || {}),
+              order_total: String(orderTotal || ""),
+            },
+          })),
         });
       }
       cursor = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor : null;

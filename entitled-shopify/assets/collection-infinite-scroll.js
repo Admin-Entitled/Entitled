@@ -6,6 +6,8 @@
   var PAGINATION_SELECTOR = '[data-infinite-scroll-pagination]';
   var STATUS_SELECTOR = '[data-infinite-scroll-status]';
   var NEXT_SELECTOR = 'a.next_page';
+  var DISABLED_ATTR = 'data-infinite-scroll-disabled';
+  var ENHANCED_ATTR = 'data-infinite-scroll-enhanced';
   var SOURCE = 'infinite-scroll';
 
   function supportsInfiniteScroll() {
@@ -67,7 +69,8 @@
 
     return {
       items: nextList ? Array.prototype.slice.call(nextList.children) : [],
-      nextUrl: nextLink ? nextLink.href : ''
+      nextUrl: nextLink ? nextLink.href : '',
+      paginationHtml: nextPagination ? nextPagination.innerHTML : ''
     };
   }
 
@@ -104,13 +107,14 @@
       state.observer.disconnect();
     }
 
-    if (!supportsInfiniteScroll() || !context.pagination || !nextUrl || context.pagination.hidden) {
+    if (!supportsInfiniteScroll() || !context.pagination || !nextUrl || context.pagination.hasAttribute(DISABLED_ATTR)) {
       return;
     }
 
     state = {
       loading: false,
       nextUrl: nextUrl,
+      requestedUrls: {},
       controller: null,
       observer: null,
       abort: function () {
@@ -123,7 +127,8 @@
     };
     list.__entitledInfiniteScroll = state;
 
-    context.pagination.hidden = true;
+    context.pagination.hidden = false;
+    context.pagination.setAttribute(ENHANCED_ATTR, 'true');
     setStatus(context, '', false);
 
     function finish(message) {
@@ -137,6 +142,12 @@
         return;
       }
 
+      if (state.requestedUrls[state.nextUrl]) {
+        finish('All products loaded');
+        return;
+      }
+
+      var requestedUrl = state.nextUrl;
       state.loading = true;
       state.controller = 'AbortController' in window ? new AbortController() : null;
       setStatus(context, 'Loading more products...', true);
@@ -152,6 +163,7 @@
           return response.text();
         })
         .then(function (html) {
+          state.requestedUrls[requestedUrl] = true;
           var page = parsePage(html, context);
           var keys = existingKeys(context.list);
           var appended = [];
@@ -168,6 +180,11 @@
             appended.push(item);
           });
 
+          if (context.pagination) {
+            context.pagination.innerHTML = page.paginationHtml;
+            context.pagination.setAttribute(ENHANCED_ATTR, 'true');
+          }
+
           state.nextUrl = page.nextUrl;
           state.loading = false;
           state.controller = null;
@@ -176,12 +193,15 @@
             dispatchAppended(context, appended);
           }
 
-          if (!state.nextUrl || !appended.length) {
+          if (!state.nextUrl) {
             finish('All products loaded');
             return;
           }
 
           setStatus(context, '', false);
+          if (!appended.length) {
+            window.setTimeout(loadNext, 0);
+          }
         })
         .catch(function (error) {
           state.loading = false;
@@ -189,8 +209,21 @@
           if (error && error.name === 'AbortError') {
             return;
           }
+          context.pagination.removeAttribute(ENHANCED_ATTR);
           context.pagination.hidden = false;
           setStatus(context, 'Unable to load more products. Use pagination below.', true);
+          if (context.status) {
+            var retry = document.createElement('button');
+            retry.type = 'button';
+            retry.className = 'infinite-scroll-retry';
+            retry.textContent = 'Retry';
+            retry.addEventListener('click', function () {
+              context.pagination.setAttribute(ENHANCED_ATTR, 'true');
+              setStatus(context, '', false);
+              loadNext();
+            });
+            context.status.appendChild(retry);
+          }
         });
     }
 

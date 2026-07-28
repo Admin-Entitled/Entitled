@@ -8,6 +8,10 @@ test("normalizes identifiers and shipment statuses", () => {
   assert.equal(normalizeOrderMappingIdentifier(" #ab-1 "), "AB-1");
   assert.equal(normalizeOrderMappingStatus("Delivered"), "DELIVERED_TO_CUSTOMER");
   assert.equal(normalizeOrderMappingStatus("RTO Delivered"), "RTO_DELIVERED");
+  assert.equal(normalizeOrderMappingStatus("NEW"), "PENDING_TRACKING");
+  assert.equal(normalizeOrderMappingStatus("1"), "PENDING_TRACKING");
+  assert.equal(normalizeOrderMappingStatus("11"), "PENDING_TRACKING");
+  assert.equal(normalizeOrderMappingStatus("21"), "UNDELIVERED");
   assert.equal(normalizeOrderMappingStatus("Undelivered-3rd Attempt"), "DELIVERY_ATTEMPTED");
   assert.equal(normalizeOrderMappingStatus("Weird status", "SHIPMENT_EXCEPTION"), "SHIPMENT_EXCEPTION");
   assert.equal(isTerminalOrderMappingStatus("DELIVERED_TO_CUSTOMER"), true);
@@ -20,6 +24,14 @@ test("matches strongest available identifiers", () => {
   assert.equal(matchOrderMappingShipment({ shopifyOrderId: "gid://shopify/Order/1" }, rows).method, "shopify_order_id");
   assert.equal(matchOrderMappingShipment({ orderNumber: "#1001" }, rows).method, "shopify_order_number");
   assert.equal(matchOrderMappingShipment({ awb: "AWB-1" }, rows).method, "awb");
+});
+
+test("matches Shopify order numbers to Shiprocket channel order IDs", () => {
+  const rows = [{ shiprocket_channel_reference: "1243" }];
+  const match = matchOrderMappingShipment({ orderNumber: "#1243" }, rows);
+
+  assert.equal(match.method, "shiprocket_channel_reference");
+  assert.equal(match.row, rows[0]);
 });
 
 test("parses csv aliases and keeps deduped rows", () => {
@@ -60,5 +72,24 @@ test("prevents terminal downgrade and respects manual locks", () => {
       },
     ),
     false,
+  );
+});
+
+test("allows newer Shiprocket correction from terminal to non-terminal status", () => {
+  assert.equal(
+    canApplyStatusUpdate(
+      {
+        normalized_status: "DELIVERED_TO_CUSTOMER",
+        status_source: "SHIPROCKET_API",
+        status_timestamp: "2026-07-22T10:00:00Z",
+        manual_override_lock: false,
+      },
+      {
+        normalizedStatus: "UNDELIVERED",
+        source: "SHIPROCKET_API",
+        statusTimestamp: "2026-07-22T12:00:00Z",
+      },
+    ),
+    true,
   );
 });

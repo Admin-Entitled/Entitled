@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api";
 import OrderMapping from "./OrderMapping";
 import SkuImageManager from "./SkuImageManager";
@@ -404,21 +404,24 @@ export default function App() {
   });
   const [actualSalesSidebarState, setActualSalesSidebarState] = useState({
     diagnostics: {
-      activeModule: "Actual Sales Intelligence",
-      loadedOrders: 0,
-      matchedOrders: 0,
-      deliveredOrders: 0,
-      rtoOrders: 0,
-      pendingOrders: 0,
-      returnOrders: 0,
-      unmatchedShiprocketOrders: 0,
-      shiprocketStatus: "Unknown",
+      activeModule: "Order Mapping",
+      loadedOrders: "Not synced",
+      ordersWithAwb: "Unknown",
+      matchedOrders: "Unknown",
+      unmatchedShiprocketOrders: "Unknown",
+      historicalOrders: "Unknown",
+      deliveredOrders: "Unknown",
+      rtoOrders: "Unknown",
+      activeOrders: "Unknown",
+      pendingOrders: "Unknown",
+      shiprocketStatus: "Not synced",
       lastRefreshTime: null,
       lastActionStatus: "idle",
       lastError: "None",
     },
     logs: [],
   });
+  const [orderMappingLogTab, setOrderMappingLogTab] = useState("activity");
 
   // 2. Derived variables
   const products = snapshot?.products || [];
@@ -1137,14 +1140,14 @@ function clearCurrentLogs() {
     }));
   }
 
-  function pushActualSalesLog(entry) {
+  const replaceActualSalesLogs = useCallback((entries) => {
     setActualSalesSidebarState((prev) => ({
       ...prev,
-      logs: [entry, ...prev.logs].slice(0, 40),
+      logs: Array.isArray(entries) ? entries.slice(0, 40) : [],
     }));
-  }
+  }, []);
 
-  function updateActualSalesDiagnostics(patch) {
+  const updateActualSalesDiagnostics = useCallback((patch) => {
     setActualSalesSidebarState((prev) => ({
       ...prev,
       diagnostics: {
@@ -1152,47 +1155,61 @@ function clearCurrentLogs() {
         ...patch,
       },
     }));
-  }
+  }, []);
 
-const currentLogs =
-  activeModule === "sku-image-manager"
-  ? skuSidebarState.logs
-  : activeModule === "order-mapping"
-  ? actualSalesSidebarState.logs
-  : [...actionLogs, ...networkLogs]
-      .sort((left, right) => {
-        const leftTime = new Date(left.timestamp || left.startedAt || 0).getTime();
-        const rightTime = new Date(right.timestamp || right.startedAt || 0).getTime();
-        return rightTime - leftTime;
-      })
-      .map((log) =>
-        log.actionType
-          ? {
-              timestamp: log.timestamp,
-              status: log.status,
-              module: "action",
-              actionType: log.actionType,
-              message: log.actionLabel,
-              endpoint: log.collectionTitle || "",
-              error: log.errorMessage || "",
-            }
-          : {
-              timestamp: log.startedAt,
-              status: log.status,
-              module: log.provider || "network",
-              actionType: log.operationName,
-              message: log.collectionTitle || log.endpoint || "",
-              endpoint: log.endpoint || "",
-              error: log.errorMessage || "",
-            },
-      )
-      .slice(0, 40);
+  const orderMappingSidebarBridge = useMemo(
+    () => ({
+      updateDiagnostics: updateActualSalesDiagnostics,
+      replaceLogs: replaceActualSalesLogs,
+    }),
+    [replaceActualSalesLogs, updateActualSalesDiagnostics],
+  );
+
+  const currentLogs =
+    activeModule === "sku-image-manager"
+      ? skuSidebarState.logs
+      : activeModule === "order-mapping"
+        ? actualSalesSidebarState.logs
+        : [...actionLogs, ...networkLogs]
+            .sort((left, right) => {
+              const leftTime = new Date(left.timestamp || left.startedAt || 0).getTime();
+              const rightTime = new Date(right.timestamp || right.startedAt || 0).getTime();
+              return rightTime - leftTime;
+            })
+            .map((log) =>
+              log.actionType
+                ? {
+                    timestamp: log.timestamp,
+                    status: log.status,
+                    module: "activity",
+                    actionType: log.actionType,
+                    message: log.actionLabel,
+                    endpoint: log.collectionTitle || "",
+                    error: log.errorMessage || "",
+                  }
+                : {
+                    timestamp: log.startedAt,
+                    status: log.status,
+                    module: "network",
+                    actionType: log.operationName,
+                    message: log.collectionTitle || log.endpoint || "",
+                    endpoint: log.endpoint || "",
+                    error: log.errorMessage || "",
+                  },
+            )
+            .slice(0, 40);
+  const visibleLogs =
+    activeModule === "order-mapping"
+      ? currentLogs.filter((log) =>
+          orderMappingLogTab === "activity" ? log.module === "activity" : log.module !== "activity",
+        )
+      : currentLogs;
 
 
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
+      <aside className={`sidebar ${activeModule === "order-mapping" ? "sidebar--order-mapping" : ""}`}>
         <div>
           <p className="eyebrow">Entitled Club</p>
           <h1>Collection Placement Manager</h1>
@@ -1295,45 +1312,53 @@ const currentLogs =
                   <span className="diagnostic-label">Module:</span>
                   <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.activeModule}</span>
                 </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Orders:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.loadedOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Matched:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.matchedOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Delivered:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.deliveredOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">RTO:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.rtoOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Pending:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.pendingOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Returns:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.returnOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Unmatched SR:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.unmatchedShiprocketOrders}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Shiprocket:</span>
-                  <span className="diagnostic-value text-truncate" title={actualSalesSidebarState.diagnostics.shiprocketStatus}>
-                    {actualSalesSidebarState.diagnostics.shiprocketStatus}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Status:</span>
-                  <span className={`diagnostic-value status-${actualSalesSidebarState.diagnostics.lastActionStatus}`}>
-                    {actualSalesSidebarState.diagnostics.lastActionStatus.toUpperCase()}
-                    {actualSalesSidebarState.diagnostics.lastRefreshTime ? ` (${actualSalesSidebarState.diagnostics.lastRefreshTime})` : ""}
+<div className="diagnostic-item">
+<span className="diagnostic-label">Total orders:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.loadedOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Orders with AWB:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.ordersWithAwb}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Shiprocket matched:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.matchedOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Delivered:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.deliveredOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">RTO delivered:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.rtoOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Pending tracking:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.pendingOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Historical courier:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.historicalOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Shiprocket unmatched:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.unmatchedShiprocketOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Active shipments:</span>
+<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.activeOrders}</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Current state:</span>
+<span className="diagnostic-value text-truncate" title={actualSalesSidebarState.diagnostics.shiprocketStatus}>
+{actualSalesSidebarState.diagnostics.shiprocketStatus}
+</span>
+</div>
+<div className="diagnostic-item">
+<span className="diagnostic-label">Last sync:</span>
+<span className={`diagnostic-value status-${actualSalesSidebarState.diagnostics.lastActionStatus}`}>
+{actualSalesSidebarState.diagnostics.lastActionStatus.toUpperCase()}
+{actualSalesSidebarState.diagnostics.lastRefreshTime ? ` (${actualSalesSidebarState.diagnostics.lastRefreshTime})` : ""}
                   </span>
                 </div>
                 <div className="diagnostic-item">
@@ -1375,21 +1400,33 @@ const currentLogs =
               </>
             )}
           </div>
-          <div className="diagnostic-logs-container">
-            <div className="diagnostic-logs-header">
-              <span className="diagnostic-label">Network & Action Logs:</span>
-              <button type="button" className="diagnostic-clear-button" onClick={clearCurrentLogs}>
-                Clear Logs
-              </button>
-            </div>
-<div className="diagnostic-logs"> 
+<div className="diagnostic-logs-container">
+<div className="diagnostic-logs-header">
+<span className="diagnostic-label">{activeModule === "order-mapping" ? "System diagnostics logs:" : "Network & Action Logs:"}</span>
+<div className="diagnostic-logs-actions">
+{activeModule === "order-mapping" ? (
+<div className="diagnostic-tab-group" role="tablist" aria-label="Order Mapping logs">
+<button type="button" className={`diagnostic-tab ${orderMappingLogTab === "activity" ? "active" : ""}`} onClick={() => setOrderMappingLogTab("activity")}>
+Activity
+</button>
+<button type="button" className={`diagnostic-tab ${orderMappingLogTab === "network" ? "active" : ""}`} onClick={() => setOrderMappingLogTab("network")}>
+Network
+</button>
+</div>
+) : null}
+<button type="button" className="diagnostic-clear-button" onClick={clearCurrentLogs}>
+Clear Logs
+</button>
+</div>
+</div>
+<div className="diagnostic-logs">
 {activeModule === "sorter" && logsError ? (
 <div className="error-text">{logsError}</div>
 ) : null}
-{currentLogs.length === 0 ? (
-<div className="diagnostic-log-empty">No activity logged.</div>
+{visibleLogs.length === 0 ? (
+<div className="diagnostic-log-empty">{activeModule === "order-mapping" ? "No diagnostics logged." : "No activity logged."}</div>
 ) : (
-                currentLogs.map((log, index) => (
+ visibleLogs.map((log, index) => (
                   typeof log === "string" ? (
                     <div key={index} className="diagnostic-log-line">{log}</div>
                   ) : (
@@ -2033,12 +2070,7 @@ Failed: {reorderAllSummary.results
         </section>
       </main>
       ) : activeModule === "order-mapping" ? (
-      <OrderMapping
-        sidebarBridge={{
-          updateDiagnostics: updateActualSalesDiagnostics,
-          pushLog: pushActualSalesLog,
-        }}
-      />
+      <OrderMapping sidebarBridge={orderMappingSidebarBridge} />
       ) : (
       <main className="dashboard">
         <SkuImageManager

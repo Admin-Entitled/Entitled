@@ -15,6 +15,8 @@
   var PROMPT_COMPLETED_KEY = 'entitled:size-preference:prompt-completed:v1';
   var LEGACY_SESSION_KEY = 'entitled:size-preference:session:v2';
   var LEGACY_STORAGE_KEY = 'entitled:size-preference:v1';
+  // Temporarily paused. Set to true to restore automatic size-preference prompts.
+  var SIZE_PREFERENCE_PROMPT_ENABLED = false;
   var MAX_LABEL_LENGTH = 64;
   var PDP_MAX_ATTEMPTS = 10;
   var PDP_RETRY_DELAY = 100;
@@ -207,6 +209,7 @@
 
   function resolveProductCardAction(product, record) {
     var variants = product && product.variants || [];
+    var sellable = variants.filter(function (variant) { return !!variant.available; });
     var optionIndex = findSizeOptionIndex(product && product.options_with_values || product && product.options || []);
     var values = optionIndex < 0 ? [] : sizeValues(product, optionIndex);
     var meaningfulSize = optionIndex >= 0 && !isOneSize(values);
@@ -225,11 +228,14 @@
       return unique.length !== 1;
     });
 
+    if (!sellable.length) {
+      return { state: 'sold_out', variantId: null };
+    }
+
     if (!meaningfulSize) {
-      var sellable = variants.filter(function (variant) { return !!variant.available; });
       return !hasUnresolvedOption && sellable.length === 1 ?
         { state: 'add', variantId: sellable[0].id } :
-        { state: sellable.length ? 'choose_options' : 'sold_out', variantId: null };
+        { state: 'choose_options', variantId: null };
     }
 
     var selectedValues = selectedSizeValues(record);
@@ -241,7 +247,7 @@
     var classification = classifications.some(function (item) { return item.state === 'available'; }) ? { state: 'available' } :
       classifications.some(function (item) { return item.state === 'sold_out'; }) ? { state: 'sold_out' } : { state: 'unavailable' };
     if (classification.state === 'sold_out') {
-      return { state: 'sold_out', variantId: null };
+      return { state: 'size_sold_out', variantId: null };
     }
     if (classification.state !== 'available') {
       return { state: 'unavailable', variantId: null };
@@ -364,6 +370,11 @@
     };
   }
 
+  function isFullySoldOut(product) {
+    var variants = product && product.variants || [];
+    return !!variants.length && !variants.some(function (variant) { return !!variant.available; });
+  }
+
   function formatStatus(template, value) {
     return String(template || '').replace(/\{\{\s*size\s*\}\}/g, value);
   }
@@ -429,13 +440,16 @@
       choose: rootElement.getAttribute('data-label-choose') || 'Choose size',
       selected: rootElement.getAttribute('data-label-selected') || 'Size: {{ size }}',
       available: rootElement.getAttribute('data-status-available') || 'Your size {{ size }} is available',
-      soldOut: rootElement.getAttribute('data-status-sold-out') || 'Sold out in {{ size }}',
+      soldOut: rootElement.getAttribute('data-status-sold-out') || 'Size {{ size }} is sold out',
+      currentlySoldOut: rootElement.getAttribute('data-status-currently-sold-out') || 'Currently sold out',
+      selectSize: rootElement.getAttribute('data-status-select-size') || 'Select a size to continue',
       unavailable: rootElement.getAttribute('data-status-unavailable') || '{{ size }} unavailable',
       oneSize: rootElement.getAttribute('data-status-one-size') || 'One size',
       notApplicable: rootElement.getAttribute('data-status-not-applicable') || 'Size preference not applicable',
       saved: rootElement.getAttribute('data-status-saved') || 'Preferred size updated to {{ size }}',
       cardAdd: rootElement.getAttribute('data-card-add-label') || 'Add to cart',
       cardSoldOut: rootElement.getAttribute('data-card-sold-out-label') || 'Sold out',
+      cardChooseAnotherSize: rootElement.getAttribute('data-card-choose-another-size-label') || 'Choose another size',
       cardChooseOptions: rootElement.getAttribute('data-card-choose-options-label') || 'Choose options',
       cardViewProduct: rootElement.getAttribute('data-card-view-product-label') || 'View product'
     };
@@ -589,6 +603,9 @@
     }
 
     function maybeOpenPrompt() {
+      if (!SIZE_PREFERENCE_PROMPT_ENABLED) {
+        return;
+      }
       var designMode = !!(window.Shopify && window.Shopify.designMode);
       var generation = productRenderGeneration;
       if (!dialogOpen && !promptTimer && !adapter.isPromptCompleted() && hasProductContext(document) && !designMode && dismissedRenderGeneration !== generation) {
@@ -626,14 +643,26 @@
           return;
         }
         status.className = 'product-size-status';
-        updateCardAction(card, record);
+        var product = productFromElement(card);
+        var fullySoldOut = isFullySoldOut(product);
+        var action = updateCardAction(card, record);
+        card.classList.toggle('product_item--sold-out', fullySoldOut);
+        card.setAttribute('data-product-card-state', fullySoldOut ? 'sold_out' : 'available');
+        if (fullySoldOut) {
+          status.hidden = false;
+          status.classList.add('product-size-status--sold_out');
+          status.setAttribute('data-size-state', 'sold_out');
+          status.textContent = strings.currentlySoldOut;
+          return;
+        }
         if (!hasValidSessionSizePreference(record)) {
-          status.hidden = true;
-          status.textContent = '';
+          status.hidden = !action || action.state !== 'select_size';
+          status.classList.toggle('product-size-status--select_size', !status.hidden);
+          status.textContent = status.hidden ? '' : strings.selectSize;
           return;
         }
         var selectedValues = selectedSizeValues(record);
-        var results = selectedValues.map(function (value) { return classifyPreferredSize(productFromElement(card), value); });
+        var results = selectedValues.map(function (value) { return classifyPreferredSize(product, value); });
         var result = results.some(function (item) { return item.state === 'available'; }) ? { state: 'available' } :
           results.some(function (item) { return item.state === 'sold_out'; }) ? { state: 'sold_out' } :
           results.some(function (item) { return item.state === 'unavailable'; }) ? { state: 'unavailable' } : results[0];
@@ -646,73 +675,80 @@
         if (result.state === 'available') {
           status.textContent = formatStatus(strings.available, display);
         } else if (result.state === 'sold_out') {
+          card.setAttribute('data-product-card-state', 'size_sold_out');
           status.textContent = formatStatus(strings.soldOut, display);
         } else if (result.state === 'unavailable') {
-          status.textContent = formatStatus(strings.unavailable, display);
+          card.setAttribute('data-product-card-state', 'size_sold_out');
+          status.textContent = formatStatus(strings.soldOut, display);
         } else {
           status.textContent = result.display ? strings.oneSize : strings.notApplicable;
         }
       });
     }
 
-    function createCardButton(label, disabled) {
-      var button = document.createElement('button');
-      button.type = disabled ? 'button' : 'submit';
-      button.className = 'product_card_button' + (disabled ? ' is-disabled' : '');
-      button.disabled = !!disabled;
-      button.textContent = label;
-      return button;
-    }
-
     function updateCardAction(card, record) {
       var host = card.querySelector('[data-size-preference-card-action]');
       if (!host) {
-        return;
+        return null;
       }
       var action = resolveProductCardAction(productFromElement(card), record);
       var productUrl = card.getAttribute('data-product-url') || '#';
-      host.replaceChildren();
+      var form = host.querySelector('[data-product-card-form]');
+      var variantInput = host.querySelector('[data-product-card-variant]');
+      var quantityInput = host.querySelector('[data-product-card-quantity]');
+      var primary = host.querySelector('[data-product-card-primary]');
+      var primaryLink = host.querySelector('[data-product-card-primary-link]');
+      var buyNow = host.querySelector('[data-buy-now-trigger]');
+      var viewProduct = host.querySelector('[data-product-card-view]');
+      var isAdd = action.state === 'add';
+      var isSoldOut = action.state === 'sold_out';
+      var isSizeChoice = action.state === 'select_size' || action.state === 'size_sold_out' || action.state === 'unavailable';
+
       host.setAttribute('data-card-action-state', action.state);
 
-      if (action.state === 'add') {
-        var form = document.createElement('form');
-        var variantInput = document.createElement('input');
-        var quantityInput = document.createElement('input');
-        form.action = cartAddUrl;
-        form.method = 'post';
-        form.className = 'product_card_form';
-        form.setAttribute('data-size-preference-card-form', '');
-        variantInput.type = 'hidden';
-        variantInput.name = 'id';
-        variantInput.value = String(action.variantId);
-        quantityInput.type = 'hidden';
-        quantityInput.name = 'quantity';
-        quantityInput.value = '1';
-        form.appendChild(variantInput);
-        form.appendChild(quantityInput);
-        form.appendChild(createCardButton(strings.cardAdd, false));
-        host.appendChild(form);
-        return;
+      if (!form || !variantInput || !quantityInput || !primary || !primaryLink || !buyNow || !viewProduct) {
+        return action;
       }
 
-      if (action.state === 'sold_out') {
-        host.appendChild(createCardButton(strings.cardSoldOut, true));
-        return;
-      }
+      form.action = cartAddUrl;
+      form.method = 'post';
+      form.toggleAttribute('data-size-preference-card-form', isAdd);
+      variantInput.disabled = !isAdd;
+      variantInput.value = isAdd && action.variantId ? String(action.variantId) : '';
+      quantityInput.disabled = !isAdd;
+      quantityInput.value = quantityInput.value || '1';
 
-      if (action.state === 'select_size') {
-        var selectButton = createCardButton(strings.choose, false);
-        selectButton.type = 'button';
-        selectButton.setAttribute('data-size-preference-card-select', '');
-        host.appendChild(selectButton);
-        return;
+      primary.hidden = action.state === 'choose_options';
+      primary.type = isAdd ? 'submit' : 'button';
+      primary.disabled = isSoldOut;
+      primary.classList.toggle('is-disabled', isSoldOut);
+      if (isSoldOut) {
+        primary.setAttribute('aria-disabled', 'true');
+      } else {
+        primary.removeAttribute('aria-disabled');
       }
+      primary.toggleAttribute('data-size-preference-card-select', isSizeChoice);
+      if (isAdd) {
+        primary.setAttribute('name', 'add');
+      } else {
+        primary.removeAttribute('name');
+      }
+      primary.textContent = isAdd ? strings.cardAdd :
+        isSoldOut ? strings.cardSoldOut :
+        action.state === 'select_size' ? strings.choose : strings.cardChooseAnotherSize;
 
-      var link = document.createElement('a');
-      link.href = productUrl;
-      link.className = 'product_card_button';
-      link.textContent = action.state === 'unavailable' ? strings.cardViewProduct : strings.cardChooseOptions;
-      host.appendChild(link);
+      primaryLink.hidden = action.state !== 'choose_options';
+      primaryLink.href = productUrl;
+      primaryLink.textContent = strings.cardChooseOptions;
+
+      buyNow.hidden = !isAdd;
+      buyNow.disabled = !isAdd;
+      buyNow.setAttribute('aria-disabled', isAdd ? 'false' : 'true');
+
+      viewProduct.hidden = isAdd;
+      viewProduct.href = productUrl;
+      viewProduct.textContent = strings.cardViewProduct;
+      return action;
     }
 
     function selectedProductOptions() {
@@ -949,7 +985,9 @@
       var productRoot = document.querySelector('[data-size-product-page]');
       if (productRoot) { productRoot.removeAttribute('data-size-preference-applied'); }
       refresh(false);
-      scheduleProductPreselection();
+      if (SIZE_PREFERENCE_PROMPT_ENABLED) {
+        scheduleProductPreselection();
+      }
       maybeOpenPrompt();
     });
     document.addEventListener('entitled:size-filter-change', function (event) {
@@ -969,25 +1007,35 @@
       adapter.setFilters(nextValues);
       dispatchChange();
     });
-    document.addEventListener('entitled:size-filter-ready', dispatchChange);
+    if (SIZE_PREFERENCE_PROMPT_ENABLED) {
+      document.addEventListener('entitled:size-filter-ready', dispatchChange);
+    }
     document.addEventListener('entitled:collection-rendered', function () {
       productRenderGeneration += 1;
       refresh(false);
-      maybeOpenPrompt();
+      if (SIZE_PREFERENCE_PROMPT_ENABLED) {
+        scheduleProductPreselection();
+        maybeOpenPrompt();
+      }
     });
-    document.addEventListener('entitled:variant-selectors-ready', scheduleProductPreselection);
+    if (SIZE_PREFERENCE_PROMPT_ENABLED) {
+      document.addEventListener('entitled:variant-selectors-ready', scheduleProductPreselection);
+    }
     document.addEventListener('shopify:section:load', function (event) {
       if (hasProductContext(event.target)) {
         productRenderGeneration += 1;
       }
       refresh(false);
-      scheduleProductPreselection();
-      maybeOpenPrompt();
+      if (SIZE_PREFERENCE_PROMPT_ENABLED) {
+        scheduleProductPreselection();
+        maybeOpenPrompt();
+      }
     });
     refresh(false);
-    scheduleProductPreselection();
-
-    maybeOpenPrompt();
+    if (SIZE_PREFERENCE_PROMPT_ENABLED) {
+      scheduleProductPreselection();
+      maybeOpenPrompt();
+    }
   }
 
   if (typeof document !== 'undefined') {

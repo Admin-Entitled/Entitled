@@ -20,12 +20,16 @@
     "clear": "Bevorzugte Größe löschen",
     "close": "Größenauswahl schließen",
     "status_available": "Ihre Größe {{ size }} ist verfügbar",
-    "status_sold_out": "In {{ size }} ausverkauft",
+    "status_sold_out": "Größe {{ size }} ist ausverkauft",
+    "status_currently_sold_out": "Derzeit ausverkauft",
+    "status_select_size": "Wählen Sie eine Größe aus",
+    "choose_another_size": "Andere Größe wählen",
     "status_unavailable": "{{ size }} nicht verfügbar",
     "status_one_size": "Einheitsgröße",
     "status_not_applicable": "Größenpräferenz nicht anwendbar",
     "status_saved": "Bevorzugte Größe auf {{ size }} aktualisiert",
-    "view_product": "Produkt ansehen"
+    "view_product": "Produkt ansehen",
+    "buy_now": "Jetzt kaufen"
   },
   "general": {
     "meta": {

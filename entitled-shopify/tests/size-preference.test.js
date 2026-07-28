@@ -206,6 +206,10 @@ assert.deepStrictEqual(resolveProductCardAction(product(
 assert.deepStrictEqual(resolveProductCardAction(product(
   [{ name: 'Size', values: ['M', 'L'] }],
   [variant(201, false, ['M']), variant(202, true, ['L'])]
+), preferredM), { state: 'size_sold_out', variantId: null });
+assert.deepStrictEqual(resolveProductCardAction(product(
+  [{ name: 'Size', values: ['M', 'L'] }],
+  [variant(211, false, ['M']), variant(212, false, ['L'])]
 ), preferredM), { state: 'sold_out', variantId: null });
 assert.deepStrictEqual(resolveProductCardAction(product(
   [{ name: 'Size', values: ['L'] }],
@@ -300,12 +304,15 @@ assert.ok(!/size-preference-control--toolbar|data-size-preference-open/.test(col
 ['snippets/product-home-grid-item.liquid', 'snippets/product-related-loop.liquid'].forEach(function (snippet) {
   const source = fs.readFileSync(snippet, 'utf8');
   assert.ok(/product\.has_only_default_variant/.test(source), snippet + ' must not directly add multi-variant products');
-  assert.ok(/products\.product\.choose_options/.test(source), snippet + ' must route multi-variant products to option selection');
+  assert.ok(/render 'product-card-actions'/.test(source), snippet + ' must route actions through the shared server-rendered component');
 });
 ['snippets/product-grid-item.liquid', 'snippets/product-home-grid-item.liquid', 'snippets/product-related-loop.liquid', 'sections/search.liquid'].forEach(function (file) {
   const source = fs.readFileSync(file, 'utf8');
-  assert.ok(/data-size-preference-card-action/.test(source), file + ' must expose a stable card action host');
+  assert.ok(/render 'product-card-actions'/.test(source), file + ' must use the stable shared card action host');
 });
+const productCardActionsSource = fs.readFileSync('snippets/product-card-actions.liquid', 'utf8');
+assert.ok(/products\.product\.choose_options/.test(productCardActionsSource), 'shared cards must preserve the no-JS product-options fallback');
+assert.ok(/data-size-preference-card-action/.test(productCardActionsSource), 'shared cards must expose a stable action host');
 assert.ok(/"id":\{\{ size_variant\.id \| json \}\}/.test(fs.readFileSync('snippets/product-size-data.liquid', 'utf8')), 'compact card metadata must include exact variant IDs');
 
 const sizePreferenceSource = fs.readFileSync('assets/size-preference.js', 'utf8');

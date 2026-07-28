@@ -801,6 +801,7 @@
       }
 
       if (pagination) {
+        pagination.removeAttribute('data-infinite-scroll-disabled');
         pagination.hidden = false;
       }
     }
@@ -838,6 +839,7 @@
         }
 
         if (pagination) {
+          pagination.setAttribute('data-infinite-scroll-disabled', 'true');
           pagination.hidden = true;
         }
 

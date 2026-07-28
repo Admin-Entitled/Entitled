@@ -20,6 +20,13 @@ assert.ok(/querySelector\(NEXT_SELECTOR\)/.test(script), 'next-page URL must com
 assert.ok(/context\.list\.appendChild\(item\)/.test(script), 'next pages must append cards instead of replacing the grid');
 assert.ok(/context\.status\.hidden = false/.test(script) && /is-idle/.test(script), 'the observed sentinel must remain measurable while idle');
 assert.ok(/AbortController/.test(script), 'in-flight requests must be abortable when state resets');
+assert.ok(/DISABLED_ATTR = 'data-infinite-scroll-disabled'/.test(script), 'filtered client-rendered grids need an explicit infinite-scroll disable flag');
+assert.ok(/ENHANCED_ATTR = 'data-infinite-scroll-enhanced'/.test(script), 'working infinite scroll must hide pagination without destroying fallback state');
+assert.ok(!/context\.pagination\.hidden\)/.test(script), 'hidden fallback pagination must not make infinite scroll stop early');
+assert.ok(/requestedUrls/.test(script), 'infinite scroll must guard repeated next-page requests');
+assert.ok(/paginationHtml/.test(script) && /context\.pagination\.innerHTML = page\.paginationHtml/.test(script), 'fallback pagination DOM must be kept in sync with fetched Shopify pages');
+assert.ok(/if \(!state\.nextUrl\) \{[\s\S]*?finish\('All products loaded'\)/.test(script), 'completion must depend on the absence of Shopify next-page URL');
+assert.ok(/infinite-scroll-retry/.test(script) && /loadNext\(\)/.test(script), 'fetch failures must expose a retry control that reuses the same next-page request path');
 assert.ok(/existingKeys\(context\.list\)/.test(script), 'duplicate products must be guarded');
 assert.ok(/entitled:products-appended/.test(script), 'new cards must trigger product-card reinitialization');
 assert.ok(/entitled:collection-rendered/.test(script), 'new cards must trigger existing size and Buy Now lifecycle');
@@ -32,6 +39,8 @@ assert.ok(/event\.defaultPrevented/.test(filters), 'delegated Add to Cart must n
 assert.ok(/data-size-preference-card-form/.test(filters), 'delegated Add to Cart must not compete with size-preference generated forms');
 assert.ok(/ShopifyAPI\.addItemFromForm/.test(filters), 'delegated Add to Cart must reuse the Shopify AJAX cart API');
 assert.ok(/\.infinite-scroll-status/.test(css), 'loading UI must be styled');
+assert.ok(/\[data-infinite-scroll-pagination\]\[data-infinite-scroll-enhanced="true"\]/.test(css), 'pagination must be hidden only after infinite scroll initializes');
+assert.ok(/\.infinite-scroll-retry/.test(css), 'retry control must be styled');
 assert.ok(/\.buy_now_stack \{[\s\S]*?gap: 0 !important;/.test(css), 'Add to Cart and Buy Now must have zero vertical gap');
 assert.ok(/\.template-product \.submit_row\.buy_now_stack \{[\s\S]*?gap: 0 !important;/.test(css), 'PDP Add to Cart and Buy Now must have zero vertical gap');
 

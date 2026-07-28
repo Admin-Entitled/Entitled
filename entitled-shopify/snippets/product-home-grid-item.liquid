@@ -16,7 +16,7 @@
  <div class="grid__item three-twelfths small--one-half medium--one-half">
            
    {% capture home_product_size_variants %}{% render 'product-size-data', size_product: product %}{% endcapture %}
-   <div class="product_item" data-size-product data-product-url="{{ product.url | within: collection | escape }}" data-product-options="{{ product.options_with_values | json | escape }}" data-product-variants="{{ home_product_size_variants | strip | escape }}">
+   <div class="product_item{% if sold_out %} product_item--sold-out{% endif %}" data-size-product data-product-url="{{ product.url | within: collection | escape }}" data-product-options="{{ product.options_with_values | json | escape }}" data-product-variants="{{ home_product_size_variants | strip | escape }}" data-product-card-state="{% if sold_out %}sold_out{% else %}available{% endif %}">
                  <a href="{{ product.url | within: collection }}" class="product_card_media" aria-label="{{ product.title | escape }}">
                         <div class="product_image">
                           <span class="product_overlay"></span>
@@ -52,23 +52,9 @@
                               {% endif %}
                             </h4>
                             <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
-                            <p id="HomeProductSizeStatus-{{ product.id }}" class="product-size-status" data-size-preference-status hidden></p>
+                            <p id="HomeProductSizeStatus-{{ product.id }}" class="product-size-status{% if sold_out %} product-size-status--sold_out{% endif %}" data-size-preference-status{% if product.has_only_default_variant and sold_out == false %} hidden{% endif %}>{% if sold_out %}{{ 'size_preference.status_currently_sold_out' | t }}{% elsif product.has_only_default_variant == false %}{{ 'size_preference.status_select_size' | t }}{% endif %}</p>
                           </div>
-                          <div data-size-preference-card-action>
-                          {% if sold_out %}
-                            <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
-                              <button type="button" class="product_card_button is-disabled" disabled>{{ 'products.product.sold_out' | t }}</button>
-                            </form>
-                          {% elsif product.has_only_default_variant %}
-                            <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
-                              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                              <input type="hidden" name="quantity" value="1">
-                              <button type="submit" name="add" class="product_card_button">{{ 'products.product.add_to_cart' | t }}</button>
-                            </form>
-                          {% else %}
-                            <a href="{{ product.url | within: collection }}" class="product_card_button">{{ 'products.product.choose_options' | t }}</a>
-                          {% endif %}
-                          </div>
+                          {% render 'product-card-actions', card_product: product, sold_out: sold_out %}
                         </div>
                     
                     </div>

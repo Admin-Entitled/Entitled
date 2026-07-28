@@ -1,0 +1,177 @@
+[    4400ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:21606
+[    4468ms] [LOG] [15:35:11] [NETWORK] Fetching collections: GET /api/collections @ http://localhost:5174/src/App.jsx:380
+[    4656ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5174/favicon.ico:0
+[    4971ms] [LOG] [15:35:12] [SUCCESS] Collections fetched: 8 @ http://localhost:5174/src/App.jsx:380
+[    4993ms] [LOG] [15:35:12] [NETWORK] Fetching products: GET /api/collection-products @ http://localhost:5174/src/App.jsx:380
+[    4995ms] [LOG] Payload: {collectionId: gid://shopify/Collection/458724835569} @ http://localhost:5174/src/App.jsx:382
+[    9652ms] [LOG] [15:35:16] [SUCCESS] Fetched 33 products for collection "Polo T-shirt" @ http://localhost:5174/src/App.jsx:380
+[  930101ms] [LOG] [15:50:37] [NETWORK] Fetching collections: GET /api/collections @ http://localhost:5174/src/App.jsx?t=1784802036721:382
+[  930663ms] [LOG] [15:50:37] [SUCCESS] Collections fetched: 8 @ http://localhost:5174/src/App.jsx?t=1784802036721:382
+[  930674ms] [LOG] [15:50:37] [NETWORK] Fetching products: GET /api/collection-products @ http://localhost:5174/src/App.jsx?t=1784802036721:382
+[  930675ms] [LOG] Payload: {collectionId: gid://shopify/Collection/458724835569} @ http://localhost:5174/src/App.jsx?t=1784802036721:384
+[  934944ms] [LOG] [15:50:42] [SUCCESS] Fetched 33 products for collection "Polo T-shirt" @ http://localhost:5174/src/App.jsx?t=1784802036721:382
+[  943043ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802049964:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[  943045ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802049964:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[  943047ms] [ERROR] The above error occurred in the <App> component:
+
+    at App (http://localhost:5174/src/App.jsx?t=1784802049964:279:43)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14077
+[  943049ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802049964:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19804:22)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+    at renderRootSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19167:15)
+    at recoverFromConcurrentError (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18784:28)
+    at performSyncWorkOnRoot (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18930:28)
+[  953261ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[  953262ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[  953262ms] [ERROR] The above error occurred in the <App> component:
+
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:279:43)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14077
+[  953263ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19804:22)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+    at renderRootSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19167:15)
+    at recoverFromConcurrentError (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18784:28)
+    at performSyncWorkOnRoot (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18930:28)
+[  968782ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5174/src/OrderMapping.jsx?t=1784802075991:0
+[  968783ms] [ERROR] [vite] Failed to reload /src/OrderMapping.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5174/@vite/client:881
+[ 1136791ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[ 1136793ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[ 1136792ms] [ERROR] The above error occurred in the <App> component:
+
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:279:43)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14077
+[ 1136795ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19804:22)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+    at renderRootSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19167:15)
+    at recoverFromConcurrentError (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18784:28)
+    at performSyncWorkOnRoot (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18930:28)
+[ 1144183ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5174/src/orderMapping.css?t=1784802251394:0
+[ 1144184ms] [ERROR] [vite] Failed to reload /src/orderMapping.css. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5174/@vite/client:881
+[ 1222331ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[ 1222331ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at HTMLUnknownElement.callCallback2 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3678:22)
+    at Object.invokeGuardedCallbackDev (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3703:24)
+    at invokeGuardedCallback (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:3737:39)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19816:15)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+[ 1222330ms] [ERROR] The above error occurred in the <App> component:
+
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:279:43)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries. @ http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14077
+[ 1222332ms] ReferenceError: useCallback is not defined
+    at App (http://localhost:5174/src/App.jsx?t=1784802059982:984:34)
+    at renderWithHooks (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:11594:26)
+    at mountIndeterminateComponent (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:14972:21)
+    at beginWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:15960:22)
+    at beginWork$1 (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19804:22)
+    at performUnitOfWork (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19249:20)
+    at workLoopSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19188:13)
+    at renderRootSync (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:19167:15)
+    at recoverFromConcurrentError (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18784:28)
+    at performSyncWorkOnRoot (http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:18930:28)
+[ 1387175ms] [LOG] [15:58:14] [NETWORK] Fetching collections: GET /api/collections @ http://localhost:5174/src/App.jsx?t=1784802494072:382
+[ 1387998ms] [LOG] [15:58:15] [SUCCESS] Collections fetched: 8 @ http://localhost:5174/src/App.jsx?t=1784802494072:382
+[ 1388011ms] [LOG] [15:58:15] [NETWORK] Fetching products: GET /api/collection-products @ http://localhost:5174/src/App.jsx?t=1784802494072:382
+[ 1388011ms] [LOG] Payload: {collectionId: gid://shopify/Collection/458724835569} @ http://localhost:5174/src/App.jsx?t=1784802494072:384
+[ 1391691ms] [LOG] [15:58:18] [SUCCESS] Fetched 33 products for collection "Polo T-shirt" @ http://localhost:5174/src/App.jsx?t=1784802494072:382

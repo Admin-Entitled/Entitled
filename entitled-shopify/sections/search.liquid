@@ -114,12 +114,13 @@
             <div class="grid__item three-twelfths small--one-half medium--one-half"> 
 
               <div
-                class="product_item"
+                class="product_item{% if sold_out %} product_item--sold-out{% endif %}"
                 data-product-id="{{ item.id }}"
                 data-size-product
                 data-product-url="{{ item.url | within: collection | escape }}"
                 data-product-options="{{ item.options_with_values | json | escape }}"
                 data-product-variants="{{ search_product_size_variants | strip_newlines | escape }}"
+                data-product-card-state="{% if sold_out %}sold_out{% else %}available{% endif %}"
               >
                 <a href="{{ item.url | within:collection }}" class="product_card_media" aria-label="{{ item.title | escape }}">
                   <div class="product_image">
@@ -158,23 +159,9 @@
                       {% endif %}
                     </h4>
                     <span class="shopify-product-reviews-badge" data-id="{{ item.id }}"></span>
-                    <p id="SearchProductSizeStatus-{{ item.id }}" class="product-size-status" data-size-preference-status hidden></p>
+                    <p id="SearchProductSizeStatus-{{ item.id }}" class="product-size-status{% if sold_out %} product-size-status--sold_out{% endif %}" data-size-preference-status{% if item.has_only_default_variant and sold_out == false %} hidden{% endif %}>{% if sold_out %}{{ 'size_preference.status_currently_sold_out' | t }}{% elsif item.has_only_default_variant == false %}{{ 'size_preference.status_select_size' | t }}{% endif %}</p>
                   </div>
-                  <div data-size-preference-card-action>
-                  {% if sold_out %}
-                    <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
-                      <button type="button" class="product_card_button is-disabled" disabled>{{ 'products.product.sold_out' | t }}</button>
-                    </form>
-                  {% elsif item.has_only_default_variant %}
-                    <form action="{{ routes.cart_add_url }}" method="post" class="product_card_form" enctype="multipart/form-data">
-                      <input type="hidden" name="id" value="{{ item.selected_or_first_available_variant.id }}">
-                      <input type="hidden" name="quantity" value="1">
-                      <button type="submit" name="add" class="product_card_button">{{ 'products.product.add_to_cart' | t }}</button>
-                    </form>
-                  {% else %}
-                    <a href="{{ item.url | within: collection }}" class="product_card_button">{{ 'products.product.choose_options' | t }}</a>
-                  {% endif %}
-                  </div>
+                  {% render 'product-card-actions', card_product: item, sold_out: sold_out %}
      			 </div>
 
               </div>  

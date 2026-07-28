@@ -20,12 +20,16 @@
     "clear": "Clear preferred size",
     "close": "Close size selection",
     "status_available": "Your size {{ size }} is available",
-    "status_sold_out": "Sold out in {{ size }}",
+    "status_sold_out": "Size {{ size }} is sold out",
+    "status_currently_sold_out": "Currently sold out",
+    "status_select_size": "Select a size to continue",
+    "choose_another_size": "Choose another size",
     "status_unavailable": "{{ size }} unavailable",
     "status_one_size": "One size",
     "status_not_applicable": "Size preference not applicable",
     "status_saved": "Preferred size updated to {{ size }}",
-    "view_product": "View product"
+    "view_product": "View product",
+    "buy_now": "Buy now"
   },
   "general": {
     "meta": {

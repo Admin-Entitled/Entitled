@@ -18,7 +18,7 @@ const STATUS_ALIASES = [
   ["return in transit", "RTO_IN_TRANSIT"],
   ["manifested", "MANIFESTED"],
   ["shipment created", "MANIFESTED"],
-  ["new", "MANIFESTED"],
+  ["new", "PENDING_TRACKING"],
   ["pickup pending", "PICKUP_PENDING"],
   ["pickup scheduled", "PICKUP_PENDING"],
   ["pickup exception", "SHIPMENT_EXCEPTION"],
@@ -39,6 +39,8 @@ const STATUS_ALIASES = [
   ["lost", "LOST"],
   ["damaged", "DAMAGED"],
   ["destroyed", "DAMAGED"],
+  ["historical courier", "HISTORICAL_COURIER"],
+  ["csv required", "HISTORICAL_COURIER"],
   ["self fulfilled", "UNKNOWN"],
 ];
 
@@ -60,6 +62,49 @@ export const ORDER_MAPPING_STATUSES = [
   "DAMAGED",
   "CANCELLED",
   "SHIPMENT_EXCEPTION",
+  "HISTORICAL_COURIER",
+  "UNKNOWN",
+];
+
+const SHIPROCKET_CODE_ALIASES = {
+  1: "PENDING_TRACKING",
+  6: "IN_TRANSIT",
+  7: "PICKUP_PENDING",
+  8: "PICKUP_PENDING",
+  10: "PICKED_UP",
+  11: "PENDING_TRACKING",
+  17: "OUT_FOR_DELIVERY",
+  18: "IN_TRANSIT",
+  19: "PICKUP_PENDING",
+  21: "UNDELIVERED",
+  38: "IN_TRANSIT",
+  41: "DELIVERY_ATTEMPTED",
+  42: "PICKED_UP",
+  43: "RTO_INITIATED",
+  46: "RTO_IN_TRANSIT",
+  76: "IN_TRANSIT",
+  78: "UNDELIVERED",
+};
+
+export const ACTIVE_ORDER_MAPPING_STATUSES = [
+  "MANIFESTED",
+  "PICKUP_PENDING",
+  "PICKED_UP",
+  "IN_TRANSIT",
+  "OUT_FOR_DELIVERY",
+  "RTO_IN_TRANSIT",
+  "RTO_OUT_FOR_DELIVERY",
+];
+
+export const ATTENTION_ORDER_MAPPING_STATUSES = [
+  "PENDING_TRACKING",
+  "DELIVERY_ATTEMPTED",
+  "UNDELIVERED",
+  "RTO_INITIATED",
+  "LOST",
+  "DAMAGED",
+  "SHIPMENT_EXCEPTION",
+  "HISTORICAL_COURIER",
   "UNKNOWN",
 ];
 
@@ -92,6 +137,11 @@ function normalizeStatusKey(value) {
 }
 
 export function normalizeOrderMappingStatus(rawStatus, fallback = "UNKNOWN") {
+  const numeric = Number.parseInt(String(rawStatus || "").trim(), 10);
+  if (Number.isFinite(numeric) && SHIPROCKET_CODE_ALIASES[numeric]) {
+    return SHIPROCKET_CODE_ALIASES[numeric];
+  }
+
   const normalized = normalizeStatusKey(rawStatus);
   if (!normalized) {
     return fallback;
@@ -99,7 +149,14 @@ export function normalizeOrderMappingStatus(rawStatus, fallback = "UNKNOWN") {
 
   for (const [fragment, status] of STATUS_ALIASES) {
     const normalizedFragment = normalizeStatusKey(fragment);
-    if (normalized === normalizedFragment || normalized.includes(normalizedFragment)) {
+    if (normalized === normalizedFragment) {
+      return status;
+    }
+  }
+
+  for (const [fragment, status] of STATUS_ALIASES) {
+    const normalizedFragment = normalizeStatusKey(fragment);
+    if (normalized.includes(normalizedFragment)) {
       return status;
     }
   }
@@ -136,8 +193,18 @@ export function canApplyStatusUpdate(current, incoming, { force = false } = {}) 
     return false;
   }
 
-  if (isTerminalOrderMappingStatus(current.normalized_status) && !isTerminalOrderMappingStatus(incoming.normalizedStatus)) {
-    return false;
+  if (
+    isTerminalOrderMappingStatus(current.normalized_status) &&
+    !isTerminalOrderMappingStatus(incoming.normalizedStatus)
+  ) {
+    const currentAt = current.status_timestamp ? new Date(current.status_timestamp).getTime() : 0;
+    const incomingAt = incoming.statusTimestamp ? new Date(incoming.statusTimestamp).getTime() : 0;
+    const sameAuthoritativeSource =
+      current.status_source === "SHIPROCKET_API" && incoming.source === "SHIPROCKET_API";
+
+    if (!(sameAuthoritativeSource && incomingAt && incomingAt >= currentAt)) {
+      return false;
+    }
   }
 
   const currentAt = current.status_timestamp ? new Date(current.status_timestamp).getTime() : 0;

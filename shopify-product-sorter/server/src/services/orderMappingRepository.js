@@ -2,6 +2,8 @@ import crypto from "node:crypto";
 import { env } from "../config/env.js";
 import { matchOrderMappingShipment } from "./orderMappingMatcher.js";
 import {
+  ACTIVE_ORDER_MAPPING_STATUSES,
+  ATTENTION_ORDER_MAPPING_STATUSES,
   canApplyStatusUpdate,
   displayStatusSource,
   isTerminalOrderMappingStatus,
@@ -32,11 +34,32 @@ function parseTimestamp(value) {
 }
 
 function primaryShipmentOrderBy() {
-  return "s.order_id, s.manual_override_lock DESC, COALESCE(s.status_timestamp, s.updated_at) DESC NULLS LAST, s.updated_at DESC";
+  return "s.order_id, s.manual_override_lock DESC, (s.shiprocket_response_id IS NOT NULL) DESC, COALESCE(s.status_timestamp, s.updated_at) DESC NULLS LAST, s.updated_at DESC";
 }
 
 function buildFilters(filters, values) {
   const clauses = [];
+  if (filters.queue && filters.queue !== "ALL") {
+    if (filters.queue === "ACTIVE") {
+      values.push(ACTIVE_ORDER_MAPPING_STATUSES);
+      clauses.push(
+        `COALESCE(s.normalized_status, 'PENDING_TRACKING') = ANY($${values.length}::text[])`,
+      );
+    } else if (filters.queue === "COMPLETED") {
+      values.push(["DELIVERED_TO_CUSTOMER", "RTO_DELIVERED"]);
+      clauses.push(
+        `COALESCE(s.normalized_status, 'PENDING_TRACKING') = ANY($${values.length}::text[])`,
+      );
+    } else if (filters.queue === "NEEDS_ATTENTION") {
+      values.push(ATTENTION_ORDER_MAPPING_STATUSES);
+      clauses.push(`(
+        COALESCE(s.normalized_status, 'PENDING_TRACKING') = ANY($${values.length}::text[])
+        OR COALESCE(s.status_source, 'SHOPIFY') = 'LEGACY_DATA'
+        OR COALESCE(s.sync_error, '') <> ''
+        OR COALESCE(s.awb, '') = ''
+      )`);
+    }
+  }
   if (filters.search) {
     values.push(`%${filters.search}%`);
     values.push(`%${filters.search}%`);
@@ -60,6 +83,19 @@ function buildFilters(filters, values) {
       clauses.push("COALESCE(s.status_source, 'SHOPIFY') = $" + values.length);
     }
   }
+  if (filters.startDate) {
+    values.push(filters.startDate);
+    clauses.push("o.order_date >= $" + values.length);
+  }
+  if (filters.endDate) {
+    values.push(filters.endDate);
+    clauses.push("o.order_date <= $" + values.length);
+  }
+  return clauses.length ? `WHERE ${clauses.join(" AND ")}` : "";
+}
+
+function buildDateWhere(filters, values) {
+  const clauses = [];
   if (filters.startDate) {
     values.push(filters.startDate);
     clauses.push("o.order_date >= $" + values.length);
@@ -183,20 +219,16 @@ async function findMatchingShipment(client, orderId, shipment) {
 }
 
 export async function getLatestShopifySyncWindow() {
-  const row = (await orderMappingQuery(`SELECT MAX(COALESCE(shopify_updated_at, order_date)) AS last_seen FROM ${ordersTable}`)).rows[0];
   const end = new Date();
-  const fallbackStart = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30);
-  const lastSeen = row?.last_seen ? new Date(row.last_seen) : fallbackStart;
-  const start = new Date(lastSeen.getTime() - 1000 * 60 * 60 * 24 * 2);
   return {
-    start: start.toISOString().slice(0, 10),
+    start: "2000-01-01",
     end: end.toISOString().slice(0, 10),
   };
 }
 
 export async function listOrderMappings(filters = {}) {
   const page = Math.max(1, Number(filters.page) || 1);
-  const pageSize = Math.min(100, Math.max(1, Number(filters.pageSize) || 25));
+  const pageSize = Math.min(500, Math.max(1, Number(filters.pageSize) || 25));
   const values = [];
   const where = buildFilters(filters, values);
   const base = `
@@ -232,18 +264,36 @@ export async function listOrderMappings(filters = {}) {
          o.customer_name,
          o.customer_phone,
          o.shopify_fulfillment_status,
+         o.cancellation_status,
          s.id AS primary_shipment_id,
          s.awb,
          s.courier,
-         COALESCE(s.normalized_status, 'PENDING_TRACKING') AS normalized_status,
-         s.raw_status,
-         COALESCE(s.status_source, 'SHOPIFY') AS status_source,
+         s.shiprocket_response_id,
+         s.shiprocket_order_reference,
+         s.shiprocket_channel_reference,
+         COALESCE(
+           NULLIF(s.latest_provider_payload->>'order_total', ''),
+           NULLIF(s.latest_provider_payload->>'total', ''),
+           NULLIF(o.latest_fulfillment->>'order_total', '')
+         ) AS order_amount,
+         CASE
+           WHEN o.cancellation_status IS NOT NULL THEN 'CANCELLED'
+           ELSE COALESCE(s.normalized_status, 'PENDING_TRACKING')
+         END AS normalized_status,
+         CASE WHEN o.cancellation_status IS NOT NULL THEN 'Cancelled' ELSE s.raw_status END AS raw_status,
+         CASE
+           WHEN o.cancellation_status IS NOT NULL THEN 'SHOPIFY'
+           ELSE COALESCE(s.status_source, 'SHOPIFY')
+         END AS status_source,
          s.status_timestamp,
          s.last_shiprocket_sync_at,
          COALESCE(s.manual_override_lock, false) AS manual_override_lock,
          COALESCE(s.manual_override, false) AS manual_override,
-         COALESCE(s.terminal_status, false) AS terminal_status,
-         s.sync_error,
+         CASE
+           WHEN o.cancellation_status IS NOT NULL THEN true
+           ELSE COALESCE(s.terminal_status, false)
+         END AS terminal_status,
+         CASE WHEN o.cancellation_status IS NOT NULL THEN NULL ELSE s.sync_error END AS sync_error,
          o.updated_at
        FROM ${ordersTable} o
        LEFT JOIN primary_shipments s ON s.order_id = o.id
@@ -266,31 +316,120 @@ export async function listOrderMappings(filters = {}) {
     )
   ).rows;
 
-  const sourceSummary = (
-    await orderMappingQuery(
-      `${base}
-       SELECT
-         CASE WHEN COALESCE(s.terminal_status, false) THEN 'DATABASE_CACHE' ELSE COALESCE(s.status_source, 'SHOPIFY') END AS source,
-         COUNT(*)::int AS count
-       FROM ${ordersTable} o
-       LEFT JOIN primary_shipments s ON s.order_id = o.id
-       ${where}
-       GROUP BY 1`,
-      values,
-    )
-  ).rows;
+const sourceSummary = (
+await orderMappingQuery(
+`${base}
+SELECT
+CASE WHEN COALESCE(s.terminal_status, false) THEN 'DATABASE_CACHE' ELSE COALESCE(s.status_source, 'SHOPIFY') END AS source,
+COUNT(*)::int AS count
+FROM ${ordersTable} o
+LEFT JOIN primary_shipments s ON s.order_id = o.id
+${where}
+GROUP BY 1`,
+values,
+)
+).rows;
 
-  return {
-    orders: rows.map((row) => ({
-      ...row,
-      display_source: displayStatusSource(row),
-    })),
-    total,
-    page,
-    pageSize,
-    summary: Object.fromEntries(summary.map((row) => [row.status, row.count])),
-    sourceSummary: Object.fromEntries(sourceSummary.map((row) => [row.source, row.count])),
-  };
+const globalSummary = (
+await orderMappingQuery(
+`WITH primary_shipments AS (
+SELECT DISTINCT ON (s.order_id) s.*
+FROM ${shipmentsTable} s
+ORDER BY ${primaryShipmentOrderBy()}
+)
+SELECT COALESCE(s.normalized_status, 'PENDING_TRACKING') AS status, COUNT(*)::int AS count
+FROM ${ordersTable} o
+LEFT JOIN primary_shipments s ON s.order_id = o.id
+GROUP BY 1`,
+[],
+)
+).rows;
+
+const globalSourceSummary = (
+await orderMappingQuery(
+`WITH primary_shipments AS (
+SELECT DISTINCT ON (s.order_id) s.*
+FROM ${shipmentsTable} s
+ORDER BY ${primaryShipmentOrderBy()}
+)
+SELECT
+CASE WHEN COALESCE(s.terminal_status, false) THEN 'DATABASE_CACHE' ELSE COALESCE(s.status_source, 'SHOPIFY') END AS source,
+COUNT(*)::int AS count
+FROM ${ordersTable} o
+LEFT JOIN primary_shipments s ON s.order_id = o.id
+GROUP BY 1`,
+[],
+)
+).rows;
+
+const globalAwbSummary = (
+await orderMappingQuery(
+`WITH primary_shipments AS (
+SELECT DISTINCT ON (s.order_id) s.*
+FROM ${shipmentsTable} s
+ORDER BY ${primaryShipmentOrderBy()}
+)
+SELECT
+COUNT(*) FILTER (WHERE COALESCE(s.awb, '') <> '')::int AS with_awb,
+COUNT(*) FILTER (WHERE COALESCE(s.awb, '') = '')::int AS missing_awb,
+COUNT(*)::int AS total
+FROM ${ordersTable} o
+LEFT JOIN primary_shipments s ON s.order_id = o.id`,
+[],
+)
+).rows[0];
+
+const deliveredAmountValues = [];
+const deliveredAmountWhere = buildDateWhere(filters, deliveredAmountValues);
+const deliveredAmountRow = (
+await orderMappingQuery(
+`${base}
+SELECT COALESCE(
+  SUM(
+    CASE
+      WHEN COALESCE(s.normalized_status, 'PENDING_TRACKING') = 'DELIVERED_TO_CUSTOMER'
+      THEN COALESCE(
+        NULLIF(
+          COALESCE(
+            s.latest_provider_payload->>'order_total',
+            s.latest_provider_payload->>'total',
+            o.latest_fulfillment->>'order_total'
+          ),
+          ''
+        )::numeric,
+        0
+      )
+      ELSE 0
+    END
+  ),
+  0
+)::text AS delivered_amount_total
+FROM ${ordersTable} o
+LEFT JOIN primary_shipments s ON s.order_id = o.id
+${deliveredAmountWhere}`,
+deliveredAmountValues,
+)
+).rows[0];
+
+return {
+orders: rows.map((row) => ({
+...row,
+display_source: displayStatusSource(row),
+})),
+total,
+page,
+pageSize,
+summary: Object.fromEntries(summary.map((row) => [row.status, row.count])),
+sourceSummary: Object.fromEntries(sourceSummary.map((row) => [row.source, row.count])),
+globalSummary: Object.fromEntries(globalSummary.map((row) => [row.status, row.count])),
+globalSourceSummary: Object.fromEntries(globalSourceSummary.map((row) => [row.source, row.count])),
+globalAwbSummary: {
+withAwb: Number(globalAwbSummary.with_awb || 0),
+missingAwb: Number(globalAwbSummary.missing_awb || 0),
+total: Number(globalAwbSummary.total || 0),
+},
+deliveredAmountTotal: deliveredAmountRow.delivered_amount_total || "0",
+};
 }
 
 export async function getOrderMappingDetails(orderId) {
@@ -423,6 +562,16 @@ export async function createNetworkLog({
   return result.rows[0];
 }
 
+export async function setShipmentSyncError(shipmentId, message) {
+  await orderMappingQuery(
+    `UPDATE ${shipmentsTable}
+     SET sync_error = $2,
+         updated_at = NOW()
+     WHERE id = $1`,
+    [shipmentId, message || null],
+  );
+}
+
 export async function listNetworkLogs(limit = 50) {
   const rows = (
     await orderMappingQuery(
@@ -531,7 +680,10 @@ export async function upsertShopifyOrders(orders) {
                    shopify_tracking_number = $3,
                    awb = $4,
                    courier = $5,
-                   latest_provider_payload = $7,
+                   latest_provider_payload = CASE
+                     WHEN $7::jsonb = '{}'::jsonb THEN latest_provider_payload
+                     ELSE COALESCE(latest_provider_payload, '{}'::jsonb) || $7::jsonb
+                   END,
                    status_source = CASE WHEN status_source = 'SHOPIFY' THEN 'SHOPIFY' ELSE status_source END,
                    status_timestamp = COALESCE(status_timestamp, $6),
                    updated_at = NOW()
@@ -562,14 +714,14 @@ export async function upsertShopifyOrders(orders) {
 
 export async function listEligibleShipmentsForRefresh({ shipmentId = null, force = false } = {}) {
   const values = [];
-  const clauses = ["(COALESCE(awb, '') <> '' OR COALESCE(shiprocket_response_id, '') <> '')"];
+  const clauses = ["o.cancellation_status IS NULL"];
   if (!force) {
-    clauses.push("terminal_status = false");
-    clauses.push("manual_override_lock = false");
+    clauses.push("s.terminal_status = false");
+    clauses.push("s.manual_override_lock = false");
   }
   if (shipmentId) {
     values.push(shipmentId);
-    clauses.push(`id = $${values.length}`);
+    clauses.push(`s.id = $${values.length}`);
   }
 
   const rows = (
@@ -578,7 +730,11 @@ export async function listEligibleShipmentsForRefresh({ shipmentId = null, force
        FROM ${shipmentsTable} s
        JOIN ${ordersTable} o ON o.id = s.order_id
        WHERE ${clauses.join(" AND ")}
-       ORDER BY o.order_date DESC`,
+       ORDER BY
+         o.order_date DESC,
+         (COALESCE(s.awb, '') <> '') DESC,
+         (COALESCE(s.shiprocket_response_id, '') <> '') DESC,
+         s.updated_at DESC`,
       values,
     )
   ).rows;
@@ -589,6 +745,7 @@ export async function listEligibleShipmentsForRefresh({ shipmentId = null, force
 export async function applyShipmentUpdate(
   shipmentId,
   {
+    awb,
     normalizedStatus,
     rawStatus,
     source,
@@ -599,6 +756,7 @@ export async function applyShipmentUpdate(
     shiprocketOrderReference,
     shiprocketChannelReference,
     latestProviderPayload,
+    trackingEvents = [],
     remarks,
     manualOverride = false,
     manualOverrideLock = false,
@@ -621,11 +779,61 @@ export async function applyShipmentUpdate(
     };
 
     if (!canApplyStatusUpdate(current, incoming, { force })) {
+      if (source === "SHIPROCKET_API") {
+        await client.query("BEGIN");
+        try {
+          if (shiprocketResponseId) {
+            await client.query(
+              `UPDATE ${shipmentsTable}
+               SET shiprocket_response_id = NULL,
+                   shiprocket_order_reference = NULL,
+                   shiprocket_channel_reference = NULL,
+                   updated_at = NOW()
+               WHERE id <> $1
+                 AND shiprocket_response_id = $2`,
+              [shipmentId, shiprocketResponseId],
+            );
+          }
+          await client.query(
+            `UPDATE ${shipmentsTable}
+             SET shiprocket_response_id = COALESCE($2, shiprocket_response_id),
+                 shiprocket_order_reference = COALESCE($3, shiprocket_order_reference),
+                 shiprocket_channel_reference = COALESCE($4, shiprocket_channel_reference),
+                 last_shiprocket_sync_at = NOW(),
+                 sync_error = NULL,
+                 updated_at = NOW()
+             WHERE id = $1`,
+            [
+              shipmentId,
+              shiprocketResponseId || null,
+              shiprocketOrderReference || null,
+              shiprocketChannelReference || null,
+            ],
+          );
+          await client.query("COMMIT");
+        } catch (error) {
+          await client.query("ROLLBACK");
+          throw error;
+        }
+      }
       return { applied: false, reason: current.manual_override_lock ? "manual_lock" : "precedence" };
     }
 
     await client.query("BEGIN");
     try {
+      if (source === "SHIPROCKET_API" && shiprocketResponseId) {
+        await client.query(
+          `UPDATE ${shipmentsTable}
+           SET shiprocket_response_id = NULL,
+               shiprocket_order_reference = NULL,
+               shiprocket_channel_reference = NULL,
+               updated_at = NOW()
+           WHERE id <> $1
+             AND shiprocket_response_id = $2`,
+          [shipmentId, shiprocketResponseId],
+        );
+      }
+
       await client.query(
         `UPDATE ${shipmentsTable}
          SET normalized_status = $2,
@@ -633,6 +841,7 @@ export async function applyShipmentUpdate(
              status_source = $4,
              status_timestamp = $5,
              courier = COALESCE($6, courier),
+             awb = COALESCE(NULLIF($16, ''), awb),
              delivered_at = COALESCE($7, delivered_at),
              shiprocket_response_id = COALESCE($8, shiprocket_response_id),
              shiprocket_order_reference = COALESCE($9, shiprocket_order_reference),
@@ -642,7 +851,10 @@ export async function applyShipmentUpdate(
              manual_override = $12,
              manual_override_lock = $13,
              manual_override_reason = $14,
-             latest_provider_payload = CASE WHEN $15::jsonb = '{}'::jsonb THEN latest_provider_payload ELSE $15::jsonb END,
+             latest_provider_payload = CASE
+               WHEN $15::jsonb = '{}'::jsonb THEN latest_provider_payload
+               ELSE COALESCE(latest_provider_payload, '{}'::jsonb) || $15::jsonb
+             END,
              sync_error = NULL,
              updated_at = NOW()
          WHERE id = $1`,
@@ -660,8 +872,9 @@ export async function applyShipmentUpdate(
           isTerminalOrderMappingStatus(normalizedStatus),
           manualOverride,
           manualOverrideLock,
-          remarks || null,
-          latestProviderPayload || {},
+            remarks || null,
+            latestProviderPayload || {},
+            awb || null,
         ],
       );
 
@@ -679,13 +892,31 @@ export async function applyShipmentUpdate(
         manualOverrideLock,
       });
 
-      await insertTrackingEvent(client, shipmentId, {
-        normalizedStatus,
-        rawStatus,
-        statusTimestamp: parseTimestamp(statusTimestamp) || nowIso(),
-        source,
-        latestProviderPayload,
-      });
+      const events = trackingEvents.length
+        ? trackingEvents.map((event) => ({
+            normalizedStatus: normalizeOrderMappingStatus(
+              event.normalizedHint || event.rawStatus || normalizedStatus,
+              normalizedStatus,
+            ),
+            rawStatus: event.rawStatus,
+            statusTimestamp: parseTimestamp(event.statusTimestamp) || nowIso(),
+            source,
+            latestProviderPayload,
+            eventLocation: event.eventLocation,
+          }))
+        : [
+            {
+              normalizedStatus,
+              rawStatus,
+              statusTimestamp: parseTimestamp(statusTimestamp) || nowIso(),
+              source,
+              latestProviderPayload,
+            },
+          ];
+
+      for (const event of events) {
+        await insertTrackingEvent(client, shipmentId, event);
+      }
 
       await client.query("COMMIT");
       return { applied: true };

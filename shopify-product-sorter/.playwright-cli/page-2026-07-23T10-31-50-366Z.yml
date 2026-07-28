@@ -1,0 +1,209 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: Entitled Club
+      - heading "Collection Placement Manager" [level=1] [ref=e7]
+    - navigation [ref=e8]:
+      - button "Shopify Collection Manager" [ref=e9] [cursor=pointer]
+      - button "Order Mapping" [ref=e10] [cursor=pointer]
+      - button "SKU Image Manager" [ref=e11] [cursor=pointer]
+      - button "Meta Ads Dashboard" [disabled] [ref=e12]
+      - button "Product Analytics" [disabled] [ref=e13]
+      - button "Inventory" [disabled] [ref=e14]
+      - button "Reports" [disabled] [ref=e15]
+      - button "Settings" [disabled] [ref=e16]
+    - generic [ref=e17]:
+      - heading "System Diagnostics" [level=4] [ref=e18]
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: "Collections:"
+          - generic [ref=e22]: 0 loaded
+        - generic [ref=e23]:
+          - generic [ref=e24]: "Products:"
+          - generic [ref=e25]: 0 loaded
+        - generic [ref=e26]:
+          - generic [ref=e27]: "Selected:"
+          - generic "None" [ref=e28]
+        - generic [ref=e29]:
+          - generic [ref=e30]: "Last API:"
+          - generic "GET /api/collections" [ref=e31]
+        - generic [ref=e32]:
+          - generic [ref=e33]: "Status:"
+          - generic [ref=e34]: LOADING
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - generic [ref=e37]: "Network & Action Logs:"
+          - button "Clear Logs" [ref=e38] [cursor=pointer]
+        - generic [ref=e39]: No activity logged.
+  - main [ref=e41]:
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: Shopify
+          - heading "Manual collection control with daily smart rotation" [level=2] [ref=e46]
+        - generic [ref=e47]:
+          - button "Sync Live Data" [disabled] [ref=e48]
+          - button "Generate Today's Order" [disabled] [ref=e49]
+          - button "Update All Collections" [ref=e50] [cursor=pointer]
+          - button "Apply Order to Shopify" [disabled] [ref=e51]
+          - button "Rollback Last Backup" [disabled] [ref=e52]
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - text: Collection
+          - combobox "Collection" [ref=e55]:
+            - option "Select collection" [selected]
+        - generic [ref=e56]:
+          - text: First Page Limit
+          - spinbutton "First Page Limit" [ref=e57]: "40"
+        - generic [ref=e58]:
+          - text: Search
+          - textbox "Search" [ref=e59]:
+            - /placeholder: Product or handle
+        - generic [ref=e60]:
+          - text: Vendor
+          - combobox "Vendor" [ref=e61]:
+            - option "All vendors" [selected]
+      - generic [ref=e62]: Not synced
+    - generic [ref=e64]:
+      - article [ref=e65]:
+        - generic [ref=e66]: Active products
+        - strong [ref=e67]: "0"
+      - article [ref=e68]:
+        - generic [ref=e69]: Total inventory
+        - strong [ref=e70]: "0"
+      - article [ref=e71]:
+        - generic [ref=e72]: Sold quantity
+        - strong [ref=e73]: "0"
+      - article [ref=e74]:
+        - generic [ref=e75]: Sales revenue
+        - strong [ref=e76]: $0
+    - generic [ref=e77]:
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - heading "Smart sorter controls" [level=3] [ref=e80]
+          - paragraph [ref=e81]: Pinned products stay fixed. Remaining products use one deterministic daily strategy.
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - heading "Active Merchandising Strategy" [level=4] [ref=e84]
+            - button "Edit Strategy" [ref=e85] [cursor=pointer]
+          - generic [ref=e86]:
+            - generic [ref=e87]: "🔥 Sales Performance: 0.40"
+            - generic [ref=e88]: "📦 Inventory Health: 0.25"
+            - generic [ref=e89]: "🆕 Newness: 0.20"
+            - generic [ref=e90]: "📈 Sales Momentum: 0.10"
+            - generic [ref=e91]: "↻ Controlled Rotation: 0.05"
+            - generic [ref=e92]: "Total Weight: 1.00"
+          - paragraph [ref=e93]: Products are ranked using SKU-level sales, sellable inventory, size availability, newness and recent momentum.
+          - paragraph [ref=e94]: "Pinned products remain fixed · Diversity: Brand and Product Type · Sold-out social proof: up to 2 genuine products."
+        - generic [ref=e95]:
+          - generic [ref=e96]:
+            - heading "Pinned Merchandising (Slots 1-0)" [level=4] [ref=e97]
+            - button "Remove All Pinned" [disabled] [ref=e98]
+          - paragraph [ref=e99]: Drag items or use buttons to order pinned products (always appear first on page 1).
+          - generic [ref=e100]: No pinned products. Select "Pinned" in the allocation dropdown below to pin products.
+        - generic [ref=e101]:
+          - generic [ref=e102]:
+            - text: Stock
+            - combobox "Stock" [ref=e103]:
+              - option "All stock" [selected]
+              - option "In stock"
+              - option "Out of stock"
+          - generic [ref=e104]:
+            - text: Sold quantity
+            - combobox "Sold quantity" [ref=e105]:
+              - option "All ranges" [selected]
+              - option "0-2"
+              - option "3-19"
+              - option "20+"
+          - generic [ref=e106]:
+            - text: Rotation
+            - combobox "Rotation" [ref=e107]:
+              - option "All products" [selected]
+              - option "Included only"
+              - option "Excluded only"
+          - generic [ref=e108]:
+            - text: Performance
+            - combobox "Performance" [ref=e109]:
+              - option "All tiers" [selected]
+              - option "Bestsellers"
+              - option "Average sellers"
+              - option "Low sellers"
+          - generic [ref=e110]:
+            - checkbox "Allotted products only" [ref=e111]
+            - text: Allotted products only
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - heading "Preview order panel" [level=3] [ref=e114]
+          - paragraph [ref=e115]: "Old vs new order before apply. Affected products: 0"
+        - generic [ref=e116]: Generate today's order to preview the first page.
+    - generic [ref=e118]:
+      - generic [ref=e119]:
+        - generic [ref=e120]:
+          - heading "Collection product table" [level=3] [ref=e121]
+          - paragraph [ref=e122]: Current Shopify placement, sales metrics, and manual overrides.
+        - generic [ref=e123]:
+          - button "📋 Product Table" [ref=e124] [cursor=pointer]
+          - button "📊 Explainability Panel" [ref=e125] [cursor=pointer]
+      - table [ref=e127]:
+        - rowgroup [ref=e128]:
+          - row [ref=e129]:
+            - columnheader "Product" [ref=e130]
+            - columnheader "ID" [ref=e131]
+            - columnheader "Current" [ref=e132]
+            - columnheader "Allocation" [ref=e133]
+            - columnheader "Score" [ref=e134]
+            - columnheader "Stock" [ref=e135]
+            - columnheader "Sold" [ref=e136]
+            - columnheader "Revenue" [ref=e137]
+            - columnheader "Vendor" [ref=e138]
+            - columnheader "Status" [ref=e139]
+            - columnheader "Price" [ref=e140]
+            - columnheader "Updated" [ref=e141]
+          - row [ref=e142]:
+            - columnheader [ref=e143]:
+              - textbox "Search product" [ref=e144]
+            - columnheader [ref=e145]:
+              - textbox "Search ID" [ref=e146]
+            - columnheader "Any pos" [ref=e147]:
+              - combobox [ref=e148]:
+                - option "Any pos" [selected]
+                - option "Page 1"
+                - option "After page 1"
+            - columnheader "All" [ref=e149]:
+              - combobox [ref=e150]:
+                - option "All" [selected]
+                - option "Pinned"
+                - option "Eligible"
+                - option "Hidden"
+            - columnheader "All scores" [ref=e151]:
+              - combobox [ref=e152]:
+                - option "All scores" [selected]
+                - option "Bestsellers"
+                - option "Average"
+                - option "Low"
+            - columnheader "All stock" [ref=e153]:
+              - combobox [ref=e154]:
+                - option "All stock" [selected]
+                - option "In stock"
+                - option "Out"
+            - columnheader "All sold" [ref=e155]:
+              - combobox [ref=e156]:
+                - option "All sold" [selected]
+                - option "0-2"
+                - option "3-19"
+                - option "20+"
+            - columnheader [ref=e157]
+            - columnheader "All vendors" [ref=e158]:
+              - combobox [ref=e159]:
+                - option "All vendors" [selected]
+            - columnheader "All status" [ref=e160]:
+              - combobox [ref=e161]:
+                - option "All status" [selected]
+            - columnheader [ref=e162]
+            - columnheader "Any age" [ref=e163]:
+              - combobox [ref=e164]:
+                - option "Any age" [selected]
+                - option "Updated 7d"
+                - option "Updated 30d"
+                - option "Older"
+        - rowgroup

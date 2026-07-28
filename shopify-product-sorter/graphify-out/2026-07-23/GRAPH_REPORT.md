@@ -1,16 +1,16 @@
 # Graph Report - shopify-product-sorter  (2026-07-23)
 
 ## Corpus Check
-- 63 files · ~58,552 words
+- 63 files · ~89,759 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 570 nodes · 1162 edges · 23 communities (18 shown, 5 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.59)
+- 578 nodes · 1193 edges · 23 communities (18 shown, 5 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.56)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `95f9bcc6`
+- Built from commit: `4939e06a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -42,25 +42,25 @@
 1. `reconcileSalesData()` - 18 edges
 2. `Neon Serverless Postgres` - 17 edges
 3. `shopifyGraphQL()` - 16 edges
-4. `applyShipmentUpdate()` - 14 edges
-5. `generateOrder()` - 14 edges
-6. ``@neon/sdk` — the TypeScript client for the Neon API` - 14 edges
-7. `env` - 13 edges
-8. `orderMappingQuery()` - 13 edges
+4. `applyShipmentUpdate()` - 15 edges
+5. `orderMappingQuery()` - 14 edges
+6. `generateOrder()` - 14 edges
+7. ``@neon/sdk` — the TypeScript client for the Neon API` - 14 edges
+8. `env` - 13 edges
 9. `logInfo()` - 13 edges
-10. `buildAnalytics()` - 12 edges
+10. `shopifyGraphQL()` - 12 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `buildAnalytics()` --indirect_call--> `label()`  [INFERRED]
-  server/src/services/actualSalesService.js → client/src/OrderMapping.jsx
-- `startServer()` --calls--> `runOrderMappingMigrations()`  [EXTRACTED]
-  server/src/index.js → server/src/services/orderMappingMigrations.js
 - `settingsFor()` --calls--> `getStrategySettings()`  [EXTRACTED]
   server/src/routes/api.js → server/src/services/strategySettings.js
 - `applyGeneratedOrder()` --calls--> `syncCollectionOrder()`  [EXTRACTED]
   server/src/routes/api.js → server/src/services/shopifyService.js
 - `refreshShopifySalesData()` --calls--> `fetchActualSalesOrders()`  [EXTRACTED]
   server/src/services/actualSalesService.js → server/src/services/shopifyService.js
+- `refreshShiprocketSalesData()` --calls--> `fetchShiprocketOrders()`  [EXTRACTED]
+  server/src/services/actualSalesService.js → server/src/services/shiprocketService.js
+- `fetchDeliveryOrders()` --calls--> `shopifyGraphQL()`  [EXTRACTED]
+  server/src/services/deliveryShopify.js → server/src/services/shopifyService.js
 
 ## Import Cycles
 - None detected.
@@ -71,12 +71,12 @@
 ## Communities (23 total, 5 thin omitted)
 
 ### Community 0 - "Server Startup"
-Cohesion: 0.10
-Nodes (41): app, clientDistPath, __dirname, __dirname, ensureShopifyEnv(), env, envLoadReport, repoRoot (+33 more)
+Cohesion: 0.08
+Nodes (48): app, clientDistPath, __dirname, __dirname, ensureShopifyEnv(), env, envLoadReport, repoRoot (+40 more)
 
 ### Community 1 - "API and User Interface"
 Cohesion: 0.07
-Nodes (41): api, App(), buildDimensionScores(), buildScoringContext(), calculateScore(), defaultFilters, emptyPreview, extractTypeAndColor() (+33 more)
+Nodes (44): api, App(), buildDimensionScores(), buildScoringContext(), calculateScore(), defaultFilters, emptyPreview, extractTypeAndColor() (+36 more)
 
 ### Community 2 - "Sales Analytics"
 Cohesion: 0.09
@@ -92,7 +92,7 @@ Nodes (34): automatic(), getImport(), getOrdersForLegacy(), listOrders(), logUnk
 
 ### Community 5 - "Database and Uploads"
 Cohesion: 0.06
-Nodes (79): upload, COLUMN_ALIASES, detectMap(), orderMappingCsvColumns(), parseCsv(), parseOrderMappingCsv(), parseTimestamp(), closeOrderMappingPool() (+71 more)
+Nodes (77): upload, COLUMN_ALIASES, detectMap(), orderMappingCsvColumns(), parseCsv(), parseOrderMappingCsv(), parseTimestamp(), orderMappingQuery() (+69 more)
 
 ### Community 6 - "Product Sorting Logic"
 Cohesion: 0.17
@@ -135,28 +135,28 @@ Cohesion: 0.09
 Nodes (38): db, resolvedPath, applyGeneratedOrder(), mergeSnapshotWithPreferences(), reorderSnapshot(), saveSnapshot(), settingsFor(), upload (+30 more)
 
 ### Community 22 - "orderMappingShiprocket.js"
-Cohesion: 0.44
-Nodes (8): authenticateShiprocket(), baseUrl(), configured(), fetchOrderMappingShiprocketShipments(), normalizeShiprocketRow(), shiprocketRequest(), sleep(), timeoutMs
+Cohesion: 0.47
+Nodes (9): authenticateShiprocket(), baseUrl(), configured(), fetchOrderMappingShiprocketShipments(), fetchOrderMappingShiprocketTracking(), normalizeShiprocketRow(), shiprocketRequest(), sleep() (+1 more)
 
 ## Knowledge Gaps
-- **160 isolated node(s):** `{ test, expect }`, `name`, `version`, `private`, `type` (+155 more)
+- **157 isolated node(s):** `{ test, expect }`, `name`, `version`, `private`, `type` (+152 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `buildAnalytics()` connect `Sales Analytics` to `API and User Interface`?**
-  _High betweenness centrality (0.119) - this node is a cross-community bridge._
-- **Why does `label()` connect `API and User Interface` to `Sales Analytics`?**
-  _High betweenness centrality (0.117) - this node is a cross-community bridge._
 - **Why does `env` connect `Server Startup` to `Shopify Media and Orders`, `Delivery Import Workflows`, `Database and Uploads`, `routes/api.js`, `orderMappingShiprocket.js`?**
-  _High betweenness centrality (0.083) - this node is a cross-community bridge._
+  _High betweenness centrality (0.071) - this node is a cross-community bridge._
+- **Why does `generateOrder()` connect `Product Sorting Logic` to `routes/api.js`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `fetchShiprocketOrders()` connect `Delivery Import Workflows` to `Sales Analytics`?**
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **What connects `{ test, expect }`, `name`, `version` to the rest of the system?**
-  _160 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _157 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Server Startup` be split into smaller, more focused modules?**
-  _Cohesion score 0.10017730496453901 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08182349503214495 - nodes in this community are weakly interconnected._
 - **Should `API and User Interface` be split into smaller, more focused modules?**
-  _Cohesion score 0.06531986531986532 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06829573934837092 - nodes in this community are weakly interconnected._
 - **Should `Sales Analytics` be split into smaller, more focused modules?**
   _Cohesion score 0.08788159111933395 - nodes in this community are weakly interconnected._

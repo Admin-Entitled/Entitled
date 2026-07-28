@@ -25,6 +25,7 @@ function html() {
   const cards = products.map(product => card(product.id, product.vendor, product.sizes, product.type, product.color)).join('');
   return `<!doctype html><html><body><header></header><main id="PageContainer">
     <button data-filter-drawer-open>Filters <span data-filter-trigger-count hidden></span></button>
+    <button id="opener" data-size-preference-open><span data-size-preference-control-label>Choose size</span></button>
     <aside data-collection-filters data-collection-url="/collections/all"><div data-filter-combobox><input data-filter-search><button data-filter-dropdown-toggle></button><div data-filter-dropdown><div data-client-filter-groups></div><p data-filter-empty hidden></p></div></div><span data-filter-selected-count></span><div data-active-filters hidden></div><button data-client-filter-apply>Apply</button><button data-client-filter-clear>Clear</button></aside>
     <p data-collection-product-count>4 products</p><div data-collection-product-list>${cards}</div><nav data-collection-pagination>Pagination</nav>
     </main><div data-size-preference-root data-status-available="Available {{ size }}" data-status-sold-out="Sold out in {{ size }}" data-status-unavailable="{{ size }} unavailable" data-status-not-applicable="Not applicable"><div data-size-preference-dialog aria-modal="true" tabindex="-1" hidden><button data-size-preference-close>Close</button><form data-size-preference-form><div data-size-preference-choices></div><button data-size-preference-confirm>Confirm</button></form></div><p data-size-preference-live></p></div>
@@ -51,6 +52,8 @@ async function main() {
       document.addEventListener('entitled:size-preference-change', () => { window.__preferenceEvents += 1; });
       document.addEventListener('entitled:size-filter-change', () => { window.__filterEvents += 1; });
     });
+    assert.strictEqual(await page.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'prompt must stay hidden until explicitly opened');
+    await page.click('#opener');
     await page.waitForSelector('[data-size-preference-dialog]:not([hidden])');
     await page.click('[data-size-preference-choice][data-size-value="M"]');
     await page.click('[data-size-preference-confirm]');
@@ -98,7 +101,7 @@ async function main() {
 
     const fresh = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await fresh.goto(`http://127.0.0.1:${server.address().port}/`);
-    await fresh.waitForSelector('[data-size-preference-dialog]:not([hidden])');
+    assert.strictEqual(await fresh.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'fresh sessions must not auto-open the popup');
     await fresh.close();
     console.log('size preference filter DOM integration ok');
   } finally {

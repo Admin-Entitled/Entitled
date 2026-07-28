@@ -1,0 +1,7 @@
+[     233ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:5174/node_modules/.vite/deps/chunk-TBBDLHAM.js?v=9a7f7d35:21606
+[     328ms] [LOG] [15:58:54] [NETWORK] Fetching collections: GET /api/collections @ http://localhost:5174/src/App.jsx?t=1784802494072:382
+[     794ms] [LOG] [15:58:54] [SUCCESS] Collections fetched: 8 @ http://localhost:5174/src/App.jsx?t=1784802494072:382
+[     822ms] [LOG] [15:58:54] [NETWORK] Fetching products: GET /api/collection-products @ http://localhost:5174/src/App.jsx?t=1784802494072:382
+[     822ms] [LOG] Payload: {collectionId: gid://shopify/Collection/458724835569} @ http://localhost:5174/src/App.jsx?t=1784802494072:384
+[    1265ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5174/favicon.ico:0
+[    4395ms] [LOG] [15:58:58] [SUCCESS] Fetched 33 products for collection "Polo T-shirt" @ http://localhost:5174/src/App.jsx?t=1784802494072:382

@@ -15,6 +15,98 @@
   font-family: "Manrope", "Segoe UI", sans-serif;
 }
 
+/* Order Mapping diagnostics: one sidebar scrollbar only */
+.sidebar {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.diagnostic-panel,
+.diagnostic-logs-container,
+.diagnostic-logs {
+  overflow: visible;
+}
+
+.diagnostic-logs {
+  max-height: none;
+}
+
+.diagnostic-panel,
+.diagnostic-stats,
+.diagnostic-logs-container,
+.diagnostic-logs,
+.diagnostic-item,
+.diagnostic-log-entry,
+.diagnostic-log-top {
+  min-width: 0;
+}
+
+.diagnostic-panel,
+.sidebar {
+  overflow-x: hidden;
+}
+
+.diagnostic-item {
+  align-items: flex-start;
+}
+
+.diagnostic-value {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.diagnostic-value.text-truncate {
+  white-space: normal;
+  max-width: 160px;
+}
+
+.diagnostic-logs-header {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.diagnostic-logs-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.diagnostic-tab-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.diagnostic-tab {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.diagnostic-tab.active {
+  color: var(--text);
+  border-color: rgba(200, 181, 138, 0.5);
+  background: rgba(200, 181, 138, 0.12);
+}
+
+.diagnostic-logs {
+  overflow-x: hidden;
+}
+
+.diagnostic-log-entry:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -712,7 +804,7 @@ th {
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 10px;
+  padding: 10px 14px 10px 10px;
   min-height: 180px;
   height: auto;
   flex: 1;
@@ -723,6 +815,7 @@ th {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  scrollbar-gutter: stable;
 }
 
 .diagnostic-log-entry {
@@ -737,6 +830,7 @@ th {
   justify-content: space-between;
   gap: 8px;
   align-items: center;
+  padding-right: 14px;
 }
 
 .diagnostic-log-time {
@@ -748,6 +842,7 @@ th {
   align-items: center;
   justify-content: center;
   padding: 2px 8px;
+  flex-shrink: 0;
   border-radius: 999px;
   font-size: 9px;
   font-weight: 700;
@@ -1335,4 +1430,74 @@ th {
   .diagnostic-panel {
     display: none;
   }
+}
+
+/* Order Mapping sidebar: one vertical scrollbar only */
+.sidebar {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+}
+
+.diagnostic-panel,
+.diagnostic-stats,
+.diagnostic-logs-container,
+.diagnostic-logs {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.diagnostic-panel {
+  height: 100%;
+  overflow: visible !important;
+}
+
+.diagnostic-logs-container {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.diagnostic-logs {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: none !important;
+}
+
+.diagnostic-logs-header,
+.diagnostic-logs-actions,
+.diagnostic-item,
+.diagnostic-value,
+.diagnostic-log-entry,
+.diagnostic-log-top,
+.diagnostic-log-line {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.diagnostic-value,
+.diagnostic-log-line {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.sidebar.sidebar--order-mapping {
+  justify-content: flex-start;
+}
+
+.sidebar.sidebar--order-mapping .diagnostic-panel,
+.sidebar.sidebar--order-mapping .diagnostic-logs-container {
+  display: none !important;
+}
+
+.diagnostic-value.text-truncate {
+  white-space: normal !important;
+  max-width: 100% !important;
+}
+
+.diagnostic-log-entry,
+.diagnostic-log-top,
+.diagnostic-log-line {
+  width: 100%;
 }

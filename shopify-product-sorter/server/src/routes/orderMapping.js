@@ -41,6 +41,7 @@ router.get("/orders", async (req, res) => {
         page: req.query.page,
         pageSize: req.query.pageSize,
         search: String(req.query.search || ""),
+        queue: String(req.query.queue || "ALL"),
         status: String(req.query.status || "ALL"),
         courier: String(req.query.courier || "ALL"),
         source: String(req.query.source || "ALL"),

@@ -119,14 +119,15 @@
 
     var existing = form.querySelector(BUY_NOW_SELECTOR);
     if (!existing) {
-      existing = createBuyNowButton(primary);
-      if (primary.parentNode && primary.parentNode.classList) {
-        primary.parentNode.classList.add('buy_now_stack');
-        if (primary.classList.contains('product_card_button')) {
-          primary.parentNode.classList.add('buy_now_stack--card');
-        }
+      if (primary.classList.contains('product_card_button')) {
+        return;
       }
+      existing = createBuyNowButton(primary);
       primary.insertAdjacentElement('afterend', existing);
+    }
+
+    if (primary.parentNode && primary.parentNode.classList) {
+      primary.parentNode.classList.add('buy_now_stack');
     }
 
     if (!form.__buyNowObserver && window.MutationObserver && primary) {

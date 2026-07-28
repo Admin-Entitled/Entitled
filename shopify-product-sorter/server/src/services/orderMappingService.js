@@ -3,7 +3,10 @@ import Database from "better-sqlite3";
 import { env } from "../config/env.js";
 import { parseOrderMappingCsv } from "./orderMappingCsv.js";
 import { fetchOrderMappingOrders } from "./orderMappingShopify.js";
-import { fetchOrderMappingShiprocketShipments } from "./orderMappingShiprocket.js";
+import {
+  fetchOrderMappingShiprocketShipments,
+  fetchOrderMappingShiprocketTracking,
+} from "./orderMappingShiprocket.js";
 import {
   applyShipmentUpdate,
   clearManualShipmentStatus,
@@ -19,6 +22,7 @@ import {
   listNetworkLogs,
   logMigrationException,
   previewCsvImport,
+  setShipmentSyncError,
   setManualShipmentStatus,
   upsertShopifyOrders,
   withSyncLock,
@@ -35,6 +39,148 @@ function safeRange(range) {
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
+}
+
+async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = false } = {}) {
+  const eligibleShipments = await listEligibleShipmentsForRefresh({ shipmentId, force });
+  if (!eligibleShipments.length) {
+    return {
+      processed: 0,
+      updated: 0,
+      skippedTerminal: 0,
+      failed: 0,
+      unmatched: 0,
+      configured: true,
+      pagesFetched: 0,
+    };
+  }
+
+  const earliest = eligibleShipments
+    .map((shipment) => new Date(shipment.order_date))
+    .filter((value) => !Number.isNaN(value.getTime()))
+    .sort((left, right) => left.getTime() - right.getTime())[0];
+  const provider = await fetchOrderMappingShiprocketShipments({
+    start: (earliest || new Date()).toISOString().slice(0, 10),
+    end: todayIso(),
+  });
+
+  if (!provider.configured) {
+    return {
+      processed: 0,
+      updated: 0,
+      skippedTerminal: 0,
+      failed: 0,
+      unmatched: 0,
+      configured: false,
+      pagesFetched: 0,
+    };
+  }
+
+  const providerRows = provider.shipments.map((row) => ({
+    ...row,
+    shiprocket_response_id: row.shiprocketResponseId,
+    shiprocket_order_reference: row.shiprocketOrderReference,
+    shiprocket_channel_reference: row.shiprocketChannelReference,
+    shopify_order_id: row.shiprocketOrderReference,
+    shopify_order_name: row.shiprocketChannelReference,
+    shopify_order_number: row.shiprocketChannelReference,
+  }));
+
+  let updated = 0;
+  let failed = 0;
+  let skippedTerminal = 0;
+  let unmatched = 0;
+  let trackingFallbacks = 0;
+  const claimedProviderRows = new Set();
+
+  for (const shipment of eligibleShipments) {
+    const match = matchOrderMappingShipment(
+      {
+        shiprocketResponseId: shipment.shiprocket_response_id,
+        shopifyOrderId: shipment.shopify_order_id,
+        orderNumber: shipment.shopify_order_name || shipment.shopify_order_number,
+        awb: shipment.awb || shipment.shopify_tracking_number,
+      },
+      providerRows,
+    );
+
+    if (!match.row) {
+      unmatched += 1;
+      await setShipmentSyncError(
+        shipment.id,
+        match.ambiguous ? "Ambiguous Shiprocket match" : "Not found in Shiprocket",
+      );
+      continue;
+    }
+
+    const providerKey =
+      match.row.shiprocketResponseId || match.row.awb || match.row.shiprocketChannelReference;
+    if (providerKey && claimedProviderRows.has(providerKey)) {
+      continue;
+    }
+    claimedProviderRows.add(providerKey);
+
+    try {
+      let trackingPayload = null;
+      try {
+        const tracking = await fetchOrderMappingShiprocketTracking(
+          match.row.awb || shipment.awb || shipment.shopify_tracking_number,
+        );
+        trackingPayload = tracking.tracking;
+      } catch {
+        trackingFallbacks += 1;
+      }
+      const normalizedStatus = normalizeOrderMappingStatus(
+        trackingPayload?.rawStatus || match.row.rawStatus || match.row.rawStatusCode,
+        "UNKNOWN",
+      );
+      const result = await applyShipmentUpdate(shipment.id, {
+        awb: trackingPayload?.awb || match.row.awb,
+        normalizedStatus,
+        rawStatus:
+          trackingPayload?.rawStatus ||
+          trackingPayload?.rawStatusCode ||
+          match.row.rawStatus ||
+          match.row.rawStatusCode,
+        source: "SHIPROCKET_API",
+        statusTimestamp:
+          trackingPayload?.statusTimestamp ||
+          match.row.statusTimestamp ||
+          shipment.status_timestamp ||
+          new Date().toISOString(),
+        courier: trackingPayload?.courier || match.row.courier,
+        deliveredAt: trackingPayload?.deliveredAt || match.row.deliveredAt,
+        shiprocketResponseId: match.row.shiprocketResponseId,
+        shiprocketOrderReference: match.row.shiprocketOrderReference,
+        shiprocketChannelReference: match.row.shiprocketChannelReference,
+        latestProviderPayload: {
+          ...(match.row.latestProviderPayload || {}),
+          ...(trackingPayload?.latestProviderPayload || {}),
+        },
+        trackingEvents: trackingPayload?.trackingEvents || [],
+        force,
+      });
+      if (result.applied) {
+        updated += 1;
+      } else if (result.reason === "precedence") {
+        skippedTerminal += 1;
+      }
+    } catch (error) {
+      failed += 1;
+      await setShipmentSyncError(shipment.id, error.message);
+    }
+  }
+
+  return {
+    processed: eligibleShipments.length,
+    updated,
+    skippedTerminal,
+    failed,
+    unmatched,
+    trackingFallbacks,
+    configured: true,
+    pagesFetched: provider.pages,
+  };
 }
 
 function normalizeSqliteRow(row) {
@@ -62,12 +208,17 @@ export async function syncOrderMappingShopify(range) {
       const selectedRange = await safeRange(range);
       const payload = await fetchOrderMappingOrders(selectedRange);
       const result = await upsertShopifyOrders(payload.orders);
+      const tracking = await refreshOrderMappingShiprocketCore({ force: false });
       await completeSyncRun(syncRun.id, {
-        status: "completed",
+        status: tracking.failed ? "partial" : "completed",
         processedCount: payload.orders.length,
-        updatedCount: result.shipments,
+        updatedCount: result.shipments + tracking.updated,
+        skippedTerminalCount: tracking.skippedTerminal,
+        failedCount: tracking.failed,
       });
       return {
+        success: true,
+        status: tracking.failed ? "partially_completed" : "completed",
         range: selectedRange,
         pages: payload.pages,
         ordersFetched: payload.orders.length,
@@ -77,6 +228,7 @@ export async function syncOrderMappingShopify(range) {
         updated: result.shipments,
         unchanged: 0,
         failed: 0,
+        tracking,
       };
     } catch (error) {
       await completeSyncRun(syncRun.id, {
@@ -92,87 +244,16 @@ export async function refreshOrderMappingShiprocket({ shipmentId = null, force =
   return withSyncLock(shipmentId ? 41003 : 41002, async () => {
     const syncRun = await createSyncRun(force ? "shiprocket_force_refresh" : "shiprocket_refresh");
     try {
-      const eligibleShipments = await listEligibleShipmentsForRefresh({ shipmentId, force });
-      if (!eligibleShipments.length) {
-        await completeSyncRun(syncRun.id, { status: "completed" });
-        return { processed: 0, updated: 0, skippedTerminal: 0, configured: true, shipments: [] };
-      }
-
-      const start = eligibleShipments
-        .map((shipment) => shipment.order_date)
-        .map((value) => new Date(value))
-        .sort((left, right) => left.getTime() - right.getTime())[0]
-        .toISOString()
-        .slice(0, 10);
-      const end = todayIso();
-      const provider = await fetchOrderMappingShiprocketShipments({ start, end });
-      if (!provider.configured) {
-        await completeSyncRun(syncRun.id, { status: "completed" });
-        return { processed: 0, updated: 0, skippedTerminal: 0, configured: false, shipments: [] };
-      }
-
-      let updated = 0;
-      let failed = 0;
-      let skippedTerminal = 0;
-
-      for (const shipment of eligibleShipments) {
-        const match = matchOrderMappingShipment(
-          {
-            shopifyOrderId: shipment.shopify_order_id,
-            orderNumber: shipment.shopify_order_name || shipment.shopify_order_number,
-            awb: shipment.awb,
-          },
-          provider.shipments.map((row) => ({
-            ...row,
-            shopify_order_id: row.shiprocketOrderReference,
-            shopify_order_name: row.shiprocketChannelReference,
-            shopify_order_number: row.shiprocketOrderReference,
-          })),
-        );
-
-        if (!match.row) {
-          continue;
-        }
-
-        try {
-          const result = await applyShipmentUpdate(shipment.id, {
-            normalizedStatus: normalizeOrderMappingStatus(match.row.rawStatus, "UNKNOWN"),
-            rawStatus: match.row.rawStatus,
-            source: "SHIPROCKET_API",
-            statusTimestamp: match.row.statusTimestamp || shipment.status_timestamp || new Date().toISOString(),
-            courier: match.row.courier,
-            deliveredAt: match.row.deliveredAt,
-            shiprocketResponseId: match.row.shiprocketResponseId,
-            shiprocketOrderReference: match.row.shiprocketOrderReference,
-            shiprocketChannelReference: match.row.shiprocketChannelReference,
-            latestProviderPayload: match.row.latestProviderPayload,
-            force,
-          });
-          if (result.applied) {
-            updated += 1;
-          } else if (result.reason === "precedence") {
-            skippedTerminal += 1;
-          }
-        } catch {
-          failed += 1;
-        }
-      }
-
+      const result = await refreshOrderMappingShiprocketCore({ shipmentId, force });
       await completeSyncRun(syncRun.id, {
-        status: failed ? (updated ? "partial" : "failed") : "completed",
-        processedCount: eligibleShipments.length,
-        updatedCount: updated,
-        skippedTerminalCount: skippedTerminal,
-        failedCount: failed,
+        status: result.failed ? (result.updated ? "partial" : "failed") : "completed",
+        processedCount: result.processed,
+        updatedCount: result.updated,
+        skippedTerminalCount: result.skippedTerminal,
+        failedCount: result.failed,
+        errorSummary: result.configured ? null : "Shiprocket is not configured",
       });
-
-      return {
-        processed: eligibleShipments.length,
-        updated,
-        skippedTerminal,
-        failed,
-        configured: true,
-      };
+      return result;
     } catch (error) {
       await completeSyncRun(syncRun.id, {
         status: "failed",

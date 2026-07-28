@@ -1,0 +1,79 @@
+{% assign card_direct_purchase = false %}
+{% unless sold_out %}
+  {% if card_product.has_only_default_variant %}
+    {% assign card_direct_purchase = true %}
+  {% endif %}
+{% endunless %}
+
+<div
+  class="product_card_actions"
+  data-size-preference-card-action
+  data-card-action-state="{% if sold_out %}sold_out{% elsif card_direct_purchase %}add{% else %}select_size{% endif %}"
+>
+  <form
+    action="{{ routes.cart_add_url }}"
+    method="post"
+    class="product_card_form buy_now_stack buy_now_stack--card"
+    enctype="multipart/form-data"
+    data-product-card-form
+    {% if card_direct_purchase %}data-size-preference-card-form{% endif %}
+  >
+    <input
+      type="hidden"
+      name="id"
+      value="{% if card_direct_purchase %}{{ card_product.selected_or_first_available_variant.id }}{% endif %}"
+      data-product-card-variant
+      {% unless card_direct_purchase %}disabled{% endunless %}
+    >
+    <input
+      type="hidden"
+      name="quantity"
+      value="1"
+      data-product-card-quantity
+      {% unless card_direct_purchase %}disabled{% endunless %}
+    >
+
+    <button
+      type="{% if card_direct_purchase %}submit{% else %}button{% endif %}"
+      class="product_card_button{% if sold_out %} is-disabled{% endif %}"
+      data-product-card-primary
+      {% if sold_out %}disabled aria-disabled="true"{% elsif card_direct_purchase %}name="add"{% else %}hidden{% endif %}
+    >
+      {% if sold_out %}
+        {{ 'products.product.sold_out' | t }}
+      {% elsif card_direct_purchase %}
+        {{ 'products.product.add_to_cart' | t }}
+      {% else %}
+        {{ 'size_preference.choose_size' | t }}
+      {% endif %}
+    </button>
+
+    <a
+      href="{{ card_product.url | within: collection }}"
+      class="product_card_button"
+      data-product-card-primary-link
+      {% if sold_out or card_direct_purchase %}hidden{% endif %}
+    >
+      {{ 'products.product.choose_options' | t }}
+    </a>
+
+    <button
+      type="button"
+      class="product_card_button buy_now_button"
+      data-buy-now-trigger
+      aria-disabled="false"
+      {% unless card_direct_purchase %}hidden{% endunless %}
+    >
+      {{ 'size_preference.buy_now' | t }}
+    </button>
+
+    <a
+      href="{{ card_product.url | within: collection }}"
+      class="product_card_button product_card_button--secondary"
+      data-product-card-view
+      {% if card_direct_purchase %}hidden{% endif %}
+    >
+      {{ 'size_preference.view_product' | t }}
+    </a>
+  </form>
+</div>

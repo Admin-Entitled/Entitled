@@ -20,12 +20,16 @@
     "clear": "Borrar talla preferida",
     "close": "Cerrar selección de talla",
     "status_available": "Tu talla {{ size }} está disponible",
-    "status_sold_out": "Agotado en {{ size }}",
+    "status_sold_out": "La talla {{ size }} está agotada",
+    "status_currently_sold_out": "Actualmente agotado",
+    "status_select_size": "Selecciona una talla para continuar",
+    "choose_another_size": "Elegir otra talla",
     "status_unavailable": "{{ size }} no disponible",
     "status_one_size": "Talla única",
     "status_not_applicable": "La talla preferida no se aplica",
     "status_saved": "Talla preferida actualizada a {{ size }}",
-    "view_product": "Ver producto"
+    "view_product": "Ver producto",
+    "buy_now": "Comprar ahora"
   },
   "general": {
     "meta": {

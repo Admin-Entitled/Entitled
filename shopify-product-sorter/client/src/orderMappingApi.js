@@ -13,9 +13,7 @@ async function request(path, options = {}) {
   const payload = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const error = new Error(
-      payload.message || payload.error || "Order Mapping request failed",
-    );
+    const error = new Error(payload.message || payload.error || "Order Mapping request failed");
     Object.assign(error, payload);
     throw error;
   }
@@ -24,11 +22,12 @@ async function request(path, options = {}) {
 }
 
 export const api = {
-  orders: (params = {}) => request(`/orders?${new URLSearchParams(params)}`),
+  orders: (params = {}, options = {}) =>
+    request(`/orders?${new URLSearchParams({ queue: "ALL", ...params })}`, options),
   order: (id) => request(`/orders/${id}`),
   networkLogs: (limit = 30) => request(`/logs/network?limit=${limit}`),
   actionLogs: (limit = 30) => request(`/logs/actions?limit=${limit}`),
-  syncShopify: (range) =>
+  syncShopify: (range = {}) =>
     request("/sync/shopify", {
       method: "POST",
       body: JSON.stringify(range),
@@ -58,13 +57,7 @@ export const api = {
     if (mapping) {
       body.append("mapping", JSON.stringify(mapping));
     }
-    return request("/imports/preview", {
-      method: "POST",
-      body,
-    });
+    return request("/imports/preview", { method: "POST", body });
   },
-  commitImport: (batchId) =>
-    request(`/imports/${batchId}/commit`, {
-      method: "POST",
-    }),
+  commitImport: (batchId) => request(`/imports/${batchId}/commit`, { method: "POST" }),
 };

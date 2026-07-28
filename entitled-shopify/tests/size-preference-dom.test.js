@@ -97,6 +97,8 @@ async function main() {
 
     const activation = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await activation.goto(url);
+    assert.strictEqual(await activation.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'prompt must stay hidden until explicitly opened');
+    await activation.click('#opener');
     await activation.waitForSelector('[data-size-preference-dialog]:not([hidden])');
     await activation.evaluate(() => {
       window.__preferenceEvents = 0;
@@ -138,6 +140,7 @@ async function main() {
 
     const keyboard = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await keyboard.goto(url);
+    await keyboard.click('#opener');
     await keyboard.waitForSelector('[data-size-preference-dialog]:not([hidden])');
     await keyboard.focus('[data-size-preference-choice][data-size-value="M"]');
     await keyboard.keyboard.press('Enter');
@@ -152,22 +155,21 @@ async function main() {
 
     const rerenderPage = await browser.newPage();
     await rerenderPage.goto(url + 'collections/all');
-    await rerenderPage.waitForSelector('[data-size-preference-dialog]:not([hidden])');
-    await rerenderPage.click('[data-size-preference-close]');
+    assert.strictEqual(await rerenderPage.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'collection pages must not reopen the prompt on load');
     await rerenderPage.evaluate(() => document.dispatchEvent(new CustomEvent('entitled:collection-rendered')));
-    await rerenderPage.waitForSelector('[data-size-preference-dialog]:not([hidden])');
-    await rerenderPage.click('[data-size-preference-close]');
+    await rerenderPage.waitForTimeout(150);
+    assert.strictEqual(await rerenderPage.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'collection rerenders must not reopen the prompt');
     await rerenderPage.evaluate(() => document.dispatchEvent(new CustomEvent('shopify:section:load')));
-    await rerenderPage.waitForSelector('[data-size-preference-dialog]:not([hidden])');
+    await rerenderPage.waitForTimeout(150);
+    assert.strictEqual(await rerenderPage.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'section reloads must not reopen the prompt');
     await rerenderPage.close();
 
     const legacySessionPage = await browser.newPage();
     await legacySessionPage.goto(url);
     await legacySessionPage.evaluate(() => sessionStorage.setItem('entitled:size-preference:session:v2', JSON.stringify({ version: 1, state: 'selected', value: 'M', display: 'M' })));
     await legacySessionPage.reload();
-    await legacySessionPage.waitForSelector('[data-size-preference-dialog]:not([hidden])');
+    assert.strictEqual(await legacySessionPage.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'legacy stored size must not auto-open the prompt');
     assert.deepStrictEqual(await legacySessionPage.evaluate(() => JSON.parse(sessionStorage.getItem('entitled:size-preference:selected-filters:v1')).values), ['M']);
-    assert.strictEqual(await legacySessionPage.evaluate(() => sessionStorage.getItem('entitled:size-preference:prompt-completed:v1')), null, 'legacy scalar migration must not suppress required popup confirmation');
     await legacySessionPage.close();
 
     for (const viewport of [{ width: 375, height: 812 }, { width: 1440, height: 1000 }]) {
@@ -292,16 +294,20 @@ async function main() {
       assert.strictEqual(await page.evaluate(() => document.activeElement.id), 'opener');
       assert.strictEqual(await page.evaluate(() => sessionStorage.getItem('entitled:size-preference:session:v2')), null, 'dismissal must not save a decision');
       await page.goto(url + 'collections/round-necks');
+      assert.strictEqual(await page.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'collection navigation must not reopen the prompt');
+      await page.click('#opener');
       await page.waitForSelector('[data-size-preference-dialog]:not([hidden])');
       await page.click('[data-size-preference-close]');
       assert.strictEqual(await page.evaluate(() => sessionStorage.getItem('entitled:size-preference:session:v2')), null, 'Close must not save a decision');
       await page.goto(url + 'collections/polos');
+      assert.strictEqual(await page.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'collection navigation must stay silent');
+      await page.click('#opener');
       await page.waitForSelector('[data-size-preference-dialog]:not([hidden])');
-      assert.strictEqual(await page.locator('[data-size-preference-skip], [data-size-preference-clear]').count(), 0, 'initial popup must only expose size choices, Save, and Close');
+      assert.strictEqual(await page.locator('[data-size-preference-skip], [data-size-preference-clear]').count(), 0, 'manual popup must only expose size choices, Save, and Close');
       await page.click('[data-size-preference-close]');
       assert.strictEqual(await page.evaluate(() => sessionStorage.getItem('entitled:size-preference:session:v2')), null, 'Close must not save a decision');
       await page.goto(url + 'collections/shirts');
-      await page.waitForSelector('[data-size-preference-dialog]:not([hidden])');
+      assert.strictEqual(await page.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'collection navigation must not reopen the prompt');
       await page.keyboard.press('Escape');
       const restoredBackground = await page.evaluate(() => ({ inert: document.querySelector('#PageContainer').inert, inertAttribute: document.querySelector('#PageContainer').getAttribute('inert'), ariaHidden: document.querySelector('#PageContainer').getAttribute('aria-hidden') }));
       assert.deepStrictEqual(restoredBackground, { inert: false, inertAttribute: null, ariaHidden: null }, 'background state must be restored');
@@ -339,7 +345,7 @@ async function main() {
       };
       document.dispatchEvent(new CustomEvent('entitled:variant-selectors-ready'));
     });
-    await page.waitForFunction(() => document.querySelectorAll('.single-option-selector')[1].value === 'M');
+    await page.waitForFunction(() => document.querySelectorAll('.single-option-selector')[1].value === 'L');
     assert.strictEqual(await page.evaluate(() => document.querySelectorAll('.single-option-selector')[0].value), 'Black');
     assert.strictEqual(await page.evaluate(() => window.__submits), 0);
 
@@ -368,6 +374,8 @@ async function main() {
       sessionStorage.removeItem('entitled:size-preference:prompt-completed:v1');
     });
     await persistence.reload();
+    assert.strictEqual(await persistence.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'fresh storage must not auto-open the prompt');
+    await persistence.click('#opener');
     await persistence.waitForSelector('[data-size-preference-dialog]:not([hidden])');
     await persistence.click('[data-size-preference-choice][data-size-value="M"]');
     await persistence.click('[data-size-preference-confirm]');
@@ -382,6 +390,8 @@ async function main() {
       Object.defineProperty(window, 'sessionStorage', { configurable: true, value: { getItem: () => { throw new Error('denied'); }, setItem: () => { throw new Error('denied'); }, removeItem: () => { throw new Error('denied'); } } });
     });
     await fallback.goto(url);
+    assert.strictEqual(await fallback.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'blocked storage must not auto-open the prompt');
+    await fallback.click('#opener');
     await fallback.waitForSelector('[data-size-preference-dialog]:not([hidden])');
     await fallback.click('[data-size-preference-choice][data-size-value="M"]');
     await fallback.click('[data-size-preference-confirm]');
@@ -390,7 +400,7 @@ async function main() {
     await fallback.waitForTimeout(350);
     assert.strictEqual(await fallback.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'memory completion must prevent AJAX prompt loops when storage is blocked');
     await fallback.reload();
-    await fallback.waitForSelector('[data-size-preference-dialog]:not([hidden])');
+    assert.strictEqual(await fallback.getAttribute('[data-size-preference-dialog]', 'hidden'), '', 'reloading with blocked storage must stay quiet');
 
     const hostile = await browser.newPage();
     await hostile.goto(url);
