@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T16:11:58.116Z` |
+| Generated timestamp | `2026-07-31T16:12:31.707Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `b9d899b` |
+| Local commit | `d9cdfb5` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -41,11 +41,11 @@
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 55 |
-| Completion percentage | 42.6% |
+| Completed | 56 |
+| Completion percentage | 43.4% |
 
 ## 4. Current execution focus
 
@@ -91,7 +91,7 @@
 | BE-001 | Split the generic API router | HIGH | COMPLETED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | COMPLETED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | COMPLETED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-004 | Create a Sales Intelligence router | HIGH | VALIDATED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-004 | Create a Sales Intelligence router | HIGH | COMPLETED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-005 | Preserve existing backend URLs with adapters | CRITICAL | READY | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | COMPLETED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1149,9 +1149,9 @@ Route, mocked Shopify, upload cleanup, audit, and frontend regression tests.
 ### `BE-004` Create a Sales Intelligence router
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, OWN-005
-**Last updated:** 2026-07-31T16:11:58.116Z
+**Last updated:** 2026-07-31T16:12:31.707Z
 
 #### Description
 
@@ -1171,7 +1171,7 @@ Route contracts, synthetic cache tests, CSV tests, startup, and regression gate.
 
 #### Completion evidence
 
---evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js., --evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite.
+--evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js., --evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite., Commit SHA: d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f
 
 ---
 
@@ -3929,6 +3929,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T16:12:31.720Z | BE-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e4b6f42e` |
 | 2026-07-31T16:11:58.130Z | BE-004 | implemented | validated | shivam | --evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite. | `a87e520f` |
 | 2026-07-31T16:11:51.448Z | BE-004 | in_progress | implemented | shivam | --evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js. | `ac7c8e0e` |
 | 2026-07-31T16:08:36.110Z | BE-004 | ready | in_progress | shivam | Transition to in_progress | `85465e4c` |
@@ -3938,4 +3939,3 @@ Not completed.
 | 2026-07-31T16:05:24.637Z | BE-003 | ready | in_progress | shivam | Transition to in_progress | `046d318c` |
 | 2026-07-31T16:01:36.966Z | BE-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `46ed9f97` |
 | 2026-07-31T16:01:25.513Z | BE-002 | implemented | validated | shivam | --evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed. | `5942e159` |
-| 2026-07-31T15:55:21.513Z | BE-002 | in_progress | implemented | shivam | --evidence Created dedicated Sorter router module server/src/routes/sorter.js owning all sorter/reorder endpoints without SKU or Sales Intelligence imports. | `b9683226` |
