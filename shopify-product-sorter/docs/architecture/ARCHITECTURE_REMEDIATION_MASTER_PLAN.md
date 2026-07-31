@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:47:57.477Z` |
+| Generated timestamp | `2026-07-31T14:51:04.360Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `1e845b1` |
+| Local commit | `4bd0e53` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 60 |
-| Ready | 14 |
+| Ready | 13 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 42 |
-| Completion percentage | 32.6% |
+| Completed | 43 |
+| Completion percentage | 33.3% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `DATA-002`, `DATA-004`, `DATA-005`, `DATA-006`, `OPS-001`
+- Next ready tasks: `DATA-004`, `DATA-005`, `DATA-006`, `OPS-001`, `OPS-005`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -116,12 +116,12 @@
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | COMPLETED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-006 | Standardize integration authentication and env ownership | CRITICAL | NOT_STARTED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATED | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-007 | Standardize retries, rate limits, and errors | HIGH | COMPLETED | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-008 | Add deterministic integration mocks | HIGH | NOT_STARTED | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | NOT_STARTED | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-010 | Verify provider contracts and API-version compatibility | HIGH | NOT_STARTED | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | BLOCKED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
-| DATA-002 | Document SQLite table ownership | CRITICAL | READY | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-002 | Document SQLite table ownership | CRITICAL | VALIDATED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-004 | Separate SKU audit data | HIGH | READY | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-005 | Separate Sales Intelligence caches | HIGH | READY | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1874,9 +1874,9 @@ Not completed.
 ### `INT-007` Standardize retries, rate limits, and errors
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** INT-002, INT-005
-**Last updated:** 2026-07-31T14:47:57.477Z
+**Last updated:** 2026-07-31T14:48:01.358Z
 
 #### Description
 
@@ -1896,7 +1896,7 @@ Mocked failure matrix, idempotency tests, logs, and integration regression.
 
 #### Completion evidence
 
-Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md, Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification
+Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md, Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification, Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd
 
 ---
 
@@ -2019,9 +2019,9 @@ Not completed.
 ### `DATA-002` Document SQLite table ownership
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** OWN-003, OWN-008
-**Last updated:** 2026-07-31T13:37:09.852Z
+**Last updated:** 2026-07-31T14:51:04.360Z
 
 #### Description
 
@@ -2041,7 +2041,7 @@ Static references, schema inventory, owner review, and backup status.
 
 #### Completion evidence
 
-Not completed.
+Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md, Validated via database.js schema review, table ownership audit, and cleanup task dependency verification
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:51:04.375Z | DATA-002 | implemented | validated | shivam | Validated via database.js schema review, table ownership audit, and cleanup task dependency verification | `a5f177d5` |
+| 2026-07-31T14:51:04.133Z | DATA-002 | in_progress | implemented | shivam | Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md | `615f866b` |
+| 2026-07-31T14:49:57.427Z | DATA-002 | ready | in_progress | shivam | Transition to in_progress | `128819f4` |
+| 2026-07-31T14:48:01.369Z | INT-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `6f2669a1` |
 | 2026-07-31T14:47:57.491Z | INT-007 | implemented | validated | shivam | Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification | `832a9d66` |
 | 2026-07-31T14:47:57.241Z | INT-007 | in_progress | implemented | shivam | Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md | `5874908b` |
 | 2026-07-31T14:47:11.048Z | INT-007 | ready | in_progress | shivam | Transition to in_progress | `ec9309d9` |
 | 2026-07-31T14:46:08.901Z | INT-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `cbdd0a06` |
 | 2026-07-31T14:46:08.874Z | INT-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `f1800099` |
 | 2026-07-31T14:46:05.036Z | INT-005 | implemented | validated | shivam | Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification | `46407384` |
-| 2026-07-31T14:46:04.798Z | INT-005 | in_progress | implemented | shivam | Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md | `4c9ce2d8` |
-| 2026-07-31T14:45:23.318Z | INT-005 | ready | in_progress | shivam | Transition to in_progress | `aeff607b` |
-| 2026-07-31T14:44:04.676Z | INT-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2b9fa4e1` |
-| 2026-07-31T14:44:04.648Z | INT-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `80c3f4f0` |
