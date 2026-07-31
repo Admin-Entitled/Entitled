@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T11:16:01.763Z",
+  "last_updated": "2026-07-31T11:10:53.549Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -418,7 +418,7 @@
       "title": "Protect Sales Intelligence API contracts",
       "description": "Remediation task TEST-007: Protect Sales Intelligence API contracts",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "SAFE-002"
       ],
@@ -431,17 +431,13 @@
       "validation_commands": [
         "Unit, route contract, mocked integration, CSV parse, and no-network checks."
       ],
-      "evidence": [
-        "Starting implementation of TEST-007: Protect Sales Intelligence API contracts",
-        "Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting.",
-        "Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:16:01.763Z",
-      "started_timestamp": "2026-07-31T11:14:06.365Z",
-      "implemented_timestamp": "2026-07-31T11:15:53.576Z",
-      "validated_timestamp": "2026-07-31T11:16:01.763Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
