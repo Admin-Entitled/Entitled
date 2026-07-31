@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:44:00.315Z",
+  "last_updated": "2026-07-31T14:40:43.132Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1757,7 +1757,7 @@
       "title": "Inventory and contract Shiprocket clients",
       "description": "Remediation task INT-004: Inventory and contract Shiprocket clients",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-010",
         "TEST-004"
@@ -1771,16 +1771,13 @@
       "validation_commands": [
         "Static search, synthetic provider fixtures, status tests, and owner review."
       ],
-      "evidence": [
-        "Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md",
-        "Validated via static search of all Shiprocket imports, status mapping audit, and secret value review"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:44:00.315Z",
-      "started_timestamp": "2026-07-31T14:42:11.147Z",
-      "implemented_timestamp": "2026-07-31T14:44:00.068Z",
-      "validated_timestamp": "2026-07-31T14:44:00.315Z",
+      "updated_timestamp": "2026-07-31T13:49:17.646Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
