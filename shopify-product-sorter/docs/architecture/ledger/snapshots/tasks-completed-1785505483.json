@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:49:13.697Z",
+  "last_updated": "2026-07-31T13:44:43.385Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -926,7 +926,7 @@
       "title": "Approve integration and environment ownership",
       "description": "Remediation task OWN-010: Approve integration and environment ownership",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -943,17 +943,13 @@
       "validation_commands": [
         "Static dependency search, secret-name inventory, and integration-owner review."
       ],
-      "evidence": [
-        "Defining environment configuration ownership",
-        "Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md",
-        "Validated via static dependency search, secret-name inventory, and integration-owner review"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:13.696Z",
-      "started_timestamp": "2026-07-31T13:46:11.292Z",
-      "implemented_timestamp": "2026-07-31T13:49:13.454Z",
-      "validated_timestamp": "2026-07-31T13:49:13.696Z",
+      "updated_timestamp": "2026-07-31T13:23:33.428Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -2003,7 +1999,7 @@
       "title": "Separate SKU audit data",
       "description": "Remediation task DATA-004: Separate SKU audit data",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-004",
         "OWN-009"
@@ -2020,7 +2016,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:43.409Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2032,7 +2028,7 @@
       "title": "Separate Sales Intelligence caches",
       "description": "Remediation task DATA-005: Separate Sales Intelligence caches",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-005",
         "OWN-009"
@@ -2049,7 +2045,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:43.420Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2401,7 +2397,7 @@
       "title": "Review and isolate Graphify artifacts",
       "description": "Remediation task OPS-005: Review and isolate Graphify artifacts",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-009"
       ],
@@ -2417,7 +2413,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:43.428Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2458,7 +2454,7 @@
       "title": "Review Playwright artifacts",
       "description": "Remediation task OPS-007: Review Playwright artifacts",
       "severity": "LOW",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-009"
       ],
@@ -2474,7 +2470,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:43.438Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2486,7 +2482,7 @@
       "title": "Review test outputs and cache artifacts",
       "description": "Remediation task OPS-008: Review test outputs and cache artifacts",
       "severity": "LOW",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-009"
       ],
@@ -2502,7 +2498,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:43.446Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
