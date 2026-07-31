@@ -1,0 +1,39 @@
+name: Architecture Ledger Verification
+
+on:
+  push:
+    branches: [ main, ops/architecture-ledger-hardening ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci || npm install
+          fi
+
+      - name: Validate Ledger System
+        run: |
+          node scripts/architecture-ledger.mjs doctor
+          node scripts/architecture-ledger.mjs validate
+
+      - name: Run Architecture Ledger Automated Tests
+        run: |
+          npm run test:architecture-ledger
+
+      - name: Verify Markdown Plan Synchronization (No Drift)
+        run: |
+          node scripts/architecture-ledger.mjs generate
+          git diff --exit-code docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md

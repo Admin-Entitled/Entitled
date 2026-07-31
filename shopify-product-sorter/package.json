@@ -14,9 +14,27 @@
     "build": "npm run build --workspace client",
     "start": "npm run start --workspace server",
     "health": "curl http://localhost:4000/api/debug/shopify",
-    "verify": "npm run health && echo 'System Ready'"
+    "verify": "npm run health && echo 'System Ready'",
+    "arch:doctor": "node scripts/architecture-ledger.mjs doctor",
+    "arch:status": "node scripts/architecture-ledger.mjs status",
+    "arch:resume": "node scripts/architecture-ledger.mjs resume",
+    "arch:show": "node scripts/architecture-ledger.mjs show",
+    "arch:start": "node scripts/architecture-ledger.mjs start",
+    "arch:implement": "node scripts/architecture-ledger.mjs implement",
+    "arch:validate-task": "node scripts/architecture-ledger.mjs validate-task",
+    "arch:complete": "node scripts/architecture-ledger.mjs complete",
+    "arch:block": "node scripts/architecture-ledger.mjs block",
+    "arch:ready": "node scripts/architecture-ledger.mjs ready",
+    "arch:defer": "node scripts/architecture-ledger.mjs defer",
+    "arch:history": "node scripts/architecture-ledger.mjs history",
+    "arch:generate": "node scripts/architecture-ledger.mjs generate",
+    "arch:validate": "node scripts/architecture-ledger.mjs validate",
+    "arch:checkpoint": "node scripts/architecture-ledger.mjs checkpoint",
+    "arch:sync-obsidian": "node scripts/architecture-ledger.mjs sync-obsidian",
+    "test:architecture-ledger": "node --test tests/architecture-ledger.test.js"
   },
   "devDependencies": {
     "concurrently": "^10.0.3"
-  }
+  },
+  "type": "module"
 }

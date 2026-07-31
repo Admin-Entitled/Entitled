@@ -90,18 +90,27 @@ Rules:
 
 ### Authoritative ledger
 
-The single authoritative architecture execution ledger is:
+The authoritative architecture execution ledger files are:
+- `docs/architecture/ledger/tasks.json` (JSON task database)
+- `docs/architecture/ledger/history.jsonl` (SHA-256 hash-chained history log)
 
-`docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md`
+`docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md` is a generated report; direct edits to task status in the Markdown file are strictly prohibited.
 
 No separate architecture checklist, progress file, task ledger, or competing plan may be created.
 
 ### Mandatory session startup
 
-Before modifying any repository file, every Codex session must:
+Before modifying any repository file, every Codex architecture session must:
 
 1. Read `AGENTS.md`.
-2. Read the master plan's Document control, Status definitions, Architecture principles, Master task index, Current execution focus, and the detailed record for every requested task ID.
+2. Begin with `npm run arch:resume`.
+3. Inspect current in-progress, ready, and blocked tasks.
+4. Confirm that requested task dependencies are satisfied.
+5. All task state transitions must be executed via the Architecture Ledger CLI (`scripts/architecture-ledger.mjs` or `npm run arch:*`).
+6. Conversational claims of task completion are not authoritative.
+7. A task is completed only after implementation, validation, ledger update, history append, generated report synchronization, Git commit, remote push, and SHA verification via `npm run arch:checkpoint`.
+8. Exactly one architecture task per commit.
+9. No task status may be inferred from Obsidian alone.
 3. Confirm that requested task dependencies are satisfied.
 4. Capture the current Git baseline.
 5. Identify pre-existing changes and leave them untouched.
