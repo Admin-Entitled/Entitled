@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:01:33.195Z",
+  "last_updated": "2026-07-31T20:56:38.083Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2534,7 +2534,7 @@
       "title": "Standardize health checks",
       "description": "Remediation task OPS-003: Standardize health checks",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "BE-005",
         "OWN-006"
@@ -2548,18 +2548,14 @@
       "validation_commands": [
         "Route tests, startup matrix, script dry-run, and security review."
       ],
-      "evidence": [
-        "--changed-files server/src/routes/api.js,server/src/utils/sanitize.js,server/src/routes/health.test.js,scripts/regression-gate.mjs",
-        "--passed-tests health.test.js",
-        "--evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:01:33.195Z",
-      "started_timestamp": "2026-07-31T20:57:57.628Z",
-      "implemented_timestamp": "2026-07-31T21:01:18.281Z",
-      "validated_timestamp": "2026-07-31T21:01:26.058Z",
-      "completed_timestamp": "2026-07-31T21:01:33.195Z",
+      "updated_timestamp": "2026-07-31T16:17:42.926Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {

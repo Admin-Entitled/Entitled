@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T20:55:05.153Z` |
+| Generated timestamp | `2026-07-31T21:01:33.195Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `7fed269` |
+| Local commit | `4f6d26d` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 33 |
-| Ready | 18 |
+| Ready | 17 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 67 |
-| Completion percentage | 51.9% |
+| Completed | 68 |
+| Completion percentage | 52.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OPS-003`, `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`
+- Next ready tasks: `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`, `SEC-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -134,7 +134,7 @@
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | COMPLETED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-003 | Standardize health checks | HIGH | READY | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-003 | Standardize health checks | HIGH | COMPLETED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | READY | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-006 | Review and isolate Tokensave runtime files | HIGH | NOT_STARTED | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1963,7 +1963,7 @@ Static import scan, unit/integration, route, provider mocks, and regression gate
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** INT-008, BE-005
-**Last updated:** 2026-07-31T20:55:05.152Z
+**Last updated:** 2026-07-31T20:56:38.082Z
 
 #### Description
 
@@ -1983,7 +1983,7 @@ Mocked integration, route, status, and regression checks.
 
 #### Completion evidence
 
---changed-files server/src/services/providerIntegration.test.js, --passed-tests providerIntegration.test.js, --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js.
+--changed-files server/src/services/providerIntegration.test.js, --passed-tests providerIntegration.test.js, --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js., Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186
 
 ---
 
@@ -2396,9 +2396,9 @@ Static script checks, dry-run help, test gate, and documentation review.
 ### `OPS-003` Standardize health checks
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** BE-005, OWN-006
-**Last updated:** 2026-07-31T16:17:42.926Z
+**Last updated:** 2026-07-31T21:01:33.195Z
 
 #### Description
 
@@ -2418,7 +2418,7 @@ Route tests, startup matrix, script dry-run, and security review.
 
 #### Completion evidence
 
-Not completed.
+--changed-files server/src/routes/api.js,server/src/utils/sanitize.js,server/src/routes/health.test.js,scripts/regression-gate.mjs, --passed-tests health.test.js, --evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T21:01:33.211Z | OPS-003 | validated | completed | shivam | --evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate. | `74907f57` |
+| 2026-07-31T21:01:26.074Z | OPS-003 | implemented | validated | shivam | --passed-tests health.test.js | `2b6e34f6` |
+| 2026-07-31T21:01:18.296Z | OPS-003 | in_progress | implemented | shivam | --changed-files server/src/routes/api.js,server/src/utils/sanitize.js,server/src/routes/health.test.js,scripts/regression-gate.mjs | `44279f65` |
+| 2026-07-31T20:57:57.645Z | OPS-003 | ready | in_progress | shivam | Transition to in_progress | `1dcd7f96` |
+| 2026-07-31T20:56:38.095Z | INT-010 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `fa669438` |
 | 2026-07-31T20:55:05.168Z | INT-010 | validated | completed | shivam | --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js. | `1a40a7af` |
 | 2026-07-31T20:54:58.555Z | INT-010 | implemented | validated | shivam | --passed-tests providerIntegration.test.js | `4cc73ee6` |
 | 2026-07-31T20:54:51.350Z | INT-010 | in_progress | implemented | shivam | --changed-files server/src/services/providerIntegration.test.js | `6f78af51` |
 | 2026-07-31T20:51:26.074Z | INT-010 | ready | in_progress | shivam | Transition to in_progress | `79ee1aee` |
 | 2026-07-31T20:50:39.207Z | INT-009 | validated | completed | shivam | --evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass. | `e4ee988a` |
-| 2026-07-31T20:50:31.843Z | INT-009 | implemented | validated | shivam | Transition to validated | `89bbf49b` |
-| 2026-07-31T20:50:25.198Z | INT-009 | in_progress | implemented | shivam | --evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass. | `6d9a1ed0` |
-| 2026-07-31T20:47:11.938Z | INT-009 | ready | in_progress | shivam | Transition to in_progress | `ef5a6eb0` |
-| 2026-07-31T20:46:15.568Z | CLEAN-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `a19d19ef` |
-| 2026-07-31T20:46:15.533Z | FE-011 | validated | completed | shivam | --evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation. | `76da0130` |
