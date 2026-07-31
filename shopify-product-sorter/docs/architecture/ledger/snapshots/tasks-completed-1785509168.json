@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:47:57.477Z",
+  "last_updated": "2026-07-31T14:46:08.864Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1853,7 +1853,7 @@
       "title": "Standardize retries, rate limits, and errors",
       "description": "Remediation task INT-007: Standardize retries, rate limits, and errors",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "INT-002",
         "INT-005"
@@ -1867,16 +1867,13 @@
       "validation_commands": [
         "Mocked failure matrix, idempotency tests, logs, and integration regression."
       ],
-      "evidence": [
-        "Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md",
-        "Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:47:57.477Z",
-      "started_timestamp": "2026-07-31T14:47:11.033Z",
-      "implemented_timestamp": "2026-07-31T14:47:57.226Z",
-      "validated_timestamp": "2026-07-31T14:47:57.477Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
