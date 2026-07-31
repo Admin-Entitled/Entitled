@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T11:16:01.763Z` |
+| Generated timestamp | `2026-07-31T11:21:38.995Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `6476c33` |
+| Local commit | `360d53c` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 95 |
-| Ready | 6 |
+| Ready | 5 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 15 |
-| Completion percentage | 11.6% |
+| Completed | 16 |
+| Completion percentage | 12.4% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `TEST-008`, `TEST-009`, `TEST-010`, `TEST-011`, `OWN-008`
+- Next ready tasks: `TEST-009`, `TEST-010`, `TEST-011`, `OWN-008`, `OPS-ARCH-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -72,8 +72,8 @@
 | TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-005 | Protect CSV import and manual overrides | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-006 | Protect SKU media operations | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-007 | Protect Sales Intelligence API contracts | HIGH | VALIDATED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-008 | Protect public route compatibility | CRITICAL | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-007 | Protect Sales Intelligence API contracts | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-008 | Protect public route compatibility | CRITICAL | VALIDATED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-009 | Protect database migration safety | CRITICAL | READY | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-010 | Protect startup and environment isolation | HIGH | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-011 | Protect frontend navigation | HIGH | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -598,9 +598,9 @@ Starting implementation of TEST-006: Protect SKU media operations, Created unit 
 ### `TEST-007` Protect Sales Intelligence API contracts
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:16:01.763Z
+**Last updated:** 2026-07-31T11:16:12.816Z
 
 #### Description
 
@@ -620,16 +620,16 @@ Unit, route contract, mocked integration, CSV parse, and no-network checks.
 
 #### Completion evidence
 
-Starting implementation of TEST-007: Protect Sales Intelligence API contracts, Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting., Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully.
+Starting implementation of TEST-007: Protect Sales Intelligence API contracts, Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting., Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully., Commit SHA: 360d53ccd88e248acc4ecf48c5a13e9d389c10fd
 
 ---
 
 ### `TEST-008` Protect public route compatibility
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:21:38.994Z
 
 #### Description
 
@@ -649,7 +649,7 @@ Route integration tests, frontend navigation checks, static route inventory diff
 
 #### Completion evidence
 
-Not completed.
+Starting implementation of TEST-008: Protect public route compatibility, Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials., Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T11:21:39.009Z | TEST-008 | implemented | validated | shivam | Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility. | `66cd9930` |
+| 2026-07-31T11:21:27.329Z | TEST-008 | in_progress | implemented | shivam | Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials. | `5e5f2609` |
+| 2026-07-31T11:18:59.977Z | TEST-008 | ready | in_progress | shivam | Starting implementation of TEST-008: Protect public route compatibility | `ef979f6b` |
+| 2026-07-31T11:16:12.823Z | TEST-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `b5dd89ac` |
 | 2026-07-31T11:16:01.774Z | TEST-007 | implemented | validated | shivam | Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully. | `0665b4ea` |
 | 2026-07-31T11:15:53.587Z | TEST-007 | in_progress | implemented | shivam | Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting. | `572a9b9b` |
 | 2026-07-31T11:14:06.376Z | TEST-007 | ready | in_progress | shivam | Starting implementation of TEST-007: Protect Sales Intelligence API contracts | `ff37ac5f` |
 | 2026-07-31T11:10:53.557Z | TEST-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `9bddc9f7` |
 | 2026-07-31T11:10:34.477Z | TEST-006 | implemented | validated | shivam | Ran node --test src/services/shopifyMediaService.test.js in server/. All 4 tests passed successfully. | `a04ce3e1` |
 | 2026-07-31T11:10:24.898Z | TEST-006 | in_progress | implemented | shivam | Created unit test suite server/src/services/shopifyMediaService.test.js covering SKU media scopes, duplicate product deduplication without deletion, confirm bulk deletion filtering, and audit log path verification. | `f3dbbfc6` |
-| 2026-07-31T11:06:20.654Z | TEST-006 | ready | in_progress | shivam | Starting implementation of TEST-006: Protect SKU media operations | `f2e70aac` |
-| 2026-07-31T10:43:49.613Z | TEST-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `4bcc86f6` |
-| 2026-07-31T10:43:08.772Z | TEST-005 | implemented | validated | shivam | Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics. | `e59f5cd1` |
-| 2026-07-31T10:43:01.006Z | TEST-005 | in_progress | implemented | shivam | Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction. | `4f020828` |
