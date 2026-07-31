@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:51:58.254Z",
+  "last_updated": "2026-07-31T15:51:58.096Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1003,7 +1003,7 @@
       "title": "Create a Sorter router",
       "description": "Remediation task BE-002: Create a Sorter router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-001",
         "OWN-002"
@@ -1020,7 +1020,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.123Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1032,7 +1032,7 @@
       "title": "Create a SKU Image Manager router",
       "description": "Remediation task BE-003: Create a SKU Image Manager router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-001",
         "OWN-004"
@@ -1049,7 +1049,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.205Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1061,7 +1061,7 @@
       "title": "Create a Sales Intelligence router",
       "description": "Remediation task BE-004: Create a Sales Intelligence router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-001",
         "OWN-005"
@@ -1078,7 +1078,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.216Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1090,7 +1090,7 @@
       "title": "Preserve existing backend URLs with adapters",
       "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-001",
         "TEST-008"
@@ -1107,7 +1107,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.254Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
