@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T11:10:34.464Z",
+  "last_updated": "2026-07-31T10:43:49.606Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -385,7 +385,7 @@
       "title": "Protect SKU media operations",
       "description": "Remediation task TEST-006: Protect SKU media operations",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "SAFE-002"
       ],
@@ -398,17 +398,13 @@
       "validation_commands": [
         "Unit, mocked integration, route, browser regression, and audit-file fixture checks."
       ],
-      "evidence": [
-        "Starting implementation of TEST-006: Protect SKU media operations",
-        "Created unit test suite server/src/services/shopifyMediaService.test.js covering SKU media scopes, duplicate product deduplication without deletion, confirm bulk deletion filtering, and audit log path verification.",
-        "Ran node --test src/services/shopifyMediaService.test.js in server/. All 4 tests passed successfully."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:10:34.464Z",
-      "started_timestamp": "2026-07-31T11:06:20.642Z",
-      "implemented_timestamp": "2026-07-31T11:10:24.872Z",
-      "validated_timestamp": "2026-07-31T11:10:34.464Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
