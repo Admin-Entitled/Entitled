@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:11:05.958Z",
+  "last_updated": "2026-07-31T15:07:10.968Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2366,7 +2366,7 @@
       "title": "Fix or retire obsolete `scripts/dev.mjs`",
       "description": "Remediation task OPS-001: Fix or retire obsolete `scripts/dev.mjs`",
       "severity": "MEDIUM",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "TEST-010",
         "OWN-001"
@@ -2380,16 +2380,13 @@
       "validation_commands": [
         "Static script check, dry-run/process tests, documentation review, and no server start in audit."
       ],
-      "evidence": [
-        "Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md",
-        "Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:11:05.958Z",
-      "started_timestamp": "2026-07-31T15:08:24.194Z",
-      "implemented_timestamp": "2026-07-31T15:11:05.703Z",
-      "validated_timestamp": "2026-07-31T15:11:05.958Z",
+      "updated_timestamp": "2026-07-31T11:59:05.421Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -3152,7 +3149,7 @@
       "title": "Create backup and restore guide",
       "description": "Remediation task DOC-009: Create backup and restore guide",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "SAFE-007",
         "DATA-012"
@@ -3169,7 +3166,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:07:10.995Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

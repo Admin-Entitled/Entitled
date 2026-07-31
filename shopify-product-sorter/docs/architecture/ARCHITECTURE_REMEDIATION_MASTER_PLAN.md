@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:07:07.080Z` |
+| Generated timestamp | `2026-07-31T15:11:05.958Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `78223a3` |
+| Local commit | `1ee6ca2` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 58 |
+| Not started | 57 |
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,13 +44,13 @@
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 47 |
-| Completion percentage | 36.4% |
+| Completed | 48 |
+| Completion percentage | 37.2% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OPS-001`, `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`
+- Next ready tasks: `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`, `SEC-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -131,8 +131,8 @@
 | DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | VALIDATED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | READY | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | NOT_STARTED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | NOT_STARTED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -159,7 +159,7 @@
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-009 | Create backup and restore guide | CRITICAL | NOT_STARTED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | BLOCKED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
@@ -2309,9 +2309,9 @@ Not completed.
 ### `DATA-012` Validate PostgreSQL backup and restore process
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-004, SAFE-007, DATA-006
-**Last updated:** 2026-07-31T15:07:07.080Z
+**Last updated:** 2026-07-31T15:07:10.967Z
 
 #### Description
 
@@ -2331,16 +2331,16 @@ Database integrity, migration, repository read, route smoke, and manual runbook 
 
 #### Completion evidence
 
-Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md, Validated via Neon backup strategy review, restore process audit, and destructive check safety verification
+Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md, Validated via Neon backup strategy review, restore process audit, and destructive check safety verification, Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950
 
 ---
 
 ### `OPS-001` Fix or retire obsolete `scripts/dev.mjs`
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-010, OWN-001
-**Last updated:** 2026-07-31T11:59:05.421Z
+**Last updated:** 2026-07-31T15:11:05.958Z
 
 #### Description
 
@@ -2360,7 +2360,7 @@ Static script check, dry-run/process tests, documentation review, and no server 
 
 #### Completion evidence
 
-Not completed.
+Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs
 
 ---
 
@@ -3119,9 +3119,9 @@ Not completed.
 ### `DOC-009` Create backup and restore guide
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SAFE-007, DATA-012
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:07:10.995Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:11:05.973Z | OPS-001 | implemented | validated | shivam | Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs | `8af3b6c1` |
+| 2026-07-31T15:11:05.718Z | OPS-001 | in_progress | implemented | shivam | Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md | `390533d6` |
+| 2026-07-31T15:08:24.210Z | OPS-001 | ready | in_progress | shivam | Transition to in_progress | `390a4a66` |
+| 2026-07-31T15:07:11.054Z | DOC-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6896ec1f` |
+| 2026-07-31T15:07:10.979Z | DATA-012 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `085d87e9` |
 | 2026-07-31T15:07:07.094Z | DATA-012 | implemented | validated | shivam | Validated via Neon backup strategy review, restore process audit, and destructive check safety verification | `cdc480a4` |
 | 2026-07-31T15:07:06.840Z | DATA-012 | in_progress | implemented | shivam | Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md | `8bb851f5` |
 | 2026-07-31T15:05:41.332Z | DATA-012 | ready | in_progress | shivam | Transition to in_progress | `bbccca9b` |
 | 2026-07-31T14:58:06.816Z | DATA-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `0ab4ea52` |
 | 2026-07-31T14:58:06.790Z | DATA-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `71be67b8` |
-| 2026-07-31T14:58:03.019Z | DATA-006 | implemented | validated | shivam | Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification | `03a2004e` |
-| 2026-07-31T14:58:02.766Z | DATA-006 | in_progress | implemented | shivam | Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md | `a40ac405` |
-| 2026-07-31T14:56:49.451Z | DATA-006 | ready | in_progress | shivam | Transition to in_progress | `82173595` |
-| 2026-07-31T14:55:45.976Z | DATA-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `811d1e36` |
-| 2026-07-31T14:55:42.121Z | DATA-005 | implemented | validated | shivam | Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification | `3a20248f` |
