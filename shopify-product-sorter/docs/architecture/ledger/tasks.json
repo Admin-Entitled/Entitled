@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:43:47.910Z",
+  "last_updated": "2026-07-31T15:51:39.922Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -970,7 +970,7 @@
       "title": "Split the generic API router",
       "description": "Remediation task BE-001: Split the generic API router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "TEST-012",
         "OWN-007"
@@ -984,13 +984,16 @@
       "validation_commands": [
         "Static import graph, route contracts, startup test, existing-app regression, and build/parser checks."
       ],
-      "evidence": "",
+      "evidence": [
+        "--evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts.",
+        "--evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:43:47.888Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T15:51:39.921Z",
+      "started_timestamp": "2026-07-31T15:45:17.167Z",
+      "implemented_timestamp": "2026-07-31T15:51:29.983Z",
+      "validated_timestamp": "2026-07-31T15:51:39.921Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

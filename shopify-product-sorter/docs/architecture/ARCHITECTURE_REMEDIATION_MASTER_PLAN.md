@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:43:47.910Z` |
+| Generated timestamp | `2026-07-31T15:51:39.922Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `094e208` |
+| Local commit | `e6e4191` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,11 +37,11 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 51 |
-| Ready | 15 |
+| Ready | 14 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 0 |
+| Validated | 1 |
 | Blocked | 3 |
 | Deferred | 8 |
 | Completed | 52 |
@@ -50,7 +50,7 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `BE-001`, `FE-004`, `INT-008`, `OPS-005`, `OPS-007`
+- Next ready tasks: `FE-004`, `INT-008`, `OPS-005`, `OPS-007`, `OPS-008`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -88,7 +88,7 @@
 | OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-001 | Split the generic API router | HIGH | READY | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-001 | Split the generic API router | HIGH | VALIDATED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | NOT_STARTED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | NOT_STARTED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | NOT_STARTED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1062,9 +1062,9 @@ Defining environment configuration ownership, Defined complete integration and e
 ### `BE-001` Split the generic API router
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-012, OWN-007
-**Last updated:** 2026-07-31T15:43:47.888Z
+**Last updated:** 2026-07-31T15:51:39.921Z
 
 #### Description
 
@@ -1084,7 +1084,7 @@ Static import graph, route contracts, startup test, existing-app regression, and
 
 #### Completion evidence
 
-Not completed.
+--evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts., --evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js.
 
 ---
 
@@ -3929,6 +3929,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:51:39.940Z | BE-001 | implemented | validated | shivam | --evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js. | `004760d2` |
+| 2026-07-31T15:51:29.998Z | BE-001 | in_progress | implemented | shivam | --evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts. | `d19d06a2` |
+| 2026-07-31T15:45:17.182Z | BE-001 | ready | in_progress | shivam | Transition to in_progress | `80908b1c` |
 | 2026-07-31T15:43:47.922Z | FINAL-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3e8a922a` |
 | 2026-07-31T15:43:47.909Z | INT-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e67f0d66` |
 | 2026-07-31T15:43:47.899Z | BE-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `4c930c60` |
@@ -3936,6 +3939,3 @@ Not completed.
 | 2026-07-31T15:43:28.515Z | TEST-012 | implemented | validated | shivam | --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json) | `5b93bb52` |
 | 2026-07-31T15:43:20.319Z | TEST-012 | in_progress | implemented | shivam | --evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json | `fee411a1` |
 | 2026-07-31T15:42:15.610Z | TEST-012 | ready | in_progress | shivam | Transition to in_progress | `9fe5cf03` |
-| 2026-07-31T15:40:31.030Z | FE-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `47445a5c` |
-| 2026-07-31T15:40:31.019Z | TEST-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `fa163ebe` |
-| 2026-07-31T15:40:30.992Z | TEST-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1f137ab7` |
