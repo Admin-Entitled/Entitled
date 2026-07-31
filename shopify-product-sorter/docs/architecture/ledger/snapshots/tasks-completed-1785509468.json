@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:53:09.301Z",
+  "last_updated": "2026-07-31T14:51:08.227Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2069,7 +2069,7 @@
       "title": "Separate SKU audit data",
       "description": "Remediation task DATA-004: Separate SKU audit data",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-004",
         "OWN-009"
@@ -2083,16 +2083,13 @@
       "validation_commands": [
         "JSONL parse, redaction, write/rotation, SKU flow, and regression tests."
       ],
-      "evidence": [
-        "Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md",
-        "Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:53:09.301Z",
-      "started_timestamp": "2026-07-31T14:52:11.657Z",
-      "implemented_timestamp": "2026-07-31T14:53:09.061Z",
-      "validated_timestamp": "2026-07-31T14:53:09.301Z",
+      "updated_timestamp": "2026-07-31T13:44:43.409Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -3014,7 +3011,7 @@
       "title": "Create data ownership documentation",
       "description": "Remediation task DOC-005: Create data ownership documentation",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-008",
         "DATA-002"
@@ -3031,7 +3028,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:51:08.254Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
