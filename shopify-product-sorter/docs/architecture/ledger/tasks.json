@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T08:08:44.994Z",
+  "last_updated": "2026-07-31T10:30:47.678Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -143,7 +143,7 @@
       "title": "Create off-device backup copy",
       "description": "Remediation task SAFE-006: Create off-device backup copy",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "SAFE-003",
         "SAFE-004",
@@ -158,13 +158,16 @@
       "validation_commands": [
         "Hash verification, authorized access test, restore-read test, and status review."
       ],
-      "evidence": "",
+      "evidence": [
+        "Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d)",
+        "Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T10:30:47.678Z",
+      "started_timestamp": "2026-07-31T10:28:10.186Z",
+      "implemented_timestamp": "2026-07-31T10:30:39.545Z",
+      "validated_timestamp": "2026-07-31T10:30:47.678Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

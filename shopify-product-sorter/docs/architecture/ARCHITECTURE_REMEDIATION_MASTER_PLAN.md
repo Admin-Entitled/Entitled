@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T08:08:44.994Z` |
+| Generated timestamp | `2026-07-31T10:30:47.678Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `51684e3` |
+| Local commit | `e326bf4` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,11 +37,11 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 95 |
-| Ready | 11 |
+| Ready | 10 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
 | Completed | 11 |
@@ -50,7 +50,7 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `SAFE-006`, `TEST-004`, `TEST-005`, `TEST-006`, `TEST-007`
+- Next ready tasks: `TEST-004`, `TEST-005`, `TEST-006`, `TEST-007`, `TEST-008`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -63,7 +63,7 @@
 | SAFE-003 | Confirm SQLite backups | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: READY |
 | SAFE-004 | Complete PostgreSQL/Neon backup | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | SAFE-005 | Encrypt secret archive | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-006 | Create off-device backup copy | CRITICAL | READY | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-006 | Create off-device backup copy | CRITICAL | VALIDATED | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SAFE-007 | Validate restoration instructions | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
 | SAFE-008 | Record database ownership uncertainties | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-001 | Protect sorter scoring and core logic | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
@@ -338,9 +338,9 @@ Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30
 ### `SAFE-006` Create off-device backup copy
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T10:30:47.678Z
 
 #### Description
 
@@ -360,7 +360,7 @@ Hash verification, authorized access test, restore-read test, and status review.
 
 #### Completion evidence
 
-Not completed.
+Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks.
 
 ---
 
@@ -3929,6 +3929,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T10:30:47.690Z | SAFE-006 | implemented | validated | shivam | Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks. | `74075b7d` |
+| 2026-07-31T10:30:39.556Z | SAFE-006 | in_progress | implemented | shivam | Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) | `b296a403` |
+| 2026-07-31T10:28:10.198Z | SAFE-006 | ready | in_progress | shivam | Transition to in_progress | `c0ad4b57` |
 | 2026-07-31T08:01:57.073Z | TEST-002 | implemented | validated | shivam | Transition to validated | `6462928e` |
 | 2026-07-31T08:01:56.981Z | TEST-002 | in_progress | implemented | shivam | Transition to implemented | `51a73eaf` |
 | 2026-07-31T08:01:56.903Z | TEST-002 | completed | in_progress | shivam | Transition to in_progress | `f1487c6d` |
@@ -3936,6 +3939,3 @@ Not completed.
 | 2026-07-31T08:01:56.639Z | TEST-002 | implemented | validated | shivam | Transition to validated | `0b1254c4` |
 | 2026-07-31T08:01:56.556Z | TEST-002 | in_progress | implemented | shivam | Transition to implemented | `778e749b` |
 | 2026-07-31T08:01:56.473Z | TEST-002 | blocked | in_progress | shivam | Transition to in_progress | `b11b8f40` |
-| 2026-07-31T08:01:56.244Z | TEST-002 | completed | blocked | shivam | Waiting for API credentials | `4b63facf` |
-| 2026-07-31T08:01:56.093Z | TEST-002 | validated | completed | shivam | Verified implementation and tests pass | `48d73217` |
-| 2026-07-31T08:01:56.015Z | TEST-002 | implemented | validated | shivam | Transition to validated | `b1378147` |
