@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-07-31T08:12:05.143Z",
+  "tasks": [
+    {
+      "id": "TEST-001",
+      "title": "Prerequisite Task",
+      "description": "First task",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Pass unit tests"
+      ],
+      "validation_commands": [
+        "npm test"
+      ],
+      "evidence": "Proof of pass",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T00:00:00Z",
+      "started_timestamp": "2026-07-29T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T00:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Pre-completed fixture"
+    },
+    {
+      "id": "TEST-002",
+      "title": "Dependent Task",
+      "description": "Second task depending on TEST-001",
+      "severity": "MEDIUM",
+      "status": "validated",
+      "dependencies": [
+        "TEST-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Complete integration"
+      ],
+      "validation_commands": [
+        "npm run validate"
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T08:12:05.143Z",
+      "started_timestamp": "2026-07-31T08:12:05.000Z",
+      "implemented_timestamp": "2026-07-31T08:12:05.073Z",
+      "validated_timestamp": "2026-07-31T08:12:05.143Z",
+      "completed_timestamp": null,
+      "notes": "Ready fixture"
+    }
+  ]
+}
