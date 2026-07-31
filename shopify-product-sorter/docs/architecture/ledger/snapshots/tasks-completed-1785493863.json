@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T10:39:12.754Z",
+  "last_updated": "2026-07-31T10:31:03.307Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -319,7 +319,7 @@
       "title": "Protect Order Mapping sync/status lifecycle",
       "description": "Remediation task TEST-004: Protect Order Mapping sync/status lifecycle",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "SAFE-004"
       ],
@@ -332,17 +332,13 @@
       "validation_commands": [
         "Unit, integration, isolated PostgreSQL integrity, network-log assertions, and no production writes."
       ],
-      "evidence": [
-        "Starting task TEST-004: Protect Order Mapping sync/status lifecycle",
-        "Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides.",
-        "Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override)."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T10:39:12.754Z",
-      "started_timestamp": "2026-07-31T10:37:56.184Z",
-      "implemented_timestamp": "2026-07-31T10:39:06.087Z",
-      "validated_timestamp": "2026-07-31T10:39:12.754Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
