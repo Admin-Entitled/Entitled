@@ -1022,10 +1022,7 @@
         "--evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed.",
         "Commit SHA: 19bdae536ce86c4bb395e581ffb3f58db62b924b"
       ],
-      "changed_files": [
-        "server/src/routes/sorter.js",
-        "server/src/routes/api.js"
-      ],
+      "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-07-31T16:01:36.955Z",
       "started_timestamp": "2026-07-31T15:54:07.433Z",
