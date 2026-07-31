@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:21:19.750Z",
+  "last_updated": "2026-07-31T15:11:09.846Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2399,7 +2399,7 @@
       "title": "Standardize startup commands",
       "description": "Remediation task OPS-002: Standardize startup commands",
       "severity": "MEDIUM",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "OPS-001",
         "BE-010"
@@ -2413,16 +2413,13 @@
       "validation_commands": [
         "Static script checks, dry-run help, test gate, and documentation review."
       ],
-      "evidence": [
-        "--evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js",
-        "--evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:21:19.750Z",
-      "started_timestamp": "2026-07-31T15:18:48.305Z",
-      "implemented_timestamp": "2026-07-31T15:21:12.981Z",
-      "validated_timestamp": "2026-07-31T15:21:19.750Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

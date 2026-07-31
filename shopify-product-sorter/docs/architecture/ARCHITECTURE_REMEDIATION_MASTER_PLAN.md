@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:11:05.958Z` |
+| Generated timestamp | `2026-07-31T15:21:19.750Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `1ee6ca2` |
+| Local commit | `ca40abb` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 57 |
+| Not started | 56 |
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,8 +44,8 @@
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 48 |
-| Completion percentage | 37.2% |
+| Completed | 49 |
+| Completion percentage | 38.0% |
 
 ## 4. Current execution focus
 
@@ -132,8 +132,8 @@
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-002 | Standardize startup commands | MEDIUM | NOT_STARTED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-002 | Standardize startup commands | MEDIUM | VALIDATED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | NOT_STARTED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | READY | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2338,9 +2338,9 @@ Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BA
 ### `OPS-001` Fix or retire obsolete `scripts/dev.mjs`
 
 **Severity:** MEDIUM
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-010, OWN-001
-**Last updated:** 2026-07-31T15:11:05.958Z
+**Last updated:** 2026-07-31T15:11:09.845Z
 
 #### Description
 
@@ -2360,16 +2360,16 @@ Static script check, dry-run/process tests, documentation review, and no server 
 
 #### Completion evidence
 
-Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs
+Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs, Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c
 
 ---
 
 ### `OPS-002` Standardize startup commands
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** VALIDATED
 **Dependencies:** OPS-001, BE-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:21:19.750Z
 
 #### Description
 
@@ -2389,7 +2389,7 @@ Static script checks, dry-run help, test gate, and documentation review.
 
 #### Completion evidence
 
-Not completed.
+--evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js, --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:21:19.764Z | OPS-002 | implemented | validated | shivam | --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution | `aa897b0d` |
+| 2026-07-31T15:21:12.996Z | OPS-002 | in_progress | implemented | shivam | --evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js | `1bf620b5` |
+| 2026-07-31T15:18:48.319Z | OPS-002 | ready | in_progress | shivam | Transition to in_progress | `67d183e1` |
+| 2026-07-31T15:11:09.883Z | OPS-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3fa4c8dc` |
+| 2026-07-31T15:11:09.857Z | OPS-001 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `9305d53a` |
 | 2026-07-31T15:11:05.973Z | OPS-001 | implemented | validated | shivam | Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs | `8af3b6c1` |
 | 2026-07-31T15:11:05.718Z | OPS-001 | in_progress | implemented | shivam | Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md | `390533d6` |
 | 2026-07-31T15:08:24.210Z | OPS-001 | ready | in_progress | shivam | Transition to in_progress | `390a4a66` |
 | 2026-07-31T15:07:11.054Z | DOC-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6896ec1f` |
 | 2026-07-31T15:07:10.979Z | DATA-012 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `085d87e9` |
-| 2026-07-31T15:07:07.094Z | DATA-012 | implemented | validated | shivam | Validated via Neon backup strategy review, restore process audit, and destructive check safety verification | `cdc480a4` |
-| 2026-07-31T15:07:06.840Z | DATA-012 | in_progress | implemented | shivam | Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md | `8bb851f5` |
-| 2026-07-31T15:05:41.332Z | DATA-012 | ready | in_progress | shivam | Transition to in_progress | `bbccca9b` |
-| 2026-07-31T14:58:06.816Z | DATA-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `0ab4ea52` |
-| 2026-07-31T14:58:06.790Z | DATA-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `71be67b8` |
