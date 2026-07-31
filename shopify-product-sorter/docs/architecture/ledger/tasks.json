@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:51:58.254Z",
+  "last_updated": "2026-07-31T16:01:25.498Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1003,7 +1003,7 @@
       "title": "Create a Sorter router",
       "description": "Remediation task BE-002: Create a Sorter router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-002"
@@ -1017,13 +1017,16 @@
       "validation_commands": [
         "Route, unit, mocked Shopify, SQLite fixture, and existing-app regression tests."
       ],
-      "evidence": "",
+      "evidence": [
+        "--evidence Created dedicated Sorter router module server/src/routes/sorter.js owning all sorter/reorder endpoints without SKU or Sales Intelligence imports.",
+        "--evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.123Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T16:01:25.498Z",
+      "started_timestamp": "2026-07-31T15:54:07.433Z",
+      "implemented_timestamp": "2026-07-31T15:55:21.498Z",
+      "validated_timestamp": "2026-07-31T16:01:25.498Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
