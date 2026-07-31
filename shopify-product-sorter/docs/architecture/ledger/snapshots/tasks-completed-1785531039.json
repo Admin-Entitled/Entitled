@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T20:55:05.153Z",
+  "last_updated": "2026-07-31T20:50:39.182Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2043,7 +2043,7 @@
       "title": "Verify provider contracts and API-version compatibility",
       "description": "Remediation task INT-010: Verify provider contracts and API-version compatibility",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "INT-008",
         "BE-005"
@@ -2057,18 +2057,14 @@
       "validation_commands": [
         "Mocked integration, route, status, and regression checks."
       ],
-      "evidence": [
-        "--changed-files server/src/services/providerIntegration.test.js",
-        "--passed-tests providerIntegration.test.js",
-        "--evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:55:05.152Z",
-      "started_timestamp": "2026-07-31T20:51:26.058Z",
-      "implemented_timestamp": "2026-07-31T20:54:51.334Z",
-      "validated_timestamp": "2026-07-31T20:54:58.536Z",
-      "completed_timestamp": "2026-07-31T20:55:05.152Z",
+      "updated_timestamp": "2026-07-31T20:37:24.542Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {

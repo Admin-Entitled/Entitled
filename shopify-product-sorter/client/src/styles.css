@@ -256,16 +256,16 @@ textarea {
   margin-top: 22px;
 }
 
-label {
+.dashboard label {
   display: grid;
   gap: 8px;
   color: var(--muted);
   font-size: 13px;
 }
 
-input,
-select,
-textarea {
+.dashboard input,
+.dashboard select,
+.dashboard textarea {
   background: var(--surface-2);
   color: var(--text);
   border: 1px solid var(--border);
@@ -273,9 +273,9 @@ textarea {
   padding: 12px 14px;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+.dashboard input:focus,
+.dashboard select:focus,
+.dashboard textarea:focus {
   outline: 1px solid var(--metal);
 }
 
@@ -311,9 +311,9 @@ textarea:focus {
 }
 
 button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
+.dashboard input:focus-visible,
+.dashboard select:focus-visible,
+.dashboard textarea:focus-visible {
   outline: 2px solid var(--metal);
   outline-offset: 2px;
 }
@@ -541,21 +541,21 @@ textarea:focus-visible {
   font-weight: 400;
 }
 
-table {
+.dashboard table {
   width: 100%;
   border-collapse: collapse;
   min-width: 1180px;
 }
 
-th,
-td {
+.dashboard th,
+.dashboard td {
   border-bottom: 1px solid var(--border);
   text-align: left;
   padding: 14px 10px;
   vertical-align: top;
 }
 
-th {
+.dashboard th {
   color: var(--metal);
   font-size: 12px;
   text-transform: uppercase;

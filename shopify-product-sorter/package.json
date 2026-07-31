@@ -34,6 +34,7 @@
     "arch:checkpoint": "node scripts/architecture-ledger.mjs checkpoint",
     "arch:sync-obsidian": "node scripts/architecture-ledger.mjs sync-obsidian",
     "test:architecture-ledger": "node --test tests/architecture-ledger.test.js",
+    "test:client": "node --test --test-name-pattern='feature form and table styles stay inside dashboard features|front-end regression: Sorter, SKU Image Manager, and Order Mapping all render in dashboard' client/src/styles.test.js",
     "arch:reconcile": "node scripts/architecture-ledger.mjs reconcile",
     "arch:next": "node scripts/architecture-ledger.mjs next"
   },

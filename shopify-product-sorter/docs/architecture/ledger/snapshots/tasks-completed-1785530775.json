@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T20:55:05.153Z",
+  "last_updated": "2026-07-31T20:46:15.518Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2010,7 +2010,7 @@
       "title": "Remove duplicate clients after usage proof",
       "description": "Remediation task INT-009: Remove duplicate clients after usage proof",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "INT-003",
         "INT-007",
@@ -2025,17 +2025,14 @@
       "validation_commands": [
         "Static import scan, unit/integration, route, provider mocks, and regression gate."
       ],
-      "evidence": [
-        "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass.",
-        "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:50:39.182Z",
-      "started_timestamp": "2026-07-31T20:47:11.922Z",
-      "implemented_timestamp": "2026-07-31T20:50:25.182Z",
-      "validated_timestamp": "2026-07-31T20:50:31.827Z",
-      "completed_timestamp": "2026-07-31T20:50:39.182Z",
+      "updated_timestamp": "2026-07-31T20:37:24.529Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2043,7 +2040,7 @@
       "title": "Verify provider contracts and API-version compatibility",
       "description": "Remediation task INT-010: Verify provider contracts and API-version compatibility",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "INT-008",
         "BE-005"
@@ -2057,18 +2054,14 @@
       "validation_commands": [
         "Mocked integration, route, status, and regression checks."
       ],
-      "evidence": [
-        "--changed-files server/src/services/providerIntegration.test.js",
-        "--passed-tests providerIntegration.test.js",
-        "--evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:55:05.152Z",
-      "started_timestamp": "2026-07-31T20:51:26.058Z",
-      "implemented_timestamp": "2026-07-31T20:54:51.334Z",
-      "validated_timestamp": "2026-07-31T20:54:58.536Z",
-      "completed_timestamp": "2026-07-31T20:55:05.152Z",
+      "updated_timestamp": "2026-07-31T20:37:24.542Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -3438,7 +3431,7 @@
       "title": "Classify dead components and disabled placeholders",
       "description": "Remediation task CLEAN-004: Classify dead components and disabled placeholders",
       "severity": "LOW",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-011",
         "OWN-001"
@@ -3454,7 +3447,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:46:15.556Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

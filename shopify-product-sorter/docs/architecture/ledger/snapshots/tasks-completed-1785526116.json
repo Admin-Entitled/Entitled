@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T20:55:05.153Z",
+  "last_updated": "2026-07-31T19:28:36.923Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1707,7 +1707,7 @@
       "title": "Add frontend regression tests and classify placeholders",
       "description": "Remediation task FE-011: Add frontend regression tests and classify placeholders",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "not_started",
       "dependencies": [
         "FE-002",
         "FE-003",
@@ -1728,17 +1728,14 @@
       "validation_commands": [
         "Unit, browser, accessibility, route, build, and regression checks."
       ],
-      "evidence": [
-        "--evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules.",
-        "--evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:46:15.517Z",
-      "started_timestamp": "2026-07-31T20:38:52.540Z",
-      "implemented_timestamp": "2026-07-31T20:45:39.883Z",
-      "validated_timestamp": "2026-07-31T20:45:46.223Z",
-      "completed_timestamp": "2026-07-31T20:46:15.517Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -1976,7 +1973,7 @@
       "title": "Add deterministic integration mocks",
       "description": "Remediation task INT-008: Add deterministic integration mocks",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "INT-002",
         "INT-005",
@@ -1991,18 +1988,14 @@
       "validation_commands": [
         "Unit/integration tests, network denial, and regression gate."
       ],
-      "evidence": [
-        "Created server/src/mocks/integrationMocks.js with synthetic fixtures for Shopify & Shiprocket. Added server/src/services/providerIntegration.test.js with 12 deterministic provider tests.",
-        "All 12 provider integration tests pass network-free. 11/11 regression gate suites passed.",
-        "INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:37:24.493Z",
-      "started_timestamp": "2026-07-31T20:32:54.267Z",
-      "implemented_timestamp": "2026-07-31T20:37:24.299Z",
-      "validated_timestamp": "2026-07-31T20:37:24.392Z",
-      "completed_timestamp": "2026-07-31T20:37:24.493Z",
+      "updated_timestamp": "2026-07-31T15:43:47.899Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2010,7 +2003,7 @@
       "title": "Remove duplicate clients after usage proof",
       "description": "Remediation task INT-009: Remove duplicate clients after usage proof",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "not_started",
       "dependencies": [
         "INT-003",
         "INT-007",
@@ -2025,17 +2018,14 @@
       "validation_commands": [
         "Static import scan, unit/integration, route, provider mocks, and regression gate."
       ],
-      "evidence": [
-        "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass.",
-        "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:50:39.182Z",
-      "started_timestamp": "2026-07-31T20:47:11.922Z",
-      "implemented_timestamp": "2026-07-31T20:50:25.182Z",
-      "validated_timestamp": "2026-07-31T20:50:31.827Z",
-      "completed_timestamp": "2026-07-31T20:50:39.182Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2043,7 +2033,7 @@
       "title": "Verify provider contracts and API-version compatibility",
       "description": "Remediation task INT-010: Verify provider contracts and API-version compatibility",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "not_started",
       "dependencies": [
         "INT-008",
         "BE-005"
@@ -2057,18 +2047,14 @@
       "validation_commands": [
         "Mocked integration, route, status, and regression checks."
       ],
-      "evidence": [
-        "--changed-files server/src/services/providerIntegration.test.js",
-        "--passed-tests providerIntegration.test.js",
-        "--evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:55:05.152Z",
-      "started_timestamp": "2026-07-31T20:51:26.058Z",
-      "implemented_timestamp": "2026-07-31T20:54:51.334Z",
-      "validated_timestamp": "2026-07-31T20:54:58.536Z",
-      "completed_timestamp": "2026-07-31T20:55:05.152Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -3438,7 +3424,7 @@
       "title": "Classify dead components and disabled placeholders",
       "description": "Remediation task CLEAN-004: Classify dead components and disabled placeholders",
       "severity": "LOW",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-011",
         "OWN-001"
@@ -3454,7 +3440,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:46:15.556Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

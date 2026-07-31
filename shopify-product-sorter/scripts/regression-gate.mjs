@@ -22,6 +22,7 @@ const testSuites = [
   { name: "Collection Sync, Apply & Rollback", file: "server/src/services/collectionSyncApplyRollback.test.js" },
   { name: "Order Mapping Sync & Status Lifecycle", file: "server/src/services/orderMapping.test.js" },
   { name: "Order Mapping Client & UI Navigation", file: "client/src/api.test.js" },
+  { name: "Frontend Style Isolation", file: "client/src/styles.test.js" },
   { name: "SKU Media Operations", file: "server/src/services/shopifyMediaService.test.js" },
   { name: "Sales Intelligence API Contracts", file: "server/src/services/actualSalesService.test.js" },
   { name: "Order Mapping Migration Integrity", file: "server/src/services/orderMappingMigrations.test.js" },
