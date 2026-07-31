@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:07:17.253Z",
+  "last_updated": "2026-07-31T21:02:02.097Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2598,7 +2598,7 @@
       "title": "Review and isolate Graphify artifacts",
       "description": "Remediation task OPS-005: Review and isolate Graphify artifacts",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "OWN-009"
       ],
@@ -2611,18 +2611,14 @@
       "validation_commands": [
         "Git inventory, reproducibility check, ignore check, and owner review."
       ],
-      "evidence": [
-        "--changed-files .gitignore",
-        "--passed-tests npm run verify,npm run test:regression-gate",
-        "--evidence Isolated Graphify runtime cache (graphify-out/cache/) and temp files (.graphify_*) in .gitignore and untracked them from git index, while preserving canonical report and graph files (GRAPH_REPORT.md, graph.json, manifest.json, graph.html)."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:07:17.253Z",
-      "started_timestamp": "2026-07-31T21:05:04.040Z",
-      "implemented_timestamp": "2026-07-31T21:07:00.349Z",
-      "validated_timestamp": "2026-07-31T21:07:09.828Z",
-      "completed_timestamp": "2026-07-31T21:07:17.253Z",
+      "updated_timestamp": "2026-07-31T13:44:43.428Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
