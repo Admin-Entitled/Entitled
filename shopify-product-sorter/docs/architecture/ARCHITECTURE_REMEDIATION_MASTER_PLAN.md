@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:53:09.301Z` |
+| Generated timestamp | `2026-07-31T14:55:42.107Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `9c8e78e` |
+| Local commit | `6b31f14` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 59 |
-| Ready | 13 |
+| Ready | 12 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 44 |
-| Completion percentage | 34.1% |
+| Completed | 45 |
+| Completion percentage | 34.9% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `DATA-005`, `DATA-006`, `OPS-001`, `OPS-005`, `OPS-007`
+- Next ready tasks: `DATA-006`, `OPS-001`, `OPS-005`, `OPS-007`, `OPS-008`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -123,8 +123,8 @@
 | DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | BLOCKED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
 | DATA-002 | Document SQLite table ownership | CRITICAL | COMPLETED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-004 | Separate SKU audit data | HIGH | VALIDATED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-005 | Separate Sales Intelligence caches | HIGH | READY | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-004 | Separate SKU audit data | HIGH | COMPLETED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-005 | Separate Sales Intelligence caches | HIGH | VALIDATED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | READY | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-007 | Make runtime paths configurable | HIGH | NOT_STARTED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2077,9 +2077,9 @@ Not completed.
 ### `DATA-004` Separate SKU audit data
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-004, OWN-009
-**Last updated:** 2026-07-31T14:53:09.301Z
+**Last updated:** 2026-07-31T14:53:13.155Z
 
 #### Description
 
@@ -2099,16 +2099,16 @@ JSONL parse, redaction, write/rotation, SKU flow, and regression tests.
 
 #### Completion evidence
 
-Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md, Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis
+Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md, Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis, Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403
 
 ---
 
 ### `DATA-005` Separate Sales Intelligence caches
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** OWN-005, OWN-009
-**Last updated:** 2026-07-31T13:44:43.420Z
+**Last updated:** 2026-07-31T14:55:42.107Z
 
 #### Description
 
@@ -2128,7 +2128,7 @@ JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regressio
 
 #### Completion evidence
 
-Not completed.
+Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md, Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:55:42.121Z | DATA-005 | implemented | validated | shivam | Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification | `3a20248f` |
+| 2026-07-31T14:55:41.881Z | DATA-005 | in_progress | implemented | shivam | Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md | `788c7d7d` |
+| 2026-07-31T14:54:44.820Z | DATA-005 | ready | in_progress | shivam | Transition to in_progress | `67de21a2` |
+| 2026-07-31T14:53:13.166Z | DATA-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `59c05a78` |
 | 2026-07-31T14:53:09.314Z | DATA-004 | implemented | validated | shivam | Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis | `dfccc9a6` |
 | 2026-07-31T14:53:09.076Z | DATA-004 | in_progress | implemented | shivam | Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md | `1c645d26` |
 | 2026-07-31T14:52:11.672Z | DATA-004 | ready | in_progress | shivam | Transition to in_progress | `dcefbbde` |
 | 2026-07-31T14:51:08.264Z | DOC-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `1f12db1b` |
 | 2026-07-31T14:51:08.238Z | DATA-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `44433ee6` |
 | 2026-07-31T14:51:04.375Z | DATA-002 | implemented | validated | shivam | Validated via database.js schema review, table ownership audit, and cleanup task dependency verification | `a5f177d5` |
-| 2026-07-31T14:51:04.133Z | DATA-002 | in_progress | implemented | shivam | Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md | `615f866b` |
-| 2026-07-31T14:49:57.427Z | DATA-002 | ready | in_progress | shivam | Transition to in_progress | `128819f4` |
-| 2026-07-31T14:48:01.369Z | INT-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `6f2669a1` |
-| 2026-07-31T14:47:57.491Z | INT-007 | implemented | validated | shivam | Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification | `832a9d66` |

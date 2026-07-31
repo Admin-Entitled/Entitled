@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:55:42.107Z",
+  "last_updated": "2026-07-31T14:53:13.155Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2102,7 +2102,7 @@
       "title": "Separate Sales Intelligence caches",
       "description": "Remediation task DATA-005: Separate Sales Intelligence caches",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-005",
         "OWN-009"
@@ -2116,16 +2116,13 @@
       "validation_commands": [
         "JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regression tests."
       ],
-      "evidence": [
-        "Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md",
-        "Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:55:42.107Z",
-      "started_timestamp": "2026-07-31T14:54:44.806Z",
-      "implemented_timestamp": "2026-07-31T14:55:41.867Z",
-      "validated_timestamp": "2026-07-31T14:55:42.107Z",
+      "updated_timestamp": "2026-07-31T13:44:43.420Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
