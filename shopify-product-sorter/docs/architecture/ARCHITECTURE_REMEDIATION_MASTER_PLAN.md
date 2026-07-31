@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:00:19.031Z` |
+| Generated timestamp | `2026-07-31T14:09:12.356Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `c2beccc` |
+| Local commit | `de400fb` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 69 |
-| Ready | 17 |
+| Ready | 16 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 30 |
-| Completion percentage | 23.3% |
+| Completed | 31 |
+| Completion percentage | 24.0% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `BE-010`, `FE-001`, `INT-001`, `INT-004`, `DATA-002`
+- Next ready tasks: `FE-001`, `INT-001`, `INT-004`, `DATA-002`, `DATA-004`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -96,8 +96,8 @@
 | BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | COMPLETED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-009 | Standardize structured logging | MEDIUM | VALIDATED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-010 | Isolate startup migrations and side effects | CRITICAL | READY | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-010 | Isolate startup migrations and side effects | CRITICAL | VALIDATED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | READY | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | NOT_STARTED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1294,9 +1294,9 @@ Not completed.
 ### `BE-009` Standardize structured logging
 
 **Severity:** MEDIUM
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-006, BE-006
-**Last updated:** 2026-07-31T14:00:19.030Z
+**Last updated:** 2026-07-31T14:00:23.009Z
 
 #### Description
 
@@ -1316,16 +1316,16 @@ Unit log-shape tests, redaction tests, route checks, and manual diagnostics revi
 
 #### Completion evidence
 
-Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md, Validated via logger.js review, log consumer audit, and redaction rule verification
+Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md, Validated via logger.js review, log consumer audit, and redaction rule verification, Commit SHA: de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99
 
 ---
 
 ### `BE-010` Isolate startup migrations and side effects
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-009, SAFE-004
-**Last updated:** 2026-07-31T11:59:05.405Z
+**Last updated:** 2026-07-31T14:09:12.356Z
 
 #### Description
 
@@ -1345,7 +1345,7 @@ Migration tests, startup tests, route health, database integrity, and regression
 
 #### Completion evidence
 
-Not completed.
+Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md, Validated via index.js review, database.js migration audit, and side-effect isolation analysis
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:09:12.369Z | BE-010 | implemented | validated | shivam | Validated via index.js review, database.js migration audit, and side-effect isolation analysis | `2e1cc332` |
+| 2026-07-31T14:09:12.136Z | BE-010 | in_progress | implemented | shivam | Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md | `12b68229` |
+| 2026-07-31T14:07:33.270Z | BE-010 | ready | in_progress | shivam | Transition to in_progress | `69aadae7` |
+| 2026-07-31T14:00:23.018Z | BE-009 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `61b60dd9` |
 | 2026-07-31T14:00:19.044Z | BE-009 | implemented | validated | shivam | Validated via logger.js review, log consumer audit, and redaction rule verification | `2cfcebfc` |
 | 2026-07-31T14:00:18.772Z | BE-009 | in_progress | implemented | shivam | Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md | `be0e1701` |
 | 2026-07-31T13:58:58.638Z | BE-009 | ready | in_progress | shivam | Transition to in_progress | `a02e579b` |
 | 2026-07-31T13:56:49.867Z | BE-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1a5e4508` |
 | 2026-07-31T13:56:45.559Z | BE-007 | implemented | validated | shivam | Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests | `1cd81813` |
 | 2026-07-31T13:56:45.305Z | BE-007 | in_progress | implemented | shivam | Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md | `7a2222d0` |
-| 2026-07-31T13:55:30.467Z | BE-007 | ready | in_progress | shivam | Transition to in_progress | `8d5aa2fc` |
-| 2026-07-31T13:54:16.993Z | BE-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `10e4b56c` |
-| 2026-07-31T13:54:16.984Z | BE-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `c5129fce` |
-| 2026-07-31T13:54:16.959Z | BE-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `efa7f1ec` |

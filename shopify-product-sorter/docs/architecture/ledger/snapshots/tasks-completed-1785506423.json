@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:09:12.356Z",
+  "last_updated": "2026-07-31T14:00:23.009Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1239,7 +1239,7 @@
       "title": "Isolate startup migrations and side effects",
       "description": "Remediation task BE-010: Isolate startup migrations and side effects",
       "severity": "CRITICAL",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "TEST-009",
         "SAFE-004"
@@ -1253,16 +1253,13 @@
       "validation_commands": [
         "Migration tests, startup tests, route health, database integrity, and regression gate."
       ],
-      "evidence": [
-        "Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md",
-        "Validated via index.js review, database.js migration audit, and side-effect isolation analysis"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:09:12.356Z",
-      "started_timestamp": "2026-07-31T14:07:33.257Z",
-      "implemented_timestamp": "2026-07-31T14:09:12.123Z",
-      "validated_timestamp": "2026-07-31T14:09:12.356Z",
+      "updated_timestamp": "2026-07-31T11:59:05.405Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
