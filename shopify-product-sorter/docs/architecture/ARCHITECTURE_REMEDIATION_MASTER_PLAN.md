@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:13:07.364Z` |
+| Generated timestamp | `2026-07-31T14:15:24.215Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `b541301` |
+| Local commit | `c1298ca` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 68 |
-| Ready | 16 |
+| Not started | 65 |
+| Ready | 18 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 32 |
-| Completion percentage | 24.8% |
+| Completed | 33 |
+| Completion percentage | 25.6% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `INT-001`, `INT-004`, `DATA-002`, `DATA-004`, `DATA-005`
+- Next ready tasks: `FE-003`, `FE-005`, `INT-001`, `INT-004`, `DATA-002`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -99,11 +99,11 @@
 | BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-001 | Extract the application shell | HIGH | VALIDATED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-002 | Extract navigation ownership | HIGH | NOT_STARTED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-003 | Introduce explicit routing while preserving URLs | HIGH | NOT_STARTED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-002 | Extract navigation ownership | HIGH | VALIDATED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-003 | Introduce explicit routing while preserving URLs | HIGH | READY | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-005 | Extract the SKU Image Manager feature | HIGH | NOT_STARTED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-005 | Extract the SKU Image Manager feature | HIGH | READY | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | NOT_STARTED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | NOT_STARTED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | NOT_STARTED | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1381,9 +1381,9 @@ Not completed.
 ### `FE-001` Extract the application shell
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-011, OWN-001
-**Last updated:** 2026-07-31T14:13:07.364Z
+**Last updated:** 2026-07-31T14:13:11.307Z
 
 #### Description
 
@@ -1403,16 +1403,16 @@ Frontend unit/E2E, route, accessibility, build, and existing-app regression chec
 
 #### Completion evidence
 
-Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping
+Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping, Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d
 
 ---
 
 ### `FE-002` Extract navigation ownership
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** VALIDATED
 **Dependencies:** FE-001, OWN-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T14:15:24.215Z
 
 #### Description
 
@@ -1432,16 +1432,16 @@ Browser navigation, accessibility, route, and regression tests.
 
 #### Completion evidence
 
-Not completed.
+Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check
 
 ---
 
 ### `FE-003` Introduce explicit routing while preserving URLs
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-008, FE-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T14:13:11.342Z
 
 #### Description
 
@@ -1497,9 +1497,9 @@ Not completed.
 ### `FE-005` Extract the SKU Image Manager feature
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-001, OWN-004, TEST-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T14:13:11.352Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:15:24.228Z | FE-002 | implemented | validated | shivam | Validated via sidebar module audit, active state derivation review, and disabled label safety check | `1134acc7` |
+| 2026-07-31T14:15:23.982Z | FE-002 | in_progress | implemented | shivam | Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md | `b96916b8` |
+| 2026-07-31T14:14:14.165Z | FE-002 | ready | in_progress | shivam | Transition to in_progress | `0d9fb9d6` |
+| 2026-07-31T14:13:11.360Z | FE-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `843d6826` |
+| 2026-07-31T14:13:11.350Z | FE-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `aab25878` |
+| 2026-07-31T14:13:11.341Z | FE-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `262db208` |
+| 2026-07-31T14:13:11.316Z | FE-001 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `0c21031e` |
 | 2026-07-31T14:13:07.378Z | FE-001 | implemented | validated | shivam | Validated via App.jsx review, module registry audit, and business logic extraction mapping | `8abd0e35` |
 | 2026-07-31T14:13:07.134Z | FE-001 | in_progress | implemented | shivam | Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md | `dd29f10e` |
 | 2026-07-31T14:11:08.372Z | FE-001 | ready | in_progress | shivam | Transition to in_progress | `3f939f6c` |
-| 2026-07-31T14:09:16.478Z | DATA-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `777a6754` |
-| 2026-07-31T14:09:16.452Z | BE-010 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `7253e498` |
-| 2026-07-31T14:09:12.369Z | BE-010 | implemented | validated | shivam | Validated via index.js review, database.js migration audit, and side-effect isolation analysis | `2e1cc332` |
-| 2026-07-31T14:09:12.136Z | BE-010 | in_progress | implemented | shivam | Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md | `12b68229` |
-| 2026-07-31T14:07:33.270Z | BE-010 | ready | in_progress | shivam | Transition to in_progress | `69aadae7` |
-| 2026-07-31T14:00:23.018Z | BE-009 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `61b60dd9` |
-| 2026-07-31T14:00:19.044Z | BE-009 | implemented | validated | shivam | Validated via logger.js review, log consumer audit, and redaction rule verification | `2cfcebfc` |

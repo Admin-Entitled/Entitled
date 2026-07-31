@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:15:24.215Z",
+  "last_updated": "2026-07-31T14:13:11.307Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1335,7 +1335,7 @@
       "title": "Extract navigation ownership",
       "description": "Remediation task FE-002: Extract navigation ownership",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "FE-001",
         "OWN-007"
@@ -1349,16 +1349,13 @@
       "validation_commands": [
         "Browser navigation, accessibility, route, and regression tests."
       ],
-      "evidence": [
-        "Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md",
-        "Validated via sidebar module audit, active state derivation review, and disabled label safety check"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:15:24.215Z",
-      "started_timestamp": "2026-07-31T14:14:14.150Z",
-      "implemented_timestamp": "2026-07-31T14:15:23.966Z",
-      "validated_timestamp": "2026-07-31T14:15:24.215Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -1367,7 +1364,7 @@
       "title": "Introduce explicit routing while preserving URLs",
       "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "TEST-008",
         "FE-001"
@@ -1384,7 +1381,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:13:11.342Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1427,7 +1424,7 @@
       "title": "Extract the SKU Image Manager feature",
       "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-001",
         "OWN-004",
@@ -1445,7 +1442,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:13:11.352Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
