@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T21:23:51.227Z` |
+| Generated timestamp | `2026-07-31T21:26:00.848Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `4725ea6` |
+| Local commit | `294d976` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 33 |
-| Ready | 14 |
+| Ready | 13 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 71 |
-| Completion percentage | 55.0% |
+| Completed | 72 |
+| Completion percentage | 55.8% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OPS-ARCH-001`, `SEC-001`, `SEC-003`, `SEC-004`, `DOC-001`
+- Next ready tasks: `SEC-001`, `SEC-003`, `SEC-004`, `DOC-001`, `DOC-003`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -141,7 +141,7 @@
 | OPS-007 | Review Playwright artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-008 | Review test outputs and cache artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | READY | None | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | COMPLETED | None | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-001 | Assess authentication boundary | CRITICAL | READY | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-002 | Add route authorization boundaries | CRITICAL | NOT_STARTED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-003 | Correct secret handling and tracked token risk | CRITICAL | READY | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2543,7 +2543,7 @@ File classification, test discovery, ignore checks, and owner review.
 **Severity:** LOW
 **Status:** COMPLETED
 **Dependencies:** OWN-009
-**Last updated:** 2026-07-31T21:23:51.227Z
+**Last updated:** 2026-07-31T21:24:09.080Z
 
 #### Description
 
@@ -2563,7 +2563,7 @@ Test discovery, Git/ignore checks, and clean checkout simulation.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets.
+--changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets., Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9
 
 ---
 
@@ -2599,9 +2599,9 @@ Not completed.
 ### `OPS-ARCH-001` OPS-ARCH-001
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** None
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T21:26:00.847Z
 
 #### Description
 
@@ -2619,7 +2619,7 @@ None
 
 #### Completion evidence
 
-Not completed.
+--passed-tests npm run arch:doctor,npm run test:architecture-ledger, --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing).
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T21:26:00.865Z | OPS-ARCH-001 | validated | completed | shivam | --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing). | `79b95d33` |
+| 2026-07-31T21:25:53.789Z | OPS-ARCH-001 | implemented | validated | shivam | --passed-tests npm run arch:doctor,npm run test:architecture-ledger | `9b9dad79` |
+| 2026-07-31T21:25:42.272Z | OPS-ARCH-001 | in_progress | implemented | shivam | Transition to implemented | `23a2a94b` |
+| 2026-07-31T21:25:16.250Z | OPS-ARCH-001 | ready | in_progress | shivam | Transition to in_progress | `24a320f8` |
+| 2026-07-31T21:24:09.095Z | OPS-008 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `84733cf6` |
 | 2026-07-31T21:23:51.248Z | OPS-008 | validated | completed | shivam | --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets. | `623fd5d2` |
 | 2026-07-31T21:23:44.872Z | OPS-008 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `da127c67` |
 | 2026-07-31T21:23:38.214Z | OPS-008 | in_progress | implemented | shivam | --changed-files .gitignore | `d2b8800c` |
 | 2026-07-31T21:20:40.482Z | OPS-008 | ready | in_progress | shivam | Transition to in_progress | `6cef8101` |
 | 2026-07-31T21:14:22.833Z | OPS-007 | validated | completed | shivam | --evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable. | `c0067913` |
-| 2026-07-31T21:14:15.130Z | OPS-007 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate | `f8108cb9` |
-| 2026-07-31T21:14:08.218Z | OPS-007 | in_progress | implemented | shivam | --changed-files .gitignore | `d91d7d78` |
-| 2026-07-31T21:12:47.330Z | OPS-007 | ready | in_progress | shivam | Transition to in_progress | `8701fdce` |
-| 2026-07-31T21:07:38.286Z | OPS-005 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `b0fe5222` |
-| 2026-07-31T21:07:17.269Z | OPS-005 | validated | completed | shivam | --evidence Isolated Graphify runtime cache (graphify-out/cache/) and temp files (.graphify_*) in .gitignore and untracked them from git index, while preserving canonical report and graph files (GRAPH_REPORT.md, graph.json, manifest.json, graph.html). | `3a70486a` |

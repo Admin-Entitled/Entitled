@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:23:51.227Z",
+  "last_updated": "2026-07-31T21:26:00.848Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2708,15 +2708,16 @@
       "evidence": [
         "--changed-files .gitignore",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets."
+        "--evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets.",
+        "Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:23:51.227Z",
+      "updated_timestamp": "2026-07-31T21:24:09.080Z",
       "started_timestamp": "2026-07-31T21:20:40.465Z",
       "implemented_timestamp": "2026-07-31T21:23:38.195Z",
       "validated_timestamp": "2026-07-31T21:23:44.856Z",
-      "completed_timestamp": "2026-07-31T21:23:51.227Z",
+      "completed_timestamp": "2026-07-31T21:24:09.080Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2753,19 +2754,22 @@
       "title": "OPS-ARCH-001",
       "description": "Task OPS-ARCH-001",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [],
       "blocking_reasons": [],
       "acceptance_criteria": [],
       "validation_commands": [],
-      "evidence": "",
+      "evidence": [
+        "--passed-tests npm run arch:doctor,npm run test:architecture-ledger",
+        "--evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing)."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:26:00.847Z",
+      "started_timestamp": "2026-07-31T21:25:16.233Z",
+      "implemented_timestamp": "2026-07-31T21:25:42.253Z",
+      "validated_timestamp": "2026-07-31T21:25:53.773Z",
+      "completed_timestamp": "2026-07-31T21:26:00.847Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
