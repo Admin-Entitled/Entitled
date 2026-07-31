@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T12:16:20.421Z",
+  "last_updated": "2026-07-31T12:26:55.931Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -714,7 +714,7 @@
       "title": "Define SKU Image Manager boundary",
       "description": "Remediation task OWN-004: Define SKU Image Manager boundary",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "OWN-001",
         "TEST-006"
@@ -728,13 +728,17 @@
       "validation_commands": [
         "Static imports, route matrix, mocked media contract tests, and owner sign-off."
       ],
-      "evidence": "",
+      "evidence": [
+        "Defining SKU Image Manager boundary specification",
+        "Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md",
+        "Validated via static imports, route matrix, and shopifyMediaService.test.js passing"
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:59:05.286Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T12:26:55.931Z",
+      "started_timestamp": "2026-07-31T12:22:22.819Z",
+      "implemented_timestamp": "2026-07-31T12:26:39.137Z",
+      "validated_timestamp": "2026-07-31T12:26:55.931Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

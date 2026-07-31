@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T12:16:20.421Z` |
+| Generated timestamp | `2026-07-31T12:26:55.931Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `77e237a` |
+| Local commit | `57e48a4` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,11 +37,11 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 87 |
-| Ready | 9 |
+| Ready | 8 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
 | Completed | 21 |
@@ -50,7 +50,7 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OWN-004`, `OWN-005`, `OWN-006`, `OWN-008`, `BE-010`
+- Next ready tasks: `OWN-005`, `OWN-006`, `OWN-008`, `BE-010`, `FE-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -81,7 +81,7 @@
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-004 | Define SKU Image Manager boundary | HIGH | READY | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-004 | Define SKU Image Manager boundary | HIGH | VALIDATED | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | READY | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-006 | Define System Diagnostics ownership | MEDIUM | READY | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-007 | Approve route ownership matrix | CRITICAL | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -859,9 +859,9 @@ Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping
 ### `OWN-004` Define SKU Image Manager boundary
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** OWN-001, TEST-006
-**Last updated:** 2026-07-31T11:59:05.286Z
+**Last updated:** 2026-07-31T12:26:55.931Z
 
 #### Description
 
@@ -881,7 +881,7 @@ Static imports, route matrix, mocked media contract tests, and owner sign-off.
 
 #### Completion evidence
 
-Not completed.
+Defining SKU Image Manager boundary specification, Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md, Validated via static imports, route matrix, and shopifyMediaService.test.js passing
 
 ---
 
@@ -3929,6 +3929,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T12:26:55.943Z | OWN-004 | implemented | validated | shivam | Validated via static imports, route matrix, and shopifyMediaService.test.js passing | `4af2ab2d` |
+| 2026-07-31T12:26:39.149Z | OWN-004 | in_progress | implemented | shivam | Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md | `9f1d21b3` |
+| 2026-07-31T12:22:22.831Z | OWN-004 | ready | in_progress | shivam | Defining SKU Image Manager boundary specification | `81c85086` |
 | 2026-07-31T12:16:20.432Z | OWN-003 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `cc1277f7` |
 | 2026-07-31T12:15:41.199Z | OWN-003 | implemented | validated | shivam | Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js | `35614a58` |
 | 2026-07-31T12:15:33.278Z | OWN-003 | in_progress | implemented | shivam | Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md | `571fae5a` |
@@ -3936,6 +3939,3 @@ Not completed.
 | 2026-07-31T11:59:05.438Z | DOC-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `276e484d` |
 | 2026-07-31T11:59:05.429Z | OPS-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `45fb541c` |
 | 2026-07-31T11:59:05.421Z | FE-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2f3155d3` |
-| 2026-07-31T11:59:05.413Z | BE-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f2fc8d75` |
-| 2026-07-31T11:59:05.404Z | OWN-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `51ebac2d` |
-| 2026-07-31T11:59:05.313Z | OWN-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ad9e556c` |
