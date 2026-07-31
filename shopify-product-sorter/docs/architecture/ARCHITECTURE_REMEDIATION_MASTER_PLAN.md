@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T13:29:04.807Z` |
+| Generated timestamp | `2026-07-31T13:37:05.772Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `25de38d` |
+| Local commit | `c201983` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 82 |
-| Ready | 10 |
+| Ready | 9 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 24 |
-| Completion percentage | 18.6% |
+| Completed | 25 |
+| Completion percentage | 19.4% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OWN-008`, `OWN-009`, `OWN-010`, `BE-006`, `BE-010`
+- Next ready tasks: `OWN-009`, `OWN-010`, `BE-006`, `BE-010`, `FE-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -84,8 +84,8 @@
 | OWN-004 | Define SKU Image Manager boundary | HIGH | COMPLETED | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | COMPLETED | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-006 | Define System Diagnostics ownership | MEDIUM | COMPLETED | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-007 | Approve route ownership matrix | CRITICAL | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-008 | Approve data ownership matrix | CRITICAL | READY | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-007 | Approve route ownership matrix | CRITICAL | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-008 | Approve data ownership matrix | CRITICAL | VALIDATED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | NOT_STARTED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -946,9 +946,9 @@ Defining System Diagnostics ownership specification, Defined System Diagnostics 
 ### `OWN-007` Approve route ownership matrix
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008
-**Last updated:** 2026-07-31T13:29:04.806Z
+**Last updated:** 2026-07-31T13:29:08.984Z
 
 #### Description
 
@@ -968,16 +968,16 @@ Static route scan, route matrix review, and contract test inventory.
 
 #### Completion evidence
 
-Defining data store ownership boundaries, Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md, Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths
+Defining data store ownership boundaries, Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md, Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths, Commit SHA: c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c
 
 ---
 
 ### `OWN-008` Approve data ownership matrix
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:37:05.772Z
 
 #### Description
 
@@ -997,7 +997,7 @@ Static references, file inventory, schema inventory, and owner review.
 
 #### Completion evidence
 
-Not completed.
+Approving data ownership matrix, Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md, Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T13:37:05.785Z | OWN-008 | implemented | validated | shivam | Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files | `12d52243` |
+| 2026-07-31T13:37:05.534Z | OWN-008 | in_progress | implemented | shivam | Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md | `4c334c2d` |
+| 2026-07-31T13:32:26.186Z | OWN-008 | ready | in_progress | shivam | Approving data ownership matrix | `8788c118` |
+| 2026-07-31T13:29:08.992Z | OWN-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `127039f7` |
 | 2026-07-31T13:29:04.818Z | OWN-007 | implemented | validated | shivam | Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths | `409ac299` |
 | 2026-07-31T13:29:04.591Z | OWN-007 | in_progress | implemented | shivam | Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md | `42fad116` |
 | 2026-07-31T13:26:55.818Z | OWN-007 | ready | in_progress | shivam | Defining data store ownership boundaries | `858ec3f1` |
 | 2026-07-31T13:23:33.453Z | DOC-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ee4a9a23` |
 | 2026-07-31T13:23:33.445Z | BE-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6ecafac6` |
 | 2026-07-31T13:23:33.436Z | OWN-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `904725c7` |
-| 2026-07-31T13:23:33.428Z | OWN-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e710aee3` |
-| 2026-07-31T13:23:33.420Z | OWN-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `8b57a7b0` |
-| 2026-07-31T13:23:33.396Z | OWN-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1c873610` |
-| 2026-07-31T13:23:29.599Z | OWN-006 | implemented | validated | shivam | Validated via static route review, sensitive field audit, and data ownership distinction verified | `ce394aff` |
