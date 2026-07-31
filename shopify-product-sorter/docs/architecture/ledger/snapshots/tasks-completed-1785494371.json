@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T10:43:08.761Z",
+  "last_updated": "2026-07-31T10:39:31.889Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -352,7 +352,7 @@
       "title": "Protect CSV import and manual overrides",
       "description": "Remediation task TEST-005: Protect CSV import and manual overrides",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "SAFE-004"
       ],
@@ -365,17 +365,13 @@
       "validation_commands": [
         "Unit, integration, database integrity, route contract, and synthetic CSV manual check."
       ],
-      "evidence": [
-        "Starting implementation of TEST-005: Protect CSV import and manual overrides",
-        "Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction.",
-        "Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics."
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T10:43:08.760Z",
-      "started_timestamp": "2026-07-31T10:42:02.923Z",
-      "implemented_timestamp": "2026-07-31T10:43:00.995Z",
-      "validated_timestamp": "2026-07-31T10:43:08.760Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

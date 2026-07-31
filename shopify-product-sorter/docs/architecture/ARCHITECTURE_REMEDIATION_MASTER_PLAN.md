@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T10:39:12.754Z` |
+| Generated timestamp | `2026-07-31T10:43:08.761Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `e2bb549` |
+| Local commit | `634ad1a` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 95 |
-| Ready | 9 |
+| Ready | 8 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 12 |
-| Completion percentage | 9.3% |
+| Completed | 13 |
+| Completion percentage | 10.1% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `TEST-005`, `TEST-006`, `TEST-007`, `TEST-008`, `TEST-009`
+- Next ready tasks: `TEST-006`, `TEST-007`, `TEST-008`, `TEST-009`, `TEST-010`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -69,8 +69,8 @@
 | TEST-001 | Protect sorter scoring and core logic | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-002 | Protect collection sync/apply/rollback | CRITICAL | VALIDATED | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-003 | Protect collection reorder contracts | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | VALIDATED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-005 | Protect CSV import and manual overrides | HIGH | READY | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-005 | Protect CSV import and manual overrides | HIGH | VALIDATED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-006 | Protect SKU media operations | HIGH | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-007 | Protect Sales Intelligence API contracts | HIGH | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-008 | Protect public route compatibility | CRITICAL | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -511,9 +511,9 @@ Collection reorder contract test suite server/src/services/collectionReorderCont
 ### `TEST-004` Protect Order Mapping sync/status lifecycle
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-004
-**Last updated:** 2026-07-31T10:39:12.754Z
+**Last updated:** 2026-07-31T10:39:31.889Z
 
 #### Description
 
@@ -533,16 +533,16 @@ Unit, integration, isolated PostgreSQL integrity, network-log assertions, and no
 
 #### Completion evidence
 
-Starting task TEST-004: Protect Order Mapping sync/status lifecycle, Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides., Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override).
+Starting task TEST-004: Protect Order Mapping sync/status lifecycle, Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides., Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override)., Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e
 
 ---
 
 ### `TEST-005` Protect CSV import and manual overrides
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SAFE-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T10:43:08.760Z
 
 #### Description
 
@@ -562,7 +562,7 @@ Unit, integration, database integrity, route contract, and synthetic CSV manual 
 
 #### Completion evidence
 
-Not completed.
+Starting implementation of TEST-005: Protect CSV import and manual overrides, Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction., Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T10:43:08.772Z | TEST-005 | implemented | validated | shivam | Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics. | `e59f5cd1` |
+| 2026-07-31T10:43:01.006Z | TEST-005 | in_progress | implemented | shivam | Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction. | `4f020828` |
+| 2026-07-31T10:42:02.935Z | TEST-005 | ready | in_progress | shivam | Starting implementation of TEST-005: Protect CSV import and manual overrides | `4d2a58a0` |
+| 2026-07-31T10:39:31.897Z | TEST-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `dc40323c` |
 | 2026-07-31T10:39:12.765Z | TEST-004 | implemented | validated | shivam | Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override). | `e59e3dc5` |
 | 2026-07-31T10:39:06.098Z | TEST-004 | in_progress | implemented | shivam | Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides. | `d92104b3` |
 | 2026-07-31T10:37:56.194Z | TEST-004 | in_progress | in_progress | shivam | Starting task TEST-004: Protect Order Mapping sync/status lifecycle | `e82fd2ac` |
 | 2026-07-31T10:32:53.899Z | TEST-004 | ready | in_progress | shivam | Transition to in_progress | `898b2c7c` |
 | 2026-07-31T10:31:03.314Z | SAFE-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `d237150c` |
 | 2026-07-31T10:30:47.690Z | SAFE-006 | implemented | validated | shivam | Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks. | `74075b7d` |
-| 2026-07-31T10:30:39.556Z | SAFE-006 | in_progress | implemented | shivam | Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) | `b296a403` |
-| 2026-07-31T10:28:10.198Z | SAFE-006 | ready | in_progress | shivam | Transition to in_progress | `c0ad4b57` |
-| 2026-07-31T08:01:57.073Z | TEST-002 | implemented | validated | shivam | Transition to validated | `6462928e` |
-| 2026-07-31T08:01:56.981Z | TEST-002 | in_progress | implemented | shivam | Transition to implemented | `51a73eaf` |
