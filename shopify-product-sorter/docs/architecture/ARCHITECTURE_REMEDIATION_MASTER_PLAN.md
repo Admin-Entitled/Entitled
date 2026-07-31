@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T21:58:25.060Z` |
+| Generated timestamp | `2026-07-31T22:07:54.797Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `0abeb58` |
+| Local commit | `148083b` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -2427,7 +2427,7 @@ Route tests, startup matrix, script dry-run, and security review.
 **Severity:** MEDIUM
 **Status:** COMPLETED
 **Dependencies:** OWN-006, BE-009, SEC-006
-**Last updated:** 2026-07-31T21:58:25.059Z
+**Last updated:** 2026-07-31T22:07:54.797Z
 
 #### Description
 
@@ -2447,7 +2447,7 @@ Route/UI, redaction, size-limit, and regression checks.
 
 #### Completion evidence
 
---changed-files server/src/routes/api.js,server/src/routes/health.test.js, --passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate, --evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields.
+--changed-files server/src/routes/api.js,server/src/routes/health.test.js, --passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate, --evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields., Commit SHA: ed3dbac7e924a9dec82294ba12d6bb6b595dabae, --evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree.
 
 ---
 
@@ -3929,6 +3929,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T22:07:54.824Z | OPS-004 | completed | completed | shivam | --evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree. | `1bd75a31` |
+| 2026-07-31T22:05:04.810Z | OPS-004 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `554d7838` |
 | 2026-07-31T21:58:25.076Z | OPS-004 | validated | completed | shivam | --evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields. | `f5ac17ff` |
 | 2026-07-31T21:58:24.370Z | OPS-004 | implemented | validated | shivam | --passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate | `9559c099` |
 | 2026-07-31T21:58:23.681Z | OPS-004 | in_progress | implemented | shivam | --changed-files server/src/routes/api.js,server/src/routes/health.test.js | `31f9057e` |
@@ -3937,5 +3939,3 @@ Not completed.
 | 2026-07-31T21:50:28.057Z | OPS-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `54f58a8a` |
 | 2026-07-31T21:50:28.026Z | SEC-006 | validated | completed | shivam | --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns. | `8f420af1` |
 | 2026-07-31T21:50:27.348Z | SEC-006 | implemented | validated | shivam | --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate | `504057e7` |
-| 2026-07-31T21:50:26.820Z | SEC-006 | in_progress | implemented | shivam | --changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js | `4af2a830` |
-| 2026-07-31T21:46:48.733Z | SEC-006 | ready | in_progress | shivam | Transition to in_progress | `c3f14641` |

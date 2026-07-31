@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:58:25.060Z",
+  "last_updated": "2026-07-31T22:07:54.797Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2586,15 +2586,17 @@
       "evidence": [
         "--changed-files server/src/routes/api.js,server/src/routes/health.test.js",
         "--passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate",
-        "--evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields."
+        "--evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields.",
+        "Commit SHA: ed3dbac7e924a9dec82294ba12d6bb6b595dabae",
+        "--evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:58:25.059Z",
+      "updated_timestamp": "2026-07-31T22:07:54.797Z",
       "started_timestamp": "2026-07-31T21:50:49.376Z",
       "implemented_timestamp": "2026-07-31T21:58:23.663Z",
       "validated_timestamp": "2026-07-31T21:58:24.353Z",
-      "completed_timestamp": "2026-07-31T21:58:25.059Z",
+      "completed_timestamp": "2026-07-31T22:07:54.797Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
