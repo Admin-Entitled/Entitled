@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:46:05.022Z",
+  "last_updated": "2026-07-31T14:44:04.636Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1790,7 +1790,7 @@
       "title": "Define shared Shiprocket transport",
       "description": "Remediation task INT-005: Define shared Shiprocket transport",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "INT-004"
       ],
@@ -1803,16 +1803,13 @@
       "validation_commands": [
         "Mocked provider tests, timeout/429/401 cases, logs, and regression gate."
       ],
-      "evidence": [
-        "Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md",
-        "Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:46:05.022Z",
-      "started_timestamp": "2026-07-31T14:45:23.303Z",
-      "implemented_timestamp": "2026-07-31T14:46:04.784Z",
-      "validated_timestamp": "2026-07-31T14:46:05.022Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
