@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T16:01:36.955Z",
+  "last_updated": "2026-07-31T16:06:49.754Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1039,7 +1039,7 @@
       "title": "Create a SKU Image Manager router",
       "description": "Remediation task BE-003: Create a SKU Image Manager router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-004"
@@ -1053,13 +1053,19 @@
       "validation_commands": [
         "Route, mocked Shopify, upload cleanup, audit, and frontend regression tests."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "--evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed.",
+        "--evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite."
+      ],
+      "changed_files": [
+        "server/src/routes/skuMedia.js",
+        "server/src/routes/api.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.205Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T16:06:49.753Z",
+      "started_timestamp": "2026-07-31T16:05:24.622Z",
+      "implemented_timestamp": "2026-07-31T16:06:42.100Z",
+      "validated_timestamp": "2026-07-31T16:06:49.753Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
