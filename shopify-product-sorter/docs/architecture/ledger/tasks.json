@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T16:07:22.601Z",
+  "last_updated": "2026-07-31T16:11:58.116Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1075,7 +1075,7 @@
       "title": "Create a Sales Intelligence router",
       "description": "Remediation task BE-004: Create a Sales Intelligence router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-005"
@@ -1089,13 +1089,19 @@
       "validation_commands": [
         "Route contracts, synthetic cache tests, CSV tests, startup, and regression gate."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "--evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js.",
+        "--evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite."
+      ],
+      "changed_files": [
+        "server/src/routes/salesIntelligence.js",
+        "server/src/routes/api.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.216Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T16:11:58.116Z",
+      "started_timestamp": "2026-07-31T16:08:36.095Z",
+      "implemented_timestamp": "2026-07-31T16:11:51.431Z",
+      "validated_timestamp": "2026-07-31T16:11:58.116Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
