@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:40:31.020Z` |
+| Generated timestamp | `2026-07-31T15:43:28.501Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `8741148` |
+| Local commit | `f3690e8` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,11 +37,11 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 54 |
-| Ready | 13 |
+| Ready | 12 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 0 |
+| Validated | 1 |
 | Blocked | 3 |
 | Deferred | 8 |
 | Completed | 51 |
@@ -50,7 +50,7 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `TEST-012`, `FE-004`, `OPS-005`, `OPS-007`, `OPS-008`
+- Next ready tasks: `FE-004`, `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -77,7 +77,7 @@
 | TEST-009 | Protect database migration safety | CRITICAL | COMPLETED | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-011 | Protect frontend navigation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-012 | Add integrated existing-app regression gate | HIGH | READY | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-012 | Add integrated existing-app regression gate | HIGH | VALIDATED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -743,9 +743,9 @@ Starting implementation of TEST-011: Protect frontend navigation, Added frontend
 ### `TEST-012` Add integrated existing-app regression gate
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011
-**Last updated:** 2026-07-31T15:40:31.008Z
+**Last updated:** 2026-07-31T15:43:28.501Z
 
 #### Description
 
@@ -765,7 +765,7 @@ Unit, integration, E2E, startup, migration, route, and test-isolation checks.
 
 #### Completion evidence
 
-Not completed.
+--evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json, --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json)
 
 ---
 
@@ -3929,6 +3929,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:43:28.515Z | TEST-012 | implemented | validated | shivam | --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json) | `5b93bb52` |
+| 2026-07-31T15:43:20.319Z | TEST-012 | in_progress | implemented | shivam | --evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json | `fee411a1` |
+| 2026-07-31T15:42:15.610Z | TEST-012 | ready | in_progress | shivam | Transition to in_progress | `9fe5cf03` |
 | 2026-07-31T15:40:31.030Z | FE-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `47445a5c` |
 | 2026-07-31T15:40:31.019Z | TEST-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `fa163ebe` |
 | 2026-07-31T15:40:30.992Z | TEST-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1f137ab7` |
@@ -3936,6 +3939,3 @@ Not completed.
 | 2026-07-31T15:21:19.764Z | OPS-002 | implemented | validated | shivam | --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution | `aa897b0d` |
 | 2026-07-31T15:21:12.996Z | OPS-002 | in_progress | implemented | shivam | --evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js | `1bf620b5` |
 | 2026-07-31T15:18:48.319Z | OPS-002 | ready | in_progress | shivam | Transition to in_progress | `67d183e1` |
-| 2026-07-31T15:11:09.883Z | OPS-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3fa4c8dc` |
-| 2026-07-31T15:11:09.857Z | OPS-001 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `9305d53a` |
-| 2026-07-31T15:11:05.973Z | OPS-001 | implemented | validated | shivam | Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs | `8af3b6c1` |
