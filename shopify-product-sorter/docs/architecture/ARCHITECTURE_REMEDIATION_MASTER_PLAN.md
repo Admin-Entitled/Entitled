@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T16:06:49.754Z` |
+| Generated timestamp | `2026-07-31T16:07:22.601Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `292e70e` |
+| Local commit | `641bf31` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -41,11 +41,11 @@
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 54 |
-| Completion percentage | 41.9% |
+| Completed | 55 |
+| Completion percentage | 42.6% |
 
 ## 4. Current execution focus
 
@@ -90,7 +90,7 @@
 | OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | COMPLETED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | COMPLETED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-003 | Create a SKU Image Manager router | HIGH | VALIDATED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-003 | Create a SKU Image Manager router | HIGH | COMPLETED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | READY | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-005 | Preserve existing backend URLs with adapters | CRITICAL | READY | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1120,9 +1120,9 @@ Route, unit, mocked Shopify, SQLite fixture, and existing-app regression tests.
 ### `BE-003` Create a SKU Image Manager router
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, OWN-004
-**Last updated:** 2026-07-31T16:06:49.753Z
+**Last updated:** 2026-07-31T16:07:22.600Z
 
 #### Description
 
@@ -1142,7 +1142,7 @@ Route, mocked Shopify, upload cleanup, audit, and frontend regression tests.
 
 #### Completion evidence
 
---evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed., --evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite.
+--evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed., --evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite., Commit SHA: 641bf31046bc8f6f0f3bde8c8b487411225a6b8b
 
 ---
 
@@ -3929,6 +3929,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T16:07:22.612Z | BE-003 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `a841145c` |
 | 2026-07-31T16:06:49.769Z | BE-003 | implemented | validated | shivam | --evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite. | `1f947eda` |
 | 2026-07-31T16:06:42.115Z | BE-003 | in_progress | implemented | shivam | --evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed. | `006f53c1` |
 | 2026-07-31T16:05:24.637Z | BE-003 | ready | in_progress | shivam | Transition to in_progress | `046d318c` |
@@ -3938,4 +3939,3 @@ Not completed.
 | 2026-07-31T15:54:07.447Z | BE-002 | ready | in_progress | shivam | Transition to in_progress | `a7b88982` |
 | 2026-07-31T15:51:58.263Z | BE-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e9e93bee` |
 | 2026-07-31T15:51:58.253Z | BE-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6b3b7b35` |
-| 2026-07-31T15:51:58.215Z | BE-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `781ac622` |
