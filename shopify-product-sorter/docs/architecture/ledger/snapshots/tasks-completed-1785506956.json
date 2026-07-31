@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:13:07.364Z",
+  "last_updated": "2026-07-31T14:09:16.444Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1302,7 +1302,7 @@
       "title": "Extract the application shell",
       "description": "Remediation task FE-001: Extract the application shell",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "TEST-011",
         "OWN-001"
@@ -1316,16 +1316,13 @@
       "validation_commands": [
         "Frontend unit/E2E, route, accessibility, build, and existing-app regression checks."
       ],
-      "evidence": [
-        "Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md",
-        "Validated via App.jsx review, module registry audit, and business logic extraction mapping"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:13:07.364Z",
-      "started_timestamp": "2026-07-31T14:11:08.360Z",
-      "implemented_timestamp": "2026-07-31T14:13:07.121Z",
-      "validated_timestamp": "2026-07-31T14:13:07.364Z",
+      "updated_timestamp": "2026-07-31T11:59:05.413Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -2082,7 +2079,7 @@
       "title": "Isolate Order Mapping PostgreSQL/migration state",
       "description": "Remediation task DATA-006: Isolate Order Mapping PostgreSQL/migration state",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "SAFE-004",
         "OWN-003",
@@ -2100,7 +2097,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:09:16.468Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

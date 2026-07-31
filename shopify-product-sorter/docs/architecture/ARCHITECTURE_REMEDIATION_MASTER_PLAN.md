@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:09:12.356Z` |
+| Generated timestamp | `2026-07-31T14:13:07.364Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `de400fb` |
+| Local commit | `b541301` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 69 |
+| Not started | 68 |
 | Ready | 16 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,13 +44,13 @@
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 31 |
-| Completion percentage | 24.0% |
+| Completed | 32 |
+| Completion percentage | 24.8% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-001`, `INT-001`, `INT-004`, `DATA-002`, `DATA-004`
+- Next ready tasks: `INT-001`, `INT-004`, `DATA-002`, `DATA-004`, `DATA-005`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -97,9 +97,9 @@
 | BE-007 | Remove hidden cross-application imports | HIGH | COMPLETED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-010 | Isolate startup migrations and side effects | CRITICAL | VALIDATED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-001 | Extract the application shell | HIGH | READY | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-001 | Extract the application shell | HIGH | VALIDATED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | NOT_STARTED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | NOT_STARTED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -125,7 +125,7 @@
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-004 | Separate SKU audit data | HIGH | READY | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-005 | Separate Sales Intelligence caches | HIGH | READY | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | NOT_STARTED | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | READY | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-007 | Make runtime paths configurable | HIGH | NOT_STARTED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1323,9 +1323,9 @@ Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STAN
 ### `BE-010` Isolate startup migrations and side effects
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-009, SAFE-004
-**Last updated:** 2026-07-31T14:09:12.356Z
+**Last updated:** 2026-07-31T14:09:16.443Z
 
 #### Description
 
@@ -1345,7 +1345,7 @@ Migration tests, startup tests, route health, database integrity, and regression
 
 #### Completion evidence
 
-Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md, Validated via index.js review, database.js migration audit, and side-effect isolation analysis
+Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md, Validated via index.js review, database.js migration audit, and side-effect isolation analysis, Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108
 
 ---
 
@@ -1381,9 +1381,9 @@ Not completed.
 ### `FE-001` Extract the application shell
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-011, OWN-001
-**Last updated:** 2026-07-31T11:59:05.413Z
+**Last updated:** 2026-07-31T14:13:07.364Z
 
 #### Description
 
@@ -1403,7 +1403,7 @@ Frontend unit/E2E, route, accessibility, build, and existing-app regression chec
 
 #### Completion evidence
 
-Not completed.
+Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping
 
 ---
 
@@ -2135,9 +2135,9 @@ Not completed.
 ### `DATA-006` Isolate Order Mapping PostgreSQL/migration state
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SAFE-004, OWN-003, BE-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T14:09:16.468Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:13:07.378Z | FE-001 | implemented | validated | shivam | Validated via App.jsx review, module registry audit, and business logic extraction mapping | `8abd0e35` |
+| 2026-07-31T14:13:07.134Z | FE-001 | in_progress | implemented | shivam | Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md | `dd29f10e` |
+| 2026-07-31T14:11:08.372Z | FE-001 | ready | in_progress | shivam | Transition to in_progress | `3f939f6c` |
+| 2026-07-31T14:09:16.478Z | DATA-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `777a6754` |
+| 2026-07-31T14:09:16.452Z | BE-010 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `7253e498` |
 | 2026-07-31T14:09:12.369Z | BE-010 | implemented | validated | shivam | Validated via index.js review, database.js migration audit, and side-effect isolation analysis | `2e1cc332` |
 | 2026-07-31T14:09:12.136Z | BE-010 | in_progress | implemented | shivam | Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md | `12b68229` |
 | 2026-07-31T14:07:33.270Z | BE-010 | ready | in_progress | shivam | Transition to in_progress | `69aadae7` |
 | 2026-07-31T14:00:23.018Z | BE-009 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `61b60dd9` |
 | 2026-07-31T14:00:19.044Z | BE-009 | implemented | validated | shivam | Validated via logger.js review, log consumer audit, and redaction rule verification | `2cfcebfc` |
-| 2026-07-31T14:00:18.772Z | BE-009 | in_progress | implemented | shivam | Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md | `be0e1701` |
-| 2026-07-31T13:58:58.638Z | BE-009 | ready | in_progress | shivam | Transition to in_progress | `a02e579b` |
-| 2026-07-31T13:56:49.867Z | BE-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1a5e4508` |
-| 2026-07-31T13:56:45.559Z | BE-007 | implemented | validated | shivam | Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests | `1cd81813` |
-| 2026-07-31T13:56:45.305Z | BE-007 | in_progress | implemented | shivam | Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md | `7a2222d0` |
