@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T17:37:48.191Z` |
+| Generated timestamp | `2026-07-31T17:54:58.553Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `5a4c30b` |
+| Local commit | `beda378` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 38 |
+| Not started | 37 |
 | Ready | 21 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,13 +44,13 @@
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 59 |
-| Completion percentage | 45.7% |
+| Completed | 60 |
+| Completion percentage | 46.5% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-007`, `FE-008`, `FE-009`, `INT-008`, `OPS-003`
+- Next ready tasks: `FE-008`, `FE-009`, `FE-010`, `INT-008`, `OPS-003`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -105,10 +105,10 @@
 | FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-007 | Separate application state | HIGH | READY | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-007 | Separate application state | HIGH | COMPLETED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | READY | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | READY | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-010 | Add feature error and loading boundaries | HIGH | NOT_STARTED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-010 | Add feature error and loading boundaries | HIGH | READY | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | NOT_STARTED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | COMPLETED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1470,7 +1470,7 @@ Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md,
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-07-31T17:37:48.133Z
+**Last updated:** 2026-07-31T17:38:08.224Z
 
 #### Description
 
@@ -1490,7 +1490,7 @@ Unit, browser, API mock, route, build, and full regression checks.
 
 #### Completion evidence
 
---evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests.
+--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820
 
 ---
 
@@ -1555,9 +1555,9 @@ Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_
 ### `FE-007` Separate application state
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** FE-004, FE-005, FE-006
-**Last updated:** 2026-07-31T17:37:48.165Z
+**Last updated:** 2026-07-31T17:54:58.518Z
 
 #### Description
 
@@ -1577,7 +1577,7 @@ Component tests, navigation tests, stale-state checks, and regression gate.
 
 #### Completion evidence
 
-Not completed.
+--evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed., --evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced.
 
 ---
 
@@ -1642,9 +1642,9 @@ Not completed.
 ### `FE-010` Add feature error and loading boundaries
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-003, FE-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T17:54:58.553Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T17:54:58.564Z | FE-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f90fb7c9` |
+| 2026-07-31T17:54:58.534Z | FE-007 | validated | completed | shivam | Transition to completed | `1dfb8d0a` |
+| 2026-07-31T17:54:43.583Z | FE-007 | implemented | validated | shivam | --evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced. | `a8d2c13d` |
+| 2026-07-31T17:54:28.799Z | FE-007 | in_progress | implemented | shivam | --evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed. | `d3cc6e2e` |
+| 2026-07-31T17:42:13.144Z | FE-007 | ready | in_progress | shivam | Transition to in_progress | `51a2a26f` |
+| 2026-07-31T17:38:08.236Z | FE-004 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `3ee2b65d` |
 | 2026-07-31T17:37:48.201Z | FE-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `347c81ba` |
 | 2026-07-31T17:37:48.190Z | FE-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3ce3d8ca` |
 | 2026-07-31T17:37:48.177Z | FE-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `00ce491e` |
 | 2026-07-31T17:37:48.147Z | FE-004 | validated | completed | shivam | Transition to completed | `efbf0872` |
-| 2026-07-31T17:36:39.162Z | FE-004 | implemented | validated | shivam | --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests. | `82ceb296` |
-| 2026-07-31T17:36:19.592Z | FE-004 | in_progress | implemented | shivam | --evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable. | `eef5314a` |
-| 2026-07-31T16:25:58.955Z | FE-004 | ready | in_progress | shivam | Transition to in_progress | `964672f8` |
-| 2026-07-31T16:21:38.319Z | CLEAN-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6724d7cd` |
-| 2026-07-31T16:21:37.785Z | BE-011 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `44a5c226` |
-| 2026-07-31T16:21:03.002Z | BE-011 | implemented | validated | shivam | --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect. | `2dfcac51` |

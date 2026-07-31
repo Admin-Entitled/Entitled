@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T17:54:58.553Z",
+  "last_updated": "2026-07-31T17:38:08.224Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1553,7 +1553,7 @@
       "title": "Separate application state",
       "description": "Remediation task FE-007: Separate application state",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "ready",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -1568,19 +1568,14 @@
       "validation_commands": [
         "Component tests, navigation tests, stale-state checks, and regression gate."
       ],
-      "evidence": [
-        "--evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed.",
-        "--evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced."
-      ],
-      "changed_files": [
-        "client/src/App.jsx"
-      ],
+      "evidence": "",
+      "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:54:58.518Z",
-      "started_timestamp": "2026-07-31T17:42:13.129Z",
-      "implemented_timestamp": "2026-07-31T17:54:28.784Z",
-      "validated_timestamp": "2026-07-31T17:54:43.568Z",
-      "completed_timestamp": "2026-07-31T17:54:58.518Z",
+      "updated_timestamp": "2026-07-31T17:37:48.165Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -1650,7 +1645,7 @@
       "title": "Add feature error and loading boundaries",
       "description": "Remediation task FE-010: Add feature error and loading boundaries",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-003",
         "FE-007"
@@ -1667,7 +1662,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:54:58.553Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
