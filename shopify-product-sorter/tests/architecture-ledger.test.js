@@ -289,6 +289,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
   it('retains validated status if checkpoint push fails', () => {
     setupFixture();
+    execSync('git init', { cwd: tmpDir, encoding: 'utf-8' });
     execSync(`node ${CLI_PATH} start TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
     execSync(`node ${CLI_PATH} implement TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
     execSync(`node ${CLI_PATH} validate-task TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
