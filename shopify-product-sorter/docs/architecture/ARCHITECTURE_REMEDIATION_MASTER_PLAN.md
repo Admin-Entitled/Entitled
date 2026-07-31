@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:21:45.218Z` |
+| Generated timestamp | `2026-07-31T15:40:31.020Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `d9339c6` |
+| Local commit | `8741148` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 56 |
-| Ready | 11 |
+| Not started | 54 |
+| Ready | 13 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 50 |
-| Completion percentage | 38.8% |
+| Completed | 51 |
+| Completion percentage | 39.5% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`, `SEC-001`
+- Next ready tasks: `TEST-012`, `FE-004`, `OPS-005`, `OPS-007`, `OPS-008`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -67,7 +67,7 @@
 | SAFE-007 | Validate restoration instructions | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
 | SAFE-008 | Record database ownership uncertainties | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-001 | Protect sorter scoring and core logic | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | VALIDATED | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
+| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | COMPLETED | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-003 | Protect collection reorder contracts | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-005 | Protect CSV import and manual overrides | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -77,7 +77,7 @@
 | TEST-009 | Protect database migration safety | CRITICAL | COMPLETED | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-011 | Protect frontend navigation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-012 | Add integrated existing-app regression gate | HIGH | NOT_STARTED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-012 | Add integrated existing-app regression gate | HIGH | READY | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -102,7 +102,7 @@
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-004 | Extract the Sorter feature | HIGH | READY | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | NOT_STARTED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -453,9 +453,9 @@ Sorter scoring test suite server/src/services/sorter.test.js (11 pass).
 ### `TEST-002` Protect collection sync/apply/rollback
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-008
-**Last updated:** 2026-07-31T08:01:57.063Z
+**Last updated:** 2026-07-31T15:40:30.981Z
 
 #### Description
 
@@ -475,7 +475,7 @@ Unit, route contract, mocked integration, SQLite test-db integrity, and manual r
 
 #### Completion evidence
 
-Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass).
+Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass)., Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028
 
 ---
 
@@ -743,9 +743,9 @@ Starting implementation of TEST-011: Protect frontend navigation, Added frontend
 ### `TEST-012` Add integrated existing-app regression gate
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:40:31.008Z
 
 #### Description
 
@@ -1468,9 +1468,9 @@ Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md,
 ### `FE-004` Extract the Sorter feature
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:40:31.020Z
 
 #### Description
 
@@ -3929,6 +3929,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:40:31.030Z | FE-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `47445a5c` |
+| 2026-07-31T15:40:31.019Z | TEST-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `fa163ebe` |
+| 2026-07-31T15:40:30.992Z | TEST-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1f137ab7` |
 | 2026-07-31T15:21:45.229Z | OPS-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `2da3a1f8` |
 | 2026-07-31T15:21:19.764Z | OPS-002 | implemented | validated | shivam | --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution | `aa897b0d` |
 | 2026-07-31T15:21:12.996Z | OPS-002 | in_progress | implemented | shivam | --evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js | `1bf620b5` |
@@ -3936,6 +3939,3 @@ Not completed.
 | 2026-07-31T15:11:09.883Z | OPS-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3fa4c8dc` |
 | 2026-07-31T15:11:09.857Z | OPS-001 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `9305d53a` |
 | 2026-07-31T15:11:05.973Z | OPS-001 | implemented | validated | shivam | Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs | `8af3b6c1` |
-| 2026-07-31T15:11:05.718Z | OPS-001 | in_progress | implemented | shivam | Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md | `390533d6` |
-| 2026-07-31T15:08:24.210Z | OPS-001 | ready | in_progress | shivam | Transition to in_progress | `390a4a66` |
-| 2026-07-31T15:07:11.054Z | DOC-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6896ec1f` |
