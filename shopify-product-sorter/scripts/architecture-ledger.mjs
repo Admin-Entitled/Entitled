@@ -434,8 +434,8 @@ function cmdDoctor() {
     if (fs.existsSync(PLAN_MARKDOWN_PATH)) {
       const currentMd = fs.readFileSync(PLAN_MARKDOWN_PATH, 'utf-8');
       const expectedMd = generateMarkdownPlan();
-      const cleanCurrent = currentMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP');
-      const cleanExpected = expectedMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP');
+      const cleanCurrent = currentMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP').replace(/Local commit \| `.*?`/g, 'COMMIT');
+      const cleanExpected = expectedMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP').replace(/Local commit \| `.*?`/g, 'COMMIT');
       if (cleanCurrent !== cleanExpected) {
         console.log('⚠ Warning: Markdown plan file has drift compared to ledger generation');
       } else {
@@ -507,8 +507,8 @@ function cmdResume() {
   if (fs.existsSync(PLAN_MARKDOWN_PATH) && ledgerValid) {
     const currentMd = fs.readFileSync(PLAN_MARKDOWN_PATH, 'utf-8');
     const expectedMd = generateMarkdownPlan();
-    const cleanCurrent = currentMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP');
-    const cleanExpected = expectedMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP');
+    const cleanCurrent = currentMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP').replace(/Local commit \| `.*?`/g, 'COMMIT');
+      const cleanExpected = expectedMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP').replace(/Local commit \| `.*?`/g, 'COMMIT');
     if (cleanCurrent !== cleanExpected) {
       mdSync = 'DRIFT DETECTED';
     }
@@ -649,8 +649,8 @@ function cmdValidate() {
   if (fs.existsSync(PLAN_MARKDOWN_PATH)) {
     const currentMd = fs.readFileSync(PLAN_MARKDOWN_PATH, 'utf-8');
     const expectedMd = generateMarkdownPlan();
-    const cleanCurrent = currentMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP');
-    const cleanExpected = expectedMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP');
+    const cleanCurrent = currentMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP').replace(/Local commit \| `.*?`/g, 'COMMIT');
+      const cleanExpected = expectedMd.replace(/Generated timestamp \| `.*?`/g, 'TIMESTAMP').replace(/Local commit \| `.*?`/g, 'COMMIT');
     if (cleanCurrent !== cleanExpected) {
       console.error('✕ Markdown plan drift detected! Run `npm run arch:generate` to sync.');
       process.exit(1);
