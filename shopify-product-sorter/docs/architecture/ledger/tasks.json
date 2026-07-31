@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:31:09.358Z",
+  "last_updated": "2026-07-31T21:35:38.800Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2795,15 +2795,16 @@
       "evidence": [
         "--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies."
+        "--evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies.",
+        "Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:31:09.293Z",
+      "updated_timestamp": "2026-07-31T21:31:26.695Z",
       "started_timestamp": "2026-07-31T21:28:43.435Z",
       "implemented_timestamp": "2026-07-31T21:30:41.362Z",
       "validated_timestamp": "2026-07-31T21:30:56.702Z",
-      "completed_timestamp": "2026-07-31T21:31:09.293Z",
+      "completed_timestamp": "2026-07-31T21:31:26.695Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2811,7 +2812,7 @@
       "title": "Add route authorization boundaries",
       "description": "Remediation task SEC-002: Add route authorization boundaries",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "SEC-001",
         "TEST-008"
@@ -2825,14 +2826,18 @@
       "validation_commands": [
         "Auth unit/integration, route matrix, negative tests, security audit, and regression."
       ],
-      "evidence": "",
+      "evidence": [
+        "--changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js",
+        "--passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate",
+        "--evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:31:09.332Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:35:38.800Z",
+      "started_timestamp": "2026-07-31T21:32:37.817Z",
+      "implemented_timestamp": "2026-07-31T21:35:13.853Z",
+      "validated_timestamp": "2026-07-31T21:35:20.926Z",
+      "completed_timestamp": "2026-07-31T21:35:38.800Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {

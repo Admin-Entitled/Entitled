@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T21:31:09.358Z` |
+| Generated timestamp | `2026-07-31T21:35:38.800Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `d3a7216` |
+| Local commit | `a7ad4ea` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 30 |
-| Ready | 15 |
+| Ready | 14 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 73 |
-| Completion percentage | 56.6% |
+| Completed | 74 |
+| Completion percentage | 57.4% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `SEC-002`, `SEC-003`, `SEC-004`, `SEC-007`, `DOC-001`
+- Next ready tasks: `SEC-003`, `SEC-004`, `SEC-007`, `DOC-001`, `DOC-003`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -143,7 +143,7 @@
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | COMPLETED | None | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-001 | Assess authentication boundary | CRITICAL | COMPLETED | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-002 | Add route authorization boundaries | CRITICAL | READY | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-002 | Add route authorization boundaries | CRITICAL | COMPLETED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-003 | Correct secret handling and tracked token risk | CRITICAL | READY | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2628,7 +2628,7 @@ None
 **Severity:** CRITICAL
 **Status:** COMPLETED
 **Dependencies:** OWN-007, OWN-010
-**Last updated:** 2026-07-31T21:31:09.293Z
+**Last updated:** 2026-07-31T21:31:26.695Z
 
 #### Description
 
@@ -2648,16 +2648,16 @@ Static route/security review, threat model, and owner sign-off.
 
 #### Completion evidence
 
---changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies.
+--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies., Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0
 
 ---
 
 ### `SEC-002` Add route authorization boundaries
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** SEC-001, TEST-008
-**Last updated:** 2026-07-31T21:31:09.332Z
+**Last updated:** 2026-07-31T21:35:38.800Z
 
 #### Description
 
@@ -2677,7 +2677,7 @@ Auth unit/integration, route matrix, negative tests, security audit, and regress
 
 #### Completion evidence
 
-Not completed.
+--changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js, --passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate, --evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T21:35:38.816Z | SEC-002 | validated | completed | shivam | --evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass. | `1a7a662b` |
+| 2026-07-31T21:35:20.943Z | SEC-002 | implemented | validated | shivam | --passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate | `70af9a64` |
+| 2026-07-31T21:35:13.869Z | SEC-002 | in_progress | implemented | shivam | --changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js | `cc706d0f` |
+| 2026-07-31T21:32:37.834Z | SEC-002 | ready | in_progress | shivam | Transition to in_progress | `53430b48` |
+| 2026-07-31T21:31:26.707Z | SEC-001 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `fd40a800` |
 | 2026-07-31T21:31:09.370Z | DOC-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e0f32056` |
 | 2026-07-31T21:31:09.357Z | SEC-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9adbac81` |
 | 2026-07-31T21:31:09.344Z | SEC-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2e8a8cd5` |
 | 2026-07-31T21:31:09.310Z | SEC-001 | validated | completed | shivam | --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies. | `1c870296` |
 | 2026-07-31T21:30:56.725Z | SEC-001 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `78f90a54` |
-| 2026-07-31T21:30:41.378Z | SEC-001 | in_progress | implemented | shivam | --changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md | `d9b8f78a` |
-| 2026-07-31T21:28:43.452Z | SEC-001 | ready | in_progress | shivam | Transition to in_progress | `dc88dbfc` |
-| 2026-07-31T21:26:20.957Z | OPS-ARCH-001 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `84249f10` |
-| 2026-07-31T21:26:00.865Z | OPS-ARCH-001 | validated | completed | shivam | --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing). | `79b95d33` |
-| 2026-07-31T21:25:53.789Z | OPS-ARCH-001 | implemented | validated | shivam | --passed-tests npm run arch:doctor,npm run test:architecture-ledger | `9b9dad79` |
