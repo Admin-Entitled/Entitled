@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T16:21:02.937Z` |
+| Generated timestamp | `2026-07-31T16:21:38.114Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `e2e720f` |
+| Local commit | `cde8615` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,16 +36,16 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 42 |
-| Ready | 18 |
+| Not started | 41 |
+| Ready | 19 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 57 |
-| Completion percentage | 44.2% |
+| Completed | 58 |
+| Completion percentage | 45.0% |
 
 ## 4. Current execution focus
 
@@ -98,7 +98,7 @@
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | VALIDATED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | COMPLETED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -164,7 +164,7 @@
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | BLOCKED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
-| CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-003 | Resolve duplicate route handlers | CRITICAL | READY | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-004 | Classify dead components and disabled placeholders | LOW | NOT_STARTED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | NOT_STARTED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | NOT_STARTED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1352,9 +1352,9 @@ Defined startup migration and side-effect boundary in docs/architecture/STARTUP_
 ### `BE-011` Resolve duplicate collection reorder handlers
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-003, BE-002, BE-005
-**Last updated:** 2026-07-31T16:21:02.937Z
+**Last updated:** 2026-07-31T16:21:37.721Z
 
 #### Description
 
@@ -1374,7 +1374,7 @@ Static duplicate scan, route contracts, mocked Shopify jobs, and existing-app re
 
 #### Completion evidence
 
---evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2., --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect.
+--evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2., --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect., Commit SHA: cde861527ee8a6ab1efe5008bf41f6067e5e82cd
 
 ---
 
@@ -3263,9 +3263,9 @@ Not completed.
 ### `CLEAN-003` Resolve duplicate route handlers
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** BE-011, TEST-003
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T16:21:38.114Z
 
 #### Description
 
@@ -3929,6 +3929,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T16:21:38.319Z | CLEAN-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6724d7cd` |
+| 2026-07-31T16:21:37.785Z | BE-011 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `44a5c226` |
 | 2026-07-31T16:21:03.002Z | BE-011 | implemented | validated | shivam | --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect. | `2dfcac51` |
 | 2026-07-31T16:20:51.638Z | BE-011 | in_progress | implemented | shivam | --evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2. | `0a5c741a` |
 | 2026-07-31T16:20:40.945Z | BE-011 | ready | in_progress | shivam | Transition to in_progress | `303404f5` |
@@ -3937,5 +3939,3 @@ Not completed.
 | 2026-07-31T16:17:42.948Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `cc502cd8` |
 | 2026-07-31T16:17:42.937Z | OPS-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d44be762` |
 | 2026-07-31T16:17:42.925Z | BE-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `af5c98c4` |
-| 2026-07-31T16:17:42.896Z | BE-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `2bd28683` |
-| 2026-07-31T16:17:10.814Z | BE-005 | implemented | validated | shivam | --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed. | `45a1562e` |

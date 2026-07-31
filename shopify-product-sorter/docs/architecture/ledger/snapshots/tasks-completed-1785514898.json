@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T16:21:38.114Z",
+  "last_updated": "2026-07-31T16:21:37.721Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3355,7 +3355,7 @@
       "title": "Resolve duplicate route handlers",
       "description": "Remediation task CLEAN-003: Resolve duplicate route handlers",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-011",
         "TEST-003"
@@ -3372,7 +3372,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:21:38.114Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
