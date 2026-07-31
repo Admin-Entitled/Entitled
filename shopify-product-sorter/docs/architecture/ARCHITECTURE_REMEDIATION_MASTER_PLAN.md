@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T12:15:41.186Z` |
+| Generated timestamp | `2026-07-31T12:16:20.421Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `287149b` |
+| Local commit | `77e237a` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -41,11 +41,11 @@
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 2 |
+| Validated | 1 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 20 |
-| Completion percentage | 15.5% |
+| Completed | 21 |
+| Completion percentage | 16.3% |
 
 ## 4. Current execution focus
 
@@ -80,7 +80,7 @@
 | TEST-012 | Add integrated existing-app regression gate | HIGH | NOT_STARTED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | VALIDATED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-004 | Define SKU Image Manager boundary | HIGH | READY | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | READY | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-006 | Define System Diagnostics ownership | MEDIUM | READY | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -830,9 +830,9 @@ Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.
 ### `OWN-003` Classify Order Mapping versus legacy Delivery Resolution
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-008, TEST-004, TEST-005
-**Last updated:** 2026-07-31T12:15:41.186Z
+**Last updated:** 2026-07-31T12:16:20.421Z
 
 #### Description
 
@@ -852,7 +852,7 @@ Static call graph, synthetic migration mapping, route regression, and owner deci
 
 #### Completion evidence
 
-Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md, Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js
+Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md, Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js, Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af
 
 ---
 
@@ -3929,6 +3929,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T12:16:20.432Z | OWN-003 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `cc1277f7` |
 | 2026-07-31T12:15:41.199Z | OWN-003 | implemented | validated | shivam | Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js | `35614a58` |
 | 2026-07-31T12:15:33.278Z | OWN-003 | in_progress | implemented | shivam | Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md | `571fae5a` |
 | 2026-07-31T12:11:23.954Z | OWN-003 | ready | in_progress | shivam | Starting OWN-003 classification work | `b7c2594f` |
@@ -3938,4 +3939,3 @@ Not completed.
 | 2026-07-31T11:59:05.413Z | BE-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f2fc8d75` |
 | 2026-07-31T11:59:05.404Z | OWN-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `51ebac2d` |
 | 2026-07-31T11:59:05.313Z | OWN-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ad9e556c` |
-| 2026-07-31T11:59:05.294Z | OWN-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `73e0faac` |
