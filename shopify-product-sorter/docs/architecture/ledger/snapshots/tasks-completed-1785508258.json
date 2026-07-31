@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:40:39.217Z",
+  "last_updated": "2026-07-31T14:30:58.870Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1721,7 +1721,7 @@
       "title": "Keep Shopify business logic app-owned",
       "description": "Remediation task INT-003: Keep Shopify business logic app-owned",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "INT-002",
         "OWN-002",
@@ -1738,16 +1738,13 @@
       "validation_commands": [
         "Mocked integration, service unit, route, and regression tests."
       ],
-      "evidence": [
-        "Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md",
-        "Validated via business logic audit, cross-app import verification, and transport reuse analysis"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:40:39.216Z",
-      "started_timestamp": "2026-07-31T14:39:07.132Z",
-      "implemented_timestamp": "2026-07-31T14:40:38.971Z",
-      "validated_timestamp": "2026-07-31T14:40:39.216Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

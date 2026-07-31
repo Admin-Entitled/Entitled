@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:30:54.579Z` |
+| Generated timestamp | `2026-07-31T14:40:39.217Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `1791793` |
+| Local commit | `d862883` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 63 |
+| Not started | 62 |
 | Ready | 15 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,8 +44,8 @@
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 38 |
-| Completion percentage | 29.5% |
+| Completed | 39 |
+| Completion percentage | 30.2% |
 
 ## 4. Current execution focus
 
@@ -111,8 +111,8 @@
 | FE-010 | Add feature error and loading boundaries | HIGH | NOT_STARTED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | NOT_STARTED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-002 | Define shared Shopify transport | HIGH | VALIDATED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-003 | Keep Shopify business logic app-owned | HIGH | NOT_STARTED | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-002 | Define shared Shopify transport | HIGH | COMPLETED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATED | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | READY | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | NOT_STARTED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-006 | Standardize integration authentication and env ownership | CRITICAL | NOT_STARTED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1729,9 +1729,9 @@ Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIEN
 ### `INT-002` Define shared Shopify transport
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** INT-001, TEST-003
-**Last updated:** 2026-07-31T14:30:54.579Z
+**Last updated:** 2026-07-31T14:30:58.869Z
 
 #### Description
 
@@ -1751,16 +1751,16 @@ Mocked integration, route, Shopify contract, redaction, and existing-app regress
 
 #### Completion evidence
 
-Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md, Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check
+Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md, Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check, Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c
 
 ---
 
 ### `INT-003` Keep Shopify business logic app-owned
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** VALIDATED
 **Dependencies:** INT-002, OWN-002, OWN-003, OWN-004, OWN-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T14:40:39.216Z
 
 #### Description
 
@@ -1780,7 +1780,7 @@ Mocked integration, service unit, route, and regression tests.
 
 #### Completion evidence
 
-Not completed.
+Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:40:39.230Z | INT-003 | implemented | validated | shivam | Validated via business logic audit, cross-app import verification, and transport reuse analysis | `9fb1c469` |
+| 2026-07-31T14:40:38.985Z | INT-003 | in_progress | implemented | shivam | Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md | `99d5b1d0` |
+| 2026-07-31T14:39:07.146Z | INT-003 | ready | in_progress | shivam | Transition to in_progress | `ddce799e` |
+| 2026-07-31T14:30:58.949Z | INT-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f4dd0182` |
+| 2026-07-31T14:30:58.887Z | INT-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `3ca07a51` |
 | 2026-07-31T14:30:54.597Z | INT-002 | implemented | validated | shivam | Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check | `f212639e` |
 | 2026-07-31T14:30:54.306Z | INT-002 | in_progress | implemented | shivam | Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md | `59e74c02` |
 | 2026-07-31T14:29:24.879Z | INT-002 | ready | in_progress | shivam | Transition to in_progress | `dac7638e` |
 | 2026-07-31T14:28:07.578Z | INT-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `c1753606` |
 | 2026-07-31T14:28:07.551Z | INT-001 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `385dbd7f` |
-| 2026-07-31T14:28:03.588Z | INT-001 | implemented | validated | shivam | Validated via static search of all Shopify imports, read/write operation audit, and secret value review | `50598518` |
-| 2026-07-31T14:28:03.336Z | INT-001 | in_progress | implemented | shivam | Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md | `25d405f3` |
-| 2026-07-31T14:26:40.378Z | INT-001 | ready | in_progress | shivam | Transition to in_progress | `7fd68a83` |
-| 2026-07-31T14:25:09.770Z | FE-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `6075b3c0` |
-| 2026-07-31T14:25:05.699Z | FE-006 | implemented | validated | shivam | Validated via OrderMapping.jsx audit, API client isolation, and state independence verification | `ca7ac7db` |
