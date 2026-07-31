@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:54:12.823Z",
+  "last_updated": "2026-07-31T13:49:17.613Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1108,7 +1108,7 @@
       "title": "Create application-owned service boundaries",
       "description": "Remediation task BE-006: Create application-owned service boundaries",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -1125,17 +1125,13 @@
       "validation_commands": [
         "Static dependency graph, unit/integration contracts, route regression, and startup checks."
       ],
-      "evidence": [
-        "Extracting Shopify GraphQL client",
-        "Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md",
-        "Validated via static dependency graph review, layer classification, and boundary direction rules"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:54:12.823Z",
-      "started_timestamp": "2026-07-31T13:52:45.801Z",
-      "implemented_timestamp": "2026-07-31T13:54:12.580Z",
-      "validated_timestamp": "2026-07-31T13:54:12.823Z",
+      "updated_timestamp": "2026-07-31T13:23:33.438Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -1623,7 +1619,7 @@
       "title": "Inventory and contract Shopify clients",
       "description": "Remediation task INT-001: Inventory and contract Shopify clients",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-010"
       ],
@@ -1639,7 +1635,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.637Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1712,7 +1708,7 @@
       "title": "Inventory and contract Shiprocket clients",
       "description": "Remediation task INT-004: Inventory and contract Shiprocket clients",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-010",
         "TEST-004"
@@ -1729,7 +1725,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.646Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2568,7 +2564,7 @@
       "title": "Assess authentication boundary",
       "description": "Remediation task SEC-001: Assess authentication boundary",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-007",
         "OWN-010"
@@ -2585,7 +2581,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.655Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2626,7 +2622,7 @@
       "title": "Correct secret handling and tracked token risk",
       "description": "Remediation task SEC-003: Correct secret handling and tracked token risk",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "SAFE-005",
         "OWN-010"
@@ -2643,7 +2639,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.664Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2655,7 +2651,7 @@
       "title": "Validate environment schema at boundaries",
       "description": "Remediation task SEC-004: Validate environment schema at boundaries",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-010"
       ],
@@ -2671,7 +2667,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.672Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T13:49:13.697Z` |
+| Generated timestamp | `2026-07-31T13:54:12.823Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `e370e61` |
+| Local commit | `03a2c63` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 76 |
-| Ready | 13 |
+| Not started | 71 |
+| Ready | 17 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 27 |
-| Completion percentage | 20.9% |
+| Completed | 28 |
+| Completion percentage | 21.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `BE-006`, `BE-010`, `FE-001`, `DATA-002`, `DATA-004`
+- Next ready tasks: `BE-010`, `FE-001`, `INT-001`, `INT-004`, `DATA-002`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -87,13 +87,13 @@
 | OWN-007 | Approve route ownership matrix | CRITICAL | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-010 | Approve integration and environment ownership | HIGH | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | NOT_STARTED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | NOT_STARTED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | NOT_STARTED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | NOT_STARTED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-005 | Preserve existing backend URLs with adapters | CRITICAL | NOT_STARTED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-006 | Create application-owned service boundaries | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-006 | Create application-owned service boundaries | HIGH | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | NOT_STARTED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | NOT_STARTED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -110,10 +110,10 @@
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | NOT_STARTED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-010 | Add feature error and loading boundaries | HIGH | NOT_STARTED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | NOT_STARTED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-001 | Inventory and contract Shopify clients | HIGH | NOT_STARTED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-001 | Inventory and contract Shopify clients | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | NOT_STARTED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-003 | Keep Shopify business logic app-owned | HIGH | NOT_STARTED | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-004 | Inventory and contract Shiprocket clients | HIGH | NOT_STARTED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-004 | Inventory and contract Shiprocket clients | HIGH | READY | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | NOT_STARTED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-006 | Standardize integration authentication and env ownership | CRITICAL | NOT_STARTED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-007 | Standardize retries, rate limits, and errors | HIGH | NOT_STARTED | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -142,10 +142,10 @@
 | OPS-008 | Review test outputs and cache artifacts | LOW | READY | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | READY | None | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-001 | Assess authentication boundary | CRITICAL | NOT_STARTED | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-001 | Assess authentication boundary | CRITICAL | READY | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-002 | Add route authorization boundaries | CRITICAL | NOT_STARTED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-003 | Correct secret handling and tracked token risk | CRITICAL | NOT_STARTED | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-004 | Validate environment schema at boundaries | HIGH | NOT_STARTED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-003 | Correct secret handling and tracked token risk | CRITICAL | READY | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | NOT_STARTED | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-007 | Review CORS and CSRF protections | HIGH | NOT_STARTED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1033,9 +1033,9 @@ Defining shared Shopify transport boundary, Defined complete runtime file owners
 ### `OWN-010` Approve integration and environment ownership
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:49:13.696Z
+**Last updated:** 2026-07-31T13:49:17.613Z
 
 #### Description
 
@@ -1055,7 +1055,7 @@ Static dependency search, secret-name inventory, and integration-owner review.
 
 #### Completion evidence
 
-Defining environment configuration ownership, Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md, Validated via static dependency search, secret-name inventory, and integration-owner review
+Defining environment configuration ownership, Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md, Validated via static dependency search, secret-name inventory, and integration-owner review, Commit SHA: 03a2c632d37d36e9b127840508b67af99e2c87aa
 
 ---
 
@@ -1207,9 +1207,9 @@ Not completed.
 ### `BE-006` Create application-owned service boundaries
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:23:33.438Z
+**Last updated:** 2026-07-31T13:54:12.823Z
 
 #### Description
 
@@ -1229,7 +1229,7 @@ Static dependency graph, unit/integration contracts, route regression, and start
 
 #### Completion evidence
 
-Not completed.
+Extracting Shopify GraphQL client, Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md, Validated via static dependency graph review, layer classification, and boundary direction rules
 
 ---
 
@@ -1700,9 +1700,9 @@ Not completed.
 ### `INT-001` Inventory and contract Shopify clients
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:49:17.637Z
 
 #### Description
 
@@ -1787,9 +1787,9 @@ Not completed.
 ### `INT-004` Inventory and contract Shiprocket clients
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-010, TEST-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:49:17.646Z
 
 #### Description
 
@@ -2626,9 +2626,9 @@ Not completed.
 ### `SEC-001` Assess authentication boundary
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-007, OWN-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:49:17.655Z
 
 #### Description
 
@@ -2684,9 +2684,9 @@ Not completed.
 ### `SEC-003` Correct secret handling and tracked token risk
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SAFE-005, OWN-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:49:17.664Z
 
 #### Description
 
@@ -2713,9 +2713,9 @@ Not completed.
 ### `SEC-004` Validate environment schema at boundaries
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:49:17.672Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T13:54:12.836Z | BE-006 | implemented | validated | shivam | Validated via static dependency graph review, layer classification, and boundary direction rules | `7f00124d` |
+| 2026-07-31T13:54:12.593Z | BE-006 | in_progress | implemented | shivam | Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md | `b648384d` |
+| 2026-07-31T13:52:45.814Z | BE-006 | ready | in_progress | shivam | Extracting Shopify GraphQL client | `f03a0fe8` |
+| 2026-07-31T13:49:17.680Z | SEC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e0e80fe2` |
+| 2026-07-31T13:49:17.672Z | SEC-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f263fb86` |
+| 2026-07-31T13:49:17.664Z | SEC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `41516fca` |
+| 2026-07-31T13:49:17.654Z | INT-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9882cc8c` |
+| 2026-07-31T13:49:17.646Z | INT-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d918a8da` |
+| 2026-07-31T13:49:17.622Z | OWN-010 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `aee42606` |
 | 2026-07-31T13:49:13.709Z | OWN-010 | implemented | validated | shivam | Validated via static dependency search, secret-name inventory, and integration-owner review | `aa988f66` |
-| 2026-07-31T13:49:13.467Z | OWN-010 | in_progress | implemented | shivam | Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md | `9c5749b1` |
-| 2026-07-31T13:46:11.305Z | OWN-010 | ready | in_progress | shivam | Defining environment configuration ownership | `12f5024f` |
-| 2026-07-31T13:44:43.454Z | OPS-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `5a9b16dc` |
-| 2026-07-31T13:44:43.446Z | OPS-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3e561dda` |
-| 2026-07-31T13:44:43.437Z | OPS-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `47fe935d` |
-| 2026-07-31T13:44:43.428Z | DATA-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `0d8fc7ba` |
-| 2026-07-31T13:44:43.419Z | DATA-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6a85aeed` |
-| 2026-07-31T13:44:43.394Z | OWN-009 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `c9ca55b6` |
-| 2026-07-31T13:44:39.401Z | OWN-009 | implemented | validated | shivam | Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts | `b416dac6` |
