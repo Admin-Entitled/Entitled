@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:23:29.587Z",
+  "last_updated": "2026-07-31T13:14:48.558Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -782,7 +782,7 @@
       "title": "Define System Diagnostics ownership",
       "description": "Remediation task OWN-006: Define System Diagnostics ownership",
       "severity": "MEDIUM",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "TEST-010"
@@ -796,17 +796,13 @@
       "validation_commands": [
         "Static route/log review, synthetic payload checks, and security owner review."
       ],
-      "evidence": [
-        "Defining System Diagnostics ownership specification",
-        "Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md",
-        "Validated via static route review, sensitive field audit, and data ownership distinction verified"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:23:29.587Z",
-      "started_timestamp": "2026-07-31T13:20:55.350Z",
-      "implemented_timestamp": "2026-07-31T13:23:13.517Z",
-      "validated_timestamp": "2026-07-31T13:23:29.587Z",
+      "updated_timestamp": "2026-07-31T11:59:05.313Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
