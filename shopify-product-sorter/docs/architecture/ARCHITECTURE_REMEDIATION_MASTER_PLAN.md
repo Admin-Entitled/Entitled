@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:15:24.215Z` |
+| Generated timestamp | `2026-07-31T14:18:43.104Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `c1298ca` |
+| Local commit | `57a1713` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 65 |
-| Ready | 18 |
+| Ready | 17 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 33 |
-| Completion percentage | 25.6% |
+| Completed | 34 |
+| Completion percentage | 26.4% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-003`, `FE-005`, `INT-001`, `INT-004`, `DATA-002`
+- Next ready tasks: `FE-005`, `INT-001`, `INT-004`, `DATA-002`, `DATA-004`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -100,8 +100,8 @@
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-002 | Extract navigation ownership | HIGH | VALIDATED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-003 | Introduce explicit routing while preserving URLs | HIGH | READY | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | READY | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | NOT_STARTED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1410,9 +1410,9 @@ Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDA
 ### `FE-002` Extract navigation ownership
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-007
-**Last updated:** 2026-07-31T14:15:24.215Z
+**Last updated:** 2026-07-31T14:15:28.266Z
 
 #### Description
 
@@ -1432,16 +1432,16 @@ Browser navigation, accessibility, route, and regression tests.
 
 #### Completion evidence
 
-Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check
+Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check, Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874
 
 ---
 
 ### `FE-003` Introduce explicit routing while preserving URLs
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-008, FE-001
-**Last updated:** 2026-07-31T14:13:11.342Z
+**Last updated:** 2026-07-31T14:18:43.104Z
 
 #### Description
 
@@ -1461,7 +1461,7 @@ Browser, route, static fallback, build, and regression checks.
 
 #### Completion evidence
 
-Not completed.
+Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:18:43.140Z | FE-003 | implemented | validated | shivam | Validated via main.jsx routing review, server fallback audit, and URL preservation matrix | `8d65ef89` |
+| 2026-07-31T14:18:42.864Z | FE-003 | in_progress | implemented | shivam | Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md | `2d7aa7e4` |
+| 2026-07-31T14:16:57.544Z | FE-003 | ready | in_progress | shivam | Transition to in_progress | `4ceb6b94` |
+| 2026-07-31T14:15:28.275Z | FE-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `aaba455f` |
 | 2026-07-31T14:15:24.228Z | FE-002 | implemented | validated | shivam | Validated via sidebar module audit, active state derivation review, and disabled label safety check | `1134acc7` |
 | 2026-07-31T14:15:23.982Z | FE-002 | in_progress | implemented | shivam | Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md | `b96916b8` |
 | 2026-07-31T14:14:14.165Z | FE-002 | ready | in_progress | shivam | Transition to in_progress | `0d9fb9d6` |
 | 2026-07-31T14:13:11.360Z | FE-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `843d6826` |
 | 2026-07-31T14:13:11.350Z | FE-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `aab25878` |
 | 2026-07-31T14:13:11.341Z | FE-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `262db208` |
-| 2026-07-31T14:13:11.316Z | FE-001 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `0c21031e` |
-| 2026-07-31T14:13:07.378Z | FE-001 | implemented | validated | shivam | Validated via App.jsx review, module registry audit, and business logic extraction mapping | `8abd0e35` |
-| 2026-07-31T14:13:07.134Z | FE-001 | in_progress | implemented | shivam | Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md | `dd29f10e` |
-| 2026-07-31T14:11:08.372Z | FE-001 | ready | in_progress | shivam | Transition to in_progress | `3f939f6c` |

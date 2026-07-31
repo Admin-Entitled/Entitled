@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:18:43.104Z",
+  "last_updated": "2026-07-31T14:15:28.266Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1368,7 +1368,7 @@
       "title": "Introduce explicit routing while preserving URLs",
       "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "TEST-008",
         "FE-001"
@@ -1382,16 +1382,13 @@
       "validation_commands": [
         "Browser, route, static fallback, build, and regression checks."
       ],
-      "evidence": [
-        "Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md",
-        "Validated via main.jsx routing review, server fallback audit, and URL preservation matrix"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:18:43.104Z",
-      "started_timestamp": "2026-07-31T14:16:57.530Z",
-      "implemented_timestamp": "2026-07-31T14:18:42.851Z",
-      "validated_timestamp": "2026-07-31T14:18:43.104Z",
+      "updated_timestamp": "2026-07-31T14:13:11.342Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
