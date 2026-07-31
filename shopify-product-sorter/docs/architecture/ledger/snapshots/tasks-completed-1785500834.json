@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:14:44.382Z",
+  "last_updated": "2026-07-31T12:27:14.568Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -748,7 +748,7 @@
       "title": "Define Actual Sales Intelligence boundary",
       "description": "Remediation task OWN-005: Define Actual Sales Intelligence boundary",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "TEST-007"
@@ -762,17 +762,13 @@
       "validation_commands": [
         "Static import/route review, synthetic API tests, and owner sign-off."
       ],
-      "evidence": [
-        "Defining Actual Sales Intelligence boundary specification",
-        "Defined Actual Sales Intelligence boundary specification in docs/architecture/ACTUAL_SALES_INTELLIGENCE_BOUNDARY_SPECIFICATION.md",
-        "Validated via static imports, route matrix, and actualSalesService.test.js passing"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:14:44.382Z",
-      "started_timestamp": "2026-07-31T13:11:35.672Z",
-      "implemented_timestamp": "2026-07-31T13:14:09.131Z",
-      "validated_timestamp": "2026-07-31T13:14:44.382Z",
+      "updated_timestamp": "2026-07-31T11:59:05.305Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
