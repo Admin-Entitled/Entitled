@@ -4,3 +4,6 @@ dist
 server/data
 client/dist
 npm-debug.log*
+.tmp*
+.tokensave/*.db-wal
+.tokensave/*.db-shm

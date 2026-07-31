@@ -533,9 +533,7 @@ function cmdResume() {
   console.log(`Ready Tasks:       ${ready.map(t => t.id).slice(0, 5).join(', ')} (Total: ${ready.length})`);
   console.log(`Blocked Tasks:     ${blocked.map(t => t.id).join(', ') || 'None'}`);
   console.log(`Last Completed:    ${completed.slice(-3).map(t => t.id).join(', ') || 'None'}`);
-  if (unpushedCommits) {
-    console.log(`Unpushed Commits:\n${unpushedCommits}`);
-  }
+  console.log(`Unpushed Commits:  ${unpushedCommits ? '\n' + unpushedCommits : 'None'}`);
 }
 
 function cmdShow(taskId) {
@@ -570,6 +568,11 @@ function cmdTransition(taskId, targetStatus, reason, evidence) {
 
     if (!evidence && reason) {
       evidence = reason;
+    }
+
+    // Require task to be validated before completed
+    if (targetStatus === 'completed' && prevStatus !== 'validated' && prevStatus !== 'completed') {
+      throw new Error(`Cannot complete task ${taskId}: task must be in 'validated' status before completion (current: '${prevStatus}')`);
     }
 
     // Require evidence for completion
@@ -691,7 +694,7 @@ function cmdCheckpoint(taskId) {
     }
   }
 
-  runCmd(`git add docs/architecture/ ${PLAN_MARKDOWN_PATH}`);
+  runCmd(`git add "${LEDGER_DIR}" "${PLAN_MARKDOWN_PATH}"`);
 
   const commitMsg = `arch(${taskId}): ${task.title}`;
   try {

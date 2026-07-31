@@ -236,10 +236,20 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
   it('refuses completion without required evidence', () => {
     setupFixture();
+    execSync(`node ${CLI_PATH} start TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
+    execSync(`node ${CLI_PATH} implement TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
+    execSync(`node ${CLI_PATH} validate-task TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
     // Try to complete TEST-002 without evidence
     assert.throws(() => {
       execSync(`node ${CLI_PATH} complete TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
     }, /Evidence required/i);
+  });
+
+  it('refuses completion without prior validation', () => {
+    setupFixture();
+    assert.throws(() => {
+      execSync(`node ${CLI_PATH} complete TEST-002 "Some evidence"`, { cwd: tmpDir, encoding: 'utf-8' });
+    }, /validated/i);
   });
 
   it('executes valid state transition lifecycle (start -> implement -> validate-task -> complete)', () => {
