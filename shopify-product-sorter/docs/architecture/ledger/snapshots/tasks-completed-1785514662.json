@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T16:17:42.960Z",
+  "last_updated": "2026-07-31T16:17:42.883Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1312,7 +1312,7 @@
       "title": "Resolve duplicate collection reorder handlers",
       "description": "Remediation task BE-011: Resolve duplicate collection reorder handlers",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "TEST-003",
         "BE-002",
@@ -1330,7 +1330,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.915Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2472,7 +2472,7 @@
       "title": "Standardize health checks",
       "description": "Remediation task OPS-003: Standardize health checks",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-005",
         "OWN-006"
@@ -2489,7 +2489,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.926Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2953,7 +2953,7 @@
       "title": "Update README to current architecture",
       "description": "Remediation task DOC-001: Update README to current architecture",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-001",
         "BE-005",
@@ -2971,7 +2971,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.938Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -3045,7 +3045,7 @@
       "title": "Create route map",
       "description": "Remediation task DOC-004: Create route map",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-007",
         "BE-005",
@@ -3063,7 +3063,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.949Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -3817,7 +3817,7 @@
       "title": "Verify all routes and startup behavior",
       "description": "Remediation task FINAL-002: Verify all routes and startup behavior",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "BE-005",
         "FE-003",
@@ -3836,7 +3836,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.960Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

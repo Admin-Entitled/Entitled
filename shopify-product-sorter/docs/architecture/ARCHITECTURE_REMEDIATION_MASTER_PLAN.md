@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T16:17:10.799Z` |
+| Generated timestamp | `2026-07-31T16:17:42.960Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `2b3f480` |
+| Local commit | `8003f19` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 47 |
-| Ready | 14 |
+| Not started | 42 |
+| Ready | 19 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 56 |
-| Completion percentage | 43.4% |
+| Completed | 57 |
+| Completion percentage | 44.2% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-004`, `INT-008`, `OPS-005`, `OPS-007`, `OPS-008`
+- Next ready tasks: `BE-011`, `FE-004`, `INT-008`, `OPS-003`, `OPS-005`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -92,13 +92,13 @@
 | BE-002 | Create a Sorter router | HIGH | COMPLETED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | COMPLETED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | COMPLETED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | VALIDATED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | COMPLETED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | COMPLETED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | READY | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -134,7 +134,7 @@
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | COMPLETED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-003 | Standardize health checks | HIGH | NOT_STARTED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-003 | Standardize health checks | HIGH | READY | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | READY | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-006 | Review and isolate Tokensave runtime files | HIGH | NOT_STARTED | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -151,10 +151,10 @@
 | SEC-007 | Review CORS and CSRF protections | HIGH | NOT_STARTED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-001 | Update README to current architecture | MEDIUM | NOT_STARTED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-001 | Update README to current architecture | MEDIUM | READY | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-002 | Create a real `.env.example` | HIGH | NOT_STARTED | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-004 | Create route map | HIGH | NOT_STARTED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-004 | Create route map | HIGH | READY | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -180,7 +180,7 @@
 | META-007 | Add Meta tests, write safeguards, and observability | CRITICAL | DEFERRED | META-004, META-005, META-006 | Imported from master plan. Previous raw status: DEFERRED |
 | META-008 | Roll out Meta safely to production | HIGH | DEFERRED | META-007, FINAL-007 | Imported from master plan. Previous raw status: DEFERRED |
 | FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-002 | Verify all routes and startup behavior | CRITICAL | NOT_STARTED | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-002 | Verify all routes and startup behavior | CRITICAL | READY | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-003 | Verify data integrity and restore evidence | CRITICAL | NOT_STARTED | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-004 | Audit dependencies, environment, and security | CRITICAL | NOT_STARTED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | NOT_STARTED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1178,9 +1178,9 @@ Route contracts, synthetic cache tests, CSV tests, startup, and regression gate.
 ### `BE-005` Preserve existing backend URLs with adapters
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, TEST-008
-**Last updated:** 2026-07-31T16:17:10.799Z
+**Last updated:** 2026-07-31T16:17:42.883Z
 
 #### Description
 
@@ -1200,7 +1200,7 @@ Route contract, integration, startup, frontend, and regression-gate checks.
 
 #### Completion evidence
 
---evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js., --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed.
+--evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js., --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed., Commit SHA: 8003f19e0f7c2d752bd228ef69ee2ddfec6e3377
 
 ---
 
@@ -1352,9 +1352,9 @@ Defined startup migration and side-effect boundary in docs/architecture/STARTUP_
 ### `BE-011` Resolve duplicate collection reorder handlers
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-003, BE-002, BE-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T16:17:42.915Z
 
 #### Description
 
@@ -2396,9 +2396,9 @@ Static script checks, dry-run help, test gate, and documentation review.
 ### `OPS-003` Standardize health checks
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** BE-005, OWN-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T16:17:42.926Z
 
 #### Description
 
@@ -2887,9 +2887,9 @@ Not completed.
 ### `DOC-001` Update README to current architecture
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001, BE-005, FE-003
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T16:17:42.938Z
 
 #### Description
 
@@ -2974,9 +2974,9 @@ Not completed.
 ### `DOC-004` Create route map
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-007, BE-005, FE-003
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T16:17:42.949Z
 
 #### Description
 
@@ -3725,9 +3725,9 @@ Not completed.
 ### `FINAL-002` Verify all routes and startup behavior
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** BE-005, FE-003, OPS-002, TEST-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T16:17:42.960Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T16:17:42.970Z | FINAL-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9bbcdd6c` |
+| 2026-07-31T16:17:42.959Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `72a23884` |
+| 2026-07-31T16:17:42.948Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `cc502cd8` |
+| 2026-07-31T16:17:42.937Z | OPS-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d44be762` |
+| 2026-07-31T16:17:42.925Z | BE-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `af5c98c4` |
+| 2026-07-31T16:17:42.896Z | BE-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `2bd28683` |
 | 2026-07-31T16:17:10.814Z | BE-005 | implemented | validated | shivam | --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed. | `45a1562e` |
 | 2026-07-31T16:16:58.143Z | BE-005 | in_progress | implemented | shivam | --evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js. | `d03e2241` |
 | 2026-07-31T16:16:49.938Z | BE-005 | ready | in_progress | shivam | Transition to in_progress | `e1aecbbd` |
 | 2026-07-31T16:12:31.720Z | BE-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e4b6f42e` |
-| 2026-07-31T16:11:58.130Z | BE-004 | implemented | validated | shivam | --evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite. | `a87e520f` |
-| 2026-07-31T16:11:51.448Z | BE-004 | in_progress | implemented | shivam | --evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js. | `ac7c8e0e` |
-| 2026-07-31T16:08:36.110Z | BE-004 | ready | in_progress | shivam | Transition to in_progress | `85465e4c` |
-| 2026-07-31T16:07:22.612Z | BE-003 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `a841145c` |
-| 2026-07-31T16:06:49.769Z | BE-003 | implemented | validated | shivam | --evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite. | `1f947eda` |
-| 2026-07-31T16:06:42.115Z | BE-003 | in_progress | implemented | shivam | --evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed. | `006f53c1` |
