@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:28:03.574Z",
+  "last_updated": "2026-07-31T14:25:09.760Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1656,7 +1656,7 @@
       "title": "Inventory and contract Shopify clients",
       "description": "Remediation task INT-001: Inventory and contract Shopify clients",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-010"
       ],
@@ -1669,16 +1669,13 @@
       "validation_commands": [
         "Static search, contract review, mocked request fixtures, and owner sign-off."
       ],
-      "evidence": [
-        "Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md",
-        "Validated via static search of all Shopify imports, read/write operation audit, and secret value review"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:28:03.574Z",
-      "started_timestamp": "2026-07-31T14:26:40.365Z",
-      "implemented_timestamp": "2026-07-31T14:28:03.323Z",
-      "validated_timestamp": "2026-07-31T14:28:03.574Z",
+      "updated_timestamp": "2026-07-31T13:49:17.637Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

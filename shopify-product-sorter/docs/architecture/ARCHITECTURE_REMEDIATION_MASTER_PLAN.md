@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:25:05.686Z` |
+| Generated timestamp | `2026-07-31T14:28:03.574Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `d564698` |
+| Local commit | `ebbcc68` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 64 |
-| Ready | 16 |
+| Ready | 15 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 36 |
-| Completion percentage | 27.9% |
+| Completed | 37 |
+| Completion percentage | 28.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `INT-001`, `INT-004`, `DATA-002`, `DATA-004`, `DATA-005`
+- Next ready tasks: `INT-004`, `DATA-002`, `DATA-004`, `DATA-005`, `DATA-006`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -104,13 +104,13 @@
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | NOT_STARTED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | NOT_STARTED | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | NOT_STARTED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-010 | Add feature error and loading boundaries | HIGH | NOT_STARTED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | NOT_STARTED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-001 | Inventory and contract Shopify clients | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-001 | Inventory and contract Shopify clients | HIGH | VALIDATED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | NOT_STARTED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-003 | Keep Shopify business logic app-owned | HIGH | NOT_STARTED | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | READY | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1526,9 +1526,9 @@ Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MAN
 ### `FE-006` Retain Order Mapping compatibility boundary
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-003, OWN-003
-**Last updated:** 2026-07-31T14:25:05.686Z
+**Last updated:** 2026-07-31T14:25:09.759Z
 
 #### Description
 
@@ -1548,7 +1548,7 @@ Browser, route, API contract, accessibility, and existing-app regression tests.
 
 #### Completion evidence
 
-Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md, Validated via OrderMapping.jsx audit, API client isolation, and state independence verification
+Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md, Validated via OrderMapping.jsx audit, API client isolation, and state independence verification, Commit SHA: ebbcc688abffd6af81745b6e0231b5efa294c56e
 
 ---
 
@@ -1700,9 +1700,9 @@ Not completed.
 ### `INT-001` Inventory and contract Shopify clients
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** OWN-010
-**Last updated:** 2026-07-31T13:49:17.637Z
+**Last updated:** 2026-07-31T14:28:03.574Z
 
 #### Description
 
@@ -1722,7 +1722,7 @@ Static search, contract review, mocked request fixtures, and owner sign-off.
 
 #### Completion evidence
 
-Not completed.
+Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md, Validated via static search of all Shopify imports, read/write operation audit, and secret value review
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:28:03.588Z | INT-001 | implemented | validated | shivam | Validated via static search of all Shopify imports, read/write operation audit, and secret value review | `50598518` |
+| 2026-07-31T14:28:03.336Z | INT-001 | in_progress | implemented | shivam | Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md | `25d405f3` |
+| 2026-07-31T14:26:40.378Z | INT-001 | ready | in_progress | shivam | Transition to in_progress | `7fd68a83` |
+| 2026-07-31T14:25:09.770Z | FE-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `6075b3c0` |
 | 2026-07-31T14:25:05.699Z | FE-006 | implemented | validated | shivam | Validated via OrderMapping.jsx audit, API client isolation, and state independence verification | `ca7ac7db` |
 | 2026-07-31T14:25:05.407Z | FE-006 | in_progress | implemented | shivam | Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md | `eaebb144` |
 | 2026-07-31T14:23:05.229Z | FE-006 | ready | in_progress | shivam | Transition to in_progress | `6a42b4ff` |
 | 2026-07-31T14:22:08.327Z | FE-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `5c9f44d3` |
 | 2026-07-31T14:22:03.822Z | FE-005 | implemented | validated | shivam | Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification | `323e858d` |
 | 2026-07-31T14:22:03.556Z | FE-005 | in_progress | implemented | shivam | Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md | `f6b09cd7` |
-| 2026-07-31T14:19:54.586Z | FE-005 | ready | in_progress | shivam | Transition to in_progress | `dea88c8c` |
-| 2026-07-31T14:18:47.116Z | FE-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `95021fdd` |
-| 2026-07-31T14:18:47.090Z | FE-003 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `c40cdca9` |
-| 2026-07-31T14:18:43.140Z | FE-003 | implemented | validated | shivam | Validated via main.jsx routing review, server fallback audit, and URL preservation matrix | `8d65ef89` |
