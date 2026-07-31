@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T13:54:12.823Z` |
+| Generated timestamp | `2026-07-31T13:56:45.546Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `03a2c63` |
+| Local commit | `161a62b` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 71 |
-| Ready | 17 |
+| Not started | 69 |
+| Ready | 18 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 28 |
-| Completion percentage | 21.7% |
+| Completed | 29 |
+| Completion percentage | 22.5% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `BE-010`, `FE-001`, `INT-001`, `INT-004`, `DATA-002`
+- Next ready tasks: `BE-009`, `BE-010`, `FE-001`, `INT-001`, `INT-004`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -93,10 +93,10 @@
 | BE-003 | Create a SKU Image Manager router | HIGH | NOT_STARTED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | NOT_STARTED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-005 | Preserve existing backend URLs with adapters | CRITICAL | NOT_STARTED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-006 | Create application-owned service boundaries | HIGH | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-007 | Remove hidden cross-application imports | HIGH | NOT_STARTED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-007 | Remove hidden cross-application imports | HIGH | VALIDATED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-009 | Standardize structured logging | MEDIUM | NOT_STARTED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-009 | Standardize structured logging | MEDIUM | READY | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | READY | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | READY | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1207,9 +1207,9 @@ Not completed.
 ### `BE-006` Create application-owned service boundaries
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:54:12.823Z
+**Last updated:** 2026-07-31T13:54:16.949Z
 
 #### Description
 
@@ -1229,16 +1229,16 @@ Static dependency graph, unit/integration contracts, route regression, and start
 
 #### Completion evidence
 
-Extracting Shopify GraphQL client, Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md, Validated via static dependency graph review, layer classification, and boundary direction rules
+Extracting Shopify GraphQL client, Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md, Validated via static dependency graph review, layer classification, and boundary direction rules, Commit SHA: 161a62bea3a3b38dbdbac592caf8ca9d96e6b564
 
 ---
 
 ### `BE-007` Remove hidden cross-application imports
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** VALIDATED
 **Dependencies:** BE-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:56:45.546Z
 
 #### Description
 
@@ -1258,7 +1258,7 @@ Static import scan, unit contracts, mocked integrations, and regression gate.
 
 #### Completion evidence
 
-Not completed.
+Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md, Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests
 
 ---
 
@@ -1294,9 +1294,9 @@ Not completed.
 ### `BE-009` Standardize structured logging
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-006, BE-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:54:16.984Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T13:56:45.559Z | BE-007 | implemented | validated | shivam | Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests | `1cd81813` |
+| 2026-07-31T13:56:45.305Z | BE-007 | in_progress | implemented | shivam | Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md | `7a2222d0` |
+| 2026-07-31T13:55:30.467Z | BE-007 | ready | in_progress | shivam | Transition to in_progress | `8d5aa2fc` |
+| 2026-07-31T13:54:16.993Z | BE-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `10e4b56c` |
+| 2026-07-31T13:54:16.984Z | BE-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `c5129fce` |
+| 2026-07-31T13:54:16.959Z | BE-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `efa7f1ec` |
 | 2026-07-31T13:54:12.836Z | BE-006 | implemented | validated | shivam | Validated via static dependency graph review, layer classification, and boundary direction rules | `7f00124d` |
 | 2026-07-31T13:54:12.593Z | BE-006 | in_progress | implemented | shivam | Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md | `b648384d` |
 | 2026-07-31T13:52:45.814Z | BE-006 | ready | in_progress | shivam | Extracting Shopify GraphQL client | `f03a0fe8` |
 | 2026-07-31T13:49:17.680Z | SEC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e0e80fe2` |
-| 2026-07-31T13:49:17.672Z | SEC-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f263fb86` |
-| 2026-07-31T13:49:17.664Z | SEC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `41516fca` |
-| 2026-07-31T13:49:17.654Z | INT-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9882cc8c` |
-| 2026-07-31T13:49:17.646Z | INT-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d918a8da` |
-| 2026-07-31T13:49:17.622Z | OWN-010 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `aee42606` |
-| 2026-07-31T13:49:13.709Z | OWN-010 | implemented | validated | shivam | Validated via static dependency search, secret-name inventory, and integration-owner review | `aa988f66` |

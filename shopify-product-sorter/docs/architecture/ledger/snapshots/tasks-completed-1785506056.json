@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:56:45.546Z",
+  "last_updated": "2026-07-31T13:54:16.949Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1145,7 +1145,7 @@
       "title": "Remove hidden cross-application imports",
       "description": "Remediation task BE-007: Remove hidden cross-application imports",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "BE-006"
       ],
@@ -1158,16 +1158,13 @@
       "validation_commands": [
         "Static import scan, unit contracts, mocked integrations, and regression gate."
       ],
-      "evidence": [
-        "Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md",
-        "Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:56:45.546Z",
-      "started_timestamp": "2026-07-31T13:55:30.454Z",
-      "implemented_timestamp": "2026-07-31T13:56:45.292Z",
-      "validated_timestamp": "2026-07-31T13:56:45.546Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -1205,7 +1202,7 @@
       "title": "Standardize structured logging",
       "description": "Remediation task BE-009: Standardize structured logging",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-006",
         "BE-006"
@@ -1222,7 +1219,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:54:16.984Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
