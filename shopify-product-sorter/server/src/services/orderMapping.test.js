@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseOrderMappingCsv } from "./orderMappingCsv.js";
+import { parseOrderMappingCsv, orderMappingCsvColumns } from "./orderMappingCsv.js";
 import { matchOrderMappingShipment, normalizeOrderMappingIdentifier } from "./orderMappingMatcher.js";
 import { canApplyStatusUpdate, isTerminalOrderMappingStatus, normalizeOrderMappingStatus } from "./orderMappingStatus.js";
 
@@ -92,4 +92,48 @@ test("allows newer Shiprocket correction from terminal to non-terminal status", 
     ),
     true,
   );
+});
+
+test("forced refresh and MANUAL source override terminal statuses and manual locks", () => {
+  const lockedTerminal = {
+    normalized_status: "DELIVERED_TO_CUSTOMER",
+    status_source: "MANUAL",
+    status_timestamp: "2026-07-22T10:00:00Z",
+    manual_override_lock: true,
+  };
+
+  assert.equal(
+    canApplyStatusUpdate(
+      lockedTerminal,
+      {
+        normalizedStatus: "IN_TRANSIT",
+        source: "CSV_IMPORT",
+        statusTimestamp: "2026-07-25T00:00:00Z",
+      },
+      { force: true },
+    ),
+    true,
+  );
+
+  assert.equal(
+    canApplyStatusUpdate(
+      lockedTerminal,
+      {
+        normalizedStatus: "OUT_FOR_DELIVERY",
+        source: "MANUAL",
+        statusTimestamp: "2026-07-25T00:00:00Z",
+      },
+    ),
+    true,
+  );
+});
+
+test("fails on invalid CSV input with stable error messages", () => {
+  assert.throws(() => parseOrderMappingCsv(""), { message: "CSV is empty" });
+  assert.throws(() => parseOrderMappingCsv("   \n  "), { message: "CSV is empty" });
+  assert.throws(() => parseOrderMappingCsv("header1,header2\n\"unclosed quote"), { message: "Malformed CSV: unmatched quote" });
+  assert.throws(() => parseOrderMappingCsv("InvalidHeader,AnotherHeader\nval1,val2"), { message: "CSV is missing required Order Mapping columns" });
+
+  const cols = orderMappingCsvColumns("Order Number,Shipment Status\n#1001,Delivered");
+  assert.deepEqual(cols, ["Order Number", "Shipment Status"]);
 });

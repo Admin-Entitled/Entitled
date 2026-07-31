@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:21:19.750Z` |
+| Generated timestamp | `2026-07-31T15:21:45.218Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `ca40abb` |
+| Local commit | `69536df` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -41,11 +41,11 @@
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 2 |
+| Validated | 1 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 49 |
-| Completion percentage | 38.0% |
+| Completed | 50 |
+| Completion percentage | 38.8% |
 
 ## 4. Current execution focus
 
@@ -133,7 +133,7 @@
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-002 | Standardize startup commands | MEDIUM | VALIDATED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-002 | Standardize startup commands | MEDIUM | COMPLETED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | NOT_STARTED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | READY | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2367,9 +2367,9 @@ Documented dev script obsolescence and retirement recommendation in docs/archite
 ### `OPS-002` Standardize startup commands
 
 **Severity:** MEDIUM
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OPS-001, BE-010
-**Last updated:** 2026-07-31T15:21:19.750Z
+**Last updated:** 2026-07-31T15:21:45.218Z
 
 #### Description
 
@@ -2389,7 +2389,7 @@ Static script checks, dry-run help, test gate, and documentation review.
 
 #### Completion evidence
 
---evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js, --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution
+--evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js, --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution, Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e
 
 ---
 
@@ -3929,6 +3929,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:21:45.229Z | OPS-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `2da3a1f8` |
 | 2026-07-31T15:21:19.764Z | OPS-002 | implemented | validated | shivam | --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution | `aa897b0d` |
 | 2026-07-31T15:21:12.996Z | OPS-002 | in_progress | implemented | shivam | --evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js | `1bf620b5` |
 | 2026-07-31T15:18:48.319Z | OPS-002 | ready | in_progress | shivam | Transition to in_progress | `67d183e1` |
@@ -3938,4 +3939,3 @@ Not completed.
 | 2026-07-31T15:11:05.718Z | OPS-001 | in_progress | implemented | shivam | Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md | `390533d6` |
 | 2026-07-31T15:08:24.210Z | OPS-001 | ready | in_progress | shivam | Transition to in_progress | `390a4a66` |
 | 2026-07-31T15:07:11.054Z | DOC-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6896ec1f` |
-| 2026-07-31T15:07:10.979Z | DATA-012 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `085d87e9` |

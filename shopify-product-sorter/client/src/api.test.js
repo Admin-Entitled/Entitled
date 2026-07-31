@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { api } from "./orderMappingApi.js";
-import { getOrderStatusDisplay } from "./orderMappingView.js";
+import { getOrderStatusDisplay, getStatusFilterLabel } from "./orderMappingView.js";
 import { api as sorterApi } from "./api.js";
 
 test("lists order mapping orders with selected filter", async () => {
@@ -171,4 +171,10 @@ test("shows normalized Shiprocket status when available", () => {
       detail: "Delivered",
     },
   );
+});
+
+test("getStatusFilterLabel formats status labels correctly for UI navigation", () => {
+  assert.equal(getStatusFilterLabel("ALL"), "All Statuses");
+  assert.equal(getStatusFilterLabel("DELIVERED_TO_CUSTOMER"), "Delivered To Customer");
+  assert.equal(getStatusFilterLabel("PENDING_TRACKING"), "Pending Tracking");
 });

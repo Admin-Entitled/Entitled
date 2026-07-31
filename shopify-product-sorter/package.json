@@ -2,6 +2,7 @@
   "name": "entitled-collection-placement-manager",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "workspaces": [
     "server",
     "client"
@@ -14,7 +15,7 @@
     "build": "npm run build --workspace client",
     "start": "npm run start --workspace server",
     "health": "curl http://localhost:4000/api/debug/shopify",
-    "verify": "npm run health && echo 'System Ready'",
+    "verify": "node scripts/verify.mjs",
     "arch:doctor": "node scripts/architecture-ledger.mjs doctor",
     "arch:status": "node scripts/architecture-ledger.mjs status",
     "arch:resume": "node scripts/architecture-ledger.mjs resume",
@@ -37,6 +38,5 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.3"
-  },
-  "type": "module"
+  }
 }
