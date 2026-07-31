@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T16:12:31.707Z",
+  "last_updated": "2026-07-31T16:17:10.799Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1111,7 +1111,7 @@
       "title": "Preserve existing backend URLs with adapters",
       "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "TEST-008"
@@ -1125,13 +1125,20 @@
       "validation_commands": [
         "Route contract, integration, startup, frontend, and regression-gate checks."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "--evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js.",
+        "--evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed."
+      ],
+      "changed_files": [
+        "server/src/app.js",
+        "server/src/routes/api.js",
+        "server/src/app.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.254Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T16:17:10.799Z",
+      "started_timestamp": "2026-07-31T16:16:49.899Z",
+      "implemented_timestamp": "2026-07-31T16:16:58.127Z",
+      "validated_timestamp": "2026-07-31T16:17:10.799Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
