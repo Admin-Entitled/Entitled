@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T11:39:06.020Z` |
+| Generated timestamp | `2026-07-31T11:43:29.910Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `86cfc4d` |
+| Local commit | `b23cb9a` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 95 |
-| Ready | 3 |
+| Ready | 2 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 18 |
-| Completion percentage | 14.0% |
+| Completed | 19 |
+| Completion percentage | 14.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `TEST-011`, `OWN-008`, `OPS-ARCH-001`
+- Next ready tasks: `OWN-008`, `OPS-ARCH-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -75,8 +75,8 @@
 | TEST-007 | Protect Sales Intelligence API contracts | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-008 | Protect public route compatibility | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-009 | Protect database migration safety | CRITICAL | COMPLETED | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-010 | Protect startup and environment isolation | HIGH | VALIDATED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-011 | Protect frontend navigation | HIGH | READY | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-011 | Protect frontend navigation | HIGH | VALIDATED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-012 | Add integrated existing-app regression gate | HIGH | NOT_STARTED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -685,9 +685,9 @@ Starting implementation of TEST-009: Protect database migration safety, Created 
 ### `TEST-010` Protect startup and environment isolation
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:39:06.019Z
+**Last updated:** 2026-07-31T11:39:17.738Z
 
 #### Description
 
@@ -707,16 +707,16 @@ Unit, startup integration, environment matrix, static secret scan, and no-live-n
 
 #### Completion evidence
 
-Starting implementation of TEST-010: Protect startup and environment isolation, Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation., Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully.
+Starting implementation of TEST-010: Protect startup and environment isolation, Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation., Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully., Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4
 
 ---
 
 ### `TEST-011` Protect frontend navigation
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:43:29.910Z
 
 #### Description
 
@@ -736,7 +736,7 @@ Browser E2E, mocked API, accessibility smoke, and route regression.
 
 #### Completion evidence
 
-Not completed.
+Starting implementation of TEST-011: Protect frontend navigation, Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic., Ran node --test src/api.test.js in client/. All 10 tests passed successfully.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T11:43:29.922Z | TEST-011 | implemented | validated | shivam | Ran node --test src/api.test.js in client/. All 10 tests passed successfully. | `b9fece83` |
+| 2026-07-31T11:43:21.758Z | TEST-011 | in_progress | implemented | shivam | Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic. | `4fd6c6df` |
+| 2026-07-31T11:42:17.765Z | TEST-011 | ready | in_progress | shivam | Starting implementation of TEST-011: Protect frontend navigation | `a1720b3c` |
+| 2026-07-31T11:39:17.746Z | TEST-010 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e66cc1b4` |
 | 2026-07-31T11:39:06.031Z | TEST-010 | implemented | validated | shivam | Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully. | `d43e1629` |
 | 2026-07-31T11:38:57.403Z | TEST-010 | in_progress | implemented | shivam | Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation. | `f9c447e6` |
 | 2026-07-31T11:38:03.840Z | TEST-010 | ready | in_progress | shivam | Starting implementation of TEST-010: Protect startup and environment isolation | `fd7b74f4` |
 | 2026-07-31T11:24:08.714Z | TEST-009 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e8e604b8` |
 | 2026-07-31T11:23:57.985Z | TEST-009 | implemented | validated | shivam | Ran node --test src/services/orderMappingMigrations.test.js in server/. All 3 tests passed successfully. | `834f8336` |
 | 2026-07-31T11:23:50.669Z | TEST-009 | in_progress | implemented | shivam | Created test suite server/src/services/orderMappingMigrations.test.js asserting migration file loading, sorting, schema placeholder filling, and migration idempotency parameters. | `222eb969` |
-| 2026-07-31T11:22:52.170Z | TEST-009 | ready | in_progress | shivam | Starting implementation of TEST-009: Protect database migration safety | `895cc739` |
-| 2026-07-31T11:21:49.240Z | TEST-008 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e3ab25c9` |
-| 2026-07-31T11:21:39.009Z | TEST-008 | implemented | validated | shivam | Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility. | `66cd9930` |
-| 2026-07-31T11:21:27.329Z | TEST-008 | in_progress | implemented | shivam | Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials. | `5e5f2609` |
