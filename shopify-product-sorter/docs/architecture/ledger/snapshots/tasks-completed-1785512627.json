@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:43:47.910Z",
+  "last_updated": "2026-07-31T15:43:47.862Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -970,7 +970,7 @@
       "title": "Split the generic API router",
       "description": "Remediation task BE-001: Split the generic API router",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "TEST-012",
         "OWN-007"
@@ -987,7 +987,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:43:47.888Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1893,7 +1893,7 @@
       "title": "Add deterministic integration mocks",
       "description": "Remediation task INT-008: Add deterministic integration mocks",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "INT-002",
         "INT-005",
@@ -1911,7 +1911,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:43:47.899Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -3756,7 +3756,7 @@
       "title": "Run full test and coverage gate",
       "description": "Remediation task FINAL-001: Run full test and coverage gate",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "TEST-012"
       ],
@@ -3772,7 +3772,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:43:47.910Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

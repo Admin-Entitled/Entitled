@@ -16,6 +16,7 @@
     "start": "npm run start --workspace server",
     "health": "curl http://localhost:4000/api/debug/shopify",
     "verify": "node scripts/verify.mjs",
+    "test:regression-gate": "node scripts/regression-gate.mjs",
     "arch:doctor": "node scripts/architecture-ledger.mjs doctor",
     "arch:status": "node scripts/architecture-ledger.mjs status",
     "arch:resume": "node scripts/architecture-ledger.mjs resume",

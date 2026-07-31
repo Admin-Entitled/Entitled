@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T15:43:28.501Z` |
+| Generated timestamp | `2026-07-31T15:43:47.910Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `f3690e8` |
+| Local commit | `094e208` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 54 |
-| Ready | 12 |
+| Not started | 51 |
+| Ready | 15 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 51 |
-| Completion percentage | 39.5% |
+| Completed | 52 |
+| Completion percentage | 40.3% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-004`, `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`
+- Next ready tasks: `BE-001`, `FE-004`, `INT-008`, `OPS-005`, `OPS-007`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -77,7 +77,7 @@
 | TEST-009 | Protect database migration safety | CRITICAL | COMPLETED | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-011 | Protect frontend navigation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-012 | Add integrated existing-app regression gate | HIGH | VALIDATED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-012 | Add integrated existing-app regression gate | HIGH | COMPLETED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -88,7 +88,7 @@
 | OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-001 | Split the generic API router | HIGH | NOT_STARTED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-001 | Split the generic API router | HIGH | READY | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | NOT_STARTED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | NOT_STARTED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | NOT_STARTED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -117,7 +117,7 @@
 | INT-005 | Define shared Shiprocket transport | HIGH | COMPLETED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-006 | Standardize integration authentication and env ownership | CRITICAL | NOT_STARTED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-007 | Standardize retries, rate limits, and errors | HIGH | COMPLETED | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-008 | Add deterministic integration mocks | HIGH | NOT_STARTED | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-008 | Add deterministic integration mocks | HIGH | READY | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | NOT_STARTED | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-010 | Verify provider contracts and API-version compatibility | HIGH | NOT_STARTED | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | BLOCKED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
@@ -179,7 +179,7 @@
 | META-006 | Define Meta persistence and authentication | CRITICAL | DEFERRED | META-003, SEC-001, SEC-002, SEC-003, SEC-004, SEC-005 | Imported from master plan. Previous raw status: DEFERRED |
 | META-007 | Add Meta tests, write safeguards, and observability | CRITICAL | DEFERRED | META-004, META-005, META-006 | Imported from master plan. Previous raw status: DEFERRED |
 | META-008 | Roll out Meta safely to production | HIGH | DEFERRED | META-007, FINAL-007 | Imported from master plan. Previous raw status: DEFERRED |
-| FINAL-001 | Run full test and coverage gate | CRITICAL | NOT_STARTED | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-002 | Verify all routes and startup behavior | CRITICAL | NOT_STARTED | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-003 | Verify data integrity and restore evidence | CRITICAL | NOT_STARTED | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-004 | Audit dependencies, environment, and security | CRITICAL | NOT_STARTED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -743,9 +743,9 @@ Starting implementation of TEST-011: Protect frontend navigation, Added frontend
 ### `TEST-012` Add integrated existing-app regression gate
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011
-**Last updated:** 2026-07-31T15:43:28.501Z
+**Last updated:** 2026-07-31T15:43:47.861Z
 
 #### Description
 
@@ -765,7 +765,7 @@ Unit, integration, E2E, startup, migration, route, and test-isolation checks.
 
 #### Completion evidence
 
---evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json, --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json)
+--evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json, --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json), Commit SHA: 094e208a5b8104e03b82ad5ad23f8a47444987ac
 
 ---
 
@@ -1062,9 +1062,9 @@ Defining environment configuration ownership, Defined complete integration and e
 ### `BE-001` Split the generic API router
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-012, OWN-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:43:47.888Z
 
 #### Description
 
@@ -1903,9 +1903,9 @@ Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LI
 ### `INT-008` Add deterministic integration mocks
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** INT-002, INT-005, TEST-012
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:43:47.899Z
 
 #### Description
 
@@ -3696,9 +3696,9 @@ Not completed.
 ### `FINAL-001` Run full test and coverage gate
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-012
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:43:47.910Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:43:47.922Z | FINAL-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3e8a922a` |
+| 2026-07-31T15:43:47.909Z | INT-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e67f0d66` |
+| 2026-07-31T15:43:47.899Z | BE-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `4c930c60` |
+| 2026-07-31T15:43:47.873Z | TEST-012 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `a86b5fb9` |
 | 2026-07-31T15:43:28.515Z | TEST-012 | implemented | validated | shivam | --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json) | `5b93bb52` |
 | 2026-07-31T15:43:20.319Z | TEST-012 | in_progress | implemented | shivam | --evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json | `fee411a1` |
 | 2026-07-31T15:42:15.610Z | TEST-012 | ready | in_progress | shivam | Transition to in_progress | `9fe5cf03` |
 | 2026-07-31T15:40:31.030Z | FE-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `47445a5c` |
 | 2026-07-31T15:40:31.019Z | TEST-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `fa163ebe` |
 | 2026-07-31T15:40:30.992Z | TEST-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1f137ab7` |
-| 2026-07-31T15:21:45.229Z | OPS-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `2da3a1f8` |
-| 2026-07-31T15:21:19.764Z | OPS-002 | implemented | validated | shivam | --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution | `aa897b0d` |
-| 2026-07-31T15:21:12.996Z | OPS-002 | in_progress | implemented | shivam | --evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js | `1bf620b5` |
-| 2026-07-31T15:18:48.319Z | OPS-002 | ready | in_progress | shivam | Transition to in_progress | `67d183e1` |

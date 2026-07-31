@@ -5,5 +5,6 @@ server/data
 client/dist
 npm-debug.log*
 .tmp*
+test-results/
 .tokensave/*.db-wal
 .tokensave/*.db-shm
