@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T21:43:27.455Z` |
+| Generated timestamp | `2026-07-31T21:50:28.044Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `ce9d2c2` |
+| Local commit | `3519c7c` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 28 |
+| Not started | 27 |
 | Ready | 14 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,13 +44,13 @@
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 76 |
-| Completion percentage | 58.9% |
+| Completed | 77 |
+| Completion percentage | 59.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `SEC-004`, `SEC-006`, `SEC-007`, `DOC-001`, `DOC-003`
+- Next ready tasks: `OPS-004`, `SEC-004`, `SEC-007`, `DOC-001`, `DOC-003`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -135,7 +135,7 @@
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | COMPLETED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | COMPLETED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-004 | Standardize diagnostics and safe observability | MEDIUM | READY | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-006 | Review and isolate Tokensave runtime files | HIGH | COMPLETED | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-007 | Review Playwright artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -147,7 +147,7 @@
 | SEC-003 | Correct secret handling and tracked token risk | CRITICAL | COMPLETED | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | READY | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | COMPLETED | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-007 | Review CORS and CSRF protections | HIGH | READY | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2425,9 +2425,9 @@ Route tests, startup matrix, script dry-run, and security review.
 ### `OPS-004` Standardize diagnostics and safe observability
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-006, BE-009, SEC-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T21:50:28.044Z
 
 #### Description
 
@@ -2485,7 +2485,7 @@ Git inventory, reproducibility check, ignore check, and owner review.
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** OWN-009, SEC-003
-**Last updated:** 2026-07-31T21:43:27.454Z
+**Last updated:** 2026-07-31T21:43:45.622Z
 
 #### Description
 
@@ -2505,7 +2505,7 @@ Git status, ignore checks, tool smoke test if approved, and security review.
 
 #### Completion evidence
 
---changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules.
+--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules., Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec
 
 ---
 
@@ -2771,9 +2771,9 @@ Not completed.
 ### `SEC-006` Sanitize sensitive logs and diagnostics
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** SEC-003, OWN-006
-**Last updated:** 2026-07-31T21:40:38.806Z
+**Last updated:** 2026-07-31T21:50:28.008Z
 
 #### Description
 
@@ -2793,7 +2793,7 @@ Redaction unit tests, route tests, secret scan, manual log review, and regressio
 
 #### Completion evidence
 
-Not completed.
+--changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js, --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate, --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T21:50:28.057Z | OPS-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `54f58a8a` |
+| 2026-07-31T21:50:28.026Z | SEC-006 | validated | completed | shivam | --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns. | `8f420af1` |
+| 2026-07-31T21:50:27.348Z | SEC-006 | implemented | validated | shivam | --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate | `504057e7` |
+| 2026-07-31T21:50:26.820Z | SEC-006 | in_progress | implemented | shivam | --changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js | `4af2a830` |
+| 2026-07-31T21:46:48.733Z | SEC-006 | ready | in_progress | shivam | Transition to in_progress | `c3f14641` |
+| 2026-07-31T21:43:45.635Z | OPS-006 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `170a1295` |
 | 2026-07-31T21:43:27.471Z | OPS-006 | validated | completed | shivam | --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules. | `7d1c7e6f` |
 | 2026-07-31T21:43:19.667Z | OPS-006 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `5c28c737` |
 | 2026-07-31T21:43:11.615Z | OPS-006 | in_progress | implemented | shivam | --changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md | `2041ed98` |
 | 2026-07-31T21:42:19.120Z | OPS-006 | ready | in_progress | shivam | Transition to in_progress | `061cbf5e` |
-| 2026-07-31T21:41:10.201Z | SEC-003 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `c2186f4f` |
-| 2026-07-31T21:40:38.818Z | SEC-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6f57cc65` |
-| 2026-07-31T21:40:38.805Z | OPS-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `a55b0fc0` |
-| 2026-07-31T21:40:38.772Z | SEC-003 | validated | completed | shivam | --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns. | `4bd35b13` |
-| 2026-07-31T21:40:20.920Z | SEC-003 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `eb8b986f` |
-| 2026-07-31T21:40:06.336Z | SEC-003 | in_progress | implemented | shivam | --changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md | `1a500a3a` |

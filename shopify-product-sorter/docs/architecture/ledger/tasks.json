@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:43:27.455Z",
+  "last_updated": "2026-07-31T21:50:28.044Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2568,7 +2568,7 @@
       "title": "Standardize diagnostics and safe observability",
       "description": "Remediation task OPS-004: Standardize diagnostics and safe observability",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-006",
         "BE-009",
@@ -2586,7 +2586,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T21:50:28.044Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2648,15 +2648,16 @@
       "evidence": [
         "--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules."
+        "--evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules.",
+        "Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:43:27.454Z",
+      "updated_timestamp": "2026-07-31T21:43:45.622Z",
       "started_timestamp": "2026-07-31T21:42:19.103Z",
       "implemented_timestamp": "2026-07-31T21:43:11.598Z",
       "validated_timestamp": "2026-07-31T21:43:19.650Z",
-      "completed_timestamp": "2026-07-31T21:43:27.454Z",
+      "completed_timestamp": "2026-07-31T21:43:45.622Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2941,7 +2942,7 @@
       "title": "Sanitize sensitive logs and diagnostics",
       "description": "Remediation task SEC-006: Sanitize sensitive logs and diagnostics",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "SEC-003",
         "OWN-006"
@@ -2955,14 +2956,18 @@
       "validation_commands": [
         "Redaction unit tests, route tests, secret scan, manual log review, and regression."
       ],
-      "evidence": "",
+      "evidence": [
+        "--changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js",
+        "--passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate",
+        "--evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:40:38.806Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:50:28.008Z",
+      "started_timestamp": "2026-07-31T21:46:48.715Z",
+      "implemented_timestamp": "2026-07-31T21:50:26.803Z",
+      "validated_timestamp": "2026-07-31T21:50:27.332Z",
+      "completed_timestamp": "2026-07-31T21:50:28.008Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
