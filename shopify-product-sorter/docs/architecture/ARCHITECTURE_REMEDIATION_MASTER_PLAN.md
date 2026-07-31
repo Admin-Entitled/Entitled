@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:22:03.806Z` |
+| Generated timestamp | `2026-07-31T14:25:05.686Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `754db5d` |
+| Local commit | `d564698` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 64 |
-| Ready | 17 |
+| Ready | 16 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 35 |
-| Completion percentage | 27.1% |
+| Completed | 36 |
+| Completion percentage | 27.9% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-006`, `INT-001`, `INT-004`, `DATA-002`, `DATA-004`
+- Next ready tasks: `INT-001`, `INT-004`, `DATA-002`, `DATA-004`, `DATA-005`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -103,8 +103,8 @@
 | FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-005 | Extract the SKU Image Manager feature | HIGH | VALIDATED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-006 | Retain Order Mapping compatibility boundary | HIGH | READY | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | NOT_STARTED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | NOT_STARTED | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | NOT_STARTED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1497,9 +1497,9 @@ Not completed.
 ### `FE-005` Extract the SKU Image Manager feature
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-004, TEST-006
-**Last updated:** 2026-07-31T14:22:03.806Z
+**Last updated:** 2026-07-31T14:22:08.317Z
 
 #### Description
 
@@ -1519,16 +1519,16 @@ Component/unit, browser media flows with mocks, accessibility, and regression ch
 
 #### Completion evidence
 
-Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md, Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification
+Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md, Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification, Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91
 
 ---
 
 ### `FE-006` Retain Order Mapping compatibility boundary
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** FE-003, OWN-003
-**Last updated:** 2026-07-31T14:18:47.107Z
+**Last updated:** 2026-07-31T14:25:05.686Z
 
 #### Description
 
@@ -1548,7 +1548,7 @@ Browser, route, API contract, accessibility, and existing-app regression tests.
 
 #### Completion evidence
 
-Not completed.
+Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md, Validated via OrderMapping.jsx audit, API client isolation, and state independence verification
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:25:05.699Z | FE-006 | implemented | validated | shivam | Validated via OrderMapping.jsx audit, API client isolation, and state independence verification | `ca7ac7db` |
+| 2026-07-31T14:25:05.407Z | FE-006 | in_progress | implemented | shivam | Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md | `eaebb144` |
+| 2026-07-31T14:23:05.229Z | FE-006 | ready | in_progress | shivam | Transition to in_progress | `6a42b4ff` |
+| 2026-07-31T14:22:08.327Z | FE-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `5c9f44d3` |
 | 2026-07-31T14:22:03.822Z | FE-005 | implemented | validated | shivam | Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification | `323e858d` |
 | 2026-07-31T14:22:03.556Z | FE-005 | in_progress | implemented | shivam | Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md | `f6b09cd7` |
 | 2026-07-31T14:19:54.586Z | FE-005 | ready | in_progress | shivam | Transition to in_progress | `dea88c8c` |
 | 2026-07-31T14:18:47.116Z | FE-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `95021fdd` |
 | 2026-07-31T14:18:47.090Z | FE-003 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `c40cdca9` |
 | 2026-07-31T14:18:43.140Z | FE-003 | implemented | validated | shivam | Validated via main.jsx routing review, server fallback audit, and URL preservation matrix | `8d65ef89` |
-| 2026-07-31T14:18:42.864Z | FE-003 | in_progress | implemented | shivam | Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md | `2d7aa7e4` |
-| 2026-07-31T14:16:57.544Z | FE-003 | ready | in_progress | shivam | Transition to in_progress | `4ceb6b94` |
-| 2026-07-31T14:15:28.275Z | FE-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `aaba455f` |
-| 2026-07-31T14:15:24.228Z | FE-002 | implemented | validated | shivam | Validated via sidebar module audit, active state derivation review, and disabled label safety check | `1134acc7` |

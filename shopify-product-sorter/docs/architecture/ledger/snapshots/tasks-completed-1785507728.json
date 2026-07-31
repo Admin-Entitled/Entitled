@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:25:05.686Z",
+  "last_updated": "2026-07-31T14:22:08.318Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1466,7 +1466,7 @@
       "title": "Retain Order Mapping compatibility boundary",
       "description": "Remediation task FE-006: Retain Order Mapping compatibility boundary",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "FE-003",
         "OWN-003"
@@ -1480,16 +1480,13 @@
       "validation_commands": [
         "Browser, route, API contract, accessibility, and existing-app regression tests."
       ],
-      "evidence": [
-        "Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md",
-        "Validated via OrderMapping.jsx audit, API client isolation, and state independence verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:25:05.686Z",
-      "started_timestamp": "2026-07-31T14:23:05.216Z",
-      "implemented_timestamp": "2026-07-31T14:25:05.288Z",
-      "validated_timestamp": "2026-07-31T14:25:05.686Z",
+      "updated_timestamp": "2026-07-31T14:18:47.107Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
