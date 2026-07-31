@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:58:03.005Z",
+  "last_updated": "2026-07-31T14:55:45.965Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2135,7 +2135,7 @@
       "title": "Isolate Order Mapping PostgreSQL/migration state",
       "description": "Remediation task DATA-006: Isolate Order Mapping PostgreSQL/migration state",
       "severity": "CRITICAL",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "SAFE-004",
         "OWN-003",
@@ -2150,16 +2150,13 @@
       "validation_commands": [
         "Schema, migration, restore, route authorization, and Order Mapping regression tests."
       ],
-      "evidence": [
-        "Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md",
-        "Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:58:03.004Z",
-      "started_timestamp": "2026-07-31T14:56:49.438Z",
-      "implemented_timestamp": "2026-07-31T14:58:02.753Z",
-      "validated_timestamp": "2026-07-31T14:58:03.004Z",
+      "updated_timestamp": "2026-07-31T14:09:16.468Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

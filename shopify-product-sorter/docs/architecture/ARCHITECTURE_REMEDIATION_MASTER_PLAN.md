@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:55:42.107Z` |
+| Generated timestamp | `2026-07-31T14:58:03.005Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `6b31f14` |
+| Local commit | `28e6715` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 59 |
-| Ready | 12 |
+| Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 45 |
-| Completion percentage | 34.9% |
+| Completed | 46 |
+| Completion percentage | 35.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `DATA-006`, `OPS-001`, `OPS-005`, `OPS-007`, `OPS-008`
+- Next ready tasks: `OPS-001`, `OPS-005`, `OPS-007`, `OPS-008`, `OPS-ARCH-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -124,8 +124,8 @@
 | DATA-002 | Document SQLite table ownership | CRITICAL | COMPLETED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-004 | Separate SKU audit data | HIGH | COMPLETED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-005 | Separate Sales Intelligence caches | HIGH | VALIDATED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | READY | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-005 | Separate Sales Intelligence caches | HIGH | COMPLETED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | VALIDATED | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-007 | Make runtime paths configurable | HIGH | NOT_STARTED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2106,9 +2106,9 @@ Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION
 ### `DATA-005` Separate Sales Intelligence caches
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-005, OWN-009
-**Last updated:** 2026-07-31T14:55:42.107Z
+**Last updated:** 2026-07-31T14:55:45.965Z
 
 #### Description
 
@@ -2128,16 +2128,16 @@ JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regressio
 
 #### Completion evidence
 
-Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md, Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification
+Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md, Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification, Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287
 
 ---
 
 ### `DATA-006` Isolate Order Mapping PostgreSQL/migration state
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SAFE-004, OWN-003, BE-010
-**Last updated:** 2026-07-31T14:09:16.468Z
+**Last updated:** 2026-07-31T14:58:03.004Z
 
 #### Description
 
@@ -2157,7 +2157,7 @@ Schema, migration, restore, route authorization, and Order Mapping regression te
 
 #### Completion evidence
 
-Not completed.
+Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md, Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T14:58:03.019Z | DATA-006 | implemented | validated | shivam | Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification | `03a2004e` |
+| 2026-07-31T14:58:02.766Z | DATA-006 | in_progress | implemented | shivam | Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md | `a40ac405` |
+| 2026-07-31T14:56:49.451Z | DATA-006 | ready | in_progress | shivam | Transition to in_progress | `82173595` |
+| 2026-07-31T14:55:45.976Z | DATA-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `811d1e36` |
 | 2026-07-31T14:55:42.121Z | DATA-005 | implemented | validated | shivam | Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification | `3a20248f` |
 | 2026-07-31T14:55:41.881Z | DATA-005 | in_progress | implemented | shivam | Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md | `788c7d7d` |
 | 2026-07-31T14:54:44.820Z | DATA-005 | ready | in_progress | shivam | Transition to in_progress | `67de21a2` |
 | 2026-07-31T14:53:13.166Z | DATA-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `59c05a78` |
 | 2026-07-31T14:53:09.314Z | DATA-004 | implemented | validated | shivam | Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis | `dfccc9a6` |
 | 2026-07-31T14:53:09.076Z | DATA-004 | in_progress | implemented | shivam | Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md | `1c645d26` |
-| 2026-07-31T14:52:11.672Z | DATA-004 | ready | in_progress | shivam | Transition to in_progress | `dcefbbde` |
-| 2026-07-31T14:51:08.264Z | DOC-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `1f12db1b` |
-| 2026-07-31T14:51:08.238Z | DATA-002 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `44433ee6` |
-| 2026-07-31T14:51:04.375Z | DATA-002 | implemented | validated | shivam | Validated via database.js schema review, table ownership audit, and cleanup task dependency verification | `a5f177d5` |
