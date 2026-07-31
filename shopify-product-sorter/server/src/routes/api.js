@@ -593,3 +593,5 @@ router.put("/collections/products/preference", (req, res) => {
     res.status(500).json({ error: "Failed to update product preference", detail: error.message });
   }
 });
+
+export default router;
