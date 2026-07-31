@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T17:37:48.191Z",
+  "last_updated": "2026-07-31T17:37:48.133Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1552,7 +1552,7 @@
       "title": "Separate application state",
       "description": "Remediation task FE-007: Separate application state",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -1570,7 +1570,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:37:48.165Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1582,7 +1582,7 @@
       "title": "Separate frontend API clients",
       "description": "Remediation task FE-008: Separate frontend API clients",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -1601,7 +1601,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:37:48.178Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1613,7 +1613,7 @@
       "title": "Isolate styles and remove global leakage",
       "description": "Remediation task FE-009: Isolate styles and remove global leakage",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-001",
         "FE-004",
@@ -1632,7 +1632,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:37:48.191Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

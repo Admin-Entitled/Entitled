@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T16:21:38.114Z` |
+| Generated timestamp | `2026-07-31T17:37:48.191Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `cde8615` |
+| Local commit | `5a4c30b` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 41 |
-| Ready | 19 |
+| Not started | 38 |
+| Ready | 21 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 58 |
-| Completion percentage | 45.0% |
+| Completed | 59 |
+| Completion percentage | 45.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `FE-004`, `INT-008`, `OPS-003`, `OPS-005`, `OPS-007`
+- Next ready tasks: `FE-007`, `FE-008`, `FE-009`, `INT-008`, `OPS-003`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -102,12 +102,12 @@
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-004 | Extract the Sorter feature | HIGH | READY | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-007 | Separate application state | HIGH | NOT_STARTED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-008 | Separate frontend API clients | HIGH | NOT_STARTED | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-009 | Isolate styles and remove global leakage | MEDIUM | NOT_STARTED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-007 | Separate application state | HIGH | READY | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-008 | Separate frontend API clients | HIGH | READY | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-009 | Isolate styles and remove global leakage | MEDIUM | READY | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-010 | Add feature error and loading boundaries | HIGH | NOT_STARTED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | NOT_STARTED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1468,9 +1468,9 @@ Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md,
 ### `FE-004` Extract the Sorter feature
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-07-31T15:40:31.020Z
+**Last updated:** 2026-07-31T17:37:48.133Z
 
 #### Description
 
@@ -1490,7 +1490,7 @@ Unit, browser, API mock, route, build, and full regression checks.
 
 #### Completion evidence
 
-Not completed.
+--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests.
 
 ---
 
@@ -1555,9 +1555,9 @@ Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_
 ### `FE-007` Separate application state
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-004, FE-005, FE-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T17:37:48.165Z
 
 #### Description
 
@@ -1584,9 +1584,9 @@ Not completed.
 ### `FE-008` Separate frontend API clients
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-004, FE-005, FE-006, BE-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T17:37:48.178Z
 
 #### Description
 
@@ -1613,9 +1613,9 @@ Not completed.
 ### `FE-009` Isolate styles and remove global leakage
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-001, FE-004, FE-005, FE-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T17:37:48.191Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T17:37:48.201Z | FE-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `347c81ba` |
+| 2026-07-31T17:37:48.190Z | FE-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3ce3d8ca` |
+| 2026-07-31T17:37:48.177Z | FE-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `00ce491e` |
+| 2026-07-31T17:37:48.147Z | FE-004 | validated | completed | shivam | Transition to completed | `efbf0872` |
+| 2026-07-31T17:36:39.162Z | FE-004 | implemented | validated | shivam | --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests. | `82ceb296` |
+| 2026-07-31T17:36:19.592Z | FE-004 | in_progress | implemented | shivam | --evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable. | `eef5314a` |
+| 2026-07-31T16:25:58.955Z | FE-004 | ready | in_progress | shivam | Transition to in_progress | `964672f8` |
 | 2026-07-31T16:21:38.319Z | CLEAN-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6724d7cd` |
 | 2026-07-31T16:21:37.785Z | BE-011 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `44a5c226` |
 | 2026-07-31T16:21:03.002Z | BE-011 | implemented | validated | shivam | --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect. | `2dfcac51` |
-| 2026-07-31T16:20:51.638Z | BE-011 | in_progress | implemented | shivam | --evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2. | `0a5c741a` |
-| 2026-07-31T16:20:40.945Z | BE-011 | ready | in_progress | shivam | Transition to in_progress | `303404f5` |
-| 2026-07-31T16:17:42.970Z | FINAL-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9bbcdd6c` |
-| 2026-07-31T16:17:42.959Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `72a23884` |
-| 2026-07-31T16:17:42.948Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `cc502cd8` |
-| 2026-07-31T16:17:42.937Z | OPS-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d44be762` |
-| 2026-07-31T16:17:42.925Z | BE-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `af5c98c4` |
