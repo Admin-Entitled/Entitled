@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:44:39.389Z",
+  "last_updated": "2026-07-31T13:37:09.827Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -889,7 +889,7 @@
       "title": "Approve runtime file ownership",
       "description": "Remediation task OWN-009: Approve runtime file ownership",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -906,17 +906,13 @@
       "validation_commands": [
         "Filesystem/Git inventory and owner review."
       ],
-      "evidence": [
-        "Defining shared Shopify transport boundary",
-        "Defined complete runtime file ownership matrix in docs/architecture/RUNTIME_FILE_OWNERSHIP_MATRIX.md",
-        "Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:39.388Z",
-      "started_timestamp": "2026-07-31T13:41:27.312Z",
-      "implemented_timestamp": "2026-07-31T13:44:39.143Z",
-      "validated_timestamp": "2026-07-31T13:44:39.388Z",
+      "updated_timestamp": "2026-07-31T13:23:33.420Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -1939,7 +1935,7 @@
       "title": "Document SQLite table ownership",
       "description": "Remediation task DATA-002: Document SQLite table ownership",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-003",
         "OWN-008"
@@ -1956,7 +1952,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:37:09.852Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T13:37:05.772Z` |
+| Generated timestamp | `2026-07-31T13:44:39.389Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `c201983` |
+| Local commit | `87ff3ea` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 82 |
+| Not started | 81 |
 | Ready | 9 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,13 +44,13 @@
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 25 |
-| Completion percentage | 19.4% |
+| Completed | 26 |
+| Completion percentage | 20.2% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OWN-009`, `OWN-010`, `BE-006`, `BE-010`, `FE-001`
+- Next ready tasks: `OWN-010`, `BE-006`, `BE-010`, `FE-001`, `DATA-002`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -85,8 +85,8 @@
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | COMPLETED | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-006 | Define System Diagnostics ownership | MEDIUM | COMPLETED | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-007 | Approve route ownership matrix | CRITICAL | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-008 | Approve data ownership matrix | CRITICAL | VALIDATED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-009 | Approve runtime file ownership | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-009 | Approve runtime file ownership | HIGH | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | NOT_STARTED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | NOT_STARTED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -121,7 +121,7 @@
 | INT-009 | Remove duplicate clients after usage proof | HIGH | NOT_STARTED | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-010 | Verify provider contracts and API-version compatibility | HIGH | NOT_STARTED | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | BLOCKED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
-| DATA-002 | Document SQLite table ownership | CRITICAL | NOT_STARTED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-002 | Document SQLite table ownership | CRITICAL | READY | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-004 | Separate SKU audit data | HIGH | NOT_STARTED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-005 | Separate Sales Intelligence caches | HIGH | NOT_STARTED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -975,9 +975,9 @@ Defining data store ownership boundaries, Defined complete route ownership matri
 ### `OWN-008` Approve data ownership matrix
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-008
-**Last updated:** 2026-07-31T13:37:05.772Z
+**Last updated:** 2026-07-31T13:37:09.827Z
 
 #### Description
 
@@ -997,16 +997,16 @@ Static references, file inventory, schema inventory, and owner review.
 
 #### Completion evidence
 
-Approving data ownership matrix, Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md, Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files
+Approving data ownership matrix, Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md, Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files, Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330
 
 ---
 
 ### `OWN-009` Approve runtime file ownership
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:23:33.420Z
+**Last updated:** 2026-07-31T13:44:39.388Z
 
 #### Description
 
@@ -1026,7 +1026,7 @@ Filesystem/Git inventory and owner review.
 
 #### Completion evidence
 
-Not completed.
+Defining shared Shopify transport boundary, Defined complete runtime file ownership matrix in docs/architecture/RUNTIME_FILE_OWNERSHIP_MATRIX.md, Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts
 
 ---
 
@@ -2019,9 +2019,9 @@ Not completed.
 ### `DATA-002` Document SQLite table ownership
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-003, OWN-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:37:09.852Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T13:44:39.401Z | OWN-009 | implemented | validated | shivam | Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts | `b416dac6` |
+| 2026-07-31T13:44:39.157Z | OWN-009 | in_progress | implemented | shivam | Defined complete runtime file ownership matrix in docs/architecture/RUNTIME_FILE_OWNERSHIP_MATRIX.md | `03550988` |
+| 2026-07-31T13:41:27.325Z | OWN-009 | ready | in_progress | shivam | Defining shared Shopify transport boundary | `6d6908ab` |
+| 2026-07-31T13:37:09.861Z | DATA-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b81290f2` |
+| 2026-07-31T13:37:09.836Z | OWN-008 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `eefbe3b7` |
 | 2026-07-31T13:37:05.785Z | OWN-008 | implemented | validated | shivam | Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files | `12d52243` |
 | 2026-07-31T13:37:05.534Z | OWN-008 | in_progress | implemented | shivam | Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md | `4c334c2d` |
 | 2026-07-31T13:32:26.186Z | OWN-008 | ready | in_progress | shivam | Approving data ownership matrix | `8788c118` |
 | 2026-07-31T13:29:08.992Z | OWN-007 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `127039f7` |
 | 2026-07-31T13:29:04.818Z | OWN-007 | implemented | validated | shivam | Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths | `409ac299` |
-| 2026-07-31T13:29:04.591Z | OWN-007 | in_progress | implemented | shivam | Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md | `42fad116` |
-| 2026-07-31T13:26:55.818Z | OWN-007 | ready | in_progress | shivam | Defining data store ownership boundaries | `858ec3f1` |
-| 2026-07-31T13:23:33.453Z | DOC-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ee4a9a23` |
-| 2026-07-31T13:23:33.445Z | BE-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6ecafac6` |
-| 2026-07-31T13:23:33.436Z | OWN-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `904725c7` |
