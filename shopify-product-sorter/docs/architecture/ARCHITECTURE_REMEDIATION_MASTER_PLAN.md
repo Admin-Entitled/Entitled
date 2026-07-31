@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T16:17:42.960Z` |
+| Generated timestamp | `2026-07-31T16:21:02.937Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `8003f19` |
+| Local commit | `e2e720f` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,11 +37,11 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 42 |
-| Ready | 19 |
+| Ready | 18 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 0 |
+| Validated | 1 |
 | Blocked | 3 |
 | Deferred | 8 |
 | Completed | 57 |
@@ -50,7 +50,7 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `BE-011`, `FE-004`, `INT-008`, `OPS-003`, `OPS-005`
+- Next ready tasks: `FE-004`, `INT-008`, `OPS-003`, `OPS-005`, `OPS-007`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -98,7 +98,7 @@
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | READY | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | VALIDATED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1352,9 +1352,9 @@ Defined startup migration and side-effect boundary in docs/architecture/STARTUP_
 ### `BE-011` Resolve duplicate collection reorder handlers
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** TEST-003, BE-002, BE-005
-**Last updated:** 2026-07-31T16:17:42.915Z
+**Last updated:** 2026-07-31T16:21:02.937Z
 
 #### Description
 
@@ -1374,7 +1374,7 @@ Static duplicate scan, route contracts, mocked Shopify jobs, and existing-app re
 
 #### Completion evidence
 
-Not completed.
+--evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2., --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect.
 
 ---
 
@@ -3929,6 +3929,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T16:21:03.002Z | BE-011 | implemented | validated | shivam | --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect. | `2dfcac51` |
+| 2026-07-31T16:20:51.638Z | BE-011 | in_progress | implemented | shivam | --evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2. | `0a5c741a` |
+| 2026-07-31T16:20:40.945Z | BE-011 | ready | in_progress | shivam | Transition to in_progress | `303404f5` |
 | 2026-07-31T16:17:42.970Z | FINAL-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9bbcdd6c` |
 | 2026-07-31T16:17:42.959Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `72a23884` |
 | 2026-07-31T16:17:42.948Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `cc502cd8` |
@@ -3936,6 +3939,3 @@ Not completed.
 | 2026-07-31T16:17:42.925Z | BE-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `af5c98c4` |
 | 2026-07-31T16:17:42.896Z | BE-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `2bd28683` |
 | 2026-07-31T16:17:10.814Z | BE-005 | implemented | validated | shivam | --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed. | `45a1562e` |
-| 2026-07-31T16:16:58.143Z | BE-005 | in_progress | implemented | shivam | --evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js. | `d03e2241` |
-| 2026-07-31T16:16:49.938Z | BE-005 | ready | in_progress | shivam | Transition to in_progress | `e1aecbbd` |
-| 2026-07-31T16:12:31.720Z | BE-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e4b6f42e` |

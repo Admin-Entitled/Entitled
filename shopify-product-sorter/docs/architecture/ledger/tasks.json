@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T16:17:42.960Z",
+  "last_updated": "2026-07-31T16:21:02.937Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1312,7 +1312,7 @@
       "title": "Resolve duplicate collection reorder handlers",
       "description": "Remediation task BE-011: Resolve duplicate collection reorder handlers",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "validated",
       "dependencies": [
         "TEST-003",
         "BE-002",
@@ -1327,13 +1327,19 @@
       "validation_commands": [
         "Static duplicate scan, route contracts, mocked Shopify jobs, and existing-app regression."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "--evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2.",
+        "--evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect."
+      ],
+      "changed_files": [
+        "server/src/routes/sorter.js",
+        "server/src/app.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.915Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
+      "updated_timestamp": "2026-07-31T16:21:02.937Z",
+      "started_timestamp": "2026-07-31T16:20:40.928Z",
+      "implemented_timestamp": "2026-07-31T16:20:51.623Z",
+      "validated_timestamp": "2026-07-31T16:21:02.937Z",
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
