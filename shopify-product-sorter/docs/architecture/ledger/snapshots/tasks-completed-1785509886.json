@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T15:07:07.080Z",
+  "last_updated": "2026-07-31T14:58:06.779Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2332,7 +2332,7 @@
       "title": "Validate PostgreSQL backup and restore process",
       "description": "Remediation task DATA-012: Validate PostgreSQL backup and restore process",
       "severity": "CRITICAL",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "SAFE-004",
         "SAFE-007",
@@ -2347,16 +2347,13 @@
       "validation_commands": [
         "Database integrity, migration, repository read, route smoke, and manual runbook checks."
       ],
-      "evidence": [
-        "Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md",
-        "Validated via Neon backup strategy review, restore process audit, and destructive check safety verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:07:07.080Z",
-      "started_timestamp": "2026-07-31T15:05:41.316Z",
-      "implemented_timestamp": "2026-07-31T15:07:06.825Z",
-      "validated_timestamp": "2026-07-31T15:07:07.080Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },

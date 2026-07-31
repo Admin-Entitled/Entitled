@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T14:58:03.005Z` |
+| Generated timestamp | `2026-07-31T15:07:07.080Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `28e6715` |
+| Local commit | `78223a3` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,7 +36,7 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 59 |
+| Not started | 58 |
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
@@ -44,8 +44,8 @@
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 46 |
-| Completion percentage | 35.7% |
+| Completed | 47 |
+| Completion percentage | 36.4% |
 
 ## 4. Current execution focus
 
@@ -125,13 +125,13 @@
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-004 | Separate SKU audit data | HIGH | COMPLETED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-005 | Separate Sales Intelligence caches | HIGH | COMPLETED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | VALIDATED | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | COMPLETED | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-007 | Make runtime paths configurable | HIGH | NOT_STARTED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | NOT_STARTED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | VALIDATED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | READY | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | NOT_STARTED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | NOT_STARTED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2135,9 +2135,9 @@ Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGE
 ### `DATA-006` Isolate Order Mapping PostgreSQL/migration state
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-004, OWN-003, BE-010
-**Last updated:** 2026-07-31T14:58:03.004Z
+**Last updated:** 2026-07-31T14:58:06.779Z
 
 #### Description
 
@@ -2157,7 +2157,7 @@ Schema, migration, restore, route authorization, and Order Mapping regression te
 
 #### Completion evidence
 
-Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md, Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification
+Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md, Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification, Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462
 
 ---
 
@@ -2309,9 +2309,9 @@ Not completed.
 ### `DATA-012` Validate PostgreSQL backup and restore process
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** VALIDATED
 **Dependencies:** SAFE-004, SAFE-007, DATA-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T15:07:07.080Z
 
 #### Description
 
@@ -2331,7 +2331,7 @@ Database integrity, migration, repository read, route smoke, and manual runbook 
 
 #### Completion evidence
 
-Not completed.
+Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md, Validated via Neon backup strategy review, restore process audit, and destructive check safety verification
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T15:07:07.094Z | DATA-012 | implemented | validated | shivam | Validated via Neon backup strategy review, restore process audit, and destructive check safety verification | `cdc480a4` |
+| 2026-07-31T15:07:06.840Z | DATA-012 | in_progress | implemented | shivam | Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md | `8bb851f5` |
+| 2026-07-31T15:05:41.332Z | DATA-012 | ready | in_progress | shivam | Transition to in_progress | `bbccca9b` |
+| 2026-07-31T14:58:06.816Z | DATA-012 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `0ab4ea52` |
+| 2026-07-31T14:58:06.790Z | DATA-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `71be67b8` |
 | 2026-07-31T14:58:03.019Z | DATA-006 | implemented | validated | shivam | Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification | `03a2004e` |
 | 2026-07-31T14:58:02.766Z | DATA-006 | in_progress | implemented | shivam | Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md | `a40ac405` |
 | 2026-07-31T14:56:49.451Z | DATA-006 | ready | in_progress | shivam | Transition to in_progress | `82173595` |
 | 2026-07-31T14:55:45.976Z | DATA-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `811d1e36` |
 | 2026-07-31T14:55:42.121Z | DATA-005 | implemented | validated | shivam | Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification | `3a20248f` |
-| 2026-07-31T14:55:41.881Z | DATA-005 | in_progress | implemented | shivam | Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md | `788c7d7d` |
-| 2026-07-31T14:54:44.820Z | DATA-005 | ready | in_progress | shivam | Transition to in_progress | `67de21a2` |
-| 2026-07-31T14:53:13.166Z | DATA-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `59c05a78` |
-| 2026-07-31T14:53:09.314Z | DATA-004 | implemented | validated | shivam | Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis | `dfccc9a6` |
-| 2026-07-31T14:53:09.076Z | DATA-004 | in_progress | implemented | shivam | Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md | `1c645d26` |
