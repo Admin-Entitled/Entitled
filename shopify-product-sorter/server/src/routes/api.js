@@ -1,3 +1,5 @@
+import db from "../db/database.js";
+import { redactSecrets } from "../utils/sanitize.js";
 import skuMediaRouter from "./skuMedia.js";
 import sorterRouter from "./sorter.js";
 import express from "express";
@@ -157,7 +159,43 @@ function buildCollectionResult({
 
 
 router.get("/health", (req, res) => {
-  res.json({ ok: true });
+  res.json({ ok: true, status: "ok", timestamp: new Date().toISOString() });
+});
+
+router.get("/health/liveness", (req, res) => {
+  res.json({ ok: true, status: "ok", timestamp: new Date().toISOString() });
+});
+
+router.get("/health/readiness", (req, res) => {
+  try {
+    db.prepare("SELECT 1").get();
+    const requiredTables = ["collection_settings", "product_preferences", "collection_snapshots", "order_backups", "delivery_orders"];
+    const checkTableStmt = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?");
+    const missingTables = requiredTables.filter((table) => !checkTableStmt.get(table));
+    const isReady = missingTables.length === 0;
+
+    res.status(isReady ? 200 : 503).json({
+      ok: isReady,
+      status: isReady ? "ready" : "degraded",
+      db: "connected",
+      missingTables: missingTables.length ? missingTables : undefined,
+      config: {
+        shopifyConfigured: Boolean(env.shopifyStoreDomain && (env.shopifyAdminAccessToken || (env.shopifyClientId && env.shopifyClientSecret))),
+        shiprocketConfigured: Boolean(env.shiprocketEmail && env.shiprocketPassword),
+        sqlitePathConfigured: Boolean(env.sqlitePath),
+      },
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    logError("Readiness health check failed", error);
+    res.status(503).json({
+      ok: false,
+      status: "unhealthy",
+      db: "disconnected",
+      error: redactSecrets(error.message),
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
 router.get("/collections/logs/actions", (req, res) => {
@@ -486,4 +524,3 @@ router.put("/collections/products/preference", (req, res) => {
     res.status(500).json({ error: "Failed to update product preference", detail: error.message });
   }
 });
-
