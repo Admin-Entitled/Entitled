@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:22:03.806Z",
+  "last_updated": "2026-07-31T14:18:47.081Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1432,7 +1432,7 @@
       "title": "Extract the SKU Image Manager feature",
       "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "ready",
       "dependencies": [
         "FE-001",
         "OWN-004",
@@ -1447,16 +1447,13 @@
       "validation_commands": [
         "Component/unit, browser media flows with mocks, accessibility, and regression checks."
       ],
-      "evidence": [
-        "Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md",
-        "Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:22:03.806Z",
-      "started_timestamp": "2026-07-31T14:19:54.570Z",
-      "implemented_timestamp": "2026-07-31T14:22:03.541Z",
-      "validated_timestamp": "2026-07-31T14:22:03.806Z",
+      "updated_timestamp": "2026-07-31T14:13:11.352Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -1465,7 +1462,7 @@
       "title": "Retain Order Mapping compatibility boundary",
       "description": "Remediation task FE-006: Retain Order Mapping compatibility boundary",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "FE-003",
         "OWN-003"
@@ -1482,7 +1479,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:18:47.107Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
