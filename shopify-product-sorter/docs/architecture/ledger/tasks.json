@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:35:38.800Z",
+  "last_updated": "2026-07-31T21:40:38.806Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2631,7 +2631,7 @@
       "title": "Review and isolate Tokensave runtime files",
       "description": "Remediation task OPS-006: Review and isolate Tokensave runtime files",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-009",
         "SEC-003"
@@ -2648,7 +2648,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T21:40:38.792Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2829,15 +2829,16 @@
       "evidence": [
         "--changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js",
         "--passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate",
-        "--evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass."
+        "--evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass.",
+        "Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:35:38.800Z",
+      "updated_timestamp": "2026-07-31T21:35:57.885Z",
       "started_timestamp": "2026-07-31T21:32:37.817Z",
       "implemented_timestamp": "2026-07-31T21:35:13.853Z",
       "validated_timestamp": "2026-07-31T21:35:20.926Z",
-      "completed_timestamp": "2026-07-31T21:35:38.800Z",
+      "completed_timestamp": "2026-07-31T21:35:57.885Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2845,7 +2846,7 @@
       "title": "Correct secret handling and tracked token risk",
       "description": "Remediation task SEC-003: Correct secret handling and tracked token risk",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "SAFE-005",
         "OWN-010"
@@ -2859,14 +2860,18 @@
       "validation_commands": [
         "Secret scan, bundle scan, auth tests, Git status, and security review."
       ],
-      "evidence": "",
+      "evidence": [
+        "--changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md",
+        "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
+        "--evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.664Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:40:38.755Z",
+      "started_timestamp": "2026-07-31T21:37:52.489Z",
+      "implemented_timestamp": "2026-07-31T21:40:06.319Z",
+      "validated_timestamp": "2026-07-31T21:40:20.903Z",
+      "completed_timestamp": "2026-07-31T21:40:38.755Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2931,7 +2936,7 @@
       "title": "Sanitize sensitive logs and diagnostics",
       "description": "Remediation task SEC-006: Sanitize sensitive logs and diagnostics",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SEC-003",
         "OWN-006"
@@ -2948,7 +2953,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T21:40:38.806Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
