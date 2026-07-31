@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T13:29:04.807Z",
+  "last_updated": "2026-07-31T13:23:33.389Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -816,7 +816,7 @@
       "title": "Approve route ownership matrix",
       "description": "Remediation task OWN-007: Approve route ownership matrix",
       "severity": "CRITICAL",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -834,17 +834,13 @@
       "validation_commands": [
         "Static route scan, route matrix review, and contract test inventory."
       ],
-      "evidence": [
-        "Defining data store ownership boundaries",
-        "Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md",
-        "Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:29:04.806Z",
-      "started_timestamp": "2026-07-31T13:26:55.805Z",
-      "implemented_timestamp": "2026-07-31T13:29:04.579Z",
-      "validated_timestamp": "2026-07-31T13:29:04.806Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
@@ -883,7 +879,7 @@
       "title": "Approve runtime file ownership",
       "description": "Remediation task OWN-009: Approve runtime file ownership",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -903,7 +899,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:23:33.420Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -915,7 +911,7 @@
       "title": "Approve integration and environment ownership",
       "description": "Remediation task OWN-010: Approve integration and environment ownership",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -935,7 +931,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:23:33.428Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1092,7 +1088,7 @@
       "title": "Create application-owned service boundaries",
       "description": "Remediation task BE-006: Create application-owned service boundaries",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -1112,7 +1108,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:23:33.438Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2867,7 +2863,7 @@
       "title": "Create application map",
       "description": "Remediation task DOC-003: Create application map",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "OWN-001",
         "OWN-002",
@@ -2888,7 +2884,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:23:33.446Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

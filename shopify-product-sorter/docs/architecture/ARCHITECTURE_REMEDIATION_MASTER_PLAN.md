@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T13:23:29.587Z` |
+| Generated timestamp | `2026-07-31T13:29:04.807Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `4eb661e` |
+| Local commit | `25de38d` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 87 |
-| Ready | 6 |
+| Not started | 82 |
+| Ready | 10 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 2 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 23 |
-| Completion percentage | 17.8% |
+| Completed | 24 |
+| Completion percentage | 18.6% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OWN-008`, `BE-010`, `FE-001`, `OPS-001`, `OPS-ARCH-001`
+- Next ready tasks: `OWN-008`, `OWN-009`, `OWN-010`, `BE-006`, `BE-010`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -83,17 +83,17 @@
 | OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-004 | Define SKU Image Manager boundary | HIGH | COMPLETED | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | COMPLETED | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-006 | Define System Diagnostics ownership | MEDIUM | VALIDATED | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-007 | Approve route ownership matrix | CRITICAL | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-006 | Define System Diagnostics ownership | MEDIUM | COMPLETED | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-007 | Approve route ownership matrix | CRITICAL | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-008 | Approve data ownership matrix | CRITICAL | READY | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-009 | Approve runtime file ownership | HIGH | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-010 | Approve integration and environment ownership | HIGH | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-009 | Approve runtime file ownership | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-010 | Approve integration and environment ownership | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | NOT_STARTED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | NOT_STARTED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | NOT_STARTED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | NOT_STARTED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-005 | Preserve existing backend URLs with adapters | CRITICAL | NOT_STARTED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-006 | Create application-owned service boundaries | HIGH | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-006 | Create application-owned service boundaries | HIGH | READY | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | NOT_STARTED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | NOT_STARTED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -153,7 +153,7 @@
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-001 | Update README to current architecture | MEDIUM | NOT_STARTED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-002 | Create a real `.env.example` | HIGH | NOT_STARTED | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-003 | Create application map | MEDIUM | NOT_STARTED | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-004 | Create route map | HIGH | NOT_STARTED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-005 | Create data ownership documentation | HIGH | NOT_STARTED | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -917,9 +917,9 @@ Defining Actual Sales Intelligence boundary specification, Defined Actual Sales 
 ### `OWN-006` Define System Diagnostics ownership
 
 **Severity:** MEDIUM
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-001, TEST-010
-**Last updated:** 2026-07-31T13:23:29.587Z
+**Last updated:** 2026-07-31T13:23:33.388Z
 
 #### Description
 
@@ -939,16 +939,16 @@ Static route/log review, synthetic payload checks, and security owner review.
 
 #### Completion evidence
 
-Defining System Diagnostics ownership specification, Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md, Validated via static route review, sensitive field audit, and data ownership distinction verified
+Defining System Diagnostics ownership specification, Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md, Validated via static route review, sensitive field audit, and data ownership distinction verified, Commit SHA: 25de38d76639b4d48e2cde564482bee7c278131f
 
 ---
 
 ### `OWN-007` Approve route ownership matrix
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** VALIDATED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:29:04.806Z
 
 #### Description
 
@@ -968,7 +968,7 @@ Static route scan, route matrix review, and contract test inventory.
 
 #### Completion evidence
 
-Not completed.
+Defining data store ownership boundaries, Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md, Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths
 
 ---
 
@@ -1004,9 +1004,9 @@ Not completed.
 ### `OWN-009` Approve runtime file ownership
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:23:33.420Z
 
 #### Description
 
@@ -1033,9 +1033,9 @@ Not completed.
 ### `OWN-010` Approve integration and environment ownership
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:23:33.428Z
 
 #### Description
 
@@ -1207,9 +1207,9 @@ Not completed.
 ### `BE-006` Create application-owned service boundaries
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:23:33.438Z
 
 #### Description
 
@@ -2945,9 +2945,9 @@ Not completed.
 ### `DOC-003` Create application map
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T13:23:33.446Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T13:29:04.818Z | OWN-007 | implemented | validated | shivam | Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths | `409ac299` |
+| 2026-07-31T13:29:04.591Z | OWN-007 | in_progress | implemented | shivam | Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md | `42fad116` |
+| 2026-07-31T13:26:55.818Z | OWN-007 | ready | in_progress | shivam | Defining data store ownership boundaries | `858ec3f1` |
+| 2026-07-31T13:23:33.453Z | DOC-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ee4a9a23` |
+| 2026-07-31T13:23:33.445Z | BE-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6ecafac6` |
+| 2026-07-31T13:23:33.436Z | OWN-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `904725c7` |
+| 2026-07-31T13:23:33.428Z | OWN-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e710aee3` |
+| 2026-07-31T13:23:33.420Z | OWN-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `8b57a7b0` |
+| 2026-07-31T13:23:33.396Z | OWN-006 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `1c873610` |
 | 2026-07-31T13:23:29.599Z | OWN-006 | implemented | validated | shivam | Validated via static route review, sensitive field audit, and data ownership distinction verified | `ce394aff` |
-| 2026-07-31T13:23:13.529Z | OWN-006 | in_progress | implemented | shivam | Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md | `9fdd3230` |
-| 2026-07-31T13:20:55.363Z | OWN-006 | ready | in_progress | shivam | Defining System Diagnostics ownership specification | `0358ffd2` |
-| 2026-07-31T13:14:48.566Z | OWN-005 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `f5415d4b` |
-| 2026-07-31T13:14:44.394Z | OWN-005 | implemented | validated | shivam | Validated via static imports, route matrix, and actualSalesService.test.js passing | `10d5f79c` |
-| 2026-07-31T13:14:09.143Z | OWN-005 | in_progress | implemented | shivam | Defined Actual Sales Intelligence boundary specification in docs/architecture/ACTUAL_SALES_INTELLIGENCE_BOUNDARY_SPECIFICATION.md | `a5c6e2d5` |
-| 2026-07-31T13:11:35.683Z | OWN-005 | ready | in_progress | shivam | Defining Actual Sales Intelligence boundary specification | `8aa7b192` |
-| 2026-07-31T12:27:14.577Z | OWN-004 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `4181cef9` |
-| 2026-07-31T12:26:55.943Z | OWN-004 | implemented | validated | shivam | Validated via static imports, route matrix, and shopifyMediaService.test.js passing | `4af2ab2d` |
-| 2026-07-31T12:26:39.149Z | OWN-004 | in_progress | implemented | shivam | Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md | `9f1d21b3` |
