@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:26:00.848Z",
+  "last_updated": "2026-07-31T21:31:09.358Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2761,15 +2761,16 @@
       "validation_commands": [],
       "evidence": [
         "--passed-tests npm run arch:doctor,npm run test:architecture-ledger",
-        "--evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing)."
+        "--evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing).",
+        "Commit SHA: d3a72162dd271f8c42c9579e3054f8921e591d93"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:26:00.847Z",
+      "updated_timestamp": "2026-07-31T21:26:20.945Z",
       "started_timestamp": "2026-07-31T21:25:16.233Z",
       "implemented_timestamp": "2026-07-31T21:25:42.253Z",
       "validated_timestamp": "2026-07-31T21:25:53.773Z",
-      "completed_timestamp": "2026-07-31T21:26:00.847Z",
+      "completed_timestamp": "2026-07-31T21:26:20.945Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2777,7 +2778,7 @@
       "title": "Assess authentication boundary",
       "description": "Remediation task SEC-001: Assess authentication boundary",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-007",
         "OWN-010"
@@ -2791,14 +2792,18 @@
       "validation_commands": [
         "Static route/security review, threat model, and owner sign-off."
       ],
-      "evidence": "",
+      "evidence": [
+        "--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md",
+        "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
+        "--evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.655Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:31:09.293Z",
+      "started_timestamp": "2026-07-31T21:28:43.435Z",
+      "implemented_timestamp": "2026-07-31T21:30:41.362Z",
+      "validated_timestamp": "2026-07-31T21:30:56.702Z",
+      "completed_timestamp": "2026-07-31T21:31:09.293Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2806,7 +2811,7 @@
       "title": "Add route authorization boundaries",
       "description": "Remediation task SEC-002: Add route authorization boundaries",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SEC-001",
         "TEST-008"
@@ -2823,7 +2828,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T21:31:09.332Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2950,7 +2955,7 @@
       "title": "Review CORS and CSRF protections",
       "description": "Remediation task SEC-007: Review CORS and CSRF protections",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SEC-001",
         "BE-005"
@@ -2967,7 +2972,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T21:31:09.345Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -3251,7 +3256,7 @@
       "title": "Create production startup guide",
       "description": "Remediation task DOC-008: Create production startup guide",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OPS-002",
         "OPS-003",
@@ -3269,7 +3274,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T21:31:09.358Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

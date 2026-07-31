@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T21:26:00.848Z` |
+| Generated timestamp | `2026-07-31T21:31:09.358Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `294d976` |
+| Local commit | `d3a7216` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 33 |
-| Ready | 13 |
+| Not started | 30 |
+| Ready | 15 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 72 |
-| Completion percentage | 55.8% |
+| Completed | 73 |
+| Completion percentage | 56.6% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `SEC-001`, `SEC-003`, `SEC-004`, `DOC-001`, `DOC-003`
+- Next ready tasks: `SEC-002`, `SEC-003`, `SEC-004`, `SEC-007`, `DOC-001`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -142,13 +142,13 @@
 | OPS-008 | Review test outputs and cache artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | COMPLETED | None | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-001 | Assess authentication boundary | CRITICAL | READY | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-002 | Add route authorization boundaries | CRITICAL | NOT_STARTED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-001 | Assess authentication boundary | CRITICAL | COMPLETED | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-002 | Add route authorization boundaries | CRITICAL | READY | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-003 | Correct secret handling and tracked token risk | CRITICAL | READY | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | NOT_STARTED | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-007 | Review CORS and CSRF protections | HIGH | NOT_STARTED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-007 | Review CORS and CSRF protections | HIGH | READY | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-001 | Update README to current architecture | MEDIUM | READY | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -158,7 +158,7 @@
 | DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-008 | Create production startup guide | HIGH | READY | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2601,7 +2601,7 @@ Not completed.
 **Severity:** MEDIUM
 **Status:** COMPLETED
 **Dependencies:** None
-**Last updated:** 2026-07-31T21:26:00.847Z
+**Last updated:** 2026-07-31T21:26:20.945Z
 
 #### Description
 
@@ -2619,16 +2619,16 @@ None
 
 #### Completion evidence
 
---passed-tests npm run arch:doctor,npm run test:architecture-ledger, --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing).
+--passed-tests npm run arch:doctor,npm run test:architecture-ledger, --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing)., Commit SHA: d3a72162dd271f8c42c9579e3054f8921e591d93
 
 ---
 
 ### `SEC-001` Assess authentication boundary
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-007, OWN-010
-**Last updated:** 2026-07-31T13:49:17.655Z
+**Last updated:** 2026-07-31T21:31:09.293Z
 
 #### Description
 
@@ -2648,16 +2648,16 @@ Static route/security review, threat model, and owner sign-off.
 
 #### Completion evidence
 
-Not completed.
+--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies.
 
 ---
 
 ### `SEC-002` Add route authorization boundaries
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SEC-001, TEST-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T21:31:09.332Z
 
 #### Description
 
@@ -2800,9 +2800,9 @@ Not completed.
 ### `SEC-007` Review CORS and CSRF protections
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SEC-001, BE-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T21:31:09.345Z
 
 #### Description
 
@@ -3090,9 +3090,9 @@ Not completed.
 ### `DOC-008` Create production startup guide
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OPS-002, OPS-003, SEC-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T21:31:09.358Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T21:31:09.370Z | DOC-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e0f32056` |
+| 2026-07-31T21:31:09.357Z | SEC-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `9adbac81` |
+| 2026-07-31T21:31:09.344Z | SEC-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2e8a8cd5` |
+| 2026-07-31T21:31:09.310Z | SEC-001 | validated | completed | shivam | --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies. | `1c870296` |
+| 2026-07-31T21:30:56.725Z | SEC-001 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `78f90a54` |
+| 2026-07-31T21:30:41.378Z | SEC-001 | in_progress | implemented | shivam | --changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md | `d9b8f78a` |
+| 2026-07-31T21:28:43.452Z | SEC-001 | ready | in_progress | shivam | Transition to in_progress | `dc88dbfc` |
+| 2026-07-31T21:26:20.957Z | OPS-ARCH-001 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `84249f10` |
 | 2026-07-31T21:26:00.865Z | OPS-ARCH-001 | validated | completed | shivam | --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing). | `79b95d33` |
 | 2026-07-31T21:25:53.789Z | OPS-ARCH-001 | implemented | validated | shivam | --passed-tests npm run arch:doctor,npm run test:architecture-ledger | `9b9dad79` |
-| 2026-07-31T21:25:42.272Z | OPS-ARCH-001 | in_progress | implemented | shivam | Transition to implemented | `23a2a94b` |
-| 2026-07-31T21:25:16.250Z | OPS-ARCH-001 | ready | in_progress | shivam | Transition to in_progress | `24a320f8` |
-| 2026-07-31T21:24:09.095Z | OPS-008 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `84733cf6` |
-| 2026-07-31T21:23:51.248Z | OPS-008 | validated | completed | shivam | --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets. | `623fd5d2` |
-| 2026-07-31T21:23:44.872Z | OPS-008 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `da127c67` |
-| 2026-07-31T21:23:38.214Z | OPS-008 | in_progress | implemented | shivam | --changed-files .gitignore | `d2b8800c` |
-| 2026-07-31T21:20:40.482Z | OPS-008 | ready | in_progress | shivam | Transition to in_progress | `6cef8101` |
-| 2026-07-31T21:14:22.833Z | OPS-007 | validated | completed | shivam | --evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable. | `c0067913` |
