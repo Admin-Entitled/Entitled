@@ -358,4 +358,279 @@ describe('Architecture Ledger Automation Test Suite', () => {
     assert.match(res, /healthy/);
   });
 
+    it("promotes not_started task to ready when all dependencies are completed", () => {
+    const { ledgerDir } = setupFixture();
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    ledger.tasks.push({
+      id: "TEST-003",
+      title: "Unblocked Task",
+      description: "Task ready to be promoted",
+      severity: "HIGH",
+      status: "not_started",
+      dependencies: ["TEST-001"],
+      blocking_reasons: [],
+      acceptance_criteria: ["Criteria 1"],
+      validation_commands: ["echo ok"],
+      evidence: "",
+      changed_files: [],
+      created_timestamp: "2026-07-29T00:00:00Z",
+      updated_timestamp: "2026-07-31T00:00:00Z",
+      started_timestamp: null,
+      implemented_timestamp: null,
+      validated_timestamp: null,
+      completed_timestamp: null,
+      notes: ""
+    });
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    const res = execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(res, /TEST-003/);
+
+    const showOut = execSync(`node ${CLI_PATH} show TEST-003`, { cwd: tmpDir, encoding: "utf-8" });
+    const task = JSON.parse(showOut);
+    assert.strictEqual(task.status, "ready");
+  });
+
+  it("prevents promotion when dependency is incomplete", () => {
+    setupFixture([
+      {
+        id: "TEST-004",
+        title: "Blocked by incomplete dep",
+        description: "Task depending on ready (not completed) TEST-002",
+        severity: "HIGH",
+        status: "not_started",
+        dependencies: ["TEST-002"],
+        blocking_reasons: [],
+        acceptance_criteria: ["Criteria 1"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      }
+    ]);
+
+    execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    const showOut = execSync(`node ${CLI_PATH} show TEST-004`, { cwd: tmpDir, encoding: "utf-8" });
+    const task = JSON.parse(showOut);
+    assert.strictEqual(task.status, "not_started");
+  });
+
+  it("prevents promotion when task has active blockers", () => {
+    setupFixture([
+      {
+        id: "TEST-005",
+        title: "Task with blocker",
+        description: "Task with active blocking reasons",
+        severity: "HIGH",
+        status: "not_started",
+        dependencies: ["TEST-001"],
+        blocking_reasons: ["Waiting for external API key"],
+        acceptance_criteria: ["Criteria 1"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      }
+    ]);
+
+    execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    const showOut = execSync(`node ${CLI_PATH} show TEST-005`, { cwd: tmpDir, encoding: "utf-8" });
+    const task = JSON.parse(showOut);
+    assert.strictEqual(task.status, "not_started");
+  });
+
+  it("appends history entry on readiness promotion", () => {
+    const { ledgerDir } = setupFixture();
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    ledger.tasks.push({
+      id: "TEST-003",
+      title: "Unblocked Task",
+      description: "Task ready to be promoted",
+      severity: "HIGH",
+      status: "not_started",
+      dependencies: ["TEST-001"],
+      blocking_reasons: [],
+      acceptance_criteria: ["Criteria 1"],
+      validation_commands: ["echo ok"],
+      evidence: "",
+      changed_files: [],
+      created_timestamp: "2026-07-29T00:00:00Z",
+      updated_timestamp: "2026-07-31T00:00:00Z",
+      started_timestamp: null,
+      implemented_timestamp: null,
+      validated_timestamp: null,
+      completed_timestamp: null,
+      notes: ""
+    });
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    const historyOut = execSync(`node ${CLI_PATH} history TEST-003`, { cwd: tmpDir, encoding: "utf-8" });
+    const events = JSON.parse(historyOut);
+    assert.strictEqual(events.length, 1);
+    assert.strictEqual(events[0].previous_status, "not_started");
+    assert.strictEqual(events[0].new_status, "ready");
+
+    const doctorRes = execSync(`node ${CLI_PATH} doctor`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(doctorRes, /healthy/);
+  });
+
+  it("ensures repeated reconciliation is idempotent", () => {
+    const { ledgerDir } = setupFixture();
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    ledger.tasks.push({
+      id: "TEST-003",
+      title: "Unblocked Task",
+      description: "Task ready to be promoted",
+      severity: "HIGH",
+      status: "not_started",
+      dependencies: ["TEST-001"],
+      blocking_reasons: [],
+      acceptance_criteria: ["Criteria 1"],
+      validation_commands: ["echo ok"],
+      evidence: "",
+      changed_files: [],
+      created_timestamp: "2026-07-29T00:00:00Z",
+      updated_timestamp: "2026-07-31T00:00:00Z",
+      started_timestamp: null,
+      implemented_timestamp: null,
+      validated_timestamp: null,
+      completed_timestamp: null,
+      notes: ""
+    });
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    const histPath = path.join(tmpDir, "docs", "architecture", "ledger", "history.jsonl");
+    const countAfterFirst = fs.readFileSync(histPath, "utf-8").split("\n").filter(Boolean).length;
+
+    const resSecond = execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(resSecond, /No tasks needed/);
+
+    const countAfterSecond = fs.readFileSync(histPath, "utf-8").split("\n").filter(Boolean).length;
+    assert.strictEqual(countAfterSecond, countAfterFirst);
+  });
+
+  it("selects next task deterministically based on ordering rules", () => {
+    const { ledgerDir } = setupFixture();
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    const t2 = ledger.tasks.find(t => t.id === "TEST-002");
+    if (t2) t2.status = "completed";
+    ledger.tasks.push(
+      {
+        id: "TASK-EARLY",
+        title: "Earlier Task",
+        description: "Task earlier in ledger",
+        severity: "CRITICAL",
+        status: "ready",
+        dependencies: ["TEST-001"],
+        blocking_reasons: [],
+        acceptance_criteria: ["Criteria 1"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      },
+      {
+        id: "TASK-LATER",
+        title: "Later Task",
+        description: "Task later in ledger",
+        severity: "CRITICAL",
+        status: "ready",
+        dependencies: ["TEST-001"],
+        blocking_reasons: [],
+        acceptance_criteria: ["Criteria 1"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      }
+    );
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(res, /Recommended Next:\s+TASK-EARLY/);
+  });
+
+  it("selects OWN-003 before inappropriate later tasks when ordering rules require it", () => {
+    const { ledgerDir } = setupFixture();
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    const t2 = ledger.tasks.find(t => t.id === "TEST-002");
+    if (t2) t2.status = "completed";
+    ledger.tasks.push(
+      {
+        id: "OWN-003",
+        title: "Classify Order Mapping",
+        description: "Important task",
+        severity: "CRITICAL",
+        status: "not_started",
+        dependencies: ["TEST-001"],
+        blocking_reasons: [],
+        acceptance_criteria: ["Criteria 1"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      },
+      {
+        id: "OWN-008",
+        title: "Approve data ownership matrix",
+        description: "Later task",
+        severity: "CRITICAL",
+        status: "ready",
+        dependencies: ["TEST-001"],
+        blocking_reasons: [],
+        acceptance_criteria: ["Criteria 1"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      }
+    );
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(res, /Recommended Next:\s+OWN-003/);
+  });
 });

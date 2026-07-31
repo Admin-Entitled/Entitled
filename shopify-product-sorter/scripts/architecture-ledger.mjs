@@ -50,7 +50,18 @@ function runCmd(cmd, options = {}) {
 }
 
 // Lock file handling
+let lockDepth = 0;
+
 function acquireLock() {
+  if (fs.existsSync(LOCK_PATH)) {
+    try {
+      const ownerPid = fs.readFileSync(LOCK_PATH, "utf-8").trim();
+      if (ownerPid === String(process.pid)) {
+        lockDepth++;
+        return;
+      }
+    } catch (e) {}
+  }
   const timeoutMs = 5000;
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
@@ -58,6 +69,7 @@ function acquireLock() {
       const fd = fs.openSync(LOCK_PATH, 'wx');
       fs.writeSync(fd, String(process.pid));
       fs.closeSync(fd);
+      lockDepth = 1;
       return;
     } catch (err) {
       if (err.code !== 'EEXIST') throw err;
@@ -77,6 +89,11 @@ function acquireLock() {
 
 function releaseLock() {
   try {
+    if (lockDepth > 1) {
+      lockDepth--;
+      return;
+    }
+    lockDepth = 0;
     if (fs.existsSync(LOCK_PATH)) {
       fs.unlinkSync(LOCK_PATH);
     }
@@ -399,8 +416,156 @@ ${completed.map(t => `- [x] **${t.id}**: ${t.title}`).join('\n')}
   }
 }
 
+
+// Reconciliation & Next Task Selection
+function reconcileReadiness() {
+  return withLock(() => {
+    const ledger = loadTasks();
+    const promotedTaskIds = [];
+
+    let promotedInPass = 0;
+    do {
+      promotedInPass = 0;
+      for (const task of ledger.tasks) {
+        if (task.status === 'not_started') {
+          const hasBlockers = Array.isArray(task.blocking_reasons) && task.blocking_reasons.length > 0;
+          if (hasBlockers) continue;
+
+          const deps = Array.isArray(task.dependencies) ? task.dependencies : [];
+          const allDepsCompleted = deps.every(depId => {
+            const depTask = ledger.tasks.find(t => t.id === depId);
+            return depTask && depTask.status === 'completed';
+          });
+
+          if (allDepsCompleted) {
+            const prevStatus = task.status;
+            task.status = 'ready';
+            task.updated_timestamp = new Date().toISOString();
+
+            saveTasksAtomic(ledger);
+            appendHistoryEvent(
+              task.id,
+              prevStatus,
+              'ready',
+              'Automatic readiness reconciliation: all dependencies completed',
+              `Dependencies completed: ${deps.join(', ') || 'None'}`
+            );
+
+            promotedTaskIds.push(task.id);
+            promotedInPass++;
+          }
+        }
+      }
+    } while (promotedInPass > 0);
+
+    if (promotedTaskIds.length > 0) {
+      const md = generateMarkdownPlan();
+      fs.writeFileSync(PLAN_MARKDOWN_PATH, md, 'utf-8');
+      syncObsidianMemory();
+    }
+
+    return promotedTaskIds;
+  });
+}
+
+const SEVERITY_WEIGHT = {
+  CRITICAL: 4,
+  HIGH: 3,
+  MEDIUM: 2,
+  LOW: 1
+};
+
+function isDependencyOf(ancestorId, targetId, tasksMap, visited = new Set()) {
+  if (ancestorId === targetId) return false;
+  const target = tasksMap.get(targetId);
+  if (!target || !Array.isArray(target.dependencies) || target.dependencies.length === 0) {
+    return false;
+  }
+  if (target.dependencies.includes(ancestorId)) {
+    return true;
+  }
+  for (const depId of target.dependencies) {
+    if (!visited.has(depId)) {
+      visited.add(depId);
+      if (isDependencyOf(ancestorId, depId, tasksMap, visited)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function selectNextTask(ledger) {
+  const readyTasks = ledger.tasks.filter(t => t.status === 'ready');
+  if (readyTasks.length === 0) {
+    return { nextTask: null, reason: 'No tasks currently in ready status', readyTasks: [] };
+  }
+
+  const tasksMap = new Map(ledger.tasks.map(t => [t.id, t]));
+  const indexMap = new Map(ledger.tasks.map((t, idx) => [t.id, idx]));
+
+  const sortedReady = [...readyTasks].sort((a, b) => {
+    // 1. Dependency / Topological order: ancestor comes first
+    if (isDependencyOf(a.id, b.id, tasksMap)) return -1;
+    if (isDependencyOf(b.id, a.id, tasksMap)) return 1;
+
+    // 2. Architecture phase / order from ledger (index in tasks.json)
+    const idxA = indexMap.get(a.id);
+    const idxB = indexMap.get(b.id);
+    if (idxA !== idxB) return idxA - idxB;
+
+    // 3. Severity
+    const sevA = SEVERITY_WEIGHT[a.severity] || 0;
+    const sevB = SEVERITY_WEIGHT[b.severity] || 0;
+    if (sevA !== sevB) return sevB - sevA;
+
+    // 4. Task ID tie-breaker
+    return a.id.localeCompare(b.id);
+  });
+
+  const nextTask = sortedReady[0];
+  const idx = indexMap.get(nextTask.id);
+  const reason = `Selected ${nextTask.id} because all dependencies are completed, status is ready, and it ranks highest by topological/phase order (ledger index ${idx}, severity ${nextTask.severity}).`;
+
+  return {
+    nextTask,
+    reason,
+    readyTasks: sortedReady
+  };
+}
+
+function cmdReconcile() {
+  const promoted = reconcileReadiness();
+  if (promoted.length > 0) {
+    console.log(`✓ Reconciled ${promoted.length} task(s) to 'ready': ${promoted.join(', ')}`);
+  } else {
+    console.log('✓ No tasks needed readiness reconciliation.');
+  }
+}
+
+function cmdNext() {
+  reconcileReadiness();
+  const ledger = loadTasks();
+  const { nextTask, reason, readyTasks } = selectNextTask(ledger);
+
+  console.log('=== Architecture Ledger Recommended Next Task ===');
+  if (!nextTask) {
+    console.log('No ready tasks found.');
+    return;
+  }
+
+  console.log(`Recommended Next:  ${nextTask.id} — ${nextTask.title}`);
+  console.log(`Severity:          ${nextTask.severity}`);
+  console.log(`Status:            ${nextTask.status}`);
+  console.log(`Dependencies:      ${nextTask.dependencies.join(', ') || 'None'}`);
+  console.log(`Selection Reason:  ${reason}`);
+  console.log(`\nAll Ready Tasks (${readyTasks.length}):`);
+  readyTasks.forEach(t => console.log(` - ${t.id} [${t.severity}]: ${t.title}`));
+}
+
 // CLI Subcommands implementation
 function cmdDoctor() {
+  reconcileReadiness();
   console.log('=== Architecture Ledger Doctor ===');
   let errors = [];
 
@@ -456,6 +621,7 @@ function cmdDoctor() {
 }
 
 function cmdStatus() {
+  reconcileReadiness();
   const ledger = loadTasks();
   const tasks = ledger.tasks;
   const historyCheck = validateHistoryChain();
@@ -480,6 +646,7 @@ function cmdStatus() {
 }
 
 function cmdResume() {
+  reconcileReadiness();
   let root = REPO_ROOT;
   let branch = 'unknown';
   let localSha = 'unknown';
@@ -530,7 +697,12 @@ function cmdResume() {
   console.log(`History Chain:     ${historyCheck.valid ? 'VALID' : 'BROKEN'}`);
   console.log(`Markdown Sync:     ${mdSync}`);
   console.log(`In-Progress Task:  ${inProgress.length > 0 ? inProgress.map(t => t.id).join(', ') : 'None'}`);
-  console.log(`Ready Tasks:       ${ready.map(t => t.id).slice(0, 5).join(', ')} (Total: ${ready.length})`);
+  const { nextTask, reason, readyTasks } = selectNextTask(ledger);
+  console.log(`Ready Tasks:       ${readyTasks.map(t => t.id).slice(0, 5).join(', ')} (Total: ${readyTasks.length})`);
+  console.log(`Recommended Next:  ${nextTask ? nextTask.id : 'None'}`);
+  if (nextTask) {
+    console.log(`Selection Reason:  ${reason}`);
+  }
   console.log(`Blocked Tasks:     ${blocked.map(t => t.id).join(', ') || 'None'}`);
   console.log(`Last Completed:    ${completed.slice(-3).map(t => t.id).join(', ') || 'None'}`);
   console.log(`Unpushed Commits:  ${unpushedCommits ? '\n' + unpushedCommits : 'None'}`);
@@ -615,17 +787,23 @@ function cmdTransition(taskId, targetStatus, reason, evidence) {
     // Sync obsidian memory
     syncObsidianMemory();
 
+    if (targetStatus === 'completed') {
+      reconcileReadiness();
+    }
+
     console.log(`✓ Task ${taskId} transitioned: ${prevStatus} -> ${targetStatus}`);
   });
 }
 
 function cmdGenerate() {
+  reconcileReadiness();
   const md = generateMarkdownPlan();
   fs.writeFileSync(PLAN_MARKDOWN_PATH, md, 'utf-8');
   console.log(`✓ Generated ${PLAN_MARKDOWN_PATH}`);
 }
 
 function cmdValidate() {
+  reconcileReadiness();
   const historyCheck = validateHistoryChain();
   if (!historyCheck.valid) {
     console.error(`✕ History chain invalid: ${historyCheck.error}`);
@@ -664,6 +842,7 @@ function cmdValidate() {
 }
 
 function cmdCheckpoint(taskId) {
+  reconcileReadiness();
   if (!taskId) throw new Error('Task ID required for checkpoint');
 
   const ledger = loadTasks();
@@ -795,6 +974,12 @@ try {
     case 'checkpoint':
       cmdCheckpoint(arg1);
       break;
+    case 'reconcile':
+      cmdReconcile();
+      break;
+    case 'next':
+      cmdNext();
+      break;
     case 'sync-obsidian':
       const res = syncObsidianMemory();
       console.log(res.success ? `✓ Synced Obsidian to ${res.path}` : `⚠ Obsidian sync skipped: ${res.reason}`);
@@ -802,7 +987,7 @@ try {
     default:
       console.log(`Architecture Ledger CLI
 Usage: node scripts/architecture-ledger.mjs <command> [args]
-Commands: doctor, status, resume, show, start, implement, validate-task, complete, block, ready, defer, history, generate, validate, checkpoint, sync-obsidian`);
+Commands: doctor, status, resume, show, start, implement, validate-task, complete, block, ready, defer, history, generate, validate, checkpoint, sync-obsidian, reconcile, next`);
   }
 } catch (err) {
   console.error(`✕ Error: ${err.message}`);

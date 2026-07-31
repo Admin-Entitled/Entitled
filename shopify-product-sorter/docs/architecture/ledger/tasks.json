@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T11:43:29.910Z",
+  "last_updated": "2026-07-31T11:59:05.429Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -551,7 +551,7 @@
       "title": "Protect frontend navigation",
       "description": "Remediation task TEST-011: Protect frontend navigation",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "SAFE-002"
       ],
@@ -567,15 +567,16 @@
       "evidence": [
         "Starting implementation of TEST-011: Protect frontend navigation",
         "Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic.",
-        "Ran node --test src/api.test.js in client/. All 10 tests passed successfully."
+        "Ran node --test src/api.test.js in client/. All 10 tests passed successfully.",
+        "Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:43:29.910Z",
+      "updated_timestamp": "2026-07-31T11:43:41.766Z",
       "started_timestamp": "2026-07-31T11:42:17.753Z",
       "implemented_timestamp": "2026-07-31T11:43:21.747Z",
       "validated_timestamp": "2026-07-31T11:43:29.910Z",
-      "completed_timestamp": null,
+      "completed_timestamp": "2026-07-31T11:43:41.766Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -678,7 +679,7 @@
       "title": "Classify Order Mapping versus legacy Delivery Resolution",
       "description": "Remediation task OWN-003: Classify Order Mapping versus legacy Delivery Resolution",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SAFE-008",
         "TEST-004",
@@ -696,7 +697,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.273Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -708,7 +709,7 @@
       "title": "Define SKU Image Manager boundary",
       "description": "Remediation task OWN-004: Define SKU Image Manager boundary",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "TEST-006"
@@ -725,7 +726,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.286Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -737,7 +738,7 @@
       "title": "Define Actual Sales Intelligence boundary",
       "description": "Remediation task OWN-005: Define Actual Sales Intelligence boundary",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "TEST-007"
@@ -754,7 +755,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.305Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -766,7 +767,7 @@
       "title": "Define System Diagnostics ownership",
       "description": "Remediation task OWN-006: Define System Diagnostics ownership",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "TEST-010"
@@ -783,7 +784,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.313Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1185,7 +1186,7 @@
       "title": "Isolate startup migrations and side effects",
       "description": "Remediation task BE-010: Isolate startup migrations and side effects",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "TEST-009",
         "SAFE-004"
@@ -1202,7 +1203,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.405Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -1244,7 +1245,7 @@
       "title": "Extract the application shell",
       "description": "Remediation task FE-001: Extract the application shell",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "TEST-011",
         "OWN-001"
@@ -1261,7 +1262,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.413Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -2244,7 +2245,7 @@
       "title": "Fix or retire obsolete `scripts/dev.mjs`",
       "description": "Remediation task OPS-001: Fix or retire obsolete `scripts/dev.mjs`",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "TEST-010",
         "OWN-001"
@@ -2261,7 +2262,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.421Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -3085,7 +3086,7 @@
       "title": "Create ADRs and separate Shopify theme context",
       "description": "Remediation task DOC-011: Create ADRs and separate Shopify theme context",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001"
       ],
@@ -3101,7 +3102,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-07-31T11:59:05.429Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

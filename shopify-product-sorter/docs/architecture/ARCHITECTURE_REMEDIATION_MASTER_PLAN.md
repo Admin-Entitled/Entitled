@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T11:43:29.910Z` |
+| Generated timestamp | `2026-07-31T11:59:05.429Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `b23cb9a` |
+| Local commit | `df88049` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 95 |
-| Ready | 2 |
+| Not started | 87 |
+| Ready | 10 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
-| Validated | 2 |
+| Validated | 1 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 19 |
-| Completion percentage | 14.7% |
+| Completed | 20 |
+| Completion percentage | 15.5% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OWN-008`, `OPS-ARCH-001`
+- Next ready tasks: `OWN-003`, `OWN-004`, `OWN-005`, `OWN-006`, `OWN-008`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -76,14 +76,14 @@
 | TEST-008 | Protect public route compatibility | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-009 | Protect database migration safety | CRITICAL | COMPLETED | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-011 | Protect frontend navigation | HIGH | VALIDATED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-011 | Protect frontend navigation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-012 | Add integrated existing-app regression gate | HIGH | NOT_STARTED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | NOT_STARTED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-004 | Define SKU Image Manager boundary | HIGH | NOT_STARTED | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-005 | Define Actual Sales Intelligence boundary | HIGH | NOT_STARTED | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-006 | Define System Diagnostics ownership | MEDIUM | NOT_STARTED | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | READY | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-004 | Define SKU Image Manager boundary | HIGH | READY | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-005 | Define Actual Sales Intelligence boundary | HIGH | READY | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-006 | Define System Diagnostics ownership | MEDIUM | READY | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-007 | Approve route ownership matrix | CRITICAL | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-008 | Approve data ownership matrix | CRITICAL | READY | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | NOT_STARTED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -97,9 +97,9 @@
 | BE-007 | Remove hidden cross-application imports | HIGH | NOT_STARTED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | NOT_STARTED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-010 | Isolate startup migrations and side effects | CRITICAL | NOT_STARTED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-010 | Isolate startup migrations and side effects | CRITICAL | READY | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | NOT_STARTED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-001 | Extract the application shell | HIGH | NOT_STARTED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-001 | Extract the application shell | HIGH | READY | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | NOT_STARTED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | NOT_STARTED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | NOT_STARTED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -132,7 +132,7 @@
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | NOT_STARTED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | NOT_STARTED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | READY | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | NOT_STARTED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | NOT_STARTED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -161,7 +161,7 @@
 | DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-009 | Create backup and restore guide | CRITICAL | NOT_STARTED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | NOT_STARTED | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | BLOCKED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -714,9 +714,9 @@ Starting implementation of TEST-010: Protect startup and environment isolation, 
 ### `TEST-011` Protect frontend navigation
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:43:29.910Z
+**Last updated:** 2026-07-31T11:43:41.766Z
 
 #### Description
 
@@ -736,7 +736,7 @@ Browser E2E, mocked API, accessibility smoke, and route regression.
 
 #### Completion evidence
 
-Starting implementation of TEST-011: Protect frontend navigation, Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic., Ran node --test src/api.test.js in client/. All 10 tests passed successfully.
+Starting implementation of TEST-011: Protect frontend navigation, Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic., Ran node --test src/api.test.js in client/. All 10 tests passed successfully., Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5
 
 ---
 
@@ -830,9 +830,9 @@ Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.
 ### `OWN-003` Classify Order Mapping versus legacy Delivery Resolution
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SAFE-008, TEST-004, TEST-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.273Z
 
 #### Description
 
@@ -859,9 +859,9 @@ Not completed.
 ### `OWN-004` Define SKU Image Manager boundary
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001, TEST-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.286Z
 
 #### Description
 
@@ -888,9 +888,9 @@ Not completed.
 ### `OWN-005` Define Actual Sales Intelligence boundary
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001, TEST-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.305Z
 
 #### Description
 
@@ -917,9 +917,9 @@ Not completed.
 ### `OWN-006` Define System Diagnostics ownership
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001, TEST-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.313Z
 
 #### Description
 
@@ -1323,9 +1323,9 @@ Not completed.
 ### `BE-010` Isolate startup migrations and side effects
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-009, SAFE-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.405Z
 
 #### Description
 
@@ -1381,9 +1381,9 @@ Not completed.
 ### `FE-001` Extract the application shell
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-011, OWN-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.413Z
 
 #### Description
 
@@ -2338,9 +2338,9 @@ Not completed.
 ### `OPS-001` Fix or retire obsolete `scripts/dev.mjs`
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** TEST-010, OWN-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.421Z
 
 #### Description
 
@@ -3176,9 +3176,9 @@ Not completed.
 ### `DOC-011` Create ADRs and separate Shopify theme context
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-07-31T11:59:05.429Z
 
 #### Description
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T11:59:05.438Z | DOC-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `276e484d` |
+| 2026-07-31T11:59:05.429Z | OPS-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `45fb541c` |
+| 2026-07-31T11:59:05.421Z | FE-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2f3155d3` |
+| 2026-07-31T11:59:05.413Z | BE-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f2fc8d75` |
+| 2026-07-31T11:59:05.404Z | OWN-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `51ebac2d` |
+| 2026-07-31T11:59:05.313Z | OWN-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ad9e556c` |
+| 2026-07-31T11:59:05.294Z | OWN-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `73e0faac` |
+| 2026-07-31T11:59:05.285Z | OWN-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `bf35830c` |
+| 2026-07-31T11:43:41.775Z | TEST-011 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `42935f78` |
 | 2026-07-31T11:43:29.922Z | TEST-011 | implemented | validated | shivam | Ran node --test src/api.test.js in client/. All 10 tests passed successfully. | `b9fece83` |
-| 2026-07-31T11:43:21.758Z | TEST-011 | in_progress | implemented | shivam | Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic. | `4fd6c6df` |
-| 2026-07-31T11:42:17.765Z | TEST-011 | ready | in_progress | shivam | Starting implementation of TEST-011: Protect frontend navigation | `a1720b3c` |
-| 2026-07-31T11:39:17.746Z | TEST-010 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e66cc1b4` |
-| 2026-07-31T11:39:06.031Z | TEST-010 | implemented | validated | shivam | Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully. | `d43e1629` |
-| 2026-07-31T11:38:57.403Z | TEST-010 | in_progress | implemented | shivam | Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation. | `f9c447e6` |
-| 2026-07-31T11:38:03.840Z | TEST-010 | ready | in_progress | shivam | Starting implementation of TEST-010: Protect startup and environment isolation | `fd7b74f4` |
-| 2026-07-31T11:24:08.714Z | TEST-009 | validated | completed | shivam | Checkpoint succeeded and verified on remote | `e8e604b8` |
-| 2026-07-31T11:23:57.985Z | TEST-009 | implemented | validated | shivam | Ran node --test src/services/orderMappingMigrations.test.js in server/. All 3 tests passed successfully. | `834f8336` |
-| 2026-07-31T11:23:50.669Z | TEST-009 | in_progress | implemented | shivam | Created test suite server/src/services/orderMappingMigrations.test.js asserting migration file loading, sorting, schema placeholder filling, and migration idempotency parameters. | `222eb969` |

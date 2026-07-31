@@ -31,7 +31,9 @@
     "arch:validate": "node scripts/architecture-ledger.mjs validate",
     "arch:checkpoint": "node scripts/architecture-ledger.mjs checkpoint",
     "arch:sync-obsidian": "node scripts/architecture-ledger.mjs sync-obsidian",
-    "test:architecture-ledger": "node --test tests/architecture-ledger.test.js"
+    "test:architecture-ledger": "node --test tests/architecture-ledger.test.js",
+    "arch:reconcile": "node scripts/architecture-ledger.mjs reconcile",
+    "arch:next": "node scripts/architecture-ledger.mjs next"
   },
   "devDependencies": {
     "concurrently": "^10.0.3"
