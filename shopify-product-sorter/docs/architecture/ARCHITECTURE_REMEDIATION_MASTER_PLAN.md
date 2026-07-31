@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T21:40:38.806Z` |
+| Generated timestamp | `2026-07-31T21:43:27.455Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `2f2869d` |
+| Local commit | `ce9d2c2` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,20 +37,20 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 28 |
-| Ready | 15 |
+| Ready | 14 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 75 |
-| Completion percentage | 58.1% |
+| Completed | 76 |
+| Completion percentage | 58.9% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `OPS-006`, `SEC-004`, `SEC-006`, `SEC-007`, `DOC-001`
+- Next ready tasks: `SEC-004`, `SEC-006`, `SEC-007`, `DOC-001`, `DOC-003`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -137,7 +137,7 @@
 | OPS-003 | Standardize health checks | HIGH | COMPLETED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | NOT_STARTED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-006 | Review and isolate Tokensave runtime files | HIGH | READY | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-006 | Review and isolate Tokensave runtime files | HIGH | COMPLETED | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-007 | Review Playwright artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-008 | Review test outputs and cache artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2483,9 +2483,9 @@ Git inventory, reproducibility check, ignore check, and owner review.
 ### `OPS-006` Review and isolate Tokensave runtime files
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-009, SEC-003
-**Last updated:** 2026-07-31T21:40:38.792Z
+**Last updated:** 2026-07-31T21:43:27.454Z
 
 #### Description
 
@@ -2505,7 +2505,7 @@ Git status, ignore checks, tool smoke test if approved, and security review.
 
 #### Completion evidence
 
-Not completed.
+--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules.
 
 ---
 
@@ -2686,7 +2686,7 @@ Auth unit/integration, route matrix, negative tests, security audit, and regress
 **Severity:** CRITICAL
 **Status:** COMPLETED
 **Dependencies:** SAFE-005, OWN-010
-**Last updated:** 2026-07-31T21:40:38.755Z
+**Last updated:** 2026-07-31T21:41:10.189Z
 
 #### Description
 
@@ -2706,7 +2706,7 @@ Secret scan, bundle scan, auth tests, Git status, and security review.
 
 #### Completion evidence
 
---changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns.
+--changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns., Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-07-31T21:43:27.471Z | OPS-006 | validated | completed | shivam | --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules. | `7d1c7e6f` |
+| 2026-07-31T21:43:19.667Z | OPS-006 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `5c28c737` |
+| 2026-07-31T21:43:11.615Z | OPS-006 | in_progress | implemented | shivam | --changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md | `2041ed98` |
+| 2026-07-31T21:42:19.120Z | OPS-006 | ready | in_progress | shivam | Transition to in_progress | `061cbf5e` |
+| 2026-07-31T21:41:10.201Z | SEC-003 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `c2186f4f` |
 | 2026-07-31T21:40:38.818Z | SEC-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `6f57cc65` |
 | 2026-07-31T21:40:38.805Z | OPS-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `a55b0fc0` |
 | 2026-07-31T21:40:38.772Z | SEC-003 | validated | completed | shivam | --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns. | `4bd35b13` |
 | 2026-07-31T21:40:20.920Z | SEC-003 | implemented | validated | shivam | --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger | `eb8b986f` |
 | 2026-07-31T21:40:06.336Z | SEC-003 | in_progress | implemented | shivam | --changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md | `1a500a3a` |
-| 2026-07-31T21:37:52.507Z | SEC-003 | ready | in_progress | shivam | Transition to in_progress | `37568459` |
-| 2026-07-31T21:35:57.897Z | SEC-002 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `e5a33dda` |
-| 2026-07-31T21:35:38.816Z | SEC-002 | validated | completed | shivam | --evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass. | `1a7a662b` |
-| 2026-07-31T21:35:20.943Z | SEC-002 | implemented | validated | shivam | --passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate | `70af9a64` |
-| 2026-07-31T21:35:13.869Z | SEC-002 | in_progress | implemented | shivam | --changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js | `cc706d0f` |

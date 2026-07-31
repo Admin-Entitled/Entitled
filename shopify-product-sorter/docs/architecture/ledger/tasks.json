@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:40:38.806Z",
+  "last_updated": "2026-07-31T21:43:27.455Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2631,7 +2631,7 @@
       "title": "Review and isolate Tokensave runtime files",
       "description": "Remediation task OPS-006: Review and isolate Tokensave runtime files",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-009",
         "SEC-003"
@@ -2645,14 +2645,18 @@
       "validation_commands": [
         "Git status, ignore checks, tool smoke test if approved, and security review."
       ],
-      "evidence": "",
+      "evidence": [
+        "--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md",
+        "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
+        "--evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:40:38.792Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:43:27.454Z",
+      "started_timestamp": "2026-07-31T21:42:19.103Z",
+      "implemented_timestamp": "2026-07-31T21:43:11.598Z",
+      "validated_timestamp": "2026-07-31T21:43:19.650Z",
+      "completed_timestamp": "2026-07-31T21:43:27.454Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2863,15 +2867,16 @@
       "evidence": [
         "--changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns."
+        "--evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns.",
+        "Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:40:38.755Z",
+      "updated_timestamp": "2026-07-31T21:41:10.189Z",
       "started_timestamp": "2026-07-31T21:37:52.489Z",
       "implemented_timestamp": "2026-07-31T21:40:06.319Z",
       "validated_timestamp": "2026-07-31T21:40:20.903Z",
-      "completed_timestamp": "2026-07-31T21:40:38.755Z",
+      "completed_timestamp": "2026-07-31T21:41:10.189Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
