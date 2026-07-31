@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T14:30:54.579Z",
+  "last_updated": "2026-07-31T14:28:07.542Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -1688,7 +1688,7 @@
       "title": "Define shared Shopify transport",
       "description": "Remediation task INT-002: Define shared Shopify transport",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "not_started",
       "dependencies": [
         "INT-001",
         "TEST-003"
@@ -1702,16 +1702,13 @@
       "validation_commands": [
         "Mocked integration, route, Shopify contract, redaction, and existing-app regression tests."
       ],
-      "evidence": [
-        "Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md",
-        "Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check"
-      ],
+      "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:30:54.579Z",
-      "started_timestamp": "2026-07-31T14:29:24.865Z",
-      "implemented_timestamp": "2026-07-31T14:30:54.291Z",
-      "validated_timestamp": "2026-07-31T14:30:54.579Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
       "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
