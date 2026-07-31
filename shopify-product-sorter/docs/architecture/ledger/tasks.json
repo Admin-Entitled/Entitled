@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T21:50:28.044Z",
+  "last_updated": "2026-07-31T21:58:25.060Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2568,7 +2568,7 @@
       "title": "Standardize diagnostics and safe observability",
       "description": "Remediation task OPS-004: Standardize diagnostics and safe observability",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-006",
         "BE-009",
@@ -2583,14 +2583,18 @@
       "validation_commands": [
         "Route/UI, redaction, size-limit, and regression checks."
       ],
-      "evidence": "",
+      "evidence": [
+        "--changed-files server/src/routes/api.js,server/src/routes/health.test.js",
+        "--passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate",
+        "--evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:50:28.044Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-07-31T21:58:25.059Z",
+      "started_timestamp": "2026-07-31T21:50:49.376Z",
+      "implemented_timestamp": "2026-07-31T21:58:23.663Z",
+      "validated_timestamp": "2026-07-31T21:58:24.353Z",
+      "completed_timestamp": "2026-07-31T21:58:25.059Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
@@ -2959,15 +2963,16 @@
       "evidence": [
         "--changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js",
         "--passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate",
-        "--evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns."
+        "--evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns.",
+        "Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9"
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:50:28.008Z",
+      "updated_timestamp": "2026-07-31T21:50:32.840Z",
       "started_timestamp": "2026-07-31T21:46:48.715Z",
       "implemented_timestamp": "2026-07-31T21:50:26.803Z",
       "validated_timestamp": "2026-07-31T21:50:27.332Z",
-      "completed_timestamp": "2026-07-31T21:50:28.008Z",
+      "completed_timestamp": "2026-07-31T21:50:32.840Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED"
     },
     {
