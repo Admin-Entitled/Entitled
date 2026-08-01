@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-07-31T22:07:54.797Z` |
+| Generated timestamp | `2026-08-01T22:10:15.331Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `148083b` |
+| Local commit | `6279ca5` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,12 +40,12 @@
 | Ready | 13 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 0 |
+| Validation pending | 77 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 78 |
-| Completion percentage | 60.5% |
+| Completed | 1 |
+| Completion percentage | 0.8% |
 
 ## 4. Current execution focus
 
@@ -58,96 +58,96 @@
 
 | Task ID | Title | Severity | Status | Dependencies | Notes |
 | --- | --- | --- | --- | --- | --- |
-| SAFE-001 | Confirm recoverable Git backup | CRITICAL | COMPLETED | None | Imported from master plan. Previous raw status: COMPLETED |
-| SAFE-002 | Capture working-tree and baseline manifest | CRITICAL | COMPLETED | None | Imported from master plan. Previous raw status: COMPLETED |
-| SAFE-003 | Confirm SQLite backups | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: READY |
-| SAFE-004 | Complete PostgreSQL/Neon backup | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-005 | Encrypt secret archive | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-006 | Create off-device backup copy | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-007 | Validate restoration instructions | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
-| SAFE-008 | Record database ownership uncertainties | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-001 | Protect sorter scoring and core logic | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | COMPLETED | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-003 | Protect collection reorder contracts | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-005 | Protect CSV import and manual overrides | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-006 | Protect SKU media operations | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-007 | Protect Sales Intelligence API contracts | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-008 | Protect public route compatibility | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-009 | Protect database migration safety | CRITICAL | COMPLETED | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-011 | Protect frontend navigation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-012 | Add integrated existing-app regression gate | HIGH | COMPLETED | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-004 | Define SKU Image Manager boundary | HIGH | COMPLETED | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-005 | Define Actual Sales Intelligence boundary | HIGH | COMPLETED | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-006 | Define System Diagnostics ownership | MEDIUM | COMPLETED | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-007 | Approve route ownership matrix | CRITICAL | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-009 | Approve runtime file ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-001 | Split the generic API router | HIGH | COMPLETED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-002 | Create a Sorter router | HIGH | COMPLETED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-003 | Create a SKU Image Manager router | HIGH | COMPLETED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-004 | Create a Sales Intelligence router | HIGH | COMPLETED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | COMPLETED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-007 | Remove hidden cross-application imports | HIGH | COMPLETED | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-001 | Confirm recoverable Git backup | CRITICAL | VALIDATION_PENDING | None | Imported from master plan. Previous raw status: COMPLETED |
+| SAFE-002 | Capture working-tree and baseline manifest | CRITICAL | VALIDATION_PENDING | None | Imported from master plan. Previous raw status: COMPLETED |
+| SAFE-003 | Confirm SQLite backups | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: READY |
+| SAFE-004 | Complete PostgreSQL/Neon backup | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-005 | Encrypt secret archive | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-006 | Create off-device backup copy | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-007 | Validate restoration instructions | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
+| SAFE-008 | Record database ownership uncertainties | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-001 | Protect sorter scoring and core logic | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
+| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
+| TEST-003 | Protect collection reorder contracts | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
+| TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | VALIDATION_PENDING | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-005 | Protect CSV import and manual overrides | HIGH | VALIDATION_PENDING | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-006 | Protect SKU media operations | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-007 | Protect Sales Intelligence API contracts | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-008 | Protect public route compatibility | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-009 | Protect database migration safety | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-010 | Protect startup and environment isolation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-011 | Protect frontend navigation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-012 | Add integrated existing-app regression gate | HIGH | VALIDATION_PENDING | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-001 | Establish canonical application names and statuses | MEDIUM | VALIDATION_PENDING | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-002 | Define Product Sorter boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | VALIDATION_PENDING | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-004 | Define SKU Image Manager boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-005 | Define Actual Sales Intelligence boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-006 | Define System Diagnostics ownership | MEDIUM | VALIDATION_PENDING | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-007 | Approve route ownership matrix | CRITICAL | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-008 | Approve data ownership matrix | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-009 | Approve runtime file ownership | HIGH | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-010 | Approve integration and environment ownership | HIGH | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-001 | Split the generic API router | HIGH | VALIDATION_PENDING | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-002 | Create a Sorter router | HIGH | VALIDATION_PENDING | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-003 | Create a SKU Image Manager router | HIGH | VALIDATION_PENDING | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-004 | Create a Sales Intelligence router | HIGH | VALIDATION_PENDING | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | VALIDATION_PENDING | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-006 | Create application-owned service boundaries | HIGH | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-007 | Remove hidden cross-application imports | HIGH | VALIDATION_PENDING | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-009 | Standardize structured logging | MEDIUM | COMPLETED | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | COMPLETED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-007 | Separate application state | HIGH | COMPLETED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-008 | Separate frontend API clients | HIGH | COMPLETED | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-009 | Isolate styles and remove global leakage | MEDIUM | COMPLETED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-010 | Add feature error and loading boundaries | HIGH | COMPLETED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-011 | Add frontend regression tests and classify placeholders | HIGH | COMPLETED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-002 | Define shared Shopify transport | HIGH | COMPLETED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-003 | Keep Shopify business logic app-owned | HIGH | COMPLETED | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-005 | Define shared Shiprocket transport | HIGH | COMPLETED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-009 | Standardize structured logging | MEDIUM | VALIDATION_PENDING | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-010 | Isolate startup migrations and side effects | CRITICAL | VALIDATION_PENDING | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | VALIDATION_PENDING | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-001 | Extract the application shell | HIGH | VALIDATION_PENDING | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-002 | Extract navigation ownership | HIGH | VALIDATION_PENDING | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATION_PENDING | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-004 | Extract the Sorter feature | HIGH | VALIDATION_PENDING | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-005 | Extract the SKU Image Manager feature | HIGH | VALIDATION_PENDING | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATION_PENDING | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-007 | Separate application state | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-009 | Isolate styles and remove global leakage | MEDIUM | VALIDATION_PENDING | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-010 | Add feature error and loading boundaries | HIGH | VALIDATION_PENDING | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-011 | Add frontend regression tests and classify placeholders | HIGH | VALIDATION_PENDING | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-001 | Inventory and contract Shopify clients | HIGH | VALIDATION_PENDING | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-002 | Define shared Shopify transport | HIGH | VALIDATION_PENDING | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-004 | Inventory and contract Shiprocket clients | HIGH | VALIDATION_PENDING | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-005 | Define shared Shiprocket transport | HIGH | VALIDATION_PENDING | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-006 | Standardize integration authentication and env ownership | CRITICAL | NOT_STARTED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-007 | Standardize retries, rate limits, and errors | HIGH | COMPLETED | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-008 | Add deterministic integration mocks | HIGH | COMPLETED | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-009 | Remove duplicate clients after usage proof | HIGH | COMPLETED | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-010 | Verify provider contracts and API-version compatibility | HIGH | COMPLETED | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATION_PENDING | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-010 | Verify provider contracts and API-version compatibility | HIGH | VALIDATION_PENDING | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | BLOCKED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
-| DATA-002 | Document SQLite table ownership | CRITICAL | COMPLETED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-002 | Document SQLite table ownership | CRITICAL | VALIDATION_PENDING | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-004 | Separate SKU audit data | HIGH | COMPLETED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-005 | Separate Sales Intelligence caches | HIGH | COMPLETED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | COMPLETED | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-004 | Separate SKU audit data | HIGH | VALIDATION_PENDING | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-005 | Separate Sales Intelligence caches | HIGH | VALIDATION_PENDING | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | VALIDATION_PENDING | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-007 | Make runtime paths configurable | HIGH | NOT_STARTED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-002 | Standardize startup commands | MEDIUM | COMPLETED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-003 | Standardize health checks | HIGH | COMPLETED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-004 | Standardize diagnostics and safe observability | MEDIUM | COMPLETED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-005 | Review and isolate Graphify artifacts | MEDIUM | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-006 | Review and isolate Tokensave runtime files | HIGH | COMPLETED | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-007 | Review Playwright artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-008 | Review test outputs and cache artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | VALIDATION_PENDING | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATION_PENDING | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-002 | Standardize startup commands | MEDIUM | VALIDATION_PENDING | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-003 | Standardize health checks | HIGH | VALIDATION_PENDING | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-004 | Standardize diagnostics and safe observability | MEDIUM | VALIDATION_PENDING | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-005 | Review and isolate Graphify artifacts | MEDIUM | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-006 | Review and isolate Tokensave runtime files | HIGH | VALIDATION_PENDING | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-007 | Review Playwright artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-008 | Review test outputs and cache artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | COMPLETED | None | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-001 | Assess authentication boundary | CRITICAL | COMPLETED | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-002 | Add route authorization boundaries | CRITICAL | COMPLETED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-003 | Correct secret handling and tracked token risk | CRITICAL | COMPLETED | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-001 | Assess authentication boundary | CRITICAL | VALIDATION_PENDING | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-002 | Add route authorization boundaries | CRITICAL | VALIDATION_PENDING | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-003 | Correct secret handling and tracked token risk | CRITICAL | VALIDATION_PENDING | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | COMPLETED | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | VALIDATION_PENDING | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-007 | Review CORS and CSRF protections | HIGH | READY | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -193,9 +193,9 @@
 ### `SAFE-001` Confirm recoverable Git backup
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** None
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.175Z
 
 #### Description
 
@@ -215,16 +215,16 @@ Static: `git rev-parse`, `git show --stat`. Unit/integration: not applicable. Ro
 
 #### Completion evidence
 
-Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main.
+Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001.
 
 ---
 
 ### `SAFE-002` Capture working-tree and baseline manifest
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** None
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.177Z
 
 #### Description
 
@@ -244,16 +244,16 @@ Static: compare `git status`, `git ls-files`, and inventory counts. Data: verify
 
 #### Completion evidence
 
-Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest.
+Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002.
 
 ---
 
 ### `SAFE-003` Confirm SQLite backups
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.179Z
 
 #### Description
 
@@ -273,16 +273,16 @@ Data integrity check, hash comparison, restore-open test on copies, and status c
 
 #### Completion evidence
 
-SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity.
+SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003.
 
 ---
 
 ### `SAFE-004` Complete PostgreSQL/Neon backup
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.181Z
 
 #### Description
 
@@ -302,16 +302,16 @@ Migration/schema inventory, restore test, read-only smoke queries, and no produc
 
 #### Completion evidence
 
-PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore.
+PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004.
 
 ---
 
 ### `SAFE-005` Encrypt secret archive
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.183Z
 
 #### Description
 
@@ -331,16 +331,16 @@ Security review, archive decrypt test by authorized operator, repository secret 
 
 #### Completion evidence
 
-Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/.
+Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005.
 
 ---
 
 ### `SAFE-006` Create off-device backup copy
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-003, SAFE-004, SAFE-005
-**Last updated:** 2026-07-31T10:31:03.307Z
+**Last updated:** 2026-08-01T22:10:15.185Z
 
 #### Description
 
@@ -360,16 +360,16 @@ Hash verification, authorized access test, restore-read test, and status review.
 
 #### Completion evidence
 
-Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks., Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3
+Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks., Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005.
 
 ---
 
 ### `SAFE-007` Validate restoration instructions
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-003, SAFE-004, SAFE-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.187Z
 
 #### Description
 
@@ -389,16 +389,16 @@ Git status/ref, SQLite integrity, PostgreSQL schema smoke test, runtime path che
 
 #### Completion evidence
 
-Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/.
+Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007.
 
 ---
 
 ### `SAFE-008` Record database ownership uncertainties
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.189Z
 
 #### Description
 
@@ -417,16 +417,16 @@ Static import/reference search and owner review; no runtime writes.
 
 #### Completion evidence
 
-Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created.
+Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008.
 
 ---
 
 ### `TEST-001` Protect sorter scoring and core logic
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.191Z
 
 #### Description
 
@@ -446,16 +446,16 @@ Unit tests, coverage report, static import check, and sorter regression review.
 
 #### Completion evidence
 
-Sorter scoring test suite server/src/services/sorter.test.js (11 pass).
+Sorter scoring test suite server/src/services/sorter.test.js (11 pass)., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-001.
 
 ---
 
 ### `TEST-002` Protect collection sync/apply/rollback
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-003, SAFE-008
-**Last updated:** 2026-07-31T15:40:30.981Z
+**Last updated:** 2026-08-01T22:10:15.193Z
 
 #### Description
 
@@ -475,16 +475,16 @@ Unit, route contract, mocked integration, SQLite test-db integrity, and manual r
 
 #### Completion evidence
 
-Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass)., Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028
+Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass)., Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-008.
 
 ---
 
 ### `TEST-003` Protect collection reorder contracts
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.195Z
 
 #### Description
 
@@ -504,16 +504,16 @@ Route contract tests, mocked Shopify job polling, static duplicate-route scan, a
 
 #### Completion evidence
 
-Collection reorder contract test suite server/src/services/collectionReorderContracts.test.js (4 pass).
+Collection reorder contract test suite server/src/services/collectionReorderContracts.test.js (4 pass)., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-003.
 
 ---
 
 ### `TEST-004` Protect Order Mapping sync/status lifecycle
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-004
-**Last updated:** 2026-07-31T10:39:31.889Z
+**Last updated:** 2026-08-01T22:10:15.197Z
 
 #### Description
 
@@ -533,16 +533,16 @@ Unit, integration, isolated PostgreSQL integrity, network-log assertions, and no
 
 #### Completion evidence
 
-Starting task TEST-004: Protect Order Mapping sync/status lifecycle, Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides., Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override)., Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e
+Starting task TEST-004: Protect Order Mapping sync/status lifecycle, Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides., Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override)., Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004.
 
 ---
 
 ### `TEST-005` Protect CSV import and manual overrides
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-004
-**Last updated:** 2026-07-31T10:43:49.605Z
+**Last updated:** 2026-08-01T22:10:15.199Z
 
 #### Description
 
@@ -562,16 +562,16 @@ Unit, integration, database integrity, route contract, and synthetic CSV manual 
 
 #### Completion evidence
 
-Starting implementation of TEST-005: Protect CSV import and manual overrides, Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction., Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics., Commit SHA: 7890a0ef38dd5dec9454d0a583edafc3977c2a86
+Starting implementation of TEST-005: Protect CSV import and manual overrides, Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction., Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics., Commit SHA: 7890a0ef38dd5dec9454d0a583edafc3977c2a86, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004.
 
 ---
 
 ### `TEST-006` Protect SKU media operations
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:10:53.549Z
+**Last updated:** 2026-08-01T22:10:15.201Z
 
 #### Description
 
@@ -591,16 +591,16 @@ Unit, mocked integration, route, browser regression, and audit-file fixture chec
 
 #### Completion evidence
 
-Starting implementation of TEST-006: Protect SKU media operations, Created unit test suite server/src/services/shopifyMediaService.test.js covering SKU media scopes, duplicate product deduplication without deletion, confirm bulk deletion filtering, and audit log path verification., Ran node --test src/services/shopifyMediaService.test.js in server/. All 4 tests passed successfully., Commit SHA: 6476c331d12e763ee13d38d8cf38265683e58cdc
+Starting implementation of TEST-006: Protect SKU media operations, Created unit test suite server/src/services/shopifyMediaService.test.js covering SKU media scopes, duplicate product deduplication without deletion, confirm bulk deletion filtering, and audit log path verification., Ran node --test src/services/shopifyMediaService.test.js in server/. All 4 tests passed successfully., Commit SHA: 6476c331d12e763ee13d38d8cf38265683e58cdc, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002.
 
 ---
 
 ### `TEST-007` Protect Sales Intelligence API contracts
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:16:12.816Z
+**Last updated:** 2026-08-01T22:10:15.203Z
 
 #### Description
 
@@ -620,16 +620,16 @@ Unit, route contract, mocked integration, CSV parse, and no-network checks.
 
 #### Completion evidence
 
-Starting implementation of TEST-007: Protect Sales Intelligence API contracts, Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting., Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully., Commit SHA: 360d53ccd88e248acc4ecf48c5a13e9d389c10fd
+Starting implementation of TEST-007: Protect Sales Intelligence API contracts, Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting., Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully., Commit SHA: 360d53ccd88e248acc4ecf48c5a13e9d389c10fd, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002.
 
 ---
 
 ### `TEST-008` Protect public route compatibility
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:21:49.233Z
+**Last updated:** 2026-08-01T22:10:15.205Z
 
 #### Description
 
@@ -649,16 +649,16 @@ Route integration tests, frontend navigation checks, static route inventory diff
 
 #### Completion evidence
 
-Starting implementation of TEST-008: Protect public route compatibility, Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials., Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility., Commit SHA: f42888e6b976829d84acc45ac5c9a0ecfa7671b7
+Starting implementation of TEST-008: Protect public route compatibility, Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials., Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility., Commit SHA: f42888e6b976829d84acc45ac5c9a0ecfa7671b7, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002.
 
 ---
 
 ### `TEST-009` Protect database migration safety
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-003, SAFE-004
-**Last updated:** 2026-07-31T11:24:08.706Z
+**Last updated:** 2026-08-01T22:10:15.207Z
 
 #### Description
 
@@ -678,16 +678,16 @@ Migration integration tests, SQLite integrity, PostgreSQL schema checks, and sta
 
 #### Completion evidence
 
-Starting implementation of TEST-009: Protect database migration safety, Created test suite server/src/services/orderMappingMigrations.test.js asserting migration file loading, sorting, schema placeholder filling, and migration idempotency parameters., Ran node --test src/services/orderMappingMigrations.test.js in server/. All 3 tests passed successfully., Commit SHA: 86cfc4d239e91662a9ca93b410a7d51935545195
+Starting implementation of TEST-009: Protect database migration safety, Created test suite server/src/services/orderMappingMigrations.test.js asserting migration file loading, sorting, schema placeholder filling, and migration idempotency parameters., Ran node --test src/services/orderMappingMigrations.test.js in server/. All 3 tests passed successfully., Commit SHA: 86cfc4d239e91662a9ca93b410a7d51935545195, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004.
 
 ---
 
 ### `TEST-010` Protect startup and environment isolation
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:39:17.738Z
+**Last updated:** 2026-08-01T22:10:15.209Z
 
 #### Description
 
@@ -707,16 +707,16 @@ Unit, startup integration, environment matrix, static secret scan, and no-live-n
 
 #### Completion evidence
 
-Starting implementation of TEST-010: Protect startup and environment isolation, Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation., Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully., Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4
+Starting implementation of TEST-010: Protect startup and environment isolation, Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation., Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully., Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002.
 
 ---
 
 ### `TEST-011` Protect frontend navigation
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-002
-**Last updated:** 2026-07-31T11:43:41.766Z
+**Last updated:** 2026-08-01T22:10:15.211Z
 
 #### Description
 
@@ -736,16 +736,16 @@ Browser E2E, mocked API, accessibility smoke, and route regression.
 
 #### Completion evidence
 
-Starting implementation of TEST-011: Protect frontend navigation, Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic., Ran node --test src/api.test.js in client/. All 10 tests passed successfully., Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5
+Starting implementation of TEST-011: Protect frontend navigation, Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic., Ran node --test src/api.test.js in client/. All 10 tests passed successfully., Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002.
 
 ---
 
 ### `TEST-012` Add integrated existing-app regression gate
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011
-**Last updated:** 2026-07-31T15:43:47.861Z
+**Last updated:** 2026-08-01T22:10:15.213Z
 
 #### Description
 
@@ -765,16 +765,16 @@ Unit, integration, E2E, startup, migration, route, and test-isolation checks.
 
 #### Completion evidence
 
---evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json, --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json), Commit SHA: 094e208a5b8104e03b82ad5ad23f8a47444987ac
+--evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json, --evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json), Commit SHA: 094e208a5b8104e03b82ad5ad23f8a47444987ac, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011.
 
 ---
 
 ### `OWN-001` Establish canonical application names and statuses
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.215Z
 
 #### Description
 
@@ -794,16 +794,16 @@ Static path/symbol review and owner sign-off; no runtime change.
 
 #### Completion evidence
 
-Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created.
+Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001.
 
 ---
 
 ### `OWN-002` Define Product Sorter boundary
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-001, TEST-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-01T22:10:15.217Z
 
 #### Description
 
@@ -823,16 +823,16 @@ Static dependency graph, route matrix review, test inventory, and owner sign-off
 
 #### Completion evidence
 
-Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created.
+Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-002.
 
 ---
 
 ### `OWN-003` Classify Order Mapping versus legacy Delivery Resolution
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-008, TEST-004, TEST-005
-**Last updated:** 2026-07-31T12:16:20.421Z
+**Last updated:** 2026-08-01T22:10:15.219Z
 
 #### Description
 
@@ -852,16 +852,16 @@ Static call graph, synthetic migration mapping, route regression, and owner deci
 
 #### Completion evidence
 
-Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md, Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js, Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af
+Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md, Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js, Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-008, TEST-004, TEST-005.
 
 ---
 
 ### `OWN-004` Define SKU Image Manager boundary
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-001, TEST-006
-**Last updated:** 2026-07-31T12:27:14.568Z
+**Last updated:** 2026-08-01T22:10:15.221Z
 
 #### Description
 
@@ -881,16 +881,16 @@ Static imports, route matrix, mocked media contract tests, and owner sign-off.
 
 #### Completion evidence
 
-Defining SKU Image Manager boundary specification, Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md, Validated via static imports, route matrix, and shopifyMediaService.test.js passing, Commit SHA: 43c636777b7e1e62947ee14f0cdc0b918f952445
+Defining SKU Image Manager boundary specification, Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md, Validated via static imports, route matrix, and shopifyMediaService.test.js passing, Commit SHA: 43c636777b7e1e62947ee14f0cdc0b918f952445, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-001, TEST-006.
 
 ---
 
 ### `OWN-005` Define Actual Sales Intelligence boundary
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-001, TEST-007
-**Last updated:** 2026-07-31T13:14:48.558Z
+**Last updated:** 2026-08-01T22:10:15.223Z
 
 #### Description
 
@@ -910,16 +910,16 @@ Static import/route review, synthetic API tests, and owner sign-off.
 
 #### Completion evidence
 
-Defining Actual Sales Intelligence boundary specification, Defined Actual Sales Intelligence boundary specification in docs/architecture/ACTUAL_SALES_INTELLIGENCE_BOUNDARY_SPECIFICATION.md, Validated via static imports, route matrix, and actualSalesService.test.js passing, Commit SHA: 4eb661e4191baa1e20f8c2cf5ab85655b0906978
+Defining Actual Sales Intelligence boundary specification, Defined Actual Sales Intelligence boundary specification in docs/architecture/ACTUAL_SALES_INTELLIGENCE_BOUNDARY_SPECIFICATION.md, Validated via static imports, route matrix, and actualSalesService.test.js passing, Commit SHA: 4eb661e4191baa1e20f8c2cf5ab85655b0906978, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-001, TEST-007.
 
 ---
 
 ### `OWN-006` Define System Diagnostics ownership
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-001, TEST-010
-**Last updated:** 2026-07-31T13:23:33.388Z
+**Last updated:** 2026-08-01T22:10:15.225Z
 
 #### Description
 
@@ -939,16 +939,16 @@ Static route/log review, synthetic payload checks, and security owner review.
 
 #### Completion evidence
 
-Defining System Diagnostics ownership specification, Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md, Validated via static route review, sensitive field audit, and data ownership distinction verified, Commit SHA: 25de38d76639b4d48e2cde564482bee7c278131f
+Defining System Diagnostics ownership specification, Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md, Validated via static route review, sensitive field audit, and data ownership distinction verified, Commit SHA: 25de38d76639b4d48e2cde564482bee7c278131f, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-001, TEST-010.
 
 ---
 
 ### `OWN-007` Approve route ownership matrix
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008
-**Last updated:** 2026-07-31T13:29:08.984Z
+**Last updated:** 2026-08-01T22:10:15.227Z
 
 #### Description
 
@@ -968,16 +968,16 @@ Static route scan, route matrix review, and contract test inventory.
 
 #### Completion evidence
 
-Defining data store ownership boundaries, Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md, Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths, Commit SHA: c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c
+Defining data store ownership boundaries, Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md, Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths, Commit SHA: c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008.
 
 ---
 
 ### `OWN-008` Approve data ownership matrix
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-003, SAFE-004, SAFE-008
-**Last updated:** 2026-07-31T13:37:09.827Z
+**Last updated:** 2026-08-01T22:10:15.229Z
 
 #### Description
 
@@ -997,16 +997,16 @@ Static references, file inventory, schema inventory, and owner review.
 
 #### Completion evidence
 
-Approving data ownership matrix, Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md, Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files, Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330
+Approving data ownership matrix, Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md, Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files, Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-008.
 
 ---
 
 ### `OWN-009` Approve runtime file ownership
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:44:43.385Z
+**Last updated:** 2026-08-01T22:10:15.231Z
 
 #### Description
 
@@ -1026,16 +1026,16 @@ Filesystem/Git inventory and owner review.
 
 #### Completion evidence
 
-Defining shared Shopify transport boundary, Defined complete runtime file ownership matrix in docs/architecture/RUNTIME_FILE_OWNERSHIP_MATRIX.md, Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts, Commit SHA: e370e61f093543a571ebe09449b577677e7861a2
+Defining shared Shopify transport boundary, Defined complete runtime file ownership matrix in docs/architecture/RUNTIME_FILE_OWNERSHIP_MATRIX.md, Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts, Commit SHA: e370e61f093543a571ebe09449b577677e7861a2, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006.
 
 ---
 
 ### `OWN-010` Approve integration and environment ownership
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:49:17.613Z
+**Last updated:** 2026-08-01T22:10:15.233Z
 
 #### Description
 
@@ -1055,16 +1055,16 @@ Static dependency search, secret-name inventory, and integration-owner review.
 
 #### Completion evidence
 
-Defining environment configuration ownership, Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md, Validated via static dependency search, secret-name inventory, and integration-owner review, Commit SHA: 03a2c632d37d36e9b127840508b67af99e2c87aa
+Defining environment configuration ownership, Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md, Validated via static dependency search, secret-name inventory, and integration-owner review, Commit SHA: 03a2c632d37d36e9b127840508b67af99e2c87aa, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006.
 
 ---
 
 ### `BE-001` Split the generic API router
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-012, OWN-007
-**Last updated:** 2026-07-31T15:51:58.096Z
+**Last updated:** 2026-08-01T22:10:15.235Z
 
 #### Description
 
@@ -1084,16 +1084,16 @@ Static import graph, route contracts, startup test, existing-app regression, and
 
 #### Completion evidence
 
---evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts., --evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js., Commit SHA: e8c2b9f7cb43dde0ac66d20a11a5937f9f587163
+--evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts., --evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js., Commit SHA: e8c2b9f7cb43dde0ac66d20a11a5937f9f587163, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-012, OWN-007.
 
 ---
 
 ### `BE-002` Create a Sorter router
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** BE-001, OWN-002
-**Last updated:** 2026-07-31T16:01:36.955Z
+**Last updated:** 2026-08-01T22:10:15.237Z
 
 #### Description
 
@@ -1113,16 +1113,16 @@ Route, unit, mocked Shopify, SQLite fixture, and existing-app regression tests.
 
 #### Completion evidence
 
---evidence Created dedicated Sorter router module server/src/routes/sorter.js owning all sorter/reorder endpoints without SKU or Sales Intelligence imports., --evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed., Commit SHA: 19bdae536ce86c4bb395e581ffb3f58db62b924b
+--evidence Created dedicated Sorter router module server/src/routes/sorter.js owning all sorter/reorder endpoints without SKU or Sales Intelligence imports., --evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed., Commit SHA: 19bdae536ce86c4bb395e581ffb3f58db62b924b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, OWN-002.
 
 ---
 
 ### `BE-003` Create a SKU Image Manager router
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** BE-001, OWN-004
-**Last updated:** 2026-07-31T16:07:22.600Z
+**Last updated:** 2026-08-01T22:10:15.239Z
 
 #### Description
 
@@ -1142,16 +1142,16 @@ Route, mocked Shopify, upload cleanup, audit, and frontend regression tests.
 
 #### Completion evidence
 
---evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed., --evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite., Commit SHA: 641bf31046bc8f6f0f3bde8c8b487411225a6b8b
+--evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed., --evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite., Commit SHA: 641bf31046bc8f6f0f3bde8c8b487411225a6b8b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, OWN-004.
 
 ---
 
 ### `BE-004` Create a Sales Intelligence router
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** BE-001, OWN-005
-**Last updated:** 2026-07-31T16:12:31.707Z
+**Last updated:** 2026-08-01T22:10:15.241Z
 
 #### Description
 
@@ -1171,16 +1171,16 @@ Route contracts, synthetic cache tests, CSV tests, startup, and regression gate.
 
 #### Completion evidence
 
---evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js., --evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite., Commit SHA: d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f
+--evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js., --evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite., Commit SHA: d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f, Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for BE-004.
 
 ---
 
 ### `BE-005` Preserve existing backend URLs with adapters
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** BE-001, TEST-008
-**Last updated:** 2026-07-31T16:17:42.883Z
+**Last updated:** 2026-08-01T22:10:15.243Z
 
 #### Description
 
@@ -1200,16 +1200,16 @@ Route contract, integration, startup, frontend, and regression-gate checks.
 
 #### Completion evidence
 
---evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js., --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed., Commit SHA: 8003f19e0f7c2d752bd228ef69ee2ddfec6e3377
+--evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js., --evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed., Commit SHA: 8003f19e0f7c2d752bd228ef69ee2ddfec6e3377, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, TEST-008.
 
 ---
 
 ### `BE-006` Create application-owned service boundaries
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:54:16.949Z
+**Last updated:** 2026-08-01T22:10:15.245Z
 
 #### Description
 
@@ -1229,16 +1229,16 @@ Static dependency graph, unit/integration contracts, route regression, and start
 
 #### Completion evidence
 
-Extracting Shopify GraphQL client, Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md, Validated via static dependency graph review, layer classification, and boundary direction rules, Commit SHA: 161a62bea3a3b38dbdbac592caf8ca9d96e6b564
+Extracting Shopify GraphQL client, Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md, Validated via static dependency graph review, layer classification, and boundary direction rules, Commit SHA: 161a62bea3a3b38dbdbac592caf8ca9d96e6b564, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006.
 
 ---
 
 ### `BE-007` Remove hidden cross-application imports
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** BE-006
-**Last updated:** 2026-07-31T13:56:49.858Z
+**Last updated:** 2026-08-01T22:10:15.247Z
 
 #### Description
 
@@ -1258,7 +1258,7 @@ Static import scan, unit contracts, mocked integrations, and regression gate.
 
 #### Completion evidence
 
-Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md, Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests, Commit SHA: c2beccc557ad69a49bf64cd1938ceab2b422edc1
+Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md, Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests, Commit SHA: c2beccc557ad69a49bf64cd1938ceab2b422edc1, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-006.
 
 ---
 
@@ -1294,9 +1294,9 @@ Not completed.
 ### `BE-009` Standardize structured logging
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-006, BE-006
-**Last updated:** 2026-07-31T14:00:23.009Z
+**Last updated:** 2026-08-01T22:10:15.249Z
 
 #### Description
 
@@ -1316,16 +1316,16 @@ Unit log-shape tests, redaction tests, route checks, and manual diagnostics revi
 
 #### Completion evidence
 
-Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md, Validated via logger.js review, log consumer audit, and redaction rule verification, Commit SHA: de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99
+Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md, Validated via logger.js review, log consumer audit, and redaction rule verification, Commit SHA: de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-006.
 
 ---
 
 ### `BE-010` Isolate startup migrations and side effects
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-009, SAFE-004
-**Last updated:** 2026-07-31T14:09:16.443Z
+**Last updated:** 2026-08-01T22:10:15.251Z
 
 #### Description
 
@@ -1345,16 +1345,16 @@ Migration tests, startup tests, route health, database integrity, and regression
 
 #### Completion evidence
 
-Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md, Validated via index.js review, database.js migration audit, and side-effect isolation analysis, Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108
+Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md, Validated via index.js review, database.js migration audit, and side-effect isolation analysis, Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-009, SAFE-004.
 
 ---
 
 ### `BE-011` Resolve duplicate collection reorder handlers
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-003, BE-002, BE-005
-**Last updated:** 2026-07-31T16:21:37.721Z
+**Last updated:** 2026-08-01T22:10:15.253Z
 
 #### Description
 
@@ -1374,16 +1374,16 @@ Static duplicate scan, route contracts, mocked Shopify jobs, and existing-app re
 
 #### Completion evidence
 
---evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2., --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect., Commit SHA: cde861527ee8a6ab1efe5008bf41f6067e5e82cd
+--evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2., --evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect., Commit SHA: cde861527ee8a6ab1efe5008bf41f6067e5e82cd, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-003, BE-002, BE-005.
 
 ---
 
 ### `FE-001` Extract the application shell
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-011, OWN-001
-**Last updated:** 2026-07-31T14:13:11.307Z
+**Last updated:** 2026-08-01T22:10:15.255Z
 
 #### Description
 
@@ -1403,16 +1403,16 @@ Frontend unit/E2E, route, accessibility, build, and existing-app regression chec
 
 #### Completion evidence
 
-Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping, Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d
+Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping, Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-011, OWN-001.
 
 ---
 
 ### `FE-002` Extract navigation ownership
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-001, OWN-007
-**Last updated:** 2026-07-31T14:15:28.266Z
+**Last updated:** 2026-08-01T22:10:15.257Z
 
 #### Description
 
@@ -1432,16 +1432,16 @@ Browser navigation, accessibility, route, and regression tests.
 
 #### Completion evidence
 
-Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check, Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874
+Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check, Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007.
 
 ---
 
 ### `FE-003` Introduce explicit routing while preserving URLs
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-008, FE-001
-**Last updated:** 2026-07-31T14:18:47.081Z
+**Last updated:** 2026-08-01T22:10:15.259Z
 
 #### Description
 
@@ -1461,16 +1461,16 @@ Browser, route, static fallback, build, and regression checks.
 
 #### Completion evidence
 
-Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix, Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94
+Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix, Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001.
 
 ---
 
 ### `FE-004` Extract the Sorter feature
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-07-31T17:38:08.224Z
+**Last updated:** 2026-08-01T22:10:15.261Z
 
 #### Description
 
@@ -1490,16 +1490,16 @@ Unit, browser, API mock, route, build, and full regression checks.
 
 #### Completion evidence
 
---evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820
+--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820, Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004.
 
 ---
 
 ### `FE-005` Extract the SKU Image Manager feature
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-001, OWN-004, TEST-006
-**Last updated:** 2026-07-31T14:22:08.317Z
+**Last updated:** 2026-08-01T22:10:15.263Z
 
 #### Description
 
@@ -1519,16 +1519,16 @@ Component/unit, browser media flows with mocks, accessibility, and regression ch
 
 #### Completion evidence
 
-Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md, Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification, Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91
+Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md, Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification, Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006.
 
 ---
 
 ### `FE-006` Retain Order Mapping compatibility boundary
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-003, OWN-003
-**Last updated:** 2026-07-31T14:25:09.759Z
+**Last updated:** 2026-08-01T22:10:15.265Z
 
 #### Description
 
@@ -1548,16 +1548,16 @@ Browser, route, API contract, accessibility, and existing-app regression tests.
 
 #### Completion evidence
 
-Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md, Validated via OrderMapping.jsx audit, API client isolation, and state independence verification, Commit SHA: ebbcc688abffd6af81745b6e0231b5efa294c56e
+Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md, Validated via OrderMapping.jsx audit, API client isolation, and state independence verification, Commit SHA: ebbcc688abffd6af81745b6e0231b5efa294c56e, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-003, OWN-003.
 
 ---
 
 ### `FE-007` Separate application state
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-004, FE-005, FE-006
-**Last updated:** 2026-07-31T17:55:35.849Z
+**Last updated:** 2026-08-01T22:10:15.267Z
 
 #### Description
 
@@ -1577,16 +1577,16 @@ Component tests, navigation tests, stale-state checks, and regression gate.
 
 #### Completion evidence
 
---evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed., --evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced., Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493
+--evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed., --evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced., Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-004, FE-005, FE-006.
 
 ---
 
 ### `FE-008` Separate frontend API clients
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-004, FE-005, FE-006, BE-005
-**Last updated:** 2026-07-31T18:09:50.812Z
+**Last updated:** 2026-08-01T22:10:15.269Z
 
 #### Description
 
@@ -1606,16 +1606,16 @@ Unit/API mock, route, browser, and regression tests.
 
 #### Completion evidence
 
---evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed.
+--evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-008.
 
 ---
 
 ### `FE-009` Isolate styles and remove global leakage
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-001, FE-004, FE-005, FE-006
-**Last updated:** 2026-07-31T19:14:28.489Z
+**Last updated:** 2026-08-01T22:10:15.271Z
 
 #### Description
 
@@ -1635,16 +1635,16 @@ Static CSS scan, browser screenshots, accessibility, and regression checks.
 
 #### Completion evidence
 
-Scoped form and table presentation rules to dashboard feature roots; shared CSS variables remain centralized. Files: client/src/styles.css, client/src/styles.test.js, PASS: static CSS isolation test and frontend API regression tests; Vite production build; desktop/mobile browser smoke checks for Sorter, SKU Image Manager, and Order Mapping; focusable labeled controls and no body overflow. No committed visual baseline exists, so pixel comparison is inconclusive., Review follow-up: wired client/src/styles.test.js into scripts/regression-gate.mjs and strengthened scoped selector assertions., PASS: integrated regression gate includes Frontend Style Isolation; all suites passed; client build passed; scoped diff check clean., Review follow-up: added client/src/test/regression.test.js for DOM rendering checks and wired front-end tests into regression gate and package.json test:client script., PASS: node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build; focused diff check clean., PASS: removed duplicate test:regression-gate script and kept only the existing regression gate command; node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build passed., PASS: scoped input/select/textarea focus-visible visibility to dashboard features; tests and build passed., PASS: removed jsdom regression test, kept core style isolation check in regression gate; build and tests passed., FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint.
+Scoped form and table presentation rules to dashboard feature roots; shared CSS variables remain centralized. Files: client/src/styles.css, client/src/styles.test.js, PASS: static CSS isolation test and frontend API regression tests; Vite production build; desktop/mobile browser smoke checks for Sorter, SKU Image Manager, and Order Mapping; focusable labeled controls and no body overflow. No committed visual baseline exists, so pixel comparison is inconclusive., Review follow-up: wired client/src/styles.test.js into scripts/regression-gate.mjs and strengthened scoped selector assertions., PASS: integrated regression gate includes Frontend Style Isolation; all suites passed; client build passed; scoped diff check clean., Review follow-up: added client/src/test/regression.test.js for DOM rendering checks and wired front-end tests into regression gate and package.json test:client script., PASS: node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build; focused diff check clean., PASS: removed duplicate test:regression-gate script and kept only the existing regression gate command; node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build passed., PASS: scoped input/select/textarea focus-visible visibility to dashboard features; tests and build passed., PASS: removed jsdom regression test, kept core style isolation check in regression gate; build and tests passed., FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-009.
 
 ---
 
 ### `FE-010` Add feature error and loading boundaries
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-003, FE-007
-**Last updated:** 2026-07-31T19:28:36.923Z
+**Last updated:** 2026-08-01T22:10:15.273Z
 
 #### Description
 
@@ -1664,16 +1664,16 @@ Browser failure injection, accessibility, route, and regression tests.
 
 #### Completion evidence
 
-Added ErrorBoundary class component wrapping each feature route in App.jsx (keyed per route to reset on switch); added aria-busy to Sorter loading state. Files: client/src/ErrorBoundary.jsx (new), client/src/App.jsx, client/src/Sorter.jsx. Regression gate 10/10 passed, Vite build passed., PASS: regression gate 10/10 suites all passed; Vite production build passed; git diff --check clean. ErrorBoundary isolates feature render crashes from sidebar/navigation. Sorter has aria-busy during loading. OrderMapping and SkuImageManager already had accessible loading states., FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed.
+Added ErrorBoundary class component wrapping each feature route in App.jsx (keyed per route to reset on switch); added aria-busy to Sorter loading state. Files: client/src/ErrorBoundary.jsx (new), client/src/App.jsx, client/src/Sorter.jsx. Regression gate 10/10 passed, Vite build passed., PASS: regression gate 10/10 suites all passed; Vite production build passed; git diff --check clean. ErrorBoundary isolates feature render crashes from sidebar/navigation. Sorter has aria-busy during loading. OrderMapping and SkuImageManager already had accessible loading states., FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-010.
 
 ---
 
 ### `FE-011` Add frontend regression tests and classify placeholders
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010
-**Last updated:** 2026-07-31T20:46:15.517Z
+**Last updated:** 2026-08-01T22:10:15.275Z
 
 #### Description
 
@@ -1693,16 +1693,16 @@ Unit, browser, accessibility, route, build, and regression checks.
 
 #### Completion evidence
 
---evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules., --evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation.
+--evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules., --evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-011.
 
 ---
 
 ### `INT-001` Inventory and contract Shopify clients
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-010
-**Last updated:** 2026-07-31T14:28:07.542Z
+**Last updated:** 2026-08-01T22:10:15.277Z
 
 #### Description
 
@@ -1722,16 +1722,16 @@ Static search, contract review, mocked request fixtures, and owner sign-off.
 
 #### Completion evidence
 
-Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md, Validated via static search of all Shopify imports, read/write operation audit, and secret value review, Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39
+Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md, Validated via static search of all Shopify imports, read/write operation audit, and secret value review, Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010.
 
 ---
 
 ### `INT-002` Define shared Shopify transport
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-001, TEST-003
-**Last updated:** 2026-07-31T14:30:58.869Z
+**Last updated:** 2026-08-01T22:10:15.279Z
 
 #### Description
 
@@ -1751,16 +1751,16 @@ Mocked integration, route, Shopify contract, redaction, and existing-app regress
 
 #### Completion evidence
 
-Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md, Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check, Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c
+Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md, Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check, Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-001, TEST-003.
 
 ---
 
 ### `INT-003` Keep Shopify business logic app-owned
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-002, OWN-002, OWN-003, OWN-004, OWN-005
-**Last updated:** 2026-07-31T14:40:43.132Z
+**Last updated:** 2026-08-01T22:10:15.281Z
 
 #### Description
 
@@ -1780,16 +1780,16 @@ Mocked integration, service unit, route, and regression tests.
 
 #### Completion evidence
 
-Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis, Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7
+Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis, Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005.
 
 ---
 
 ### `INT-004` Inventory and contract Shiprocket clients
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-010, TEST-004
-**Last updated:** 2026-07-31T14:44:04.636Z
+**Last updated:** 2026-08-01T22:10:15.283Z
 
 #### Description
 
@@ -1809,16 +1809,16 @@ Static search, synthetic provider fixtures, status tests, and owner review.
 
 #### Completion evidence
 
-Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md, Validated via static search of all Shiprocket imports, status mapping audit, and secret value review, Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b
+Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md, Validated via static search of all Shiprocket imports, status mapping audit, and secret value review, Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010, TEST-004.
 
 ---
 
 ### `INT-005` Define shared Shiprocket transport
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-004
-**Last updated:** 2026-07-31T14:46:08.864Z
+**Last updated:** 2026-08-01T22:10:15.285Z
 
 #### Description
 
@@ -1838,7 +1838,7 @@ Mocked provider tests, timeout/429/401 cases, logs, and regression gate.
 
 #### Completion evidence
 
-Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md, Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification, Commit SHA: 1e845b181d0044a42a4c780968efa1165be41371
+Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md, Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification, Commit SHA: 1e845b181d0044a42a4c780968efa1165be41371, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-004.
 
 ---
 
@@ -1874,9 +1874,9 @@ Not completed.
 ### `INT-007` Standardize retries, rate limits, and errors
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-002, INT-005
-**Last updated:** 2026-07-31T14:48:01.358Z
+**Last updated:** 2026-08-01T22:10:15.287Z
 
 #### Description
 
@@ -1896,16 +1896,16 @@ Mocked failure matrix, idempotency tests, logs, and integration regression.
 
 #### Completion evidence
 
-Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md, Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification, Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd
+Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md, Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification, Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, INT-005.
 
 ---
 
 ### `INT-008` Add deterministic integration mocks
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-002, INT-005, TEST-012
-**Last updated:** 2026-07-31T20:37:24.493Z
+**Last updated:** 2026-08-01T22:10:15.289Z
 
 #### Description
 
@@ -1925,16 +1925,16 @@ Unit/integration tests, network denial, and regression gate.
 
 #### Completion evidence
 
-Created server/src/mocks/integrationMocks.js with synthetic fixtures for Shopify & Shiprocket. Added server/src/services/providerIntegration.test.js with 12 deterministic provider tests., All 12 provider integration tests pass network-free. 11/11 regression gate suites passed., INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API.
+Created server/src/mocks/integrationMocks.js with synthetic fixtures for Shopify & Shiprocket. Added server/src/services/providerIntegration.test.js with 12 deterministic provider tests., All 12 provider integration tests pass network-free. 11/11 regression gate suites passed., INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-008.
 
 ---
 
 ### `INT-009` Remove duplicate clients after usage proof
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-003, INT-007, INT-008
-**Last updated:** 2026-07-31T20:50:39.182Z
+**Last updated:** 2026-08-01T22:10:15.291Z
 
 #### Description
 
@@ -1954,16 +1954,16 @@ Static import scan, unit/integration, route, provider mocks, and regression gate
 
 #### Completion evidence
 
---evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., --evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass.
+--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., --evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-009.
 
 ---
 
 ### `INT-010` Verify provider contracts and API-version compatibility
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** INT-008, BE-005
-**Last updated:** 2026-07-31T20:56:38.082Z
+**Last updated:** 2026-08-01T22:10:15.293Z
 
 #### Description
 
@@ -1983,7 +1983,7 @@ Mocked integration, route, status, and regression checks.
 
 #### Completion evidence
 
---changed-files server/src/services/providerIntegration.test.js, --passed-tests providerIntegration.test.js, --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js., Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186
+--changed-files server/src/services/providerIntegration.test.js, --passed-tests providerIntegration.test.js, --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js., Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-008, BE-005.
 
 ---
 
@@ -2019,9 +2019,9 @@ Not completed.
 ### `DATA-002` Document SQLite table ownership
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-003, OWN-008
-**Last updated:** 2026-07-31T14:51:08.227Z
+**Last updated:** 2026-08-01T22:10:15.295Z
 
 #### Description
 
@@ -2041,7 +2041,7 @@ Static references, schema inventory, owner review, and backup status.
 
 #### Completion evidence
 
-Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md, Validated via database.js schema review, table ownership audit, and cleanup task dependency verification, Commit SHA: 9c8e78e7ec986fdb1060079d05652d54e5af828b
+Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md, Validated via database.js schema review, table ownership audit, and cleanup task dependency verification, Commit SHA: 9c8e78e7ec986fdb1060079d05652d54e5af828b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-003, OWN-008.
 
 ---
 
@@ -2077,9 +2077,9 @@ Not completed.
 ### `DATA-004` Separate SKU audit data
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-004, OWN-009
-**Last updated:** 2026-07-31T14:53:13.155Z
+**Last updated:** 2026-08-01T22:10:15.297Z
 
 #### Description
 
@@ -2099,16 +2099,16 @@ JSONL parse, redaction, write/rotation, SKU flow, and regression tests.
 
 #### Completion evidence
 
-Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md, Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis, Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403
+Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md, Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis, Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-004, OWN-009.
 
 ---
 
 ### `DATA-005` Separate Sales Intelligence caches
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-005, OWN-009
-**Last updated:** 2026-07-31T14:55:45.965Z
+**Last updated:** 2026-08-01T22:10:15.299Z
 
 #### Description
 
@@ -2128,16 +2128,16 @@ JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regressio
 
 #### Completion evidence
 
-Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md, Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification, Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287
+Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md, Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification, Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-005, OWN-009.
 
 ---
 
 ### `DATA-006` Isolate Order Mapping PostgreSQL/migration state
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-004, OWN-003, BE-010
-**Last updated:** 2026-07-31T14:58:06.779Z
+**Last updated:** 2026-08-01T22:10:15.301Z
 
 #### Description
 
@@ -2157,7 +2157,7 @@ Schema, migration, restore, route authorization, and Order Mapping regression te
 
 #### Completion evidence
 
-Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md, Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification, Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462
+Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md, Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification, Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, OWN-003, BE-010.
 
 ---
 
@@ -2309,9 +2309,9 @@ Not completed.
 ### `DATA-012` Validate PostgreSQL backup and restore process
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-004, SAFE-007, DATA-006
-**Last updated:** 2026-07-31T15:07:10.967Z
+**Last updated:** 2026-08-01T22:10:15.303Z
 
 #### Description
 
@@ -2331,16 +2331,16 @@ Database integrity, migration, repository read, route smoke, and manual runbook 
 
 #### Completion evidence
 
-Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md, Validated via Neon backup strategy review, restore process audit, and destructive check safety verification, Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950
+Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md, Validated via Neon backup strategy review, restore process audit, and destructive check safety verification, Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, SAFE-007, DATA-006.
 
 ---
 
 ### `OPS-001` Fix or retire obsolete `scripts/dev.mjs`
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** TEST-010, OWN-001
-**Last updated:** 2026-07-31T15:11:09.845Z
+**Last updated:** 2026-08-01T22:10:15.305Z
 
 #### Description
 
@@ -2360,16 +2360,16 @@ Static script check, dry-run/process tests, documentation review, and no server 
 
 #### Completion evidence
 
-Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs, Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c
+Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs, Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-010, OWN-001.
 
 ---
 
 ### `OPS-002` Standardize startup commands
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OPS-001, BE-010
-**Last updated:** 2026-07-31T15:21:45.218Z
+**Last updated:** 2026-08-01T22:10:15.307Z
 
 #### Description
 
@@ -2389,16 +2389,16 @@ Static script checks, dry-run help, test gate, and documentation review.
 
 #### Completion evidence
 
---evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js, --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution, Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e
+--evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js, --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution, Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OPS-001, BE-010.
 
 ---
 
 ### `OPS-003` Standardize health checks
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** BE-005, OWN-006
-**Last updated:** 2026-07-31T21:02:02.096Z
+**Last updated:** 2026-08-01T22:10:15.309Z
 
 #### Description
 
@@ -2418,16 +2418,16 @@ Route tests, startup matrix, script dry-run, and security review.
 
 #### Completion evidence
 
---changed-files server/src/routes/api.js,server/src/utils/sanitize.js,server/src/routes/health.test.js,scripts/regression-gate.mjs, --passed-tests health.test.js, --evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate., Commit SHA: b2b4e56b1f528ad7d0a5501d8e3eab8ee2021640
+--changed-files server/src/routes/api.js,server/src/utils/sanitize.js,server/src/routes/health.test.js,scripts/regression-gate.mjs, --passed-tests health.test.js, --evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate., Commit SHA: b2b4e56b1f528ad7d0a5501d8e3eab8ee2021640, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-005, OWN-006.
 
 ---
 
 ### `OPS-004` Standardize diagnostics and safe observability
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-006, BE-009, SEC-006
-**Last updated:** 2026-07-31T22:07:54.797Z
+**Last updated:** 2026-08-01T22:10:15.311Z
 
 #### Description
 
@@ -2447,16 +2447,16 @@ Route/UI, redaction, size-limit, and regression checks.
 
 #### Completion evidence
 
---changed-files server/src/routes/api.js,server/src/routes/health.test.js, --passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate, --evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields., Commit SHA: ed3dbac7e924a9dec82294ba12d6bb6b595dabae, --evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree.
+--changed-files server/src/routes/api.js,server/src/routes/health.test.js, --passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate, --evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields., Commit SHA: ed3dbac7e924a9dec82294ba12d6bb6b595dabae, --evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree., Commit SHA: 7f56184ee70a1336fa468131972f6dc69b49ea96, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-009, SEC-006.
 
 ---
 
 ### `OPS-005` Review and isolate Graphify artifacts
 
 **Severity:** MEDIUM
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-009
-**Last updated:** 2026-07-31T21:07:38.271Z
+**Last updated:** 2026-08-01T22:10:15.313Z
 
 #### Description
 
@@ -2476,16 +2476,16 @@ Git inventory, reproducibility check, ignore check, and owner review.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate, --evidence Isolated Graphify runtime cache (graphify-out/cache/) and temp files (.graphify_*) in .gitignore and untracked them from git index, while preserving canonical report and graph files (GRAPH_REPORT.md, graph.json, manifest.json, graph.html)., Commit SHA: 4725ea64148387916d77fa192ab6c32c305e5917
+--changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate, --evidence Isolated Graphify runtime cache (graphify-out/cache/) and temp files (.graphify_*) in .gitignore and untracked them from git index, while preserving canonical report and graph files (GRAPH_REPORT.md, graph.json, manifest.json, graph.html)., Commit SHA: 4725ea64148387916d77fa192ab6c32c305e5917, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009.
 
 ---
 
 ### `OPS-006` Review and isolate Tokensave runtime files
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-009, SEC-003
-**Last updated:** 2026-07-31T21:43:45.622Z
+**Last updated:** 2026-08-01T22:10:15.315Z
 
 #### Description
 
@@ -2505,16 +2505,16 @@ Git status, ignore checks, tool smoke test if approved, and security review.
 
 #### Completion evidence
 
---changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules., Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec
+--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules., Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009, SEC-003.
 
 ---
 
 ### `OPS-007` Review Playwright artifacts
 
 **Severity:** LOW
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-009
-**Last updated:** 2026-07-31T21:14:22.816Z
+**Last updated:** 2026-08-01T22:10:15.317Z
 
 #### Description
 
@@ -2534,16 +2534,16 @@ File classification, test discovery, ignore checks, and owner review.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate, --evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable.
+--changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate, --evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OPS-007.
 
 ---
 
 ### `OPS-008` Review test outputs and cache artifacts
 
 **Severity:** LOW
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-009
-**Last updated:** 2026-07-31T21:24:09.080Z
+**Last updated:** 2026-08-01T22:10:15.319Z
 
 #### Description
 
@@ -2563,7 +2563,7 @@ Test discovery, Git/ignore checks, and clean checkout simulation.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets., Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9
+--changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets., Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009.
 
 ---
 
@@ -2601,7 +2601,7 @@ Not completed.
 **Severity:** MEDIUM
 **Status:** COMPLETED
 **Dependencies:** None
-**Last updated:** 2026-07-31T21:26:20.945Z
+**Last updated:** 2026-08-01T22:10:15.329Z
 
 #### Description
 
@@ -2619,16 +2619,16 @@ None
 
 #### Completion evidence
 
---passed-tests npm run arch:doctor,npm run test:architecture-ledger, --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing)., Commit SHA: d3a72162dd271f8c42c9579e3054f8921e591d93
+--passed-tests npm run arch:doctor,npm run test:architecture-ledger, --evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing)., Commit SHA: d3a72162dd271f8c42c9579e3054f8921e591d93, Phase 3B evidence reconstruction for OPS-ARCH-001: d3a72162dd271f8c42c9579e3054f8921e591d93 is the historical completion record and reconciliation validation baseline, not a newly invented implementation SHA. Clean detached-worktree validation reran npm run test:architecture-ledger (24/24 passed) and npm run arch:doctor (exit 0) at that exact remote-contained commit.
 
 ---
 
 ### `SEC-001` Assess authentication boundary
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** OWN-007, OWN-010
-**Last updated:** 2026-07-31T21:31:26.695Z
+**Last updated:** 2026-08-01T22:10:15.321Z
 
 #### Description
 
@@ -2648,16 +2648,16 @@ Static route/security review, threat model, and owner sign-off.
 
 #### Completion evidence
 
---changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies., Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0
+--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies., Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-007, OWN-010.
 
 ---
 
 ### `SEC-002` Add route authorization boundaries
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SEC-001, TEST-008
-**Last updated:** 2026-07-31T21:35:57.885Z
+**Last updated:** 2026-08-01T22:10:15.323Z
 
 #### Description
 
@@ -2677,16 +2677,16 @@ Auth unit/integration, route matrix, negative tests, security audit, and regress
 
 #### Completion evidence
 
---changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js, --passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate, --evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass., Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c
+--changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js, --passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate, --evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass., Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-001, TEST-008.
 
 ---
 
 ### `SEC-003` Correct secret handling and tracked token risk
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SAFE-005, OWN-010
-**Last updated:** 2026-07-31T21:41:10.189Z
+**Last updated:** 2026-08-01T22:10:15.325Z
 
 #### Description
 
@@ -2706,7 +2706,7 @@ Secret scan, bundle scan, auth tests, Git status, and security review.
 
 #### Completion evidence
 
---changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns., Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06
+--changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns., Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-005, OWN-010.
 
 ---
 
@@ -2771,9 +2771,9 @@ Not completed.
 ### `SEC-006` Sanitize sensitive logs and diagnostics
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATION_PENDING
 **Dependencies:** SEC-003, OWN-006
-**Last updated:** 2026-07-31T21:50:32.840Z
+**Last updated:** 2026-08-01T22:10:15.327Z
 
 #### Description
 
@@ -2793,7 +2793,7 @@ Redaction unit tests, route tests, secret scan, manual log review, and regressio
 
 #### Completion evidence
 
---changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js, --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate, --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns., Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9
+--changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js, --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate, --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns., Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-003, OWN-006.
 
 ---
 
@@ -3929,13 +3929,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-07-31T22:07:54.824Z | OPS-004 | completed | completed | shivam | --evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree. | `1bd75a31` |
-| 2026-07-31T22:05:04.810Z | OPS-004 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `554d7838` |
-| 2026-07-31T21:58:25.076Z | OPS-004 | validated | completed | shivam | --evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields. | `f5ac17ff` |
-| 2026-07-31T21:58:24.370Z | OPS-004 | implemented | validated | shivam | --passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate | `9559c099` |
-| 2026-07-31T21:58:23.681Z | OPS-004 | in_progress | implemented | shivam | --changed-files server/src/routes/api.js,server/src/routes/health.test.js | `31f9057e` |
-| 2026-07-31T21:50:49.392Z | OPS-004 | ready | in_progress | shivam | Transition to in_progress | `363cc8e2` |
-| 2026-07-31T21:50:32.853Z | SEC-006 | completed | completed | shivam | Checkpoint succeeded and verified on remote | `bf4e84b8` |
-| 2026-07-31T21:50:28.057Z | OPS-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `54f58a8a` |
-| 2026-07-31T21:50:28.026Z | SEC-006 | validated | completed | shivam | --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns. | `8f420af1` |
-| 2026-07-31T21:50:27.348Z | SEC-006 | implemented | validated | shivam | --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate | `504057e7` |
+| 2026-08-01T22:10:15.330Z | OPS-ARCH-001 | completed | completed | codex-phase3b | Phase 3B evidence reconstruction: retained completed with clean historical validation | `670afbcb` |
+| 2026-08-01T22:10:15.328Z | SEC-006 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `526877d7` |
+| 2026-08-01T22:10:15.326Z | SEC-003 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `e9b648a4` |
+| 2026-08-01T22:10:15.324Z | SEC-002 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `554b3ef9` |
+| 2026-08-01T22:10:15.322Z | SEC-001 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `e8f59016` |
+| 2026-08-01T22:10:15.320Z | OPS-008 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `d55d41c1` |
+| 2026-08-01T22:10:15.318Z | OPS-007 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `f511ed2a` |
+| 2026-08-01T22:10:15.316Z | OPS-006 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `2794a2e3` |
+| 2026-08-01T22:10:15.314Z | OPS-005 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `106af2c7` |
+| 2026-08-01T22:10:15.312Z | OPS-004 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `ff98f28f` |

@@ -128,4 +128,53 @@ Each `tasks.json` field update must be made through the ledger CLI (or a Phase 3
 
 ## Next action
 
-Review and execute Phase 3B corrective transitions.
+Run Phase 4 final integrity closure and resume normal architecture remediation.
+
+## 10. Phase 3B execution record
+
+Phase 3B corrected the Phase 3A partition before changing statuses. The Phase 3A “retain completed (52)” set actually contained 53 IDs, its 18-task validation-pending set produced only 71 assigned IDs, and seven completed tasks were omitted: `BE-001`, `SAFE-006`, `FE-004`, `DATA-002`, `DATA-004`, `OPS-003`, and `SEC-006`. `BE-004` and `FE-004` were also corrected to direct validation-pending actions because their declared application files remain untracked and Phase 3B was prohibited from committing unrelated application dirt.
+
+The corrected manifest assigned all 78 previously completed tasks exactly once:
+
+| Check | Result |
+|---|---:|
+| Unique task IDs | 78 |
+| Duplicate task IDs | 0 |
+| Missing completed task IDs | 0 |
+| Unknown task IDs | 0 |
+
+### Direct validation-pending set (20)
+
+`BE-004`, `FE-004`, `FE-008`, `FE-009`, `FE-010`, `FE-011`, `INT-008`, `INT-009`, `OPS-007`, `OWN-001`, `OWN-002`, `SAFE-001`, `SAFE-002`, `SAFE-003`, `SAFE-004`, `SAFE-005`, `SAFE-007`, `SAFE-008`, `TEST-001`, `TEST-003`.
+
+### Dependency closure additions (57)
+
+- Round 1 (32): `SAFE-006`, `TEST-002`, `TEST-004`, `TEST-005`, `TEST-006`, `TEST-007`, `TEST-008`, `TEST-009`, `TEST-010`, `TEST-011`, `TEST-012`, `OWN-003`, `OWN-004`, `OWN-005`, `OWN-006`, `OWN-007`, `OWN-008`, `OWN-009`, `OWN-010`, `BE-002`, `BE-006`, `BE-010`, `BE-011`, `FE-001`, `FE-007`, `INT-002`, `INT-003`, `INT-010`, `DATA-006`, `DATA-012`, `OPS-001`, `SEC-003`.
+- Round 2 (24): `BE-001`, `BE-003`, `BE-005`, `BE-007`, `BE-009`, `FE-002`, `FE-003`, `FE-005`, `FE-006`, `INT-001`, `INT-004`, `INT-007`, `DATA-002`, `DATA-004`, `DATA-005`, `OPS-002`, `OPS-003`, `OPS-004`, `OPS-005`, `OPS-006`, `OPS-008`, `SEC-001`, `SEC-002`, `SEC-006`.
+- Round 3 (1): `INT-005`.
+
+The closure follows the ledger's strict dependency rule: a completed task requires every dependency to have status exactly `completed`. After closure, no retained completed task has a validation-pending dependency.
+
+### Final action partition
+
+- `RETAIN_COMPLETED_WITH_EVIDENCE` (1): `OPS-ARCH-001`.
+- `MOVE_TO_VALIDATION_PENDING` (77): all other previously completed tasks listed in the direct set and closure rounds above.
+
+`OPS-ARCH-001` was retained using historical SHA `d3a72162dd271f8c42c9579e3054f8921e591d93`. That SHA exists locally and on `origin/ops/architecture-ledger-hardening`, contains every declared implementation and validation file, and is both the historical completion-record commit and the explicit reconciliation validation baseline. It is not represented as a newly discovered original implementation SHA. A detached clean worktree at that exact SHA ran `npm run test:architecture-ledger` (24/24 passed) and `npm run arch:doctor` (exit 0; history intact; 129 tasks validated; ledger healthy). `npm ci` reported four existing dependency vulnerabilities (1 low, 3 high); dependency remediation is outside Phase 3B.
+
+### Final counts and validation
+
+| Metric | Result |
+|---|---:|
+| Completed | 1 |
+| Validation pending | 77 |
+| Completed-task audit PASS | 1 |
+| Completed-task audit AUDIT_REQUIRED | 0 |
+| Completed-task audit INVALID_COMPLETION | 0 |
+
+The current suite also passed `npm run test:architecture-ledger`, `npm run arch:validate`, `npm run arch:doctor`, `npm run verify`, and `npm run test:regression-gate` (13/13). The history chain and generated Markdown report are synchronized. The Phase 3B commit SHA is recorded in Section 11.
+
+## 11. Phase 3B commit record
+
+- Reconciliation evidence/transition commit: pending until the scoped commit is created.
+- Completion-record finalization commit: pending until the real reconciliation commit SHA is known.

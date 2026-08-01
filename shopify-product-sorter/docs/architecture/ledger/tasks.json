@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-07-31T22:07:54.797Z",
+  "last_updated": "2026-08-01T22:10:15.331Z",
   "tasks": [
     {
       "id": "SAFE-001",
       "title": "Confirm recoverable Git backup",
       "description": "Remediation task SAFE-001: Confirm recoverable Git backup",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [],
       "blocking_reasons": [],
       "acceptance_criteria": [
@@ -18,22 +18,30 @@
       "validation_commands": [
         "Static: `git rev-parse`, `git show --stat`. Unit/integration: not applicable. Route/data/build/manual: verify status and ref remain unchanged."
       ],
-      "evidence": "Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main.",
+      "evidence": [
+        "Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.175Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+      "notes": "Imported from master plan. Previous raw status: COMPLETED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SAFE-002",
       "title": "Capture working-tree and baseline manifest",
       "description": "Remediation task SAFE-002: Capture working-tree and baseline manifest",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [],
       "blocking_reasons": [],
       "acceptance_criteria": [
@@ -44,22 +52,30 @@
       "validation_commands": [
         "Static: compare `git status`, `git ls-files`, and inventory counts. Data: verify no runtime files were read into the plan. Manual: review exclusions."
       ],
-      "evidence": "Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest.",
+      "evidence": [
+        "Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.177Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+      "notes": "Imported from master plan. Previous raw status: COMPLETED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SAFE-003",
       "title": "Confirm SQLite backups",
       "description": "Remediation task SAFE-003: Confirm SQLite backups",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -72,22 +88,30 @@
       "validation_commands": [
         "Data integrity check, hash comparison, restore-open test on copies, and status check."
       ],
-      "evidence": "SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity.",
+      "evidence": [
+        "SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.179Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: READY"
+      "notes": "Imported from master plan. Previous raw status: READY",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SAFE-004",
       "title": "Complete PostgreSQL/Neon backup",
       "description": "Remediation task SAFE-004: Complete PostgreSQL/Neon backup",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -100,22 +124,30 @@
       "validation_commands": [
         "Migration/schema inventory, restore test, read-only smoke queries, and no production writes."
       ],
-      "evidence": "PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore.",
+      "evidence": [
+        "PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.181Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SAFE-005",
       "title": "Encrypt secret archive",
       "description": "Remediation task SAFE-005: Encrypt secret archive",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -128,22 +160,30 @@
       "validation_commands": [
         "Security review, archive decrypt test by authorized operator, repository secret scan, and status check."
       ],
-      "evidence": "Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/.",
+      "evidence": [
+        "Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.183Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SAFE-006",
       "title": "Create off-device backup copy",
       "description": "Remediation task SAFE-006: Create off-device backup copy",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-003",
         "SAFE-004",
@@ -161,23 +201,32 @@
       "evidence": [
         "Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d)",
         "Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks.",
-        "Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3"
+        "Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T10:31:03.307Z",
+      "updated_timestamp": "2026-08-01T22:10:15.185Z",
       "started_timestamp": "2026-07-31T10:28:10.186Z",
       "implemented_timestamp": "2026-07-31T10:30:39.545Z",
       "validated_timestamp": "2026-07-31T10:30:47.678Z",
       "completed_timestamp": "2026-07-31T10:31:03.307Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+      "clean_validation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+      "completion_record_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3"
+      }
     },
     {
       "id": "SAFE-007",
       "title": "Validate restoration instructions",
       "description": "Remediation task SAFE-007: Validate restoration instructions",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-003",
         "SAFE-004",
@@ -192,22 +241,30 @@
       "validation_commands": [
         "Git status/ref, SQLite integrity, PostgreSQL schema smoke test, runtime path check, and manual sign-off."
       ],
-      "evidence": "Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/.",
+      "evidence": [
+        "Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.187Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+      "notes": "Imported from master plan. Previous raw status: BLOCKED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SAFE-008",
       "title": "Record database ownership uncertainties",
       "description": "Remediation task SAFE-008: Record database ownership uncertainties",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -219,22 +276,30 @@
       "validation_commands": [
         "Static import/reference search and owner review; no runtime writes."
       ],
-      "evidence": "Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created.",
+      "evidence": [
+        "Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.189Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "TEST-001",
       "title": "Protect sorter scoring and core logic",
       "description": "Remediation task TEST-001: Protect sorter scoring and core logic",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -247,22 +312,30 @@
       "validation_commands": [
         "Unit tests, coverage report, static import check, and sorter regression review."
       ],
-      "evidence": "Sorter scoring test suite server/src/services/sorter.test.js (11 pass).",
+      "evidence": [
+        "Sorter scoring test suite server/src/services/sorter.test.js (11 pass).",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-001."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.191Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+      "notes": "Imported from master plan. Previous raw status: COMPLETED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "TEST-002",
       "title": "Protect collection sync/apply/rollback",
       "description": "Remediation task TEST-002: Protect collection sync/apply/rollback",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-003",
         "SAFE-008"
@@ -278,23 +351,32 @@
       ],
       "evidence": [
         "Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass).",
-        "Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028"
+        "Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:40:30.981Z",
+      "updated_timestamp": "2026-08-01T22:10:15.193Z",
       "started_timestamp": "2026-07-31T08:01:56.894Z",
       "implemented_timestamp": "2026-07-31T08:01:56.971Z",
       "validated_timestamp": "2026-07-31T08:01:57.063Z",
       "completed_timestamp": "2026-07-31T15:40:30.981Z",
-      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+      "notes": "Imported from master plan. Previous raw status: COMPLETED",
+      "validation_files": [],
+      "implementation_commit_sha": "f3690e88bead0c46576d1e8002e50804b22ade42",
+      "clean_validation_commit_sha": "f3690e88bead0c46576d1e8002e50804b22ade42",
+      "completion_record_commit_sha": "f3690e88bead0c46576d1e8002e50804b22ade42",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "f3690e88bead0c46576d1e8002e50804b22ade42"
+      }
     },
     {
       "id": "TEST-003",
       "title": "Protect collection reorder contracts",
       "description": "Remediation task TEST-003: Protect collection reorder contracts",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -307,22 +389,30 @@
       "validation_commands": [
         "Route contract tests, mocked Shopify job polling, static duplicate-route scan, and compatibility review."
       ],
-      "evidence": "Collection reorder contract test suite server/src/services/collectionReorderContracts.test.js (4 pass).",
+      "evidence": [
+        "Collection reorder contract test suite server/src/services/collectionReorderContracts.test.js (4 pass).",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-003."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.195Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+      "notes": "Imported from master plan. Previous raw status: COMPLETED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "TEST-004",
       "title": "Protect Order Mapping sync/status lifecycle",
       "description": "Remediation task TEST-004: Protect Order Mapping sync/status lifecycle",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-004"
       ],
@@ -339,23 +429,32 @@
         "Starting task TEST-004: Protect Order Mapping sync/status lifecycle",
         "Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides.",
         "Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override).",
-        "Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e"
+        "Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T10:39:31.889Z",
+      "updated_timestamp": "2026-08-01T22:10:15.197Z",
       "started_timestamp": "2026-07-31T10:37:56.184Z",
       "implemented_timestamp": "2026-07-31T10:39:06.087Z",
       "validated_timestamp": "2026-07-31T10:39:12.754Z",
       "completed_timestamp": "2026-07-31T10:39:31.889Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "634ad1afdd9e400e923bb37740b78a758a4a6a2e",
+      "clean_validation_commit_sha": "634ad1afdd9e400e923bb37740b78a758a4a6a2e",
+      "completion_record_commit_sha": "634ad1afdd9e400e923bb37740b78a758a4a6a2e",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "634ad1afdd9e400e923bb37740b78a758a4a6a2e"
+      }
     },
     {
       "id": "TEST-005",
       "title": "Protect CSV import and manual overrides",
       "description": "Remediation task TEST-005: Protect CSV import and manual overrides",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-004"
       ],
@@ -372,23 +471,32 @@
         "Starting implementation of TEST-005: Protect CSV import and manual overrides",
         "Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction.",
         "Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics.",
-        "Commit SHA: 7890a0ef38dd5dec9454d0a583edafc3977c2a86"
+        "Commit SHA: 7890a0ef38dd5dec9454d0a583edafc3977c2a86",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T10:43:49.605Z",
+      "updated_timestamp": "2026-08-01T22:10:15.199Z",
       "started_timestamp": "2026-07-31T10:42:02.923Z",
       "implemented_timestamp": "2026-07-31T10:43:00.995Z",
       "validated_timestamp": "2026-07-31T10:43:08.760Z",
       "completed_timestamp": "2026-07-31T10:43:49.605Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "7890a0ef38dd5dec9454d0a583edafc3977c2a86",
+      "clean_validation_commit_sha": "7890a0ef38dd5dec9454d0a583edafc3977c2a86",
+      "completion_record_commit_sha": "7890a0ef38dd5dec9454d0a583edafc3977c2a86",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "7890a0ef38dd5dec9454d0a583edafc3977c2a86"
+      }
     },
     {
       "id": "TEST-006",
       "title": "Protect SKU media operations",
       "description": "Remediation task TEST-006: Protect SKU media operations",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -405,23 +513,32 @@
         "Starting implementation of TEST-006: Protect SKU media operations",
         "Created unit test suite server/src/services/shopifyMediaService.test.js covering SKU media scopes, duplicate product deduplication without deletion, confirm bulk deletion filtering, and audit log path verification.",
         "Ran node --test src/services/shopifyMediaService.test.js in server/. All 4 tests passed successfully.",
-        "Commit SHA: 6476c331d12e763ee13d38d8cf38265683e58cdc"
+        "Commit SHA: 6476c331d12e763ee13d38d8cf38265683e58cdc",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:10:53.549Z",
+      "updated_timestamp": "2026-08-01T22:10:15.201Z",
       "started_timestamp": "2026-07-31T11:06:20.642Z",
       "implemented_timestamp": "2026-07-31T11:10:24.872Z",
       "validated_timestamp": "2026-07-31T11:10:34.464Z",
       "completed_timestamp": "2026-07-31T11:10:53.549Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "6476c331d12e763ee13d38d8cf38265683e58cdc",
+      "clean_validation_commit_sha": "6476c331d12e763ee13d38d8cf38265683e58cdc",
+      "completion_record_commit_sha": "6476c331d12e763ee13d38d8cf38265683e58cdc",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "6476c331d12e763ee13d38d8cf38265683e58cdc"
+      }
     },
     {
       "id": "TEST-007",
       "title": "Protect Sales Intelligence API contracts",
       "description": "Remediation task TEST-007: Protect Sales Intelligence API contracts",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -438,23 +555,32 @@
         "Starting implementation of TEST-007: Protect Sales Intelligence API contracts",
         "Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting.",
         "Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully.",
-        "Commit SHA: 360d53ccd88e248acc4ecf48c5a13e9d389c10fd"
+        "Commit SHA: 360d53ccd88e248acc4ecf48c5a13e9d389c10fd",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:16:12.816Z",
+      "updated_timestamp": "2026-08-01T22:10:15.203Z",
       "started_timestamp": "2026-07-31T11:14:06.365Z",
       "implemented_timestamp": "2026-07-31T11:15:53.576Z",
       "validated_timestamp": "2026-07-31T11:16:01.763Z",
       "completed_timestamp": "2026-07-31T11:16:12.816Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "360d53ccd88e248acc4ecf48c5a13e9d389c10fd",
+      "clean_validation_commit_sha": "360d53ccd88e248acc4ecf48c5a13e9d389c10fd",
+      "completion_record_commit_sha": "360d53ccd88e248acc4ecf48c5a13e9d389c10fd",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "360d53ccd88e248acc4ecf48c5a13e9d389c10fd"
+      }
     },
     {
       "id": "TEST-008",
       "title": "Protect public route compatibility",
       "description": "Remediation task TEST-008: Protect public route compatibility",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -471,23 +597,32 @@
         "Starting implementation of TEST-008: Protect public route compatibility",
         "Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials.",
         "Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility.",
-        "Commit SHA: f42888e6b976829d84acc45ac5c9a0ecfa7671b7"
+        "Commit SHA: f42888e6b976829d84acc45ac5c9a0ecfa7671b7",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:21:49.233Z",
+      "updated_timestamp": "2026-08-01T22:10:15.205Z",
       "started_timestamp": "2026-07-31T11:18:59.964Z",
       "implemented_timestamp": "2026-07-31T11:21:27.318Z",
       "validated_timestamp": "2026-07-31T11:21:38.994Z",
       "completed_timestamp": "2026-07-31T11:21:49.233Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "f42888e6b976829d84acc45ac5c9a0ecfa7671b7",
+      "clean_validation_commit_sha": "f42888e6b976829d84acc45ac5c9a0ecfa7671b7",
+      "completion_record_commit_sha": "f42888e6b976829d84acc45ac5c9a0ecfa7671b7",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "f42888e6b976829d84acc45ac5c9a0ecfa7671b7"
+      }
     },
     {
       "id": "TEST-009",
       "title": "Protect database migration safety",
       "description": "Remediation task TEST-009: Protect database migration safety",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-003",
         "SAFE-004"
@@ -505,23 +640,32 @@
         "Starting implementation of TEST-009: Protect database migration safety",
         "Created test suite server/src/services/orderMappingMigrations.test.js asserting migration file loading, sorting, schema placeholder filling, and migration idempotency parameters.",
         "Ran node --test src/services/orderMappingMigrations.test.js in server/. All 3 tests passed successfully.",
-        "Commit SHA: 86cfc4d239e91662a9ca93b410a7d51935545195"
+        "Commit SHA: 86cfc4d239e91662a9ca93b410a7d51935545195",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:24:08.706Z",
+      "updated_timestamp": "2026-08-01T22:10:15.207Z",
       "started_timestamp": "2026-07-31T11:22:52.159Z",
       "implemented_timestamp": "2026-07-31T11:23:50.657Z",
       "validated_timestamp": "2026-07-31T11:23:57.973Z",
       "completed_timestamp": "2026-07-31T11:24:08.706Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "86cfc4d239e91662a9ca93b410a7d51935545195",
+      "clean_validation_commit_sha": "86cfc4d239e91662a9ca93b410a7d51935545195",
+      "completion_record_commit_sha": "86cfc4d239e91662a9ca93b410a7d51935545195",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "86cfc4d239e91662a9ca93b410a7d51935545195"
+      }
     },
     {
       "id": "TEST-010",
       "title": "Protect startup and environment isolation",
       "description": "Remediation task TEST-010: Protect startup and environment isolation",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -538,23 +682,32 @@
         "Starting implementation of TEST-010: Protect startup and environment isolation",
         "Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation.",
         "Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully.",
-        "Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4"
+        "Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:39:17.738Z",
+      "updated_timestamp": "2026-08-01T22:10:15.209Z",
       "started_timestamp": "2026-07-31T11:38:03.822Z",
       "implemented_timestamp": "2026-07-31T11:38:57.380Z",
       "validated_timestamp": "2026-07-31T11:39:06.019Z",
       "completed_timestamp": "2026-07-31T11:39:17.738Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "b23cb9a2f00b5e375777fad515c80198617ca3a4",
+      "clean_validation_commit_sha": "b23cb9a2f00b5e375777fad515c80198617ca3a4",
+      "completion_record_commit_sha": "b23cb9a2f00b5e375777fad515c80198617ca3a4",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "b23cb9a2f00b5e375777fad515c80198617ca3a4"
+      }
     },
     {
       "id": "TEST-011",
       "title": "Protect frontend navigation",
       "description": "Remediation task TEST-011: Protect frontend navigation",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-002"
       ],
@@ -571,23 +724,32 @@
         "Starting implementation of TEST-011: Protect frontend navigation",
         "Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic.",
         "Ran node --test src/api.test.js in client/. All 10 tests passed successfully.",
-        "Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5"
+        "Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T11:43:41.766Z",
+      "updated_timestamp": "2026-08-01T22:10:15.211Z",
       "started_timestamp": "2026-07-31T11:42:17.753Z",
       "implemented_timestamp": "2026-07-31T11:43:21.747Z",
       "validated_timestamp": "2026-07-31T11:43:29.910Z",
       "completed_timestamp": "2026-07-31T11:43:41.766Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "df88049c65d9d79ecd2ff2eb7b80b535892426e5",
+      "clean_validation_commit_sha": "df88049c65d9d79ecd2ff2eb7b80b535892426e5",
+      "completion_record_commit_sha": "df88049c65d9d79ecd2ff2eb7b80b535892426e5",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "df88049c65d9d79ecd2ff2eb7b80b535892426e5"
+      }
     },
     {
       "id": "TEST-012",
       "title": "Add integrated existing-app regression gate",
       "description": "Remediation task TEST-012: Add integrated existing-app regression gate",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-001",
         "TEST-002",
@@ -613,23 +775,32 @@
       "evidence": [
         "--evidence Created scripts/regression-gate.mjs and npm run test:regression-gate command covering 9 test suites across all application route families and core services. Implemented production credential safeguard and saved machine-readable report to test-results/regression-gate-report.json",
         "--evidence Validated via npm run test:regression-gate (9/9 suites passed, machine report verified at test-results/regression-gate-report.json)",
-        "Commit SHA: 094e208a5b8104e03b82ad5ad23f8a47444987ac"
+        "Commit SHA: 094e208a5b8104e03b82ad5ad23f8a47444987ac",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:43:47.861Z",
+      "updated_timestamp": "2026-08-01T22:10:15.213Z",
       "started_timestamp": "2026-07-31T15:42:15.596Z",
       "implemented_timestamp": "2026-07-31T15:43:20.305Z",
       "validated_timestamp": "2026-07-31T15:43:28.501Z",
       "completed_timestamp": "2026-07-31T15:43:47.861Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "e6e41918ab44115f82ac46eb5c920e22e7f07d6d",
+      "clean_validation_commit_sha": "e6e41918ab44115f82ac46eb5c920e22e7f07d6d",
+      "completion_record_commit_sha": "e6e41918ab44115f82ac46eb5c920e22e7f07d6d",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "e6e41918ab44115f82ac46eb5c920e22e7f07d6d"
+      }
     },
     {
       "id": "OWN-001",
       "title": "Establish canonical application names and statuses",
       "description": "Remediation task OWN-001: Establish canonical application names and statuses",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-008"
       ],
@@ -642,22 +813,30 @@
       "validation_commands": [
         "Static path/symbol review and owner sign-off; no runtime change."
       ],
-      "evidence": "Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created.",
+      "evidence": [
+        "Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.215Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "OWN-002",
       "title": "Define Product Sorter boundary",
       "description": "Remediation task OWN-002: Define Product Sorter boundary",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-001",
         "TEST-001"
@@ -671,22 +850,30 @@
       "validation_commands": [
         "Static dependency graph, route matrix review, test inventory, and owner sign-off."
       ],
-      "evidence": "Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created.",
+      "evidence": [
+        "Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-002."
+      ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-01T22:10:15.217Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "OWN-003",
       "title": "Classify Order Mapping versus legacy Delivery Resolution",
       "description": "Remediation task OWN-003: Classify Order Mapping versus legacy Delivery Resolution",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-008",
         "TEST-004",
@@ -705,23 +892,32 @@
         "Starting OWN-003 classification work",
         "Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md",
         "Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js",
-        "Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af"
+        "Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-008, TEST-004, TEST-005."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T12:16:20.421Z",
+      "updated_timestamp": "2026-08-01T22:10:15.219Z",
       "started_timestamp": "2026-07-31T12:11:23.941Z",
       "implemented_timestamp": "2026-07-31T12:15:33.266Z",
       "validated_timestamp": "2026-07-31T12:15:41.186Z",
       "completed_timestamp": "2026-07-31T12:16:20.421Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "77e237a2fc9b042546976255b522af9bce8381af",
+      "clean_validation_commit_sha": "77e237a2fc9b042546976255b522af9bce8381af",
+      "completion_record_commit_sha": "57e48a494fd8ed1bf1c1e7687be15fae6a1ef86b",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "77e237a2fc9b042546976255b522af9bce8381af"
+      }
     },
     {
       "id": "OWN-004",
       "title": "Define SKU Image Manager boundary",
       "description": "Remediation task OWN-004: Define SKU Image Manager boundary",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-001",
         "TEST-006"
@@ -739,23 +935,32 @@
         "Defining SKU Image Manager boundary specification",
         "Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md",
         "Validated via static imports, route matrix, and shopifyMediaService.test.js passing",
-        "Commit SHA: 43c636777b7e1e62947ee14f0cdc0b918f952445"
+        "Commit SHA: 43c636777b7e1e62947ee14f0cdc0b918f952445",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-001, TEST-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T12:27:14.568Z",
+      "updated_timestamp": "2026-08-01T22:10:15.221Z",
       "started_timestamp": "2026-07-31T12:22:22.819Z",
       "implemented_timestamp": "2026-07-31T12:26:39.137Z",
       "validated_timestamp": "2026-07-31T12:26:55.931Z",
       "completed_timestamp": "2026-07-31T12:27:14.568Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "43c636777b7e1e62947ee14f0cdc0b918f952445",
+      "clean_validation_commit_sha": "43c636777b7e1e62947ee14f0cdc0b918f952445",
+      "completion_record_commit_sha": "43c636777b7e1e62947ee14f0cdc0b918f952445",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "43c636777b7e1e62947ee14f0cdc0b918f952445"
+      }
     },
     {
       "id": "OWN-005",
       "title": "Define Actual Sales Intelligence boundary",
       "description": "Remediation task OWN-005: Define Actual Sales Intelligence boundary",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-001",
         "TEST-007"
@@ -773,23 +978,32 @@
         "Defining Actual Sales Intelligence boundary specification",
         "Defined Actual Sales Intelligence boundary specification in docs/architecture/ACTUAL_SALES_INTELLIGENCE_BOUNDARY_SPECIFICATION.md",
         "Validated via static imports, route matrix, and actualSalesService.test.js passing",
-        "Commit SHA: 4eb661e4191baa1e20f8c2cf5ab85655b0906978"
+        "Commit SHA: 4eb661e4191baa1e20f8c2cf5ab85655b0906978",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-001, TEST-007."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:14:48.558Z",
+      "updated_timestamp": "2026-08-01T22:10:15.223Z",
       "started_timestamp": "2026-07-31T13:11:35.672Z",
       "implemented_timestamp": "2026-07-31T13:14:09.131Z",
       "validated_timestamp": "2026-07-31T13:14:44.382Z",
       "completed_timestamp": "2026-07-31T13:14:48.558Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "4eb661e4191baa1e20f8c2cf5ab85655b0906978",
+      "clean_validation_commit_sha": "4eb661e4191baa1e20f8c2cf5ab85655b0906978",
+      "completion_record_commit_sha": "4eb661e4191baa1e20f8c2cf5ab85655b0906978",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "4eb661e4191baa1e20f8c2cf5ab85655b0906978"
+      }
     },
     {
       "id": "OWN-006",
       "title": "Define System Diagnostics ownership",
       "description": "Remediation task OWN-006: Define System Diagnostics ownership",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-001",
         "TEST-010"
@@ -807,23 +1021,32 @@
         "Defining System Diagnostics ownership specification",
         "Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md",
         "Validated via static route review, sensitive field audit, and data ownership distinction verified",
-        "Commit SHA: 25de38d76639b4d48e2cde564482bee7c278131f"
+        "Commit SHA: 25de38d76639b4d48e2cde564482bee7c278131f",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-001, TEST-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:23:33.388Z",
+      "updated_timestamp": "2026-08-01T22:10:15.225Z",
       "started_timestamp": "2026-07-31T13:20:55.350Z",
       "implemented_timestamp": "2026-07-31T13:23:13.517Z",
       "validated_timestamp": "2026-07-31T13:23:29.587Z",
       "completed_timestamp": "2026-07-31T13:23:33.388Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "25de38d76639b4d48e2cde564482bee7c278131f",
+      "clean_validation_commit_sha": "25de38d76639b4d48e2cde564482bee7c278131f",
+      "completion_record_commit_sha": "25de38d76639b4d48e2cde564482bee7c278131f",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "25de38d76639b4d48e2cde564482bee7c278131f"
+      }
     },
     {
       "id": "OWN-007",
       "title": "Approve route ownership matrix",
       "description": "Remediation task OWN-007: Approve route ownership matrix",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -845,23 +1068,32 @@
         "Defining data store ownership boundaries",
         "Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md",
         "Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths",
-        "Commit SHA: c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c"
+        "Commit SHA: c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:29:08.984Z",
+      "updated_timestamp": "2026-08-01T22:10:15.227Z",
       "started_timestamp": "2026-07-31T13:26:55.805Z",
       "implemented_timestamp": "2026-07-31T13:29:04.579Z",
       "validated_timestamp": "2026-07-31T13:29:04.806Z",
       "completed_timestamp": "2026-07-31T13:29:08.984Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c",
+      "clean_validation_commit_sha": "c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c",
+      "completion_record_commit_sha": "c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c"
+      }
     },
     {
       "id": "OWN-008",
       "title": "Approve data ownership matrix",
       "description": "Remediation task OWN-008: Approve data ownership matrix",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-003",
         "SAFE-004",
@@ -880,23 +1112,32 @@
         "Approving data ownership matrix",
         "Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md",
         "Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files",
-        "Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330"
+        "Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:37:09.827Z",
+      "updated_timestamp": "2026-08-01T22:10:15.229Z",
       "started_timestamp": "2026-07-31T13:32:26.173Z",
       "implemented_timestamp": "2026-07-31T13:37:05.521Z",
       "validated_timestamp": "2026-07-31T13:37:05.772Z",
       "completed_timestamp": "2026-07-31T13:37:09.827Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "87ff3ea1e36fb81e85e8da123e2a1256d022d330",
+      "clean_validation_commit_sha": "87ff3ea1e36fb81e85e8da123e2a1256d022d330",
+      "completion_record_commit_sha": "87ff3ea1e36fb81e85e8da123e2a1256d022d330",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "87ff3ea1e36fb81e85e8da123e2a1256d022d330"
+      }
     },
     {
       "id": "OWN-009",
       "title": "Approve runtime file ownership",
       "description": "Remediation task OWN-009: Approve runtime file ownership",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -917,23 +1158,32 @@
         "Defining shared Shopify transport boundary",
         "Defined complete runtime file ownership matrix in docs/architecture/RUNTIME_FILE_OWNERSHIP_MATRIX.md",
         "Validated via filesystem inventory, .gitignore review, and owner assignments for all runtime, build, cache, and external tool artifacts",
-        "Commit SHA: e370e61f093543a571ebe09449b577677e7861a2"
+        "Commit SHA: e370e61f093543a571ebe09449b577677e7861a2",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:44:43.385Z",
+      "updated_timestamp": "2026-08-01T22:10:15.231Z",
       "started_timestamp": "2026-07-31T13:41:27.312Z",
       "implemented_timestamp": "2026-07-31T13:44:39.143Z",
       "validated_timestamp": "2026-07-31T13:44:39.388Z",
       "completed_timestamp": "2026-07-31T13:44:43.385Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "e370e61f093543a571ebe09449b577677e7861a2",
+      "clean_validation_commit_sha": "e370e61f093543a571ebe09449b577677e7861a2",
+      "completion_record_commit_sha": "e370e61f093543a571ebe09449b577677e7861a2",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "e370e61f093543a571ebe09449b577677e7861a2"
+      }
     },
     {
       "id": "OWN-010",
       "title": "Approve integration and environment ownership",
       "description": "Remediation task OWN-010: Approve integration and environment ownership",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -954,23 +1204,32 @@
         "Defining environment configuration ownership",
         "Defined complete integration and environment ownership matrix in docs/architecture/INTEGRATION_ENVIRONMENT_OWNERSHIP.md",
         "Validated via static dependency search, secret-name inventory, and integration-owner review",
-        "Commit SHA: 03a2c632d37d36e9b127840508b67af99e2c87aa"
+        "Commit SHA: 03a2c632d37d36e9b127840508b67af99e2c87aa",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:49:17.613Z",
+      "updated_timestamp": "2026-08-01T22:10:15.233Z",
       "started_timestamp": "2026-07-31T13:46:11.292Z",
       "implemented_timestamp": "2026-07-31T13:49:13.454Z",
       "validated_timestamp": "2026-07-31T13:49:13.696Z",
       "completed_timestamp": "2026-07-31T13:49:17.613Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "03a2c632d37d36e9b127840508b67af99e2c87aa",
+      "clean_validation_commit_sha": "03a2c632d37d36e9b127840508b67af99e2c87aa",
+      "completion_record_commit_sha": "03a2c632d37d36e9b127840508b67af99e2c87aa",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "03a2c632d37d36e9b127840508b67af99e2c87aa"
+      }
     },
     {
       "id": "BE-001",
       "title": "Split the generic API router",
       "description": "Remediation task BE-001: Split the generic API router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-012",
         "OWN-007"
@@ -987,23 +1246,32 @@
       "evidence": [
         "--evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts.",
         "--evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js.",
-        "Commit SHA: e8c2b9f7cb43dde0ac66d20a11a5937f9f587163"
+        "Commit SHA: e8c2b9f7cb43dde0ac66d20a11a5937f9f587163",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-012, OWN-007."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:51:58.096Z",
+      "updated_timestamp": "2026-08-01T22:10:15.235Z",
       "started_timestamp": "2026-07-31T15:45:17.167Z",
       "implemented_timestamp": "2026-07-31T15:51:29.983Z",
       "validated_timestamp": "2026-07-31T15:51:39.921Z",
       "completed_timestamp": "2026-07-31T15:51:58.096Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "e8c2b9f7cb43dde0ac66d20a11a5937f9f587163",
+      "clean_validation_commit_sha": "e8c2b9f7cb43dde0ac66d20a11a5937f9f587163",
+      "completion_record_commit_sha": "62fa3e09f7d53df016f3ee574cfbd9a59d19817f",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "e8c2b9f7cb43dde0ac66d20a11a5937f9f587163"
+      }
     },
     {
       "id": "BE-002",
       "title": "Create a Sorter router",
       "description": "Remediation task BE-002: Create a Sorter router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "BE-001",
         "OWN-002"
@@ -1020,26 +1288,35 @@
       "evidence": [
         "--evidence Created dedicated Sorter router module server/src/routes/sorter.js owning all sorter/reorder endpoints without SKU or Sales Intelligence imports.",
         "--evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed.",
-        "Commit SHA: 19bdae536ce86c4bb395e581ffb3f58db62b924b"
+        "Commit SHA: 19bdae536ce86c4bb395e581ffb3f58db62b924b",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, OWN-002."
       ],
       "changed_files": [
         "server/src/routes/sorter.js",
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:01:36.955Z",
+      "updated_timestamp": "2026-08-01T22:10:15.237Z",
       "started_timestamp": "2026-07-31T15:54:07.433Z",
       "implemented_timestamp": "2026-07-31T15:55:21.498Z",
       "validated_timestamp": "2026-07-31T16:01:25.498Z",
       "completed_timestamp": "2026-07-31T16:01:36.955Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
+      "clean_validation_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
+      "completion_record_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "292e70e99ab975b1408b22e846601b6cccd99c38"
+      }
     },
     {
       "id": "BE-003",
       "title": "Create a SKU Image Manager router",
       "description": "Remediation task BE-003: Create a SKU Image Manager router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "BE-001",
         "OWN-004"
@@ -1056,26 +1333,35 @@
       "evidence": [
         "--evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed.",
         "--evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite.",
-        "Commit SHA: 641bf31046bc8f6f0f3bde8c8b487411225a6b8b"
+        "Commit SHA: 641bf31046bc8f6f0f3bde8c8b487411225a6b8b",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, OWN-004."
       ],
       "changed_files": [
         "server/src/routes/skuMedia.js",
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:07:22.600Z",
+      "updated_timestamp": "2026-08-01T22:10:15.239Z",
       "started_timestamp": "2026-07-31T16:05:24.622Z",
       "implemented_timestamp": "2026-07-31T16:06:42.100Z",
       "validated_timestamp": "2026-07-31T16:06:49.753Z",
       "completed_timestamp": "2026-07-31T16:07:22.600Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "641bf31046bc8f6f0f3bde8c8b487411225a6b8b",
+      "clean_validation_commit_sha": "641bf31046bc8f6f0f3bde8c8b487411225a6b8b",
+      "completion_record_commit_sha": "b9d899b773651b7dc267048067da53d1f8c546d9",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "641bf31046bc8f6f0f3bde8c8b487411225a6b8b"
+      }
     },
     {
       "id": "BE-004",
       "title": "Create a Sales Intelligence router",
       "description": "Remediation task BE-004: Create a Sales Intelligence router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "BE-001",
         "OWN-005"
@@ -1092,26 +1378,35 @@
       "evidence": [
         "--evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js.",
         "--evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite.",
-        "Commit SHA: d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f"
+        "Commit SHA: d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for BE-004."
       ],
       "changed_files": [
         "server/src/routes/salesIntelligence.js",
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:12:31.707Z",
+      "updated_timestamp": "2026-08-01T22:10:15.241Z",
       "started_timestamp": "2026-07-31T16:08:36.095Z",
       "implemented_timestamp": "2026-07-31T16:11:51.431Z",
       "validated_timestamp": "2026-07-31T16:11:58.116Z",
       "completed_timestamp": "2026-07-31T16:12:31.707Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f",
+      "clean_validation_commit_sha": "d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f",
+      "completion_record_commit_sha": "2b3f480ce1bb8d1f5c566be2469d8cfc80f9069d",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f"
+      }
     },
     {
       "id": "BE-005",
       "title": "Preserve existing backend URLs with adapters",
       "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "BE-001",
         "TEST-008"
@@ -1128,7 +1423,8 @@
       "evidence": [
         "--evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js.",
         "--evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed.",
-        "Commit SHA: 8003f19e0f7c2d752bd228ef69ee2ddfec6e3377"
+        "Commit SHA: 8003f19e0f7c2d752bd228ef69ee2ddfec6e3377",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, TEST-008."
       ],
       "changed_files": [
         "server/src/app.js",
@@ -1136,19 +1432,27 @@
         "server/src/app.test.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:17:42.883Z",
+      "updated_timestamp": "2026-08-01T22:10:15.243Z",
       "started_timestamp": "2026-07-31T16:16:49.899Z",
       "implemented_timestamp": "2026-07-31T16:16:58.127Z",
       "validated_timestamp": "2026-07-31T16:17:10.799Z",
       "completed_timestamp": "2026-07-31T16:17:42.883Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "8003f19e0f7c2d752bd228ef69ee2ddfec6e3377",
+      "clean_validation_commit_sha": "8003f19e0f7c2d752bd228ef69ee2ddfec6e3377",
+      "completion_record_commit_sha": "e2e720fb42ef3b1b2c26ea8a9823f7f5544c5cb9",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "8003f19e0f7c2d752bd228ef69ee2ddfec6e3377"
+      }
     },
     {
       "id": "BE-006",
       "title": "Create application-owned service boundaries",
       "description": "Remediation task BE-006: Create application-owned service boundaries",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -1169,23 +1473,32 @@
         "Extracting Shopify GraphQL client",
         "Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md",
         "Validated via static dependency graph review, layer classification, and boundary direction rules",
-        "Commit SHA: 161a62bea3a3b38dbdbac592caf8ca9d96e6b564"
+        "Commit SHA: 161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:54:16.949Z",
+      "updated_timestamp": "2026-08-01T22:10:15.245Z",
       "started_timestamp": "2026-07-31T13:52:45.801Z",
       "implemented_timestamp": "2026-07-31T13:54:12.580Z",
       "validated_timestamp": "2026-07-31T13:54:12.823Z",
       "completed_timestamp": "2026-07-31T13:54:16.949Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
+      "clean_validation_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
+      "completion_record_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564"
+      }
     },
     {
       "id": "BE-007",
       "title": "Remove hidden cross-application imports",
       "description": "Remediation task BE-007: Remove hidden cross-application imports",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "BE-006"
       ],
@@ -1201,16 +1514,25 @@
       "evidence": [
         "Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md",
         "Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests",
-        "Commit SHA: c2beccc557ad69a49bf64cd1938ceab2b422edc1"
+        "Commit SHA: c2beccc557ad69a49bf64cd1938ceab2b422edc1",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T13:56:49.858Z",
+      "updated_timestamp": "2026-08-01T22:10:15.247Z",
       "started_timestamp": "2026-07-31T13:55:30.454Z",
       "implemented_timestamp": "2026-07-31T13:56:45.292Z",
       "validated_timestamp": "2026-07-31T13:56:45.546Z",
       "completed_timestamp": "2026-07-31T13:56:49.858Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "c2beccc557ad69a49bf64cd1938ceab2b422edc1",
+      "clean_validation_commit_sha": "c2beccc557ad69a49bf64cd1938ceab2b422edc1",
+      "completion_record_commit_sha": "c2beccc557ad69a49bf64cd1938ceab2b422edc1",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "c2beccc557ad69a49bf64cd1938ceab2b422edc1"
+      }
     },
     {
       "id": "BE-008",
@@ -1239,14 +1561,19 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "BE-009",
       "title": "Standardize structured logging",
       "description": "Remediation task BE-009: Standardize structured logging",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-006",
         "BE-006"
@@ -1263,23 +1590,32 @@
       "evidence": [
         "Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md",
         "Validated via logger.js review, log consumer audit, and redaction rule verification",
-        "Commit SHA: de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99"
+        "Commit SHA: de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:00:23.009Z",
+      "updated_timestamp": "2026-08-01T22:10:15.249Z",
       "started_timestamp": "2026-07-31T13:58:58.625Z",
       "implemented_timestamp": "2026-07-31T14:00:18.759Z",
       "validated_timestamp": "2026-07-31T14:00:19.030Z",
       "completed_timestamp": "2026-07-31T14:00:23.009Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
+      "clean_validation_commit_sha": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
+      "completion_record_commit_sha": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99"
+      }
     },
     {
       "id": "BE-010",
       "title": "Isolate startup migrations and side effects",
       "description": "Remediation task BE-010: Isolate startup migrations and side effects",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-009",
         "SAFE-004"
@@ -1296,23 +1632,32 @@
       "evidence": [
         "Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md",
         "Validated via index.js review, database.js migration audit, and side-effect isolation analysis",
-        "Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108"
+        "Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-009, SAFE-004."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:09:16.443Z",
+      "updated_timestamp": "2026-08-01T22:10:15.251Z",
       "started_timestamp": "2026-07-31T14:07:33.257Z",
       "implemented_timestamp": "2026-07-31T14:09:12.123Z",
       "validated_timestamp": "2026-07-31T14:09:12.356Z",
       "completed_timestamp": "2026-07-31T14:09:16.443Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "b541301855c7e7b41f3d7647fb70fc873d8c9108",
+      "clean_validation_commit_sha": "b541301855c7e7b41f3d7647fb70fc873d8c9108",
+      "completion_record_commit_sha": "b541301855c7e7b41f3d7647fb70fc873d8c9108",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "b541301855c7e7b41f3d7647fb70fc873d8c9108"
+      }
     },
     {
       "id": "BE-011",
       "title": "Resolve duplicate collection reorder handlers",
       "description": "Remediation task BE-011: Resolve duplicate collection reorder handlers",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-003",
         "BE-002",
@@ -1330,26 +1675,35 @@
       "evidence": [
         "--evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2.",
         "--evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect.",
-        "Commit SHA: cde861527ee8a6ab1efe5008bf41f6067e5e82cd"
+        "Commit SHA: cde861527ee8a6ab1efe5008bf41f6067e5e82cd",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-003, BE-002, BE-005."
       ],
       "changed_files": [
         "server/src/routes/sorter.js",
         "server/src/app.test.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T16:21:37.721Z",
+      "updated_timestamp": "2026-08-01T22:10:15.253Z",
       "started_timestamp": "2026-07-31T16:20:40.928Z",
       "implemented_timestamp": "2026-07-31T16:20:51.623Z",
       "validated_timestamp": "2026-07-31T16:21:02.937Z",
       "completed_timestamp": "2026-07-31T16:21:37.721Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "cde861527ee8a6ab1efe5008bf41f6067e5e82cd",
+      "clean_validation_commit_sha": "cde861527ee8a6ab1efe5008bf41f6067e5e82cd",
+      "completion_record_commit_sha": "5a4c30bd386fb100f1e1f3c9fa3731f8b91a0feb",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "cde861527ee8a6ab1efe5008bf41f6067e5e82cd"
+      }
     },
     {
       "id": "FE-001",
       "title": "Extract the application shell",
       "description": "Remediation task FE-001: Extract the application shell",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-011",
         "OWN-001"
@@ -1366,23 +1720,32 @@
       "evidence": [
         "Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md",
         "Validated via App.jsx review, module registry audit, and business logic extraction mapping",
-        "Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d"
+        "Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-011, OWN-001."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:13:11.307Z",
+      "updated_timestamp": "2026-08-01T22:10:15.255Z",
       "started_timestamp": "2026-07-31T14:11:08.360Z",
       "implemented_timestamp": "2026-07-31T14:13:07.121Z",
       "validated_timestamp": "2026-07-31T14:13:07.364Z",
       "completed_timestamp": "2026-07-31T14:13:11.307Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d",
+      "clean_validation_commit_sha": "c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d",
+      "completion_record_commit_sha": "c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d"
+      }
     },
     {
       "id": "FE-002",
       "title": "Extract navigation ownership",
       "description": "Remediation task FE-002: Extract navigation ownership",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-001",
         "OWN-007"
@@ -1399,23 +1762,32 @@
       "evidence": [
         "Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md",
         "Validated via sidebar module audit, active state derivation review, and disabled label safety check",
-        "Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874"
+        "Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:15:28.266Z",
+      "updated_timestamp": "2026-08-01T22:10:15.257Z",
       "started_timestamp": "2026-07-31T14:14:14.150Z",
       "implemented_timestamp": "2026-07-31T14:15:23.966Z",
       "validated_timestamp": "2026-07-31T14:15:24.215Z",
       "completed_timestamp": "2026-07-31T14:15:28.266Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
+      "clean_validation_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
+      "completion_record_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "57a1713e33e398fe34b299f188d67a69da994874"
+      }
     },
     {
       "id": "FE-003",
       "title": "Introduce explicit routing while preserving URLs",
       "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-008",
         "FE-001"
@@ -1432,23 +1804,32 @@
       "evidence": [
         "Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md",
         "Validated via main.jsx routing review, server fallback audit, and URL preservation matrix",
-        "Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94"
+        "Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:18:47.081Z",
+      "updated_timestamp": "2026-08-01T22:10:15.259Z",
       "started_timestamp": "2026-07-31T14:16:57.530Z",
       "implemented_timestamp": "2026-07-31T14:18:42.851Z",
       "validated_timestamp": "2026-07-31T14:18:43.104Z",
       "completed_timestamp": "2026-07-31T14:18:47.081Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "754db5d20d17a7da805828bdd73748c5d9b6da94",
+      "clean_validation_commit_sha": "754db5d20d17a7da805828bdd73748c5d9b6da94",
+      "completion_record_commit_sha": "754db5d20d17a7da805828bdd73748c5d9b6da94",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "754db5d20d17a7da805828bdd73748c5d9b6da94"
+      }
     },
     {
       "id": "FE-004",
       "title": "Extract the Sorter feature",
       "description": "Remediation task FE-004: Extract the Sorter feature",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-001",
         "OWN-002",
@@ -1467,26 +1848,35 @@
       "evidence": [
         "--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable.",
         "--evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests.",
-        "Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820"
+        "Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004."
       ],
       "changed_files": [
         "client/src/Sorter.jsx",
         "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:38:08.224Z",
+      "updated_timestamp": "2026-08-01T22:10:15.261Z",
       "started_timestamp": "2026-07-31T16:25:58.935Z",
       "implemented_timestamp": "2026-07-31T17:36:19.578Z",
       "validated_timestamp": "2026-07-31T17:36:39.147Z",
       "completed_timestamp": "2026-07-31T17:38:08.224Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "beda37806619f919a99aa09ea9b4c39ec31b5820",
+      "clean_validation_commit_sha": "beda37806619f919a99aa09ea9b4c39ec31b5820",
+      "completion_record_commit_sha": "beda37806619f919a99aa09ea9b4c39ec31b5820",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "beda37806619f919a99aa09ea9b4c39ec31b5820"
+      }
     },
     {
       "id": "FE-005",
       "title": "Extract the SKU Image Manager feature",
       "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-001",
         "OWN-004",
@@ -1504,23 +1894,34 @@
       "evidence": [
         "Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md",
         "Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification",
-        "Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91"
+        "Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/sidebarModules.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:22:08.317Z",
+      "updated_timestamp": "2026-08-01T22:10:15.263Z",
       "started_timestamp": "2026-07-31T14:19:54.570Z",
       "implemented_timestamp": "2026-07-31T14:22:03.541Z",
       "validated_timestamp": "2026-07-31T14:22:03.806Z",
       "completed_timestamp": "2026-07-31T14:22:08.317Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
+      "clean_validation_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
+      "completion_record_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "d564698e2c0cd398bf05056e64f9b947e6995c91"
+      }
     },
     {
       "id": "FE-006",
       "title": "Retain Order Mapping compatibility boundary",
       "description": "Remediation task FE-006: Retain Order Mapping compatibility boundary",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-003",
         "OWN-003"
@@ -1537,23 +1938,34 @@
       "evidence": [
         "Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md",
         "Validated via OrderMapping.jsx audit, API client isolation, and state independence verification",
-        "Commit SHA: ebbcc688abffd6af81745b6e0231b5efa294c56e"
+        "Commit SHA: ebbcc688abffd6af81745b6e0231b5efa294c56e",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-003, OWN-003."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/ErrorBoundary.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:25:09.759Z",
+      "updated_timestamp": "2026-08-01T22:10:15.265Z",
       "started_timestamp": "2026-07-31T14:23:05.216Z",
       "implemented_timestamp": "2026-07-31T14:25:05.288Z",
       "validated_timestamp": "2026-07-31T14:25:05.686Z",
       "completed_timestamp": "2026-07-31T14:25:09.759Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "ebbcc688abffd6af81745b6e0231b5efa294c56e",
+      "clean_validation_commit_sha": "ebbcc688abffd6af81745b6e0231b5efa294c56e",
+      "completion_record_commit_sha": "ebbcc688abffd6af81745b6e0231b5efa294c56e",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "ebbcc688abffd6af81745b6e0231b5efa294c56e"
+      }
     },
     {
       "id": "FE-007",
       "title": "Separate application state",
       "description": "Remediation task FE-007: Separate application state",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -1571,25 +1983,36 @@
       "evidence": [
         "--evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed.",
         "--evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced.",
-        "Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493"
+        "Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-004, FE-005, FE-006."
       ],
       "changed_files": [
         "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T17:55:35.849Z",
+      "updated_timestamp": "2026-08-01T22:10:15.267Z",
       "started_timestamp": "2026-07-31T17:42:13.129Z",
       "implemented_timestamp": "2026-07-31T17:54:28.784Z",
       "validated_timestamp": "2026-07-31T17:54:43.568Z",
       "completed_timestamp": "2026-07-31T17:55:35.849Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [
+        "client/src/frontendRegression.test.js"
+      ],
+      "implementation_commit_sha": "7fed269d4dddac965b9e38ba4e299aa346bb9493",
+      "clean_validation_commit_sha": "7fed269d4dddac965b9e38ba4e299aa346bb9493",
+      "completion_record_commit_sha": "7fed269d4dddac965b9e38ba4e299aa346bb9493",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "7fed269d4dddac965b9e38ba4e299aa346bb9493"
+      }
     },
     {
       "id": "FE-008",
       "title": "Separate frontend API clients",
       "description": "Remediation task FE-008: Separate frontend API clients",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -1608,7 +2031,8 @@
       "evidence": [
         "--evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed.",
         "--evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed.",
-        "--evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed."
+        "--evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-008."
       ],
       "changed_files": [
         "client/src/api.js",
@@ -1620,19 +2044,24 @@
         "client/src/api.test.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T18:09:50.812Z",
+      "updated_timestamp": "2026-08-01T22:10:15.269Z",
       "started_timestamp": "2026-07-31T17:59:05.079Z",
       "implemented_timestamp": "2026-07-31T18:09:23.701Z",
       "validated_timestamp": "2026-07-31T18:09:24.561Z",
       "completed_timestamp": "2026-07-31T18:09:50.812Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FE-009",
       "title": "Isolate styles and remove global leakage",
       "description": "Remediation task FE-009: Isolate styles and remove global leakage",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-001",
         "FE-004",
@@ -1658,23 +2087,29 @@
         "PASS: removed duplicate test:regression-gate script and kept only the existing regression gate command; node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build passed.",
         "PASS: scoped input/select/textarea focus-visible visibility to dashboard features; tests and build passed.",
         "PASS: removed jsdom regression test, kept core style isolation check in regression gate; build and tests passed.",
-        "FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint."
+        "FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-009."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T19:14:28.489Z",
+      "updated_timestamp": "2026-08-01T22:10:15.271Z",
       "started_timestamp": "2026-07-31T18:41:31.921Z",
       "implemented_timestamp": "2026-07-31T19:03:15.167Z",
       "validated_timestamp": "2026-07-31T19:07:11.097Z",
       "completed_timestamp": "2026-07-31T19:14:28.489Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FE-010",
       "title": "Add feature error and loading boundaries",
       "description": "Remediation task FE-010: Add feature error and loading boundaries",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-003",
         "FE-007"
@@ -1691,23 +2126,29 @@
       "evidence": [
         "Added ErrorBoundary class component wrapping each feature route in App.jsx (keyed per route to reset on switch); added aria-busy to Sorter loading state. Files: client/src/ErrorBoundary.jsx (new), client/src/App.jsx, client/src/Sorter.jsx. Regression gate 10/10 passed, Vite build passed.",
         "PASS: regression gate 10/10 suites all passed; Vite production build passed; git diff --check clean. ErrorBoundary isolates feature render crashes from sidebar/navigation. Sorter has aria-busy during loading. OrderMapping and SkuImageManager already had accessible loading states.",
-        "FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed."
+        "FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T19:28:36.923Z",
+      "updated_timestamp": "2026-08-01T22:10:15.273Z",
       "started_timestamp": "2026-07-31T19:18:12.900Z",
       "implemented_timestamp": "2026-07-31T19:28:35.703Z",
       "validated_timestamp": "2026-07-31T19:28:36.327Z",
       "completed_timestamp": "2026-07-31T19:28:36.923Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FE-011",
       "title": "Add frontend regression tests and classify placeholders",
       "description": "Remediation task FE-011: Add frontend regression tests and classify placeholders",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "FE-002",
         "FE-003",
@@ -1730,23 +2171,29 @@
       ],
       "evidence": [
         "--evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules.",
-        "--evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation."
+        "--evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-011."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:46:15.517Z",
+      "updated_timestamp": "2026-08-01T22:10:15.275Z",
       "started_timestamp": "2026-07-31T20:38:52.540Z",
       "implemented_timestamp": "2026-07-31T20:45:39.883Z",
       "validated_timestamp": "2026-07-31T20:45:46.223Z",
       "completed_timestamp": "2026-07-31T20:46:15.517Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "INT-001",
       "title": "Inventory and contract Shopify clients",
       "description": "Remediation task INT-001: Inventory and contract Shopify clients",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-010"
       ],
@@ -1762,23 +2209,32 @@
       "evidence": [
         "Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md",
         "Validated via static search of all Shopify imports, read/write operation audit, and secret value review",
-        "Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39"
+        "Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:28:07.542Z",
+      "updated_timestamp": "2026-08-01T22:10:15.277Z",
       "started_timestamp": "2026-07-31T14:26:40.365Z",
       "implemented_timestamp": "2026-07-31T14:28:03.323Z",
       "validated_timestamp": "2026-07-31T14:28:03.574Z",
       "completed_timestamp": "2026-07-31T14:28:07.542Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
+      "clean_validation_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
+      "completion_record_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "1791793de9c89144a78dfff5df6d17c13ab79a39"
+      }
     },
     {
       "id": "INT-002",
       "title": "Define shared Shopify transport",
       "description": "Remediation task INT-002: Define shared Shopify transport",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-001",
         "TEST-003"
@@ -1795,23 +2251,32 @@
       "evidence": [
         "Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md",
         "Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check",
-        "Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c"
+        "Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-001, TEST-003."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:30:58.869Z",
+      "updated_timestamp": "2026-08-01T22:10:15.279Z",
       "started_timestamp": "2026-07-31T14:29:24.865Z",
       "implemented_timestamp": "2026-07-31T14:30:54.291Z",
       "validated_timestamp": "2026-07-31T14:30:54.579Z",
       "completed_timestamp": "2026-07-31T14:30:58.869Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "d862883fad6107036dbee361ff05e114e78c6d7c",
+      "clean_validation_commit_sha": "d862883fad6107036dbee361ff05e114e78c6d7c",
+      "completion_record_commit_sha": "d862883fad6107036dbee361ff05e114e78c6d7c",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "d862883fad6107036dbee361ff05e114e78c6d7c"
+      }
     },
     {
       "id": "INT-003",
       "title": "Keep Shopify business logic app-owned",
       "description": "Remediation task INT-003: Keep Shopify business logic app-owned",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-002",
         "OWN-002",
@@ -1831,23 +2296,32 @@
       "evidence": [
         "Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md",
         "Validated via business logic audit, cross-app import verification, and transport reuse analysis",
-        "Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7"
+        "Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:40:43.132Z",
+      "updated_timestamp": "2026-08-01T22:10:15.281Z",
       "started_timestamp": "2026-07-31T14:39:07.132Z",
       "implemented_timestamp": "2026-07-31T14:40:38.971Z",
       "validated_timestamp": "2026-07-31T14:40:39.216Z",
       "completed_timestamp": "2026-07-31T14:40:43.132Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "605678c1eaea3f117312cf144bbc8da4b21332a7",
+      "clean_validation_commit_sha": "605678c1eaea3f117312cf144bbc8da4b21332a7",
+      "completion_record_commit_sha": "605678c1eaea3f117312cf144bbc8da4b21332a7",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "605678c1eaea3f117312cf144bbc8da4b21332a7"
+      }
     },
     {
       "id": "INT-004",
       "title": "Inventory and contract Shiprocket clients",
       "description": "Remediation task INT-004: Inventory and contract Shiprocket clients",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-010",
         "TEST-004"
@@ -1864,23 +2338,32 @@
       "evidence": [
         "Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md",
         "Validated via static search of all Shiprocket imports, status mapping audit, and secret value review",
-        "Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b"
+        "Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010, TEST-004."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:44:04.636Z",
+      "updated_timestamp": "2026-08-01T22:10:15.283Z",
       "started_timestamp": "2026-07-31T14:42:11.147Z",
       "implemented_timestamp": "2026-07-31T14:44:00.068Z",
       "validated_timestamp": "2026-07-31T14:44:00.315Z",
       "completed_timestamp": "2026-07-31T14:44:04.636Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
+      "clean_validation_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
+      "completion_record_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "f22a5af78e06cd4888f951fe2f767510e77c1d7b"
+      }
     },
     {
       "id": "INT-005",
       "title": "Define shared Shiprocket transport",
       "description": "Remediation task INT-005: Define shared Shiprocket transport",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-004"
       ],
@@ -1896,16 +2379,25 @@
       "evidence": [
         "Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md",
         "Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification",
-        "Commit SHA: 1e845b181d0044a42a4c780968efa1165be41371"
+        "Commit SHA: 1e845b181d0044a42a4c780968efa1165be41371",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-004."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:46:08.864Z",
+      "updated_timestamp": "2026-08-01T22:10:15.285Z",
       "started_timestamp": "2026-07-31T14:45:23.303Z",
       "implemented_timestamp": "2026-07-31T14:46:04.784Z",
       "validated_timestamp": "2026-07-31T14:46:05.022Z",
       "completed_timestamp": "2026-07-31T14:46:08.864Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "1e845b181d0044a42a4c780968efa1165be41371",
+      "clean_validation_commit_sha": "1e845b181d0044a42a4c780968efa1165be41371",
+      "completion_record_commit_sha": "1e845b181d0044a42a4c780968efa1165be41371",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "1e845b181d0044a42a4c780968efa1165be41371"
+      }
     },
     {
       "id": "INT-006",
@@ -1936,14 +2428,19 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "INT-007",
       "title": "Standardize retries, rate limits, and errors",
       "description": "Remediation task INT-007: Standardize retries, rate limits, and errors",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-002",
         "INT-005"
@@ -1960,23 +2457,32 @@
       "evidence": [
         "Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md",
         "Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification",
-        "Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd"
+        "Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, INT-005."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:48:01.358Z",
+      "updated_timestamp": "2026-08-01T22:10:15.287Z",
       "started_timestamp": "2026-07-31T14:47:11.033Z",
       "implemented_timestamp": "2026-07-31T14:47:57.226Z",
       "validated_timestamp": "2026-07-31T14:47:57.477Z",
       "completed_timestamp": "2026-07-31T14:48:01.358Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "4bd0e530c6751f784eb37101490187bf217deefd",
+      "clean_validation_commit_sha": "4bd0e530c6751f784eb37101490187bf217deefd",
+      "completion_record_commit_sha": "4bd0e530c6751f784eb37101490187bf217deefd",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "4bd0e530c6751f784eb37101490187bf217deefd"
+      }
     },
     {
       "id": "INT-008",
       "title": "Add deterministic integration mocks",
       "description": "Remediation task INT-008: Add deterministic integration mocks",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-002",
         "INT-005",
@@ -1994,23 +2500,29 @@
       "evidence": [
         "Created server/src/mocks/integrationMocks.js with synthetic fixtures for Shopify & Shiprocket. Added server/src/services/providerIntegration.test.js with 12 deterministic provider tests.",
         "All 12 provider integration tests pass network-free. 11/11 regression gate suites passed.",
-        "INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API."
+        "INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:37:24.493Z",
+      "updated_timestamp": "2026-08-01T22:10:15.289Z",
       "started_timestamp": "2026-07-31T20:32:54.267Z",
       "implemented_timestamp": "2026-07-31T20:37:24.299Z",
       "validated_timestamp": "2026-07-31T20:37:24.392Z",
       "completed_timestamp": "2026-07-31T20:37:24.493Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "INT-009",
       "title": "Remove duplicate clients after usage proof",
       "description": "Remediation task INT-009: Remove duplicate clients after usage proof",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-003",
         "INT-007",
@@ -2027,23 +2539,29 @@
       ],
       "evidence": [
         "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass.",
-        "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass."
+        "--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-009."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:50:39.182Z",
+      "updated_timestamp": "2026-08-01T22:10:15.291Z",
       "started_timestamp": "2026-07-31T20:47:11.922Z",
       "implemented_timestamp": "2026-07-31T20:50:25.182Z",
       "validated_timestamp": "2026-07-31T20:50:31.827Z",
       "completed_timestamp": "2026-07-31T20:50:39.182Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "INT-010",
       "title": "Verify provider contracts and API-version compatibility",
       "description": "Remediation task INT-010: Verify provider contracts and API-version compatibility",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "INT-008",
         "BE-005"
@@ -2061,16 +2579,25 @@
         "--changed-files server/src/services/providerIntegration.test.js",
         "--passed-tests providerIntegration.test.js",
         "--evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js.",
-        "Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186"
+        "Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-008, BE-005."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T20:56:38.082Z",
+      "updated_timestamp": "2026-08-01T22:10:15.293Z",
       "started_timestamp": "2026-07-31T20:51:26.058Z",
       "implemented_timestamp": "2026-07-31T20:54:51.334Z",
       "validated_timestamp": "2026-07-31T20:54:58.536Z",
       "completed_timestamp": "2026-07-31T20:56:38.082Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "4f6d26d90d40f68f5446a9237844afab11912186",
+      "clean_validation_commit_sha": "4f6d26d90d40f68f5446a9237844afab11912186",
+      "completion_record_commit_sha": "4f6d26d90d40f68f5446a9237844afab11912186",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "4f6d26d90d40f68f5446a9237844afab11912186"
+      }
     },
     {
       "id": "DATA-001",
@@ -2101,14 +2628,19 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+      "notes": "Imported from master plan. Previous raw status: BLOCKED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-002",
       "title": "Document SQLite table ownership",
       "description": "Remediation task DATA-002: Document SQLite table ownership",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-003",
         "OWN-008"
@@ -2125,16 +2657,27 @@
       "evidence": [
         "Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md",
         "Validated via database.js schema review, table ownership audit, and cleanup task dependency verification",
-        "Commit SHA: 9c8e78e7ec986fdb1060079d05652d54e5af828b"
+        "Commit SHA: 9c8e78e7ec986fdb1060079d05652d54e5af828b",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-003, OWN-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:51:08.227Z",
+      "updated_timestamp": "2026-08-01T22:10:15.295Z",
       "started_timestamp": "2026-07-31T14:49:57.413Z",
       "implemented_timestamp": "2026-07-31T14:51:04.120Z",
       "validated_timestamp": "2026-07-31T14:51:04.360Z",
       "completed_timestamp": "2026-07-31T14:51:08.227Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [
+        "server/src/services/orderMappingMigrations.test.js"
+      ],
+      "implementation_commit_sha": "9c8e78e7ec986fdb1060079d05652d54e5af828b",
+      "clean_validation_commit_sha": "9c8e78e7ec986fdb1060079d05652d54e5af828b",
+      "completion_record_commit_sha": "9c8e78e7ec986fdb1060079d05652d54e5af828b",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "9c8e78e7ec986fdb1060079d05652d54e5af828b"
+      }
     },
     {
       "id": "DATA-003",
@@ -2164,14 +2707,19 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-004",
       "title": "Separate SKU audit data",
       "description": "Remediation task DATA-004: Separate SKU audit data",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-004",
         "OWN-009"
@@ -2188,23 +2736,34 @@
       "evidence": [
         "Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md",
         "Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis",
-        "Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403"
+        "Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-004, OWN-009."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:53:13.155Z",
+      "updated_timestamp": "2026-08-01T22:10:15.297Z",
       "started_timestamp": "2026-07-31T14:52:11.657Z",
       "implemented_timestamp": "2026-07-31T14:53:09.061Z",
       "validated_timestamp": "2026-07-31T14:53:09.301Z",
       "completed_timestamp": "2026-07-31T14:53:13.155Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [
+        "server/src/services/actualSalesService.test.js"
+      ],
+      "implementation_commit_sha": "6b31f143a685f979ef45b76f60213abae1911403",
+      "clean_validation_commit_sha": "6b31f143a685f979ef45b76f60213abae1911403",
+      "completion_record_commit_sha": "6b31f143a685f979ef45b76f60213abae1911403",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "6b31f143a685f979ef45b76f60213abae1911403"
+      }
     },
     {
       "id": "DATA-005",
       "title": "Separate Sales Intelligence caches",
       "description": "Remediation task DATA-005: Separate Sales Intelligence caches",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-005",
         "OWN-009"
@@ -2221,23 +2780,32 @@
       "evidence": [
         "Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md",
         "Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification",
-        "Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287"
+        "Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-005, OWN-009."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:55:45.965Z",
+      "updated_timestamp": "2026-08-01T22:10:15.299Z",
       "started_timestamp": "2026-07-31T14:54:44.806Z",
       "implemented_timestamp": "2026-07-31T14:55:41.867Z",
       "validated_timestamp": "2026-07-31T14:55:42.107Z",
       "completed_timestamp": "2026-07-31T14:55:45.965Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "28e6715046cc385bf23ace99c9641157430ba287",
+      "clean_validation_commit_sha": "28e6715046cc385bf23ace99c9641157430ba287",
+      "completion_record_commit_sha": "28e6715046cc385bf23ace99c9641157430ba287",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "28e6715046cc385bf23ace99c9641157430ba287"
+      }
     },
     {
       "id": "DATA-006",
       "title": "Isolate Order Mapping PostgreSQL/migration state",
       "description": "Remediation task DATA-006: Isolate Order Mapping PostgreSQL/migration state",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-004",
         "OWN-003",
@@ -2255,16 +2823,25 @@
       "evidence": [
         "Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md",
         "Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification",
-        "Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462"
+        "Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, OWN-003, BE-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T14:58:06.779Z",
+      "updated_timestamp": "2026-08-01T22:10:15.301Z",
       "started_timestamp": "2026-07-31T14:56:49.438Z",
       "implemented_timestamp": "2026-07-31T14:58:02.753Z",
       "validated_timestamp": "2026-07-31T14:58:03.004Z",
       "completed_timestamp": "2026-07-31T14:58:06.779Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "78223a36a373dc47d6c05327b1be10e14364a462",
+      "clean_validation_commit_sha": "78223a36a373dc47d6c05327b1be10e14364a462",
+      "completion_record_commit_sha": "78223a36a373dc47d6c05327b1be10e14364a462",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "78223a36a373dc47d6c05327b1be10e14364a462"
+      }
     },
     {
       "id": "DATA-007",
@@ -2293,7 +2870,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-008",
@@ -2328,7 +2910,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-009",
@@ -2357,7 +2944,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-010",
@@ -2395,7 +2987,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-011",
@@ -2427,14 +3024,19 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DATA-012",
       "title": "Validate PostgreSQL backup and restore process",
       "description": "Remediation task DATA-012: Validate PostgreSQL backup and restore process",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-004",
         "SAFE-007",
@@ -2452,23 +3054,32 @@
       "evidence": [
         "Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md",
         "Validated via Neon backup strategy review, restore process audit, and destructive check safety verification",
-        "Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950"
+        "Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, SAFE-007, DATA-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:07:10.967Z",
+      "updated_timestamp": "2026-08-01T22:10:15.303Z",
       "started_timestamp": "2026-07-31T15:05:41.316Z",
       "implemented_timestamp": "2026-07-31T15:07:06.825Z",
       "validated_timestamp": "2026-07-31T15:07:07.080Z",
       "completed_timestamp": "2026-07-31T15:07:10.967Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "1ee6ca297aefa6c6dd7748a228a750460499a950",
+      "clean_validation_commit_sha": "1ee6ca297aefa6c6dd7748a228a750460499a950",
+      "completion_record_commit_sha": "1ee6ca297aefa6c6dd7748a228a750460499a950",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "1ee6ca297aefa6c6dd7748a228a750460499a950"
+      }
     },
     {
       "id": "OPS-001",
       "title": "Fix or retire obsolete `scripts/dev.mjs`",
       "description": "Remediation task OPS-001: Fix or retire obsolete `scripts/dev.mjs`",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "TEST-010",
         "OWN-001"
@@ -2485,23 +3096,32 @@
       "evidence": [
         "Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md",
         "Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs",
-        "Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c"
+        "Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-010, OWN-001."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:11:09.845Z",
+      "updated_timestamp": "2026-08-01T22:10:15.305Z",
       "started_timestamp": "2026-07-31T15:08:24.194Z",
       "implemented_timestamp": "2026-07-31T15:11:05.703Z",
       "validated_timestamp": "2026-07-31T15:11:05.958Z",
       "completed_timestamp": "2026-07-31T15:11:09.845Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
+      "clean_validation_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
+      "completion_record_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c"
+      }
     },
     {
       "id": "OPS-002",
       "title": "Standardize startup commands",
       "description": "Remediation task OPS-002: Standardize startup commands",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OPS-001",
         "BE-010"
@@ -2518,23 +3138,32 @@
       "evidence": [
         "--evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js",
         "--evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution",
-        "Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e"
+        "Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OPS-001, BE-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T15:21:45.218Z",
+      "updated_timestamp": "2026-08-01T22:10:15.307Z",
       "started_timestamp": "2026-07-31T15:18:48.305Z",
       "implemented_timestamp": "2026-07-31T15:21:12.981Z",
       "validated_timestamp": "2026-07-31T15:21:19.750Z",
       "completed_timestamp": "2026-07-31T15:21:45.218Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a",
+      "clean_validation_commit_sha": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a",
+      "completion_record_commit_sha": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a"
+      }
     },
     {
       "id": "OPS-003",
       "title": "Standardize health checks",
       "description": "Remediation task OPS-003: Standardize health checks",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "BE-005",
         "OWN-006"
@@ -2552,23 +3181,35 @@
         "--changed-files server/src/routes/api.js,server/src/utils/sanitize.js,server/src/routes/health.test.js,scripts/regression-gate.mjs",
         "--passed-tests health.test.js",
         "--evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate.",
-        "Commit SHA: b2b4e56b1f528ad7d0a5501d8e3eab8ee2021640"
+        "Commit SHA: b2b4e56b1f528ad7d0a5501d8e3eab8ee2021640",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-005, OWN-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:02:02.096Z",
+      "updated_timestamp": "2026-08-01T22:10:15.309Z",
       "started_timestamp": "2026-07-31T20:57:57.628Z",
       "implemented_timestamp": "2026-07-31T21:01:18.281Z",
       "validated_timestamp": "2026-07-31T21:01:26.058Z",
       "completed_timestamp": "2026-07-31T21:02:02.096Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [
+        "server/src/mocks/integrationMocks.js",
+        "server/src/services/providerIntegration.test.js"
+      ],
+      "implementation_commit_sha": "85e50fbfc6cfa43b33157aa2d760724464e18bf7",
+      "clean_validation_commit_sha": "85e50fbfc6cfa43b33157aa2d760724464e18bf7",
+      "completion_record_commit_sha": "85e50fbfc6cfa43b33157aa2d760724464e18bf7",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "85e50fbfc6cfa43b33157aa2d760724464e18bf7"
+      }
     },
     {
       "id": "OPS-004",
       "title": "Standardize diagnostics and safe observability",
       "description": "Remediation task OPS-004: Standardize diagnostics and safe observability",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-006",
         "BE-009",
@@ -2588,23 +3229,33 @@
         "--passed-tests node --test server/src/routes/health.test.js server/src/utils/sanitize.test.js,npm run verify,npm run test:regression-gate",
         "--evidence Standardized health and provider diagnostics with bounded redacted error details, explicit application and provider status indicators, response size coverage, and preserved existing Shopify debug fields.",
         "Commit SHA: ed3dbac7e924a9dec82294ba12d6bb6b595dabae",
-        "--evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree."
+        "--evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree.",
+        "Commit SHA: 7f56184ee70a1336fa468131972f6dc69b49ea96",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-009, SEC-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T22:07:54.797Z",
+      "updated_timestamp": "2026-08-01T22:10:15.311Z",
       "started_timestamp": "2026-07-31T21:50:49.376Z",
       "implemented_timestamp": "2026-07-31T21:58:23.663Z",
       "validated_timestamp": "2026-07-31T21:58:24.353Z",
-      "completed_timestamp": "2026-07-31T22:07:54.797Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "completed_timestamp": "2026-07-31T22:07:59.812Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "7f56184ee70a1336fa468131972f6dc69b49ea96",
+      "clean_validation_commit_sha": "7f56184ee70a1336fa468131972f6dc69b49ea96",
+      "completion_record_commit_sha": "7f56184ee70a1336fa468131972f6dc69b49ea96",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "7f56184ee70a1336fa468131972f6dc69b49ea96"
+      }
     },
     {
       "id": "OPS-005",
       "title": "Review and isolate Graphify artifacts",
       "description": "Remediation task OPS-005: Review and isolate Graphify artifacts",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-009"
       ],
@@ -2621,23 +3272,32 @@
         "--changed-files .gitignore",
         "--passed-tests npm run verify,npm run test:regression-gate",
         "--evidence Isolated Graphify runtime cache (graphify-out/cache/) and temp files (.graphify_*) in .gitignore and untracked them from git index, while preserving canonical report and graph files (GRAPH_REPORT.md, graph.json, manifest.json, graph.html).",
-        "Commit SHA: 4725ea64148387916d77fa192ab6c32c305e5917"
+        "Commit SHA: 4725ea64148387916d77fa192ab6c32c305e5917",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:07:38.271Z",
+      "updated_timestamp": "2026-08-01T22:10:15.313Z",
       "started_timestamp": "2026-07-31T21:05:04.040Z",
       "implemented_timestamp": "2026-07-31T21:07:00.349Z",
       "validated_timestamp": "2026-07-31T21:07:09.828Z",
       "completed_timestamp": "2026-07-31T21:07:38.271Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "4725ea64148387916d77fa192ab6c32c305e5917",
+      "clean_validation_commit_sha": "4725ea64148387916d77fa192ab6c32c305e5917",
+      "completion_record_commit_sha": "4725ea64148387916d77fa192ab6c32c305e5917",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "4725ea64148387916d77fa192ab6c32c305e5917"
+      }
     },
     {
       "id": "OPS-006",
       "title": "Review and isolate Tokensave runtime files",
       "description": "Remediation task OPS-006: Review and isolate Tokensave runtime files",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-009",
         "SEC-003"
@@ -2655,23 +3315,32 @@
         "--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
         "--evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules.",
-        "Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec"
+        "Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009, SEC-003."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:43:45.622Z",
+      "updated_timestamp": "2026-08-01T22:10:15.315Z",
       "started_timestamp": "2026-07-31T21:42:19.103Z",
       "implemented_timestamp": "2026-07-31T21:43:11.598Z",
       "validated_timestamp": "2026-07-31T21:43:19.650Z",
       "completed_timestamp": "2026-07-31T21:43:45.622Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "3519c7c3158cef6051b59cf0548f0fd1047775ec",
+      "clean_validation_commit_sha": "3519c7c3158cef6051b59cf0548f0fd1047775ec",
+      "completion_record_commit_sha": "3519c7c3158cef6051b59cf0548f0fd1047775ec",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "3519c7c3158cef6051b59cf0548f0fd1047775ec"
+      }
     },
     {
       "id": "OPS-007",
       "title": "Review Playwright artifacts",
       "description": "Remediation task OPS-007: Review Playwright artifacts",
       "severity": "LOW",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-009"
       ],
@@ -2687,23 +3356,29 @@
       "evidence": [
         "--changed-files .gitignore",
         "--passed-tests npm run verify,npm run test:regression-gate",
-        "--evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable."
+        "--evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable.",
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OPS-007."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:14:22.816Z",
+      "updated_timestamp": "2026-08-01T22:10:15.317Z",
       "started_timestamp": "2026-07-31T21:12:47.313Z",
       "implemented_timestamp": "2026-07-31T21:14:08.202Z",
       "validated_timestamp": "2026-07-31T21:14:15.114Z",
       "completed_timestamp": "2026-07-31T21:14:22.816Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "OPS-008",
       "title": "Review test outputs and cache artifacts",
       "description": "Remediation task OPS-008: Review test outputs and cache artifacts",
       "severity": "LOW",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-009"
       ],
@@ -2720,16 +3395,25 @@
         "--changed-files .gitignore",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
         "--evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets.",
-        "Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9"
+        "Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:24:09.080Z",
+      "updated_timestamp": "2026-08-01T22:10:15.319Z",
       "started_timestamp": "2026-07-31T21:20:40.465Z",
       "implemented_timestamp": "2026-07-31T21:23:38.195Z",
       "validated_timestamp": "2026-07-31T21:23:44.856Z",
       "completed_timestamp": "2026-07-31T21:24:09.080Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "294d9763555f0fc66e1f2f7a5f548b3fdaad41c9",
+      "clean_validation_commit_sha": "294d9763555f0fc66e1f2f7a5f548b3fdaad41c9",
+      "completion_record_commit_sha": "294d9763555f0fc66e1f2f7a5f548b3fdaad41c9",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "294d9763555f0fc66e1f2f7a5f548b3fdaad41c9"
+      }
     },
     {
       "id": "OPS-009",
@@ -2758,7 +3442,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "OPS-ARCH-001",
@@ -2773,23 +3462,53 @@
       "evidence": [
         "--passed-tests npm run arch:doctor,npm run test:architecture-ledger",
         "--evidence Verified operational architecture ledger integrity via doctor diagnostic checks and automated architecture ledger test suite (24/24 passing).",
-        "Commit SHA: d3a72162dd271f8c42c9579e3054f8921e591d93"
+        "Commit SHA: d3a72162dd271f8c42c9579e3054f8921e591d93",
+        "Phase 3B evidence reconstruction for OPS-ARCH-001: d3a72162dd271f8c42c9579e3054f8921e591d93 is the historical completion record and reconciliation validation baseline, not a newly invented implementation SHA. Clean detached-worktree validation reran npm run test:architecture-ledger (24/24 passed) and npm run arch:doctor (exit 0) at that exact remote-contained commit."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:26:20.945Z",
+      "updated_timestamp": "2026-08-01T22:10:15.329Z",
       "started_timestamp": "2026-07-31T21:25:16.233Z",
       "implemented_timestamp": "2026-07-31T21:25:42.253Z",
       "validated_timestamp": "2026-07-31T21:25:53.773Z",
-      "completed_timestamp": "2026-07-31T21:26:20.945Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "completed_timestamp": "2026-08-01T22:10:15.329Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "d3a72162dd271f8c42c9579e3054f8921e591d93",
+      "clean_validation_commit_sha": "d3a72162dd271f8c42c9579e3054f8921e591d93",
+      "completion_record_commit_sha": "d3a72162dd271f8c42c9579e3054f8921e591d93",
+      "validation_results": {
+        "passed": true,
+        "overallStatus": "PASSED",
+        "implementation_commit_sha": "d3a72162dd271f8c42c9579e3054f8921e591d93",
+        "tested_commit": "d3a72162dd271f8c42c9579e3054f8921e591d93",
+        "timestamp": "2026-08-01T22:01:35.236Z",
+        "commands": [
+          {
+            "command": "npm run test:architecture-ledger",
+            "exit_code": 0,
+            "result": "24 tests passed"
+          },
+          {
+            "command": "npm run arch:doctor",
+            "exit_code": 0,
+            "result": "History chain intact; 129 tasks validated; ledger healthy"
+          }
+        ]
+      }
     },
     {
       "id": "SEC-001",
       "title": "Assess authentication boundary",
       "description": "Remediation task SEC-001: Assess authentication boundary",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "OWN-007",
         "OWN-010"
@@ -2807,23 +3526,32 @@
         "--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
         "--evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies.",
-        "Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0"
+        "Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-007, OWN-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:31:26.695Z",
+      "updated_timestamp": "2026-08-01T22:10:15.321Z",
       "started_timestamp": "2026-07-31T21:28:43.435Z",
       "implemented_timestamp": "2026-07-31T21:30:41.362Z",
       "validated_timestamp": "2026-07-31T21:30:56.702Z",
       "completed_timestamp": "2026-07-31T21:31:26.695Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "a7ad4eaf660311e185c096b29387eaf4e133d3d0",
+      "clean_validation_commit_sha": "a7ad4eaf660311e185c096b29387eaf4e133d3d0",
+      "completion_record_commit_sha": "a7ad4eaf660311e185c096b29387eaf4e133d3d0",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "a7ad4eaf660311e185c096b29387eaf4e133d3d0"
+      }
     },
     {
       "id": "SEC-002",
       "title": "Add route authorization boundaries",
       "description": "Remediation task SEC-002: Add route authorization boundaries",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SEC-001",
         "TEST-008"
@@ -2841,23 +3569,32 @@
         "--changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js",
         "--passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate",
         "--evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass.",
-        "Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c"
+        "Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-001, TEST-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:35:57.885Z",
+      "updated_timestamp": "2026-08-01T22:10:15.323Z",
       "started_timestamp": "2026-07-31T21:32:37.817Z",
       "implemented_timestamp": "2026-07-31T21:35:13.853Z",
       "validated_timestamp": "2026-07-31T21:35:20.926Z",
       "completed_timestamp": "2026-07-31T21:35:57.885Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
+      "clean_validation_commit_sha": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
+      "completion_record_commit_sha": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c"
+      }
     },
     {
       "id": "SEC-003",
       "title": "Correct secret handling and tracked token risk",
       "description": "Remediation task SEC-003: Correct secret handling and tracked token risk",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SAFE-005",
         "OWN-010"
@@ -2875,16 +3612,25 @@
         "--changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md",
         "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
         "--evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns.",
-        "Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06"
+        "Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-005, OWN-010."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:41:10.189Z",
+      "updated_timestamp": "2026-08-01T22:10:15.325Z",
       "started_timestamp": "2026-07-31T21:37:52.489Z",
       "implemented_timestamp": "2026-07-31T21:40:06.319Z",
       "validated_timestamp": "2026-07-31T21:40:20.903Z",
       "completed_timestamp": "2026-07-31T21:41:10.189Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
+      "clean_validation_commit_sha": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
+      "completion_record_commit_sha": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06"
+      }
     },
     {
       "id": "SEC-004",
@@ -2912,7 +3658,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SEC-005",
@@ -2941,14 +3692,19 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SEC-006",
       "title": "Sanitize sensitive logs and diagnostics",
       "description": "Remediation task SEC-006: Sanitize sensitive logs and diagnostics",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validation_pending",
       "dependencies": [
         "SEC-003",
         "OWN-006"
@@ -2966,16 +3722,27 @@
         "--changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js",
         "--passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate",
         "--evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns.",
-        "Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9"
+        "Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9",
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-003, OWN-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T21:50:32.840Z",
+      "updated_timestamp": "2026-08-01T22:10:15.327Z",
       "started_timestamp": "2026-07-31T21:46:48.715Z",
       "implemented_timestamp": "2026-07-31T21:50:26.803Z",
       "validated_timestamp": "2026-07-31T21:50:27.332Z",
       "completed_timestamp": "2026-07-31T21:50:32.840Z",
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [
+        "server/src/services/shopifyMediaService.test.js"
+      ],
+      "implementation_commit_sha": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697",
+      "clean_validation_commit_sha": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697",
+      "completion_record_commit_sha": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697"
+      }
     },
     {
       "id": "SEC-007",
@@ -3004,7 +3771,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SEC-008",
@@ -3033,7 +3805,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "SEC-009",
@@ -3062,7 +3839,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-001",
@@ -3092,7 +3874,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-002",
@@ -3121,7 +3908,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-003",
@@ -3154,7 +3946,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-004",
@@ -3184,7 +3981,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-005",
@@ -3213,7 +4015,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-006",
@@ -3247,7 +4054,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-007",
@@ -3276,7 +4088,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-008",
@@ -3306,7 +4123,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-009",
@@ -3335,7 +4157,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-010",
@@ -3364,7 +4191,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "DOC-011",
@@ -3392,7 +4224,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-001",
@@ -3425,7 +4262,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+      "notes": "Imported from master plan. Previous raw status: BLOCKED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-002",
@@ -3457,7 +4299,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+      "notes": "Imported from master plan. Previous raw status: BLOCKED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-003",
@@ -3486,7 +4333,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-004",
@@ -3514,7 +4366,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-005",
@@ -3543,7 +4400,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-006",
@@ -3573,7 +4435,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-007",
@@ -3601,7 +4468,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-008",
@@ -3630,7 +4502,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "CLEAN-009",
@@ -3660,7 +4537,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-001",
@@ -3689,7 +4571,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-002",
@@ -3718,7 +4605,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-003",
@@ -3748,7 +4640,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-004",
@@ -3778,7 +4675,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-005",
@@ -3806,7 +4708,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-006",
@@ -3839,7 +4746,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-007",
@@ -3869,7 +4781,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "META-008",
@@ -3898,7 +4815,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+      "notes": "Imported from master plan. Previous raw status: DEFERRED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-001",
@@ -3926,7 +4848,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-002",
@@ -3957,7 +4884,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-003",
@@ -3987,7 +4919,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-004",
@@ -4024,7 +4961,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-005",
@@ -4071,7 +5013,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-006",
@@ -4099,7 +5046,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-007",
@@ -4132,7 +5084,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     },
     {
       "id": "FINAL-008",
@@ -4166,7 +5123,12 @@
       "implemented_timestamp": null,
       "validated_timestamp": null,
       "completed_timestamp": null,
-      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED",
+      "validation_files": [],
+      "implementation_commit_sha": null,
+      "clean_validation_commit_sha": null,
+      "completion_record_commit_sha": null,
+      "validation_results": null
     }
   ]
 }
