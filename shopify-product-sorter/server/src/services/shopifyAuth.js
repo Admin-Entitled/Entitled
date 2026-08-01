@@ -157,3 +157,10 @@ export function getCachedTokenStatus() {
     lastAuthError: lastAuthError ? lastAuthError.message : null,
   };
 }
+
+export function resetShopifyAuthCache() {
+  cachedAccessToken = null;
+  cachedExpiresAt = 0;
+  inFlightTokenRequest = null;
+  lastAuthError = null;
+}

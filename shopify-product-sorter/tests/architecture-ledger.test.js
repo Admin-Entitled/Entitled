@@ -5,6 +5,7 @@ import path from 'path';
 import crypto from 'crypto';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { preflightSuite, runPreflight } from '../scripts/regression-gate.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -335,7 +336,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
     setupFixture();
     assert.throws(() => {
       execSync(`node ${CLI_PATH} checkpoint TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
-    }, /must be in 'validated' status/i);
+    }, /must be in validated status/i);
   });
 
   it('maintains deterministic output on repeated generation', () => {
@@ -633,4 +634,132 @@ describe('Architecture Ledger Automation Test Suite', () => {
     const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
     assert.match(res, /Recommended Next:\s+OWN-003/);
   });
+
+  describe("Checkpoint and Preflight Hardening Suite", () => {
+    it("blocks checkpoint when untracked implementation file exists (UNTRACKED_IMPLEMENTATION_FILE)", () => {
+      setupFixture();
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test User\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@example.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      execSync("node " + CLI_PATH + " start TEST-002", { cwd: tmpDir, stdio: "pipe" });
+      execSync("node " + CLI_PATH + " implement TEST-002", { cwd: tmpDir, stdio: "pipe" });
+      execSync("node " + CLI_PATH + " validate-task TEST-002", { cwd: tmpDir, stdio: "pipe" });
+
+      fs.mkdirSync(path.join(tmpDir, "server/src"), { recursive: true });
+      fs.writeFileSync(path.join(tmpDir, "server/src/untrackedImpl.js"), "console.log(\"test\");");
+
+      assert.throws(() => {
+        execSync("node " + CLI_PATH + " checkpoint TEST-002", { cwd: tmpDir, encoding: "utf-8", stdio: "pipe" });
+      }, /UNTRACKED_IMPLEMENTATION_FILE/i);
+    });
+
+    it("blocks checkpoint when declared validation file is untracked (UNTRACKED_DECLARED_FILE)", () => {
+      const { ledgerDir } = setupFixture();
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      const t2 = ledger.tasks.find(t => t.id === "TEST-002");
+      t2.status = "validated";
+      t2.validation_files = ["server/src/untrackedVal.js"];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test User\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@example.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      fs.mkdirSync(path.join(tmpDir, "server/src"), { recursive: true });
+      fs.writeFileSync(path.join(tmpDir, "server/src/untrackedVal.js"), "// untracked");
+
+      assert.throws(() => {
+        execSync("node " + CLI_PATH + " checkpoint TEST-002", { cwd: tmpDir, encoding: "utf-8", stdio: "pipe" });
+      }, /UNTRACKED_DECLARED_FILE/i);
+    });
+
+    it("blocks checkpoint when declared file is absent from HEAD (FILE_ABSENT_FROM_HEAD / MISSING_DECLARED_FILE)", () => {
+      const { ledgerDir } = setupFixture();
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      const t2 = ledger.tasks.find(t => t.id === "TEST-002");
+      t2.status = "validated";
+      t2.files_changed = ["server/src/absentFile.js"];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test User\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@example.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      assert.throws(() => {
+        execSync("node " + CLI_PATH + " checkpoint TEST-002", { cwd: tmpDir, encoding: "utf-8", stdio: "pipe" });
+      }, /(MISSING_DECLARED_FILE|FILE_ABSENT_FROM_HEAD)/i);
+    });
+
+    it("returns PASS and is idempotent when checkpointing already completed task", () => {
+      setupFixture();
+      const out = execSync("node " + CLI_PATH + " checkpoint TEST-001", { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(out, /COMMITTED-STATE VALIDATION: PASS/);
+    });
+
+    it("preflightSuite flags missing test file (MISSING_TEST_FILE)", () => {
+      const res = preflightSuite({ name: "Fake Suite", file: "server/src/services/nonExistent.test.js" }, tmpDir);
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.category, "MISSING_TEST_FILE");
+    });
+
+    it("preflightSuite flags untracked test file (UNTRACKED_TEST_FILE)", () => {
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      fs.mkdirSync(path.join(tmpDir, "server/src/services"), { recursive: true });
+      const testFile = "server/src/services/untracked.test.js";
+      fs.writeFileSync(path.join(tmpDir, testFile), "console.log(\"test\");");
+
+      const res = preflightSuite({ name: "Untracked Suite", file: testFile }, tmpDir);
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.category, "UNTRACKED_TEST_FILE");
+    });
+
+    it("preflightSuite flags file absent from HEAD (NOT_PRESENT_IN_HEAD)", () => {
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test User\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@example.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      fs.mkdirSync(path.join(tmpDir, "server/src/services"), { recursive: true });
+      const baseFile = "server/src/services/base.test.js";
+      fs.writeFileSync(path.join(tmpDir, baseFile), "// base");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      const newFile = "server/src/services/stagedOnly.test.js";
+      fs.writeFileSync(path.join(tmpDir, newFile), "// staged only");
+      execSync("git add " + newFile, { cwd: tmpDir, stdio: "pipe" });
+
+      const res = preflightSuite({ name: "Staged Suite", file: newFile }, tmpDir);
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.category, "NOT_PRESENT_IN_HEAD");
+    });
+
+    it("preflightSuite flags live production opt-in (ENVIRONMENT_SAFETY_FAILURE)", () => {
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test User\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@example.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      fs.mkdirSync(path.join(tmpDir, "server/src/services"), { recursive: true });
+      const unsafeFile = "server/src/services/unsafe.test.js";
+      fs.writeFileSync(path.join(tmpDir, unsafeFile), "process.env.ALLOW_PROD_TEST_RUN = \"true\";");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      const res = preflightSuite({ name: "Unsafe Suite", file: unsafeFile }, tmpDir);
+      assert.strictEqual(res.valid, false);
+      assert.strictEqual(res.category, "ENVIRONMENT_SAFETY_FAILURE");
+    });
+  });
+
 });
