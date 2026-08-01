@@ -1128,6 +1128,300 @@ function cmdCheckpoint(taskId) {
   console.log(`==============================================\n`);
 }
 
+function cmdAuditCompleted() {
+  const ledger = loadTasks();
+  const historyLines = fs.existsSync(HISTORY_PATH)
+    ? fs.readFileSync(HISTORY_PATH, 'utf-8').split('\n').filter(Boolean)
+    : [];
+  const historyEntries = historyLines.map(l => {
+    try { return JSON.parse(l); } catch { return null; }
+  }).filter(Boolean);
+
+  // Build tasks map for dependency lookups
+  const tasksMap = new Map(ledger.tasks.map(t => [t.id, t]));
+  const ledgerSha = runCmd('git rev-parse HEAD', { allowError: true }) || 'unknown';
+
+  const completedTasks = ledger.tasks.filter(t => t.status === 'completed');
+
+  // Phase 1 fields that indicate modern completion
+  const PHASE1_FIELDS = ['implementation_commit_sha', 'clean_validation_commit_sha', 'completion_record_commit_sha', 'validation_results'];
+
+  function hasPhase1Metadata(task) {
+    return PHASE1_FIELDS.some(f => task[f] != null && task[f] !== undefined);
+  }
+
+  function shaExistsOnRemote(sha) {
+    if (!sha) return false;
+    try {
+      runCmd(`git cat-file -e "${sha}"`);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function shaExistsOnOrigin(sha) {
+    if (!sha) return false;
+    try {
+      runCmd(`git branch -r --contains "${sha}"`, { allowError: true });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function fileExistsAtSha(sha, filePath) {
+    if (!sha) return false;
+    try {
+      runCmd(`git cat-file -e "${sha}:${filePath}"`, { stdio: 'pipe' });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function getHistoryForTask(taskId) {
+    return historyEntries.filter(e => e.task_id === taskId);
+  }
+
+  function taskHasCompletionTransition(taskId) {
+    const events = getHistoryForTask(taskId);
+    return events.some(e => e.new_status === 'completed');
+  }
+
+  function checkDependenciesComplete(task) {
+    if (!task.dependencies || task.dependencies.length === 0) return null;
+    for (const depId of task.dependencies) {
+      const dep = tasksMap.get(depId);
+      if (!dep) return { check: 'dependencies_complete', passed: false, detail: `Dependency ${depId} not found` };
+      if (dep.status !== 'completed') return { check: 'dependencies_complete', passed: false, detail: `Dependency ${depId} has status '${dep.status}'` };
+    }
+    return { check: 'dependencies_complete', passed: true };
+  }
+
+  function checkEvidence(task) {
+    const hasEvidence = task.evidence && (
+      Array.isArray(task.evidence) ? task.evidence.length > 0 : String(task.evidence).trim().length > 0
+    );
+    return { check: 'evidence_exists', passed: !!hasEvidence };
+  }
+
+  function checkChangedFiles(task) {
+    const { changedFiles } = normalizeTaskFiles(task);
+    return { check: 'changed_files_populated', passed: changedFiles.length > 0 };
+  }
+
+  function checkValidationFiles(task) {
+    const { validationFiles } = normalizeTaskFiles(task);
+    // validation_files are only required if task has validation_commands
+    const hasValidationCommands = task.validation_commands && task.validation_commands.length > 0;
+    if (!hasValidationCommands) {
+      return { check: 'validation_files_populated', passed: true, detail: 'No validation_commands defined, skipping' };
+    }
+    return { check: 'validation_files_populated', passed: validationFiles.length > 0 };
+  }
+
+  function checkImplSha(task) {
+    return { check: 'implementation_commit_sha_exists', passed: !!task.implementation_commit_sha };
+  }
+
+  function checkImplShaLocal(task) {
+    if (!task.implementation_commit_sha) return { check: 'implementation_sha_exists_locally', passed: false };
+    return { check: 'implementation_sha_exists_locally', passed: shaExistsOnRemote(task.implementation_commit_sha) };
+  }
+
+  function checkImplShaRemote(task) {
+    if (!task.implementation_commit_sha) return { check: 'implementation_sha_exists_on_remote', passed: false };
+    return { check: 'implementation_sha_exists_on_remote', passed: shaExistsOnOrigin(task.implementation_commit_sha) };
+  }
+
+  function checkDeclaredFilesAtImplSha(task) {
+    if (!task.implementation_commit_sha) return { check: 'declared_files_exist_at_impl_sha', passed: false };
+    const { changedFiles, validationFiles } = normalizeTaskFiles(task);
+    const allFiles = [...new Set([...changedFiles, ...validationFiles])];
+    if (allFiles.length === 0) return { check: 'declared_files_exist_at_impl_sha', passed: true, detail: 'No declared files' };
+    const missing = allFiles.filter(f => !fileExistsAtSha(task.implementation_commit_sha, f));
+    if (missing.length > 0) return { check: 'declared_files_exist_at_impl_sha', passed: false, detail: `Missing: ${missing.join(', ')}` };
+    return { check: 'declared_files_exist_at_impl_sha', passed: true };
+  }
+
+  function checkCleanValSha(task) {
+    if (!task.clean_validation_commit_sha) return { check: 'clean_validation_sha_matches', passed: false };
+    const matches = task.clean_validation_commit_sha === task.implementation_commit_sha;
+    return { check: 'clean_validation_sha_matches', passed: matches };
+  }
+
+  function checkValidationPassed(task) {
+    if (!task.validation_results) return { check: 'validation_results_passed', passed: false };
+    // Support both formats: { passed: true } (Phase 1+) and { overallStatus: 'PASSED' } (pre-Phase 1)
+    const passed = task.validation_results.passed === true || task.validation_results.overallStatus === 'PASSED';
+    return { check: 'validation_results_passed', passed };
+  }
+
+  function checkValidationRefImplSha(task) {
+    if (!task.validation_results || !task.implementation_commit_sha) return { check: 'validation_results_ref_impl_sha', passed: false };
+    return { check: 'validation_results_ref_impl_sha', passed: task.validation_results.implementation_commit_sha === task.implementation_commit_sha };
+  }
+
+  function checkCompletionRecordSha(task) {
+    return { check: 'completion_record_sha_exists', passed: !!task.completion_record_commit_sha };
+  }
+
+  function checkCompletionRecordRemote(task) {
+    if (!task.completion_record_commit_sha) return { check: 'completion_record_sha_exists_on_remote', passed: false };
+    return { check: 'completion_record_sha_exists_on_remote', passed: shaExistsOnOrigin(task.completion_record_commit_sha) };
+  }
+
+  function checkHistoryTransitions(task) {
+    const hasCompletion = taskHasCompletionTransition(task.id);
+    return { check: 'has_history_transitions', passed: hasCompletion };
+  }
+
+  function checkDirtyWorktree(task) {
+    // A task should not depend solely on dirty/untracked files
+    const { changedFiles } = normalizeTaskFiles(task);
+    if (changedFiles.length === 0) return { check: 'not_only_dirty_worktree', passed: true, detail: 'No changed_files declared' };
+    // If implementation_commit_sha exists, the worktree was clean at that point
+    if (task.implementation_commit_sha) return { check: 'not_only_dirty_worktree', passed: true };
+    return { check: 'not_only_dirty_worktree', passed: false, detail: 'No implementation commit, may depend on dirty worktree' };
+  }
+
+  const results = [];
+
+  for (const task of completedTasks) {
+    const checks = [
+      checkDependenciesComplete(task),
+      checkEvidence(task),
+      checkChangedFiles(task),
+      checkValidationFiles(task),
+      checkImplSha(task),
+      checkImplShaLocal(task),
+      checkImplShaRemote(task),
+      checkDeclaredFilesAtImplSha(task),
+      checkCleanValSha(task),
+      checkValidationPassed(task),
+      checkValidationRefImplSha(task),
+      checkCompletionRecordSha(task),
+      checkCompletionRecordRemote(task),
+      checkHistoryTransitions(task),
+      checkDirtyWorktree(task),
+    ].filter(Boolean);
+
+    const checksObj = {};
+    const failedChecks = [];
+    for (const c of checks) {
+      checksObj[c.check] = { passed: c.passed, ...(c.detail ? { detail: c.detail } : {}) };
+      if (!c.passed) failedChecks.push(c.check);
+    }
+
+    // Classification logic
+    // Contradictions = hard failures that prove completion is invalid
+    const CONTRADICTION_CHECKS = new Set([
+      'dependencies_complete',
+      'has_history_transitions',
+    ]);
+
+    // Metadata-missing checks = missing Phase 1 fields, not hard failures
+    const METADATA_CHECKS = new Set([
+      'changed_files_populated',
+      'validation_files_populated',
+      'validation_results_ref_impl_sha',
+    ]);
+
+    let classification;
+    const reasons = [];
+    const hasModernMetadata = hasPhase1Metadata(task);
+
+    // Determine contradictions vs metadata gaps
+    const contradictionFails = failedChecks.filter(c => CONTRADICTION_CHECKS.has(c));
+    const metadataFails = failedChecks.filter(c => METADATA_CHECKS.has(c));
+
+    // Phase 1 validation checks are contradictions ONLY if the field is present
+    // but invalid (not just absent)
+    if (failedChecks.includes('validation_results_passed') && hasModernMetadata &&
+        task.validation_results && (task.validation_results.passed === false ||
+        (task.validation_results.overallStatus && task.validation_results.overallStatus !== 'PASSED'))) {
+      contradictionFails.push('validation_results_passed');
+    }
+    if (failedChecks.includes('implementation_sha_exists_locally') && hasModernMetadata &&
+        task.implementation_commit_sha) {
+      contradictionFails.push('implementation_sha_exists_locally');
+    }
+    if (failedChecks.includes('implementation_sha_exists_on_remote') && hasModernMetadata &&
+        task.implementation_commit_sha) {
+      contradictionFails.push('implementation_sha_exists_on_remote');
+    }
+    if (failedChecks.includes('clean_validation_sha_matches') && hasModernMetadata &&
+        task.clean_validation_commit_sha != null) {
+      contradictionFails.push('clean_validation_sha_matches');
+    }
+    if (failedChecks.includes('declared_files_exist_at_impl_sha') && hasModernMetadata &&
+        task.implementation_commit_sha) {
+      contradictionFails.push('declared_files_exist_at_impl_sha');
+    }
+
+    if (contradictionFails.length > 0) {
+      classification = 'INVALID_COMPLETION';
+      reasons.push(...contradictionFails.map(c => `Failed: ${c}`));
+    } else if (!hasModernMetadata || metadataFails.length > 0 || failedChecks.length > 0) {
+      // Historical task or task with missing metadata
+      classification = 'AUDIT_REQUIRED';
+      if (failedChecks.length > 0) {
+        reasons.push(`Missing or incomplete: ${failedChecks.join(', ')}`);
+      } else {
+        reasons.push('Historical task lacks Phase 1 metadata fields');
+      }
+    } else {
+      // All checks pass
+      classification = 'PASS';
+    }
+
+    // Build declared files list
+    const { changedFiles, validationFiles } = normalizeTaskFiles(task);
+    const declaredFiles = [...new Set([...changedFiles, ...validationFiles])];
+
+    results.push({
+      id: task.id,
+      classification,
+      reasons,
+      implementation_commit_sha: task.implementation_commit_sha || null,
+      clean_validation_commit_sha: task.clean_validation_commit_sha || null,
+      completion_record_commit_sha: task.completion_record_commit_sha || null,
+      declared_files: declaredFiles,
+      checks: checksObj,
+    });
+  }
+
+  // Build report
+  const counts = { PASS: 0, AUDIT_REQUIRED: 0, INVALID_COMPLETION: 0 };
+  for (const r of results) counts[r.classification]++;
+
+  const report = {
+    generated_at: new Date().toISOString(),
+    ledger_commit_sha: ledgerSha,
+    total_completed_tasks: results.length,
+    counts,
+    tasks: results,
+  };
+
+  // Write report
+  const reportDir = path.join(REPO_ROOT, 'test-results');
+  if (!fs.existsSync(reportDir)) fs.mkdirSync(reportDir, { recursive: true });
+  const reportPath = path.join(reportDir, 'architecture-completed-task-audit.json');
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
+
+  // Print summary
+  console.log(`\n=== Completed Task Audit ===`);
+  console.log(`Total completed: ${results.length}`);
+  console.log(`PASS:             ${counts.PASS}`);
+  console.log(`AUDIT_REQUIRED:   ${counts.AUDIT_REQUIRED}`);
+  console.log(`INVALID_COMPLETION: ${counts.INVALID_COMPLETION}`);
+  console.log(`Report: ${reportPath}\n`);
+
+  return report;
+}
+
+
 function cmdHistory(taskId) {
   if (!fs.existsSync(HISTORY_PATH)) {
     console.log('No history found');
@@ -1198,10 +1492,13 @@ try {
       const res = syncObsidianMemory();
       console.log(res.success ? `✓ Synced Obsidian to ${res.path}` : `⚠ Obsidian sync skipped: ${res.reason}`);
       break;
+    case 'audit-completed':
+      cmdAuditCompleted();
+      break;
     default:
       console.log(`Architecture Ledger CLI
 Usage: node scripts/architecture-ledger.mjs <command> [args]
-Commands: doctor, status, resume, show, start, implement, validate-task, complete, block, ready, defer, history, generate, validate, checkpoint, sync-obsidian, reconcile, next`);
+Commands: doctor, status, resume, show, start, implement, validate-task, complete, block, ready, defer, history, generate, validate, checkpoint, audit-completed, sync-obsidian, reconcile, next`);
   }
 } catch (err) {
   console.error(`✕ Error: ${err.message}`);

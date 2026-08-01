@@ -800,4 +800,453 @@ describe('Architecture Ledger Automation Test Suite', () => {
     });
   });
 
+  describe("Completed Task Audit Suite", () => {
+    function setupAuditFixture(tasksOverride = [], historyOverride = null) {
+      const ledgerDir = path.join(tmpDir, 'docs', 'architecture', 'ledger');
+      const snapDir = path.join(ledgerDir, 'snapshots');
+      fs.mkdirSync(snapDir, { recursive: true });
+
+      const baseTasks = [
+        {
+          id: 'TEST-001',
+          title: 'Prerequisite Task',
+          description: 'First task',
+          severity: 'HIGH',
+          status: 'completed',
+          dependencies: [],
+          blocking_reasons: [],
+          acceptance_criteria: ['Pass unit tests'],
+          validation_commands: ['npm test'],
+          evidence: 'Proof of pass',
+          changed_files: [],
+          created_timestamp: '2026-07-29T00:00:00Z',
+          updated_timestamp: '2026-07-31T00:00:00Z',
+          started_timestamp: '2026-07-29T00:00:00Z',
+          implemented_timestamp: '2026-07-30T00:00:00Z',
+          validated_timestamp: '2026-07-31T00:00:00Z',
+          completed_timestamp: '2026-07-31T00:00:00Z',
+          notes: 'Pre-completed fixture'
+        },
+        {
+          id: 'TEST-002',
+          title: 'Dependent Task',
+          description: 'Second task depending on TEST-001',
+          severity: 'MEDIUM',
+          status: 'ready',
+          dependencies: ['TEST-001'],
+          blocking_reasons: [],
+          acceptance_criteria: ['Complete integration'],
+          validation_commands: ['npm run validate'],
+          evidence: '',
+          changed_files: [],
+          created_timestamp: '2026-07-29T00:00:00Z',
+          updated_timestamp: '2026-07-31T00:00:00Z',
+          started_timestamp: null,
+          implemented_timestamp: null,
+          validated_timestamp: null,
+          completed_timestamp: null,
+          notes: 'Ready fixture'
+        },
+        ...tasksOverride
+      ];
+
+      const tasksPayload = {
+        version: '1.0.0',
+        last_updated: '2026-07-31T00:00:00Z',
+        tasks: baseTasks
+      };
+
+      fs.writeFileSync(path.join(ledgerDir, 'tasks.json'), JSON.stringify(tasksPayload, null, 2));
+
+      let prevHash = '0'.repeat(64);
+      const computeHash = (e) => {
+        const payload = {
+          timestamp: e.timestamp, task_id: e.task_id,
+          previous_status: e.previous_status, new_status: e.new_status,
+          reason: e.reason, evidence_summary: e.evidence_summary || '',
+          branch: e.branch || '', actor: e.actor || '',
+          previous_entry_hash: e.previous_entry_hash
+        };
+        const sortedKeys = Object.keys(payload).sort();
+        const sortedObj = {};
+        for (const k of sortedKeys) sortedObj[k] = payload[k];
+        return crypto.createHash('sha256').update(JSON.stringify(sortedObj)).digest('hex');
+      };
+
+      const genEntry = {
+        timestamp: '2026-07-29T00:00:00Z', task_id: 'SYSTEM-GENESIS',
+        previous_status: 'none', new_status: 'initialized',
+        reason: 'Genesis fixture', evidence_summary: 'Init',
+        branch: 'test', actor: 'test', previous_entry_hash: prevHash
+      };
+      genEntry.current_entry_hash = computeHash(genEntry);
+      prevHash = genEntry.current_entry_hash;
+
+      const test1Entry = {
+        timestamp: '2026-07-31T00:00:00Z', task_id: 'TEST-001',
+        previous_status: 'ready', new_status: 'completed',
+        reason: 'Fixture completed', evidence_summary: 'Proof of pass',
+        branch: 'test', actor: 'test', previous_entry_hash: prevHash
+      };
+      test1Entry.current_entry_hash = computeHash(test1Entry);
+
+      const historyContent = historyOverride !== null
+        ? historyOverride
+        : [JSON.stringify(genEntry), JSON.stringify(test1Entry)].join('\n') + '\n';
+
+      fs.writeFileSync(path.join(ledgerDir, 'history.jsonl'), historyContent);
+
+      const schemaSrc = path.join(REPO_ROOT, 'docs', 'architecture', 'ledger', 'schema.json');
+      if (fs.existsSync(schemaSrc)) {
+        fs.copyFileSync(schemaSrc, path.join(ledgerDir, 'schema.json'));
+      }
+
+      try {
+        execSync(`node ${CLI_PATH} generate`, { cwd: tmpDir, encoding: 'utf-8' });
+      } catch (e) {}
+
+      return { ledgerDir, snapDir };
+    }
+
+    function runAudit() {
+      const out = execSync(`node ${CLI_PATH} audit-completed`, { cwd: tmpDir, encoding: 'utf-8' });
+      const reportPath = path.join(tmpDir, 'test-results', 'architecture-completed-task-audit.json');
+      return JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+    }
+
+    it("classifies valid completed task as PASS", () => {
+      // Init git repo in tmpDir first so we can get its HEAD SHA
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      // Create a file so there is a real commit
+      fs.writeFileSync(path.join(tmpDir, "placeholder.txt"), "init");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "AUDIT-001", title: "Full Phase 1 Task", description: "Complete", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["placeholder.txt"],
+        validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: "2026-07-29T00:00:00Z", implemented_timestamp: "2026-07-30T00:00:00Z",
+        validated_timestamp: "2026-07-31T00:00:00Z", completed_timestamp: "2026-07-31T00:00:00Z",
+        notes: "", implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      // Build extra history entry for AUDIT-001
+      const ledgerDir = path.join(tmpDir, "docs", "architecture", "ledger");
+      const historyPath = path.join(ledgerDir, "history.jsonl");
+      const existingHistory = fs.readFileSync(historyPath, "utf-8").trim();
+      const entry = {
+        timestamp: "2026-07-31T00:00:00Z", task_id: "AUDIT-001",
+        previous_status: "validated", new_status: "completed",
+        reason: "Completed", evidence_summary: "Done",
+        branch: "test", actor: "test",
+        previous_entry_hash: "0".repeat(64)
+      };
+      // Compute hash
+      const payload = { timestamp: entry.timestamp, task_id: entry.task_id,
+        previous_status: entry.previous_status, new_status: entry.new_status,
+        reason: entry.reason, evidence_summary: entry.evidence_summary,
+        branch: entry.branch, actor: entry.actor,
+        previous_entry_hash: entry.previous_entry_hash };
+      const sortedKeys = Object.keys(payload).sort();
+      const sortedObj = {};
+      for (const k of sortedKeys) sortedObj[k] = payload[k];
+      entry.current_entry_hash = crypto.createHash("sha256").update(JSON.stringify(sortedObj)).digest("hex");
+      fs.writeFileSync(historyPath, existingHistory + "\n" + JSON.stringify(entry) + "\n");
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-001");
+      assert.strictEqual(task.classification, "PASS");
+      assert.deepStrictEqual(task.reasons, []);
+      assert.strictEqual(report.counts.PASS, 1);
+    });
+
+    it("classifies task without Phase 1 metadata as AUDIT_REQUIRED", () => {
+      setupAuditFixture();
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "TEST-001");
+      assert.strictEqual(task.classification, "AUDIT_REQUIRED");
+      assert.ok(task.reasons.length > 0);
+      assert.ok(report.counts.AUDIT_REQUIRED >= 1);
+    });
+
+    it("classifies task with incomplete dependency as INVALID_COMPLETION", () => {
+      const sha = execSync("git rev-parse HEAD", { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
+      setupAuditFixture([{
+        id: "AUDIT-002", title: "Bad Deps", description: "Incomplete dep", severity: "HIGH",
+        status: "completed", dependencies: ["TEST-002"], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["docs/architecture/ledger/tasks.json"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-002");
+      assert.strictEqual(task.classification, "INVALID_COMPLETION");
+      assert.ok(task.reasons.some(r => r.includes("dependencies_complete")));
+    });
+
+    it("classifies task with missing implementation commit as AUDIT_REQUIRED", () => {
+      setupAuditFixture([{
+        id: "AUDIT-003", title: "No SHA", description: "Missing impl sha", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: [], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: ""
+      }]);
+
+      // Add history entry for AUDIT-003
+      const ledgerDir = path.join(tmpDir, "docs", "architecture", "ledger");
+      const historyPath = path.join(ledgerDir, "history.jsonl");
+      const existingHistory = fs.readFileSync(historyPath, "utf-8").trim();
+      const entry = {
+        timestamp: "2026-07-31T00:00:00Z", task_id: "AUDIT-003",
+        previous_status: "validated", new_status: "completed",
+        reason: "Completed", evidence_summary: "Done",
+        branch: "test", actor: "test",
+        previous_entry_hash: "0".repeat(64)
+      };
+      const payload = { timestamp: entry.timestamp, task_id: entry.task_id,
+        previous_status: entry.previous_status, new_status: entry.new_status,
+        reason: entry.reason, evidence_summary: entry.evidence_summary,
+        branch: entry.branch, actor: entry.actor,
+        previous_entry_hash: entry.previous_entry_hash };
+      const sortedKeys = Object.keys(payload).sort();
+      const sortedObj = {};
+      for (const k of sortedKeys) sortedObj[k] = payload[k];
+      entry.current_entry_hash = crypto.createHash("sha256").update(JSON.stringify(sortedObj)).digest("hex");
+      fs.writeFileSync(historyPath, existingHistory + "\n" + JSON.stringify(entry) + "\n");
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-003");
+      // No implementation_commit_sha, no Phase 1 fields → AUDIT_REQUIRED (historical pattern)
+      assert.strictEqual(task.classification, "AUDIT_REQUIRED");
+    });
+
+    it("classifies task with declared file absent from impl sha as INVALID_COMPLETION", () => {
+      setupAuditFixture([{
+        id: "AUDIT-004", title: "Missing File", description: "File gone", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["nonexistent/file.js"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: "0000000000000000000000000000000000000000",
+        clean_validation_commit_sha: "0000000000000000000000000000000000000000",
+        completion_record_commit_sha: "0000000000000000000000000000000000000000",
+        validation_results: { passed: true, implementation_commit_sha: "0000000000000000000000000000000000000000", timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-004");
+      assert.strictEqual(task.classification, "INVALID_COMPLETION");
+      assert.ok(task.reasons.some(r => r.includes("declared_files_exist_at_impl_sha")));
+    });
+
+    it("classifies task with failed validation as INVALID_COMPLETION", () => {
+      const sha = execSync("git rev-parse HEAD", { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
+      setupAuditFixture([{
+        id: "AUDIT-005", title: "Failed Val", description: "Validation failed", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["docs/architecture/ledger/tasks.json"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: false, overallStatus: "FAILED", implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-005");
+      assert.strictEqual(task.classification, "INVALID_COMPLETION");
+      assert.ok(task.reasons.some(r => r.includes("validation_results_passed")));
+    });
+
+    it("excludes non-completed tasks from audit", () => {
+      setupAuditFixture([{
+        id: "AUDIT-006", title: "Not Done", description: "In progress", severity: "HIGH",
+        status: "in_progress", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "",
+        changed_files: [], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: "2026-07-29T00:00:00Z", implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-006");
+      assert.strictEqual(task, undefined);
+      assert.strictEqual(report.total_completed_tasks, 1);
+    });
+
+    it("produces deterministic output on repeated runs", () => {
+      setupAuditFixture();
+      const report1 = runAudit();
+      const report2 = runAudit();
+      // Strip timestamps and counts that may vary
+      const strip = (r) => ({ ...r, generated_at: null, counts: r.counts, tasks: r.tasks.map(t => ({ ...t, checks: t.checks })) });
+      assert.deepStrictEqual(strip(report1), strip(report2));
+    });
+
+    it("does not modify tasks.json", () => {
+      const { ledgerDir } = setupAuditFixture();
+      const tasksPath = path.join(ledgerDir, 'tasks.json');
+      const before = fs.readFileSync(tasksPath, 'utf-8');
+      runAudit();
+      const after = fs.readFileSync(tasksPath, 'utf-8');
+      assert.strictEqual(before, after);
+    });
+
+    it("does not modify history.jsonl", () => {
+      const { ledgerDir } = setupAuditFixture();
+      const historyPath = path.join(ledgerDir, 'history.jsonl');
+      const before = fs.readFileSync(historyPath, 'utf-8');
+      runAudit();
+      const after = fs.readFileSync(historyPath, 'utf-8');
+      assert.strictEqual(before, after);
+    });
+
+    it("history hash chain remains unchanged after audit", () => {
+      setupAuditFixture();
+      const before = execSync(`node ${CLI_PATH} doctor`, { cwd: tmpDir, encoding: 'utf-8' });
+      runAudit();
+      const after = execSync(`node ${CLI_PATH} doctor`, { cwd: tmpDir, encoding: 'utf-8' });
+      assert.match(before, /healthy/);
+      assert.match(after, /healthy/);
+    });
+
+    it("clean-validation SHA mismatch is INVALID_COMPLETION", () => {
+      const sha = execSync("git rev-parse HEAD", { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
+      setupAuditFixture([{
+        id: "AUDIT-007", title: "Mismatch SHA", description: "Clean val sha mismatch", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["docs/architecture/ledger/tasks.json"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha,
+        clean_validation_commit_sha: "0000000000000000000000000000000000000000",
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-007");
+      assert.strictEqual(task.classification, "INVALID_COMPLETION");
+      assert.ok(task.reasons.some(r => r.includes("clean_validation_sha_matches")));
+    });
+
+    it("completion-record commit missing is AUDIT_REQUIRED for modern task", () => {
+      // Init git repo in tmpDir first
+      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      fs.writeFileSync(path.join(tmpDir, "placeholder.txt"), "init");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "AUDIT-008", title: "No Comp SHA", description: "Missing completion sha", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["placeholder.txt"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: null,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      // Add history entry for AUDIT-008
+      const ledgerDir = path.join(tmpDir, "docs", "architecture", "ledger");
+      const historyPath = path.join(ledgerDir, "history.jsonl");
+      const existingHistory = fs.readFileSync(historyPath, "utf-8").trim();
+      const entry = {
+        timestamp: "2026-07-31T00:00:00Z", task_id: "AUDIT-008",
+        previous_status: "validated", new_status: "completed",
+        reason: "Completed", evidence_summary: "Done",
+        branch: "test", actor: "test",
+        previous_entry_hash: "0".repeat(64)
+      };
+      const payload = { timestamp: entry.timestamp, task_id: entry.task_id,
+        previous_status: entry.previous_status, new_status: entry.new_status,
+        reason: entry.reason, evidence_summary: entry.evidence_summary,
+        branch: entry.branch, actor: entry.actor,
+        previous_entry_hash: entry.previous_entry_hash };
+      const sortedKeys = Object.keys(payload).sort();
+      const sortedObj = {};
+      for (const k of sortedKeys) sortedObj[k] = payload[k];
+      entry.current_entry_hash = crypto.createHash("sha256").update(JSON.stringify(sortedObj)).digest("hex");
+      fs.writeFileSync(historyPath, existingHistory + "\n" + JSON.stringify(entry) + "\n");
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "AUDIT-008");
+      // completion_record_commit_sha is null but has other Phase 1 fields → AUDIT_REQUIRED (missing metadata)
+      assert.strictEqual(task.classification, "AUDIT_REQUIRED");
+    });
+
+    it("audit report has correct JSON structure", () => {
+      setupAuditFixture();
+      const report = runAudit();
+      assert.ok(report.generated_at);
+      assert.ok(typeof report.ledger_commit_sha === "string");
+      assert.ok(typeof report.total_completed_tasks === "number");
+      assert.ok(typeof report.counts.PASS === "number");
+      assert.ok(typeof report.counts.AUDIT_REQUIRED === "number");
+      assert.ok(typeof report.counts.INVALID_COMPLETION === "number");
+      assert.ok(Array.isArray(report.tasks));
+      for (const t of report.tasks) {
+        assert.ok(typeof t.id === "string");
+        assert.ok(["PASS", "AUDIT_REQUIRED", "INVALID_COMPLETION"].includes(t.classification));
+        assert.ok(Array.isArray(t.reasons));
+        assert.ok(Array.isArray(t.declared_files));
+        assert.ok(typeof t.checks === "object");
+      }
+    });
+  });
+
 });
