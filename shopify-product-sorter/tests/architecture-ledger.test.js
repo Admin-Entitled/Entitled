@@ -25,7 +25,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
     }
   });
 
-  function setupFixture(tasksOverride = [], historyOverride = null) {
+  function setupFixture(tasksOverride = [], historyOverride = null, options = {}) {
     const ledgerDir = path.join(tmpDir, 'docs', 'architecture', 'ledger');
     const snapDir = path.join(ledgerDir, 'snapshots');
     fs.mkdirSync(snapDir, { recursive: true });
@@ -139,11 +139,42 @@ describe('Architecture Ledger Automation Test Suite', () => {
       fs.copyFileSync(schemaSrc, path.join(ledgerDir, 'schema.json'));
     }
 
-    try {
-      execSync(`node ${CLI_PATH} generate`, { cwd: tmpDir, encoding: 'utf-8' });
-    } catch (e) {}
+    if (options.generate !== false) {
+      try {
+        execSync(`node ${CLI_PATH} generate`, { cwd: tmpDir, encoding: 'utf-8' });
+      } catch (e) {}
+    }
 
     return { ledgerDir, snapDir };
+  }
+
+  function fixtureTask(overrides = {}) {
+    return {
+      id: 'TEST-999',
+      title: 'Fixture Task',
+      description: 'Fixture task',
+      severity: 'HIGH',
+      status: 'not_started',
+      dependencies: [],
+      blocking_reasons: [],
+      acceptance_criteria: ['Criteria'],
+      validation_commands: ['echo ok'],
+      evidence: '',
+      changed_files: [],
+      created_timestamp: '2026-07-29T00:00:00Z',
+      updated_timestamp: '2026-07-31T00:00:00Z',
+      started_timestamp: null,
+      implemented_timestamp: null,
+      validated_timestamp: null,
+      completed_timestamp: null,
+      notes: '',
+      validation_files: [],
+      implementation_commit_sha: null,
+      clean_validation_commit_sha: null,
+      completion_record_commit_sha: null,
+      validation_results: null,
+      ...overrides
+    };
   }
 
   it('validates a healthy ledger and history hash chain', () => {
@@ -527,6 +558,179 @@ describe('Architecture Ledger Automation Test Suite', () => {
     assert.strictEqual(countAfterSecond, countAfterFirst);
   });
 
+  it("demotes stale ready tasks with non-completed dependencies and reports exact reasons", () => {
+    const { ledgerDir } = setupFixture([
+      {
+        id: "AAA-DEP-PENDING",
+        title: "Pending dependency",
+        description: "Implemented task awaiting validation",
+        severity: "HIGH",
+        status: "validation_pending",
+        dependencies: [],
+        blocking_reasons: [],
+        acceptance_criteria: ["Validated"],
+        validation_commands: ["echo ok"],
+        evidence: "Implemented",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: "2026-07-30T00:00:00Z",
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      }
+    ], null, { generate: false });
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    ledger.tasks.push({
+        id: "STALE-READY",
+        title: "Stale ready task",
+        description: "Ready status with incomplete dependency",
+        severity: "HIGH",
+        status: "ready",
+        dependencies: ["AAA-DEP-PENDING"],
+        blocking_reasons: [],
+        acceptance_criteria: ["Dependency completed"],
+        validation_commands: ["echo ok"],
+        evidence: "",
+        changed_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null,
+        implemented_timestamp: null,
+        validated_timestamp: null,
+        completed_timestamp: null,
+        notes: ""
+      });
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    const output = execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(output, /STALE-READY/);
+    assert.match(output, /AAA-DEP-PENDING=validation_pending/);
+
+    const task = JSON.parse(execSync(`node ${CLI_PATH} show STALE-READY`, { cwd: tmpDir, encoding: "utf-8" }));
+    assert.strictEqual(task.status, "not_started");
+
+    const events = JSON.parse(execSync(`node ${CLI_PATH} history STALE-READY`, { cwd: tmpDir, encoding: "utf-8" }));
+    assert.strictEqual(events.length, 1);
+    assert.strictEqual(events[0].previous_status, "ready");
+    assert.strictEqual(events[0].new_status, "not_started");
+    assert.match(events[0].reason, /Phase 3B/);
+    assert.match(events[0].evidence_summary, /AAA-DEP-PENDING=validation_pending/);
+    assert.match(execSync(`node ${CLI_PATH} doctor`, { cwd: tmpDir, encoding: "utf-8" }), /healthy/);
+  });
+
+  it("does not treat ready tasks with not-started or blocked dependencies as actionable", () => {
+    setupFixture([
+      {
+        id: "DEP-NOT-STARTED", title: "Not started dependency", description: "", severity: "HIGH",
+        status: "not_started", dependencies: ["TEST-002"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: [], evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "DEP-BLOCKED", title: "Blocked dependency", description: "", severity: "HIGH",
+        status: "blocked", dependencies: [], blocking_reasons: ["External blocker"], acceptance_criteria: [],
+        validation_commands: [], evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "READY-WAITS-NOT-STARTED", title: "Stale ready one", description: "", severity: "HIGH",
+        status: "ready", dependencies: ["DEP-NOT-STARTED"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: [], evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "READY-WAITS-BLOCKED", title: "Stale ready two", description: "", severity: "HIGH",
+        status: "ready", dependencies: ["DEP-BLOCKED"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: [], evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      }
+    ], null, { generate: false });
+
+    const output = execSync(`node ${CLI_PATH} resume`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(output, /READY-WAITS-NOT-STARTED.*DEP-NOT-STARTED=not_started/s);
+    assert.match(output, /READY-WAITS-BLOCKED.*DEP-BLOCKED=blocked/s);
+    assert.doesNotMatch(output, /Actionable Ready:.*READY-WAITS/);
+  });
+
+  it("reports missing dependencies and cycles without recursing forever", () => {
+    const { ledgerDir } = setupFixture([
+      {
+        id: "MISSING-READY", title: "Missing dependency", description: "", severity: "HIGH",
+        status: "ready", dependencies: ["DOES-NOT-EXIST"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: [], evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "CYCLE-A", title: "Cycle A", description: "", severity: "HIGH", status: "ready",
+        dependencies: ["CYCLE-B"], blocking_reasons: [], acceptance_criteria: [], validation_commands: [],
+        evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "CYCLE-B", title: "Cycle B", description: "", severity: "HIGH", status: "ready",
+        dependencies: ["CYCLE-A"], blocking_reasons: [], acceptance_criteria: [], validation_commands: [],
+        evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null, completed_timestamp: null, notes: ""
+      }
+    ], null, { generate: false });
+
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const before = fs.readFileSync(tasksPath, "utf-8");
+    assert.throws(() => execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" }), /non-existent dependency DOES-NOT-EXIST/i);
+    assert.strictEqual(fs.readFileSync(tasksPath, "utf-8"), before);
+
+    const ledger = JSON.parse(before);
+    ledger.tasks = ledger.tasks.filter(task => task.id !== "MISSING-READY");
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+    assert.throws(() => execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" }), /dependency cycle.*CYCLE-A.*CYCLE-B/i);
+  });
+
+  it("falls back deterministically to the first dependency-safe validation-pending task", () => {
+    const { ledgerDir } = setupFixture([
+      {
+        id: "VALIDATE-FIRST", title: "First validation", description: "", severity: "LOW",
+        status: "validation_pending", dependencies: ["TEST-001"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: ["echo ok"], evidence: "Implemented", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: "2026-07-30T00:00:00Z",
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "VALIDATE-LATER", title: "Later validation", description: "", severity: "CRITICAL",
+        status: "validation_pending", dependencies: ["TEST-001"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: ["echo ok"], evidence: "Implemented", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: "2026-07-30T00:00:00Z",
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      },
+      {
+        id: "STALE-IMPLEMENTATION", title: "Stale implementation", description: "", severity: "CRITICAL",
+        status: "ready", dependencies: ["VALIDATE-LATER"], blocking_reasons: [], acceptance_criteria: [],
+        validation_commands: [], evidence: "", changed_files: [], created_timestamp: "2026-07-29T00:00:00Z",
+        updated_timestamp: "2026-07-31T00:00:00Z", started_timestamp: null, implemented_timestamp: null,
+        validated_timestamp: null, completed_timestamp: null, notes: ""
+      }
+    ], null, { generate: false });
+    const tasksPath = path.join(ledgerDir, "tasks.json");
+    const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+    ledger.tasks.find(t => t.id === "TEST-002").status = "not_started";
+    ledger.tasks.find(t => t.id === "TEST-002").dependencies = ["VALIDATE-LATER"];
+    fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+    const first = execSync(`node ${CLI_PATH} resume`, { cwd: tmpDir, encoding: "utf-8" });
+    const second = execSync(`node ${CLI_PATH} resume`, { cwd: tmpDir, encoding: "utf-8" });
+    assert.match(first, /Recommended Next:\s+VALIDATE-FIRST/);
+    assert.match(first, /Recommendation:\s+validation_pending/);
+    assert.doesNotMatch(first, /Recommended Next:\s+STALE-IMPLEMENTATION/);
+    assert.match(second, /Recommended Next:\s+VALIDATE-FIRST/);
+  });
+
   it("selects next task deterministically based on ordering rules", () => {
     const { ledgerDir } = setupFixture();
     const tasksPath = path.join(ledgerDir, "tasks.json");
@@ -633,6 +837,179 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
     const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
     assert.match(res, /Recommended Next:\s+OWN-003/);
+  });
+
+  describe("Dependency eligibility and readiness reconciliation", () => {
+    it("ready task with validation-pending dependency is not actionable", () => {
+      setupFixture([
+        fixtureTask({ id: "DEPA-001", status: "validation_pending" }),
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["DEPA-001"] })
+      ], null, { generate: false });
+
+      const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.doesNotMatch(res, /Recommended Next:\s+ACTA-001/);
+      assert.match(res, /DEPA-001=validation_pending/);
+    });
+
+    it("ready task with not-started dependency is not actionable", () => {
+      setupFixture([
+        fixtureTask({ id: "DEPA-001", status: "validation_pending" }),
+        fixtureTask({ id: "MID-001", status: "not_started", dependencies: ["DEPA-001"] }),
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["MID-001"] })
+      ], null, { generate: false });
+
+      const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.doesNotMatch(res, /Recommended Next:\s+ACTA-001/);
+      assert.match(res, /MID-001=not_started/);
+    });
+
+    it("ready task with blocked dependency is not actionable", () => {
+      setupFixture([
+        fixtureTask({ id: "DEPA-001", status: "blocked", blocking_reasons: ["External blocker"] }),
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["DEPA-001"] })
+      ], null, { generate: false });
+
+      const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.doesNotMatch(res, /Recommended Next:\s+ACTA-001/);
+      assert.match(res, /DEPA-001=blocked/);
+    });
+
+    it("task with all dependencies completed is actionable", () => {
+      setupFixture([
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["TEST-001"] })
+      ], null, { generate: false });
+
+      const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(res, /Recommended Next:\s+TEST-002/);
+      assert.match(res, /Dependency-Actionable Ready Tasks[\s\S]*ACTA-001/);
+    });
+
+    it("missing dependency is reported and cannot be recommended", () => {
+      setupFixture([
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["MISSING-001"] })
+      ], null, { generate: false });
+
+      assert.throws(() => {
+        execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      }, /non-existent dependency MISSING-001/i);
+    });
+
+    it("dependency cycle does not cause infinite recursion", () => {
+      setupFixture([
+        fixtureTask({ id: "CYC-001", status: "ready", dependencies: ["CYC-002"] }),
+        fixtureTask({ id: "CYC-002", status: "ready", dependencies: ["CYC-001"] })
+      ]);
+
+      assert.throws(() => {
+        execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8", timeout: 3000 });
+      }, /dependency cycle detected.*CYC-001.*CYC-002/i);
+    });
+
+    it("arch:resume never recommends stale-ready SEC-004-type tasks", () => {
+      const { ledgerDir } = setupFixture([
+        fixtureTask({ id: "SAFE-001", status: "validation_pending" }),
+        fixtureTask({ id: "OWN-010", status: "validation_pending", dependencies: ["SAFE-001"] }),
+        fixtureTask({ id: "SEC-004", status: "ready", dependencies: ["OWN-010"] })
+      ], null, { generate: false });
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      ledger.tasks.find(t => t.id === "TEST-002").status = "not_started";
+      ledger.tasks.find(t => t.id === "TEST-002").dependencies = ["OWN-010"];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      const res = execSync(`node ${CLI_PATH} resume`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.doesNotMatch(res, /Recommended Next:\s+SEC-004/);
+      assert.match(res, /Recommended Next:\s+SAFE-001/);
+      assert.match(res, /OWN-010=validation_pending/);
+    });
+
+    it("when no actionable ready task exists, first dependency-safe validation-pending task is recommended", () => {
+      const { ledgerDir } = setupFixture([
+        fixtureTask({ id: "SAFE-001", status: "validation_pending" }),
+        fixtureTask({ id: "SAFE-002", status: "validation_pending" }),
+        fixtureTask({ id: "SEC-004", status: "ready", dependencies: ["SAFE-002"] })
+      ], null, { generate: false });
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      ledger.tasks.find(t => t.id === "TEST-002").status = "not_started";
+      ledger.tasks.find(t => t.id === "TEST-002").dependencies = ["SAFE-002"];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      const res = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(res, /Recommended Next:\s+SAFE-001/);
+      assert.match(res, /Recommendation:\s+validation_pending/);
+    });
+
+    it("selection is deterministic", () => {
+      setupFixture([
+        fixtureTask({ id: "SAFE-001", status: "validation_pending" }),
+        fixtureTask({ id: "SAFE-002", status: "validation_pending" })
+      ]);
+
+      const first = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      const second = execSync(`node ${CLI_PATH} next`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(first, /Recommended Next:\s+TEST-002/);
+      assert.match(second, /Recommended Next:\s+TEST-002/);
+    });
+
+    it("reconciliation identifies all 13 stale-ready tasks exactly once", () => {
+      const staleIds = ["SEC-004", "SEC-007", "DOC-001", "DOC-003", "DOC-004", "DOC-005", "DOC-008", "DOC-009", "DOC-011", "CLEAN-003", "CLEAN-004", "FINAL-001", "FINAL-002"];
+      const deps = staleIds.map((id, idx) => fixtureTask({ id: `AAA-DEP-${String(idx + 1).padStart(3, "0")}`, status: "validation_pending" }));
+      const staleReady = staleIds.map((id, idx) => fixtureTask({ id, status: "ready", dependencies: [deps[idx].id] }));
+      const { ledgerDir } = setupFixture(deps, null, { generate: false });
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      ledger.tasks.push(...staleReady);
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      const res = execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(res, /Reconciled 13 stale-ready task\(s\) to 'not_started'/);
+      for (const id of staleIds) {
+        assert.strictEqual(res.split(`${id} (`).length - 1, 1);
+      }
+
+      const reconciledLedger = JSON.parse(fs.readFileSync(path.join(tmpDir, "docs", "architecture", "ledger", "tasks.json"), "utf-8"));
+      for (const id of staleIds) {
+        assert.strictEqual(reconciledLedger.tasks.find(t => t.id === id).status, "not_started");
+      }
+    });
+
+    it("reconciliation preserves the history hash chain", () => {
+      setupFixture([
+        fixtureTask({ id: "DEPA-001", status: "validation_pending" }),
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["DEPA-001"] })
+      ], null, { generate: false });
+
+      execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+      const doctorRes = execSync(`node ${CLI_PATH} doctor`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(doctorRes, /History chain intact/);
+      assert.match(doctorRes, /healthy/);
+    });
+
+    it("reconciliation does not change completed-task audit results", () => {
+      setupFixture([
+        fixtureTask({ id: "DEPA-001", status: "validation_pending" }),
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["DEPA-001"] })
+      ], null, { generate: false });
+
+      execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+      const auditRes = execSync(`node ${CLI_PATH} audit-completed`, { cwd: tmpDir, encoding: "utf-8" });
+      assert.match(auditRes, /Total completed: 1/);
+    });
+
+    it("unrelated dirty files remain untouched", () => {
+      setupFixture([
+        fixtureTask({ id: "DEPA-001", status: "validation_pending" }),
+        fixtureTask({ id: "ACTA-001", status: "ready", dependencies: ["DEPA-001"] })
+      ], null, { generate: false });
+      const unrelatedPath = path.join(tmpDir, "unrelated-dirty.txt");
+      fs.writeFileSync(unrelatedPath, "preserve me");
+      const before = crypto.createHash("sha256").update(fs.readFileSync(unrelatedPath)).digest("hex");
+
+      execSync(`node ${CLI_PATH} reconcile`, { cwd: tmpDir, encoding: "utf-8" });
+      const after = crypto.createHash("sha256").update(fs.readFileSync(unrelatedPath)).digest("hex");
+      assert.strictEqual(after, before);
+    });
   });
 
   describe("Checkpoint and Preflight Hardening Suite", () => {

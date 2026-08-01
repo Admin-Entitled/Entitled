@@ -128,7 +128,7 @@ Each `tasks.json` field update must be made through the ledger CLI (or a Phase 3
 
 ## Next action
 
-Run Phase 4 final integrity closure and resume normal architecture remediation.
+Run Phase 4.1 contained ledger-readiness reconciliation and next-task-selection repair, then rerun Phase 4 final integrity closure.
 
 ## 10. Phase 3B execution record
 

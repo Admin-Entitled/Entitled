@@ -168,11 +168,11 @@ function computeEntryHash(entry) {
 }
 
 // Ledger Verification
-function validateHistoryChain() {
-  if (!fs.existsSync(HISTORY_PATH)) {
+function validateHistoryChain(historyPath = HISTORY_PATH) {
+  if (!fs.existsSync(historyPath)) {
     return { valid: false, error: 'history.jsonl file missing' };
   }
-  const lines = fs.readFileSync(HISTORY_PATH, 'utf-8').split('\n').filter(Boolean);
+  const lines = fs.readFileSync(historyPath, 'utf-8').split('\n').filter(Boolean);
   if (lines.length === 0) {
     return { valid: false, error: 'history.jsonl is empty' };
   }
@@ -260,6 +260,155 @@ function validateDeclaredFilesNonEmpty(task) {
   return { changedFiles, validationFiles, declaredFiles };
 }
 
+function buildTasksMap(tasks) {
+  const seen = new Set();
+  const duplicates = [];
+  for (const task of tasks) {
+    if (seen.has(task.id)) duplicates.push(task.id);
+    seen.add(task.id);
+  }
+  if (duplicates.length > 0) {
+    throw new Error(`Duplicate task ID(s): ${[...new Set(duplicates)].join(', ')}`);
+  }
+  return new Map(tasks.map(t => [t.id, t]));
+}
+
+function detectDependencyCycle(taskId, tasksMap, pathStack = [], visited = new Set()) {
+  if (pathStack.includes(taskId)) {
+    return [...pathStack.slice(pathStack.indexOf(taskId)), taskId];
+  }
+  if (visited.has(taskId)) return null;
+  visited.add(taskId);
+
+  const task = tasksMap.get(taskId);
+  if (!task || !Array.isArray(task.dependencies)) return null;
+
+  for (const depId of task.dependencies) {
+    const cycle = detectDependencyCycle(depId, tasksMap, [...pathStack, taskId], visited);
+    if (cycle) return cycle;
+  }
+  return null;
+}
+
+function evaluateTaskDependencyEligibility(task, tasksMap) {
+  const dependencies = Array.isArray(task.dependencies) ? task.dependencies : [];
+  const reasons = [];
+
+  const cycle = detectDependencyCycle(task.id, tasksMap);
+  if (cycle) {
+    reasons.push({
+      type: 'cycle',
+      task_id: task.id,
+      cycle
+    });
+  }
+
+  for (const depId of dependencies) {
+    const dep = tasksMap.get(depId);
+    if (!dep) {
+      reasons.push({
+        type: 'missing_dependency',
+        dependency_id: depId
+      });
+      continue;
+    }
+    if (dep.status !== 'completed') {
+      reasons.push({
+        type: 'non_completed_dependency',
+        dependency_id: depId,
+        status: dep.status
+      });
+    }
+  }
+
+  return {
+    satisfied: reasons.length === 0,
+    reasons,
+    blocking_task_ids: [...new Set(reasons.flatMap(reason => {
+      if (reason.type === 'cycle') return reason.cycle;
+      return [reason.dependency_id];
+    }).filter(Boolean))]
+  };
+}
+
+function formatDependencyEligibilityReasons(result) {
+  if (result.satisfied) return 'all dependencies completed';
+  return result.reasons.map(reason => {
+    if (reason.type === 'missing_dependency') {
+      return `${reason.dependency_id}: missing dependency`;
+    }
+    if (reason.type === 'non_completed_dependency') {
+      return `${reason.dependency_id}=${reason.status}`;
+    }
+    if (reason.type === 'cycle') {
+      return `cycle: ${reason.cycle.join(' -> ')}`;
+    }
+    return JSON.stringify(reason);
+  }).join('; ');
+}
+
+function formatDependencyEvidence(result) {
+  if (result.satisfied) return 'all dependencies completed';
+  return result.reasons.map(reason => {
+    if (reason.type === 'missing_dependency') return `${reason.dependency_id}=missing`;
+    if (reason.type === 'non_completed_dependency') return `${reason.dependency_id}=${reason.status}`;
+    if (reason.type === 'cycle') return `cycle=${reason.cycle.join('->')}`;
+    return JSON.stringify(reason);
+  }).join('; ');
+}
+
+function getDependencyEligibility(task, tasksMap) {
+  return evaluateTaskDependencyEligibility(task, tasksMap);
+}
+
+function findInvalidDependencyReason(ledger) {
+  const tasksMap = buildTasksMap(ledger.tasks);
+  for (const task of ledger.tasks) {
+    const eligibility = getDependencyEligibility(task, tasksMap);
+    const missing = eligibility.reasons.find(reason => reason.type === 'missing_dependency');
+    if (missing) {
+      return `Task ${task.id} references missing dependency ${missing.dependency_id}`;
+    }
+    const cycle = eligibility.reasons.find(reason => reason.type === 'cycle');
+    if (cycle) {
+      return `Task ${task.id} has dependency cycle ${cycle.cycle.join(' -> ')}`;
+    }
+  }
+  return null;
+}
+
+function getSelectionState(ledger) {
+  const tasksMap = buildTasksMap(ledger.tasks);
+  const indexMap = new Map(ledger.tasks.map((t, idx) => [t.id, idx]));
+  const sortByExecutionOrder = createExecutionOrderSorter(tasksMap, indexMap);
+
+  const storedReadyTasks = ledger.tasks.filter(t => t.status === 'ready');
+  const actionableReadyTasks = storedReadyTasks
+    .filter(t => getDependencyEligibility(t, tasksMap).satisfied)
+    .sort(sortByExecutionOrder);
+  const staleReadyTasks = storedReadyTasks
+    .filter(t => !getDependencyEligibility(t, tasksMap).satisfied)
+    .sort((a, b) => indexMap.get(a.id) - indexMap.get(b.id));
+  const eligibleValidationPendingTasks = ledger.tasks
+    .filter(t => t.status === 'validation_pending')
+    .filter(t => getDependencyEligibility(t, tasksMap).satisfied)
+    .sort(sortByExecutionOrder);
+  const awaitingPrerequisites = ledger.tasks
+    .filter(t => ['not_started', 'ready', 'validation_pending'].includes(t.status))
+    .filter(t => !getDependencyEligibility(t, tasksMap).satisfied)
+    .sort((a, b) => indexMap.get(a.id) - indexMap.get(b.id));
+
+  return {
+    tasksMap,
+    indexMap,
+    storedReadyTasks,
+    actionableReadyTasks,
+    staleReadyTasks,
+    eligibleValidationPendingTasks,
+    awaitingPrerequisites
+  };
+}
+
 function appendHistoryEvent(taskId, prevStatus, newStatus, reason, evidenceSummary) {
   const chainResult = validateHistoryChain();
   if (!chainResult.valid) {
@@ -292,6 +441,59 @@ function appendHistoryEvent(taskId, prevStatus, newStatus, reason, evidenceSumma
   return entry;
 }
 
+function saveReconciliationBatch(ledger, transitions) {
+  const chainResult = validateHistoryChain();
+  if (!chainResult.valid) {
+    throw new Error(`Cannot append to invalid history chain: ${chainResult.error}`);
+  }
+
+  const timestamp = new Date().toISOString();
+  let branch = 'unknown';
+  try { branch = runCmd('git branch --show-current'); } catch {}
+  const actor = process.env.USER || 'architecture-ledger-cli';
+  let previousEntryHash = chainResult.lastHash;
+  const entries = transitions.map(transition => {
+    const entry = {
+      timestamp,
+      task_id: transition.taskId,
+      previous_status: transition.previousStatus,
+      new_status: transition.newStatus,
+      reason: transition.reason,
+      evidence_summary: transition.evidenceSummary,
+      branch,
+      actor,
+      previous_entry_hash: previousEntryHash
+    };
+    entry.current_entry_hash = computeEntryHash(entry);
+    previousEntryHash = entry.current_entry_hash;
+    return entry;
+  });
+
+  ledger.last_updated = timestamp;
+  const tasksTmp = `${TASKS_PATH}.tmp`;
+  const historyTmp = `${HISTORY_PATH}.tmp`;
+  try {
+    fs.writeFileSync(tasksTmp, JSON.stringify(ledger, null, 2), 'utf-8');
+    JSON.parse(fs.readFileSync(tasksTmp, 'utf-8'));
+    fs.writeFileSync(
+      historyTmp,
+      fs.readFileSync(HISTORY_PATH, 'utf-8') + entries.map(entry => JSON.stringify(entry)).join('\n') + '\n',
+      'utf-8'
+    );
+    const preparedHistory = validateHistoryChain(historyTmp);
+    if (!preparedHistory.valid) {
+      throw new Error(`Prepared history chain invalid: ${preparedHistory.error}`);
+    }
+    fs.renameSync(historyTmp, HISTORY_PATH);
+    fs.renameSync(tasksTmp, TASKS_PATH);
+  } catch (error) {
+    for (const tmpPath of [tasksTmp, historyTmp]) {
+      if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+    }
+    throw error;
+  }
+}
+
 function createSnapshot(reasonTag = 'transition') {
   if (!fs.existsSync(SNAPSHOTS_DIR)) {
     fs.mkdirSync(SNAPSHOTS_DIR, { recursive: true });
@@ -318,6 +520,7 @@ function generateMarkdownPlan() {
   const deferred = tasks.filter(t => t.status === 'deferred').length;
   const notStarted = tasks.filter(t => t.status === 'not_started').length;
   const pct = total > 0 ? ((completed / total) * 100).toFixed(1) : '0.0';
+  const selection = getSelectionState(ledger);
 
   let branch = 'unknown';
   let commit = 'unknown';
@@ -382,7 +585,9 @@ function generateMarkdownPlan() {
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: ${tasks.filter(t => t.status === 'ready').map(t => `\`${t.id}\``).slice(0, 5).join(', ') || 'None'}
+- Next dependency-actionable ready tasks: ${selection.actionableReadyTasks.map(t => `\`${t.id}\``).slice(0, 5).join(', ') || 'None'}
+- Dependency-safe validation-pending tasks: ${selection.eligibleValidationPendingTasks.map(t => `\`${t.id}\``).slice(0, 5).join(', ') || 'None'}
+- Tasks awaiting prerequisites: ${selection.awaitingPrerequisites.map(t => `\`${t.id}\``).slice(0, 5).join(', ') || 'None'}
 - In-progress tasks: ${tasks.filter(t => t.status === 'in_progress').map(t => `\`${t.id}\``).join(', ') || 'None'}
 - Blocked tasks: ${tasks.filter(t => t.status === 'blocked').map(t => `\`${t.id}\``).join(', ') || 'None'}
 
@@ -495,34 +700,79 @@ function reconcileReadiness() {
   return withLock(() => {
     const ledger = loadTasks();
     const promotedTaskIds = [];
+    const demotedTasks = [];
+    const tasksMap = buildTasksMap(ledger.tasks);
+
+    for (const task of ledger.tasks) {
+      const missing = getDependencyEligibility(task, tasksMap).reasons.find(reason => reason.type === 'missing_dependency');
+      if (missing) {
+        throw new Error(`Cannot reconcile readiness: task ${task.id} references non-existent dependency ${missing.dependency_id}`);
+      }
+    }
+
+    const staleReadyTasks = ledger.tasks.filter(task => {
+      if (task.status !== 'ready') return false;
+      return !getDependencyEligibility(task, tasksMap).satisfied;
+    });
+
+    const staleCycle = staleReadyTasks
+      .map(task => getDependencyEligibility(task, tasksMap).reasons.find(reason => reason.type === 'cycle'))
+      .find(Boolean);
+    if (staleCycle) {
+      throw new Error(`Cannot reconcile readiness: dependency cycle detected (${staleCycle.cycle.join(' -> ')})`);
+    }
+
+    const staleIds = staleReadyTasks.map(task => task.id);
+    if (new Set(staleIds).size !== staleIds.length) {
+      throw new Error(`Duplicate stale-ready task ID(s): ${staleIds.join(', ')}`);
+    }
+
+    const transitions = [];
+    const now = new Date().toISOString();
+    for (const task of staleReadyTasks) {
+      const eligibility = getDependencyEligibility(task, tasksMap);
+      const prevStatus = task.status;
+      task.status = 'not_started';
+      task.updated_timestamp = now;
+
+      transitions.push({
+        taskId: task.id,
+        previousStatus: prevStatus,
+        newStatus: 'not_started',
+        reason: 'Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies',
+        evidenceSummary: `Unmet dependencies: ${formatDependencyEvidence(eligibility)}`
+      });
+
+      demotedTasks.push({
+        id: task.id,
+        reason: formatDependencyEvidence(eligibility)
+      });
+    }
 
     let promotedInPass = 0;
     do {
       promotedInPass = 0;
+      const currentTasksMap = buildTasksMap(ledger.tasks);
       for (const task of ledger.tasks) {
         if (task.status === 'not_started') {
           const hasBlockers = Array.isArray(task.blocking_reasons) && task.blocking_reasons.length > 0;
           if (hasBlockers) continue;
 
           const deps = Array.isArray(task.dependencies) ? task.dependencies : [];
-          const allDepsCompleted = deps.every(depId => {
-            const depTask = ledger.tasks.find(t => t.id === depId);
-            return depTask && depTask.status === 'completed';
-          });
+          const eligibility = getDependencyEligibility(task, currentTasksMap);
 
-          if (allDepsCompleted) {
+          if (eligibility.satisfied) {
             const prevStatus = task.status;
             task.status = 'ready';
-            task.updated_timestamp = new Date().toISOString();
+            task.updated_timestamp = now;
 
-            saveTasksAtomic(ledger);
-            appendHistoryEvent(
-              task.id,
-              prevStatus,
-              'ready',
-              'Automatic readiness reconciliation: all dependencies completed',
-              `Dependencies completed: ${deps.join(', ') || 'None'}`
-            );
+            transitions.push({
+              taskId: task.id,
+              previousStatus: prevStatus,
+              newStatus: 'ready',
+              reason: 'Automatic readiness reconciliation: all dependencies completed',
+              evidenceSummary: `Dependencies completed: ${deps.join(', ') || 'None'}`
+            });
 
             promotedTaskIds.push(task.id);
             promotedInPass++;
@@ -531,13 +781,14 @@ function reconcileReadiness() {
       }
     } while (promotedInPass > 0);
 
-    if (promotedTaskIds.length > 0) {
-      const md = generateMarkdownPlan();
-      fs.writeFileSync(PLAN_MARKDOWN_PATH, md, 'utf-8');
-      syncObsidianMemory();
+    if (transitions.length > 0) saveReconciliationBatch(ledger, transitions);
+
+    const historyCheck = validateHistoryChain();
+    if (!historyCheck.valid) {
+      throw new Error(`History chain invalid after readiness reconciliation: ${historyCheck.error}`);
     }
 
-    return promotedTaskIds;
+    return { promotedTaskIds, demotedTasks };
   });
 }
 
@@ -568,16 +819,8 @@ function isDependencyOf(ancestorId, targetId, tasksMap, visited = new Set()) {
   return false;
 }
 
-function selectNextTask(ledger) {
-  const readyTasks = ledger.tasks.filter(t => t.status === 'ready');
-  if (readyTasks.length === 0) {
-    return { nextTask: null, reason: 'No tasks currently in ready status', readyTasks: [] };
-  }
-
-  const tasksMap = new Map(ledger.tasks.map(t => [t.id, t]));
-  const indexMap = new Map(ledger.tasks.map((t, idx) => [t.id, idx]));
-
-  const sortedReady = [...readyTasks].sort((a, b) => {
+function createExecutionOrderSorter(tasksMap, indexMap) {
+  return (a, b) => {
     // 1. Dependency / Topological order: ancestor comes first
     if (isDependencyOf(a.id, b.id, tasksMap)) return -1;
     if (isDependencyOf(b.id, a.id, tasksMap)) return 1;
@@ -594,36 +837,108 @@ function selectNextTask(ledger) {
 
     // 4. Task ID tie-breaker
     return a.id.localeCompare(b.id);
-  });
+  };
+}
 
-  const nextTask = sortedReady[0];
-  const idx = indexMap.get(nextTask.id);
-  const reason = `Selected ${nextTask.id} because all dependencies are completed, status is ready, and it ranks highest by topological/phase order (ledger index ${idx}, severity ${nextTask.severity}).`;
+function selectNextTask(ledger) {
+  const {
+    tasksMap,
+    indexMap,
+    storedReadyTasks,
+    actionableReadyTasks,
+    staleReadyTasks,
+    eligibleValidationPendingTasks,
+    awaitingPrerequisites
+  } = getSelectionState(ledger);
+  const sortValidationFirst = (a, b) => {
+    const idxA = indexMap.get(a.id);
+    const idxB = indexMap.get(b.id);
+    if (idxA !== idxB) return idxA - idxB;
+    return a.id.localeCompare(b.id);
+  };
+  eligibleValidationPendingTasks.sort(sortValidationFirst);
+
+  let nextTask = null;
+  let recommendationType = 'none';
+  let reason = '';
+
+  if (actionableReadyTasks.length > 0) {
+    nextTask = actionableReadyTasks[0];
+    recommendationType = 'actionable_ready';
+    const idx = indexMap.get(nextTask.id);
+    reason = `Selected ${nextTask.id} because status is ready, dependencies are completed, and it ranks highest by topological/phase order (ledger index ${idx}, severity ${nextTask.severity}).`;
+  } else if (eligibleValidationPendingTasks.length > 0) {
+    nextTask = eligibleValidationPendingTasks[0];
+    recommendationType = 'validation_pending';
+    const idx = indexMap.get(nextTask.id);
+    reason = `Selected ${nextTask.id} for re-validation because no dependency-actionable ready implementation tasks exist, its dependencies are completed, and it ranks earliest by topological/phase order (ledger index ${idx}, severity ${nextTask.severity}).`;
+  } else {
+    reason = 'No dependency-actionable ready tasks or dependency-safe validation-pending tasks found.';
+  }
 
   return {
     nextTask,
     reason,
-    readyTasks: sortedReady
+    readyTasks: actionableReadyTasks,
+    storedReadyTasks,
+    staleReadyTasks,
+    eligibleValidationPendingTasks,
+    awaitingPrerequisites,
+    recommendationType,
+    tasksMap
   };
 }
 
 function cmdReconcile() {
-  const promoted = reconcileReadiness();
-  if (promoted.length > 0) {
-    console.log(`✓ Reconciled ${promoted.length} task(s) to 'ready': ${promoted.join(', ')}`);
-  } else {
+  const { promotedTaskIds, demotedTasks } = reconcileReadiness();
+  if (demotedTasks.length > 0) {
+    const details = demotedTasks.map(task => `${task.id} (${task.reason})`).join(', ');
+    console.log(`✓ Reconciled ${demotedTasks.length} stale-ready task(s) to 'not_started': ${details}`);
+  }
+  if (promotedTaskIds.length > 0) {
+    console.log(`✓ Reconciled ${promotedTaskIds.length} task(s) to 'ready': ${promotedTaskIds.join(', ')}`);
+  }
+  if (promotedTaskIds.length === 0 && demotedTasks.length === 0) {
     console.log('✓ No tasks needed readiness reconciliation.');
+  }
+}
+
+function printIneligibleTasks(label, tasks, tasksMap) {
+  if (tasks.length === 0) return;
+  console.log(`\n${label} (${tasks.length}):`);
+  tasks.forEach(t => {
+    const eligibility = getDependencyEligibility(t, tasksMap);
+    console.log(` - ${t.id} [${t.status}]: ${formatDependencyEligibilityReasons(eligibility)}`);
+  });
+}
+
+function printEligibleTasks(label, tasks) {
+  console.log(`\n${label} (${tasks.length}):`);
+  if (tasks.length === 0) {
+    console.log(' - None');
+  } else {
+    tasks.forEach(t => console.log(` - ${t.id} [${t.severity}]: ${t.title}`));
   }
 }
 
 function cmdNext() {
   reconcileReadiness();
   const ledger = loadTasks();
-  const { nextTask, reason, readyTasks } = selectNextTask(ledger);
+  const {
+    nextTask,
+    reason,
+    readyTasks,
+    staleReadyTasks,
+    eligibleValidationPendingTasks,
+    awaitingPrerequisites,
+    recommendationType,
+    tasksMap
+  } = selectNextTask(ledger);
 
   console.log('=== Architecture Ledger Recommended Next Task ===');
   if (!nextTask) {
-    console.log('No ready tasks found.');
+    console.log('No dependency-actionable ready task or dependency-safe validation-pending task found.');
+    printIneligibleTasks('Tasks awaiting prerequisites', awaitingPrerequisites, tasksMap);
     return;
   }
 
@@ -631,9 +946,12 @@ function cmdNext() {
   console.log(`Severity:          ${nextTask.severity}`);
   console.log(`Status:            ${nextTask.status}`);
   console.log(`Dependencies:      ${nextTask.dependencies.join(', ') || 'None'}`);
+  console.log(`Recommendation:    ${recommendationType}`);
   console.log(`Selection Reason:  ${reason}`);
-  console.log(`\nAll Ready Tasks (${readyTasks.length}):`);
-  readyTasks.forEach(t => console.log(` - ${t.id} [${t.severity}]: ${t.title}`));
+  printEligibleTasks('Dependency-Actionable Ready Tasks', readyTasks);
+  printEligibleTasks('Dependency-Safe Validation-Pending Tasks', eligibleValidationPendingTasks);
+  printIneligibleTasks('Stale/Ineligible Ready Tasks', staleReadyTasks, tasksMap);
+  printIneligibleTasks('Tasks Awaiting Prerequisites', awaitingPrerequisites, tasksMap);
 }
 
 // CLI Subcommands implementation
@@ -770,12 +1088,26 @@ function cmdResume() {
   console.log(`History Chain:     ${historyCheck.valid ? 'VALID' : 'BROKEN'}`);
   console.log(`Markdown Sync:     ${mdSync}`);
   console.log(`In-Progress Task:  ${inProgress.length > 0 ? inProgress.map(t => t.id).join(', ') : 'None'}`);
-  const { nextTask, reason, readyTasks } = selectNextTask(ledger);
-  console.log(`Ready Tasks:       ${readyTasks.map(t => t.id).slice(0, 5).join(', ')} (Total: ${readyTasks.length})`);
+  const {
+    nextTask,
+    reason,
+    readyTasks,
+    staleReadyTasks,
+    eligibleValidationPendingTasks,
+    awaitingPrerequisites,
+    recommendationType,
+    tasksMap
+  } = selectNextTask(ledger);
+  console.log(`Stored Ready Tasks: ${ready.map(t => t.id).slice(0, 5).join(', ') || 'None'} (Total: ${ready.length})`);
+  console.log(`Actionable Ready:  ${readyTasks.map(t => t.id).slice(0, 5).join(', ') || 'None'} (Total: ${readyTasks.length})`);
+  console.log(`Validation-Ready:  ${eligibleValidationPendingTasks.map(t => t.id).slice(0, 5).join(', ') || 'None'} (Total: ${eligibleValidationPendingTasks.length})`);
   console.log(`Recommended Next:  ${nextTask ? nextTask.id : 'None'}`);
+  console.log(`Recommendation:    ${recommendationType}`);
   if (nextTask) {
     console.log(`Selection Reason:  ${reason}`);
   }
+  printIneligibleTasks('Stale/Ineligible Ready Tasks', staleReadyTasks, tasksMap);
+  printIneligibleTasks('Tasks Awaiting Prerequisites', awaitingPrerequisites, tasksMap);
   console.log(`Blocked Tasks:     ${blocked.map(t => t.id).join(', ') || 'None'}`);
   console.log(`Last Completed:    ${completed.slice(-3).map(t => t.id).join(', ') || 'None'}`);
   console.log(`Unpushed Commits:  ${unpushedCommits ? '\n' + unpushedCommits : 'None'}`);
@@ -802,12 +1134,9 @@ function cmdTransition(taskId, targetStatus, reason, evidence) {
 
     // Validate dependencies for starting or completing
     if (['in_progress', 'implemented', 'validated', 'completed'].includes(targetStatus)) {
-      const missingDeps = task.dependencies.filter(depId => {
-        const dep = ledger.tasks.find(t => t.id === depId);
-        return !dep || dep.status !== 'completed';
-      });
-      if (missingDeps.length > 0) {
-        throw new Error(`Cannot transition ${taskId} to ${targetStatus}: Dependencies not completed (${missingDeps.join(', ')})`);
+      const eligibility = getDependencyEligibility(task, buildTasksMap(ledger.tasks));
+      if (!eligibility.satisfied) {
+        throw new Error(`Cannot transition ${taskId} to ${targetStatus}: Dependencies not completed (${formatDependencyEligibilityReasons(eligibility)})`);
       }
     }
 
@@ -884,20 +1213,23 @@ function cmdValidate() {
   }
 
   const ledger = loadTasks();
-  const ids = new Set();
-  for (const t of ledger.tasks) {
-    if (ids.has(t.id)) {
-      console.error(`✕ Duplicate task ID: ${t.id}`);
-      process.exit(1);
-    }
-    ids.add(t.id);
+  let tasksMap;
+  try {
+    tasksMap = buildTasksMap(ledger.tasks);
+  } catch (err) {
+    console.error(`✕ ${err.message}`);
+    process.exit(1);
+  }
 
+  for (const t of ledger.tasks) {
     for (const dep of t.dependencies) {
-      if (!ledger.tasks.some(x => x.id === dep)) {
+      if (!tasksMap.has(dep)) {
         console.error(`✕ Task ${t.id} references non-existent dependency ${dep}`);
         process.exit(1);
       }
     }
+
+    getDependencyEligibility(t, tasksMap);
   }
 
   if (fs.existsSync(PLAN_MARKDOWN_PATH)) {
@@ -1174,7 +1506,7 @@ function cmdAuditCompleted() {
   }).filter(Boolean);
 
   // Build tasks map for dependency lookups
-  const tasksMap = new Map(ledger.tasks.map(t => [t.id, t]));
+  const tasksMap = buildTasksMap(ledger.tasks);
   const ledgerSha = runCmd('git rev-parse HEAD', { allowError: true }) || 'unknown';
 
   const completedTasks = ledger.tasks.filter(t => t.status === 'completed');
@@ -1233,12 +1565,12 @@ function cmdAuditCompleted() {
 
   function checkDependenciesComplete(task) {
     if (!task.dependencies || task.dependencies.length === 0) return null;
-    for (const depId of task.dependencies) {
-      const dep = tasksMap.get(depId);
-      if (!dep) return { check: 'dependencies_complete', passed: false, detail: `Dependency ${depId} not found` };
-      if (dep.status !== 'completed') return { check: 'dependencies_complete', passed: false, detail: `Dependency ${depId} has status '${dep.status}'` };
-    }
-    return { check: 'dependencies_complete', passed: true };
+    const eligibility = getDependencyEligibility(task, tasksMap);
+    return {
+      check: 'dependencies_complete',
+      passed: eligibility.satisfied,
+      ...(eligibility.satisfied ? {} : { detail: formatDependencyEligibilityReasons(eligibility) })
+    };
   }
 
   function checkEvidence(task) {

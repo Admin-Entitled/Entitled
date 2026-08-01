@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-01T22:10:15.331Z` |
+| Generated timestamp | `2026-08-01T23:16:47.208Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `748223c` |
+| Local commit | `d20565f` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,8 +36,8 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 27 |
-| Ready | 13 |
+| Not started | 40 |
+| Ready | 0 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 77 |
@@ -50,7 +50,9 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next ready tasks: `SEC-004`, `SEC-007`, `DOC-001`, `DOC-003`, `DOC-004`
+- Next dependency-actionable ready tasks: None
+- Dependency-safe validation-pending tasks: `SAFE-001`, `SAFE-002`
+- Tasks awaiting prerequisites: `SAFE-003`, `SAFE-004`, `SAFE-005`, `SAFE-006`, `SAFE-007`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -145,27 +147,27 @@
 | SEC-001 | Assess authentication boundary | CRITICAL | VALIDATION_PENDING | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-002 | Add route authorization boundaries | CRITICAL | VALIDATION_PENDING | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-003 | Correct secret handling and tracked token risk | CRITICAL | VALIDATION_PENDING | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-004 | Validate environment schema at boundaries | HIGH | NOT_STARTED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | VALIDATION_PENDING | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-007 | Review CORS and CSRF protections | HIGH | READY | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-007 | Review CORS and CSRF protections | HIGH | NOT_STARTED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-001 | Update README to current architecture | MEDIUM | READY | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-001 | Update README to current architecture | MEDIUM | NOT_STARTED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-002 | Create a real `.env.example` | HIGH | NOT_STARTED | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-004 | Create route map | HIGH | READY | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-003 | Create application map | MEDIUM | NOT_STARTED | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-004 | Create route map | HIGH | NOT_STARTED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-005 | Create data ownership documentation | HIGH | NOT_STARTED | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-008 | Create production startup guide | HIGH | READY | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-009 | Create backup and restore guide | CRITICAL | NOT_STARTED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | NOT_STARTED | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | BLOCKED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
-| CLEAN-003 | Resolve duplicate route handlers | CRITICAL | READY | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-004 | Classify dead components and disabled placeholders | LOW | READY | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-004 | Classify dead components and disabled placeholders | LOW | NOT_STARTED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | NOT_STARTED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | NOT_STARTED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-007 | Remove or isolate test outputs | LOW | NOT_STARTED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -179,8 +181,8 @@
 | META-006 | Define Meta persistence and authentication | CRITICAL | DEFERRED | META-003, SEC-001, SEC-002, SEC-003, SEC-004, SEC-005 | Imported from master plan. Previous raw status: DEFERRED |
 | META-007 | Add Meta tests, write safeguards, and observability | CRITICAL | DEFERRED | META-004, META-005, META-006 | Imported from master plan. Previous raw status: DEFERRED |
 | META-008 | Roll out Meta safely to production | HIGH | DEFERRED | META-007, FINAL-007 | Imported from master plan. Previous raw status: DEFERRED |
-| FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-002 | Verify all routes and startup behavior | CRITICAL | READY | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-001 | Run full test and coverage gate | CRITICAL | NOT_STARTED | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-002 | Verify all routes and startup behavior | CRITICAL | NOT_STARTED | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-003 | Verify data integrity and restore evidence | CRITICAL | NOT_STARTED | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-004 | Audit dependencies, environment, and security | CRITICAL | NOT_STARTED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | NOT_STARTED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2713,9 +2715,9 @@ Secret scan, bundle scan, auth tests, Git status, and security review.
 ### `SEC-004` Validate environment schema at boundaries
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OWN-010
-**Last updated:** 2026-07-31T13:49:17.672Z
+**Last updated:** 2026-08-01T23:16:47.197Z
 
 #### Description
 
@@ -2800,9 +2802,9 @@ Redaction unit tests, route tests, secret scan, manual log review, and regressio
 ### `SEC-007` Review CORS and CSRF protections
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** SEC-001, BE-005
-**Last updated:** 2026-07-31T21:31:09.345Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -2887,9 +2889,9 @@ Not completed.
 ### `DOC-001` Update README to current architecture
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OWN-001, BE-005, FE-003
-**Last updated:** 2026-07-31T16:17:42.938Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -2945,9 +2947,9 @@ Not completed.
 ### `DOC-003` Create application map
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-07-31T13:23:33.446Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -2974,9 +2976,9 @@ Not completed.
 ### `DOC-004` Create route map
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OWN-007, BE-005, FE-003
-**Last updated:** 2026-07-31T16:17:42.949Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3003,9 +3005,9 @@ Not completed.
 ### `DOC-005` Create data ownership documentation
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OWN-008, DATA-002
-**Last updated:** 2026-07-31T14:51:08.254Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3090,9 +3092,9 @@ Not completed.
 ### `DOC-008` Create production startup guide
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OPS-002, OPS-003, SEC-001
-**Last updated:** 2026-07-31T21:31:09.358Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3119,9 +3121,9 @@ Not completed.
 ### `DOC-009` Create backup and restore guide
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** SAFE-007, DATA-012
-**Last updated:** 2026-07-31T15:07:10.995Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3176,9 +3178,9 @@ Not completed.
 ### `DOC-011` Create ADRs and separate Shopify theme context
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** OWN-001
-**Last updated:** 2026-07-31T11:59:05.429Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3263,9 +3265,9 @@ Not completed.
 ### `CLEAN-003` Resolve duplicate route handlers
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** BE-011, TEST-003
-**Last updated:** 2026-07-31T16:21:38.114Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3292,9 +3294,9 @@ Not completed.
 ### `CLEAN-004` Classify dead components and disabled placeholders
 
 **Severity:** LOW
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** FE-011, OWN-001
-**Last updated:** 2026-07-31T20:46:15.556Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3696,9 +3698,9 @@ Not completed.
 ### `FINAL-001` Run full test and coverage gate
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** TEST-012
-**Last updated:** 2026-07-31T15:43:47.910Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3725,9 +3727,9 @@ Not completed.
 ### `FINAL-002` Verify all routes and startup behavior
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** NOT_STARTED
 **Dependencies:** BE-005, FE-003, OPS-002, TEST-008
-**Last updated:** 2026-07-31T16:17:42.960Z
+**Last updated:** 2026-08-01T23:16:47.198Z
 
 #### Description
 
@@ -3929,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-01T22:10:15.330Z | OPS-ARCH-001 | completed | completed | codex-phase3b | Phase 3B evidence reconstruction: retained completed with clean historical validation | `670afbcb` |
-| 2026-08-01T22:10:15.328Z | SEC-006 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `526877d7` |
-| 2026-08-01T22:10:15.326Z | SEC-003 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `e9b648a4` |
-| 2026-08-01T22:10:15.324Z | SEC-002 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `554b3ef9` |
-| 2026-08-01T22:10:15.322Z | SEC-001 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `e8f59016` |
-| 2026-08-01T22:10:15.320Z | OPS-008 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `d55d41c1` |
-| 2026-08-01T22:10:15.318Z | OPS-007 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `f511ed2a` |
-| 2026-08-01T22:10:15.316Z | OPS-006 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `2794a2e3` |
-| 2026-08-01T22:10:15.314Z | OPS-005 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `106af2c7` |
-| 2026-08-01T22:10:15.312Z | OPS-004 | completed | validation_pending | codex-phase3b | Phase 3B reconciliation: completed status lacked truthful committed-state evidence | `ff98f28f` |
+| 2026-08-01T23:16:47.208Z | FINAL-002 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `33421d79` |
+| 2026-08-01T23:16:47.208Z | FINAL-001 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `64462871` |
+| 2026-08-01T23:16:47.208Z | CLEAN-004 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `16749160` |
+| 2026-08-01T23:16:47.208Z | CLEAN-003 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `401471c1` |
+| 2026-08-01T23:16:47.208Z | DOC-011 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `e6314d8b` |
+| 2026-08-01T23:16:47.208Z | DOC-009 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `cdf7a879` |
+| 2026-08-01T23:16:47.208Z | DOC-008 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `ead5bb5d` |
+| 2026-08-01T23:16:47.208Z | DOC-005 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `b82048ce` |
+| 2026-08-01T23:16:47.208Z | DOC-004 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `4058929c` |
+| 2026-08-01T23:16:47.208Z | DOC-003 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `8dea79e8` |
