@@ -49,6 +49,42 @@ function runCmd(cmd, options = {}) {
   }
 }
 
+/**
+ * Convert an application-relative path to a repository-relative Git path.
+ * Uses `git rev-parse --show-prefix` to determine the app directory prefix.
+ * Normalizes separators to /, rejects absolute paths and .. traversal.
+ * Returns null if the path cannot be resolved (e.g., already prefixed incorrectly).
+ */
+function resolveGitPath(appPath) {
+  if (!appPath || typeof appPath !== 'string') return null;
+  // Normalize separators
+  let normalized = appPath.replace(/\\/g, '/');
+  // Reject absolute paths
+  if (path.isAbsolute(normalized)) return null;
+  // Reject .. traversal
+  if (normalized.includes('..')) return null;
+  // Get the git prefix (e.g., "shopify-product-sorter/")
+  let prefix = '';
+  try {
+    prefix = runCmd('git rev-parse --show-prefix', { allowError: true });
+    // Ensure trailing slash
+    if (prefix && !prefix.endsWith('/')) prefix += '/';
+  } catch (e) {
+    // If we can't get prefix, try running from REPO_ROOT
+    try {
+      prefix = runCmd('git rev-parse --show-prefix', { allowError: true, cwd: REPO_ROOT });
+      if (prefix && !prefix.endsWith('/')) prefix += '/';
+    } catch (e2) {
+      prefix = '';
+    }
+  }
+  // Avoid double-prefixing
+  if (prefix && normalized.startsWith(prefix)) {
+    return normalized;
+  }
+  return prefix + normalized;
+}
+
 // Lock file handling
 let lockDepth = 0;
 
@@ -1163,8 +1199,12 @@ function cmdAuditCompleted() {
   function shaExistsOnOrigin(sha) {
     if (!sha) return false;
     try {
-      runCmd(`git branch -r --contains "${sha}"`, { allowError: true });
-      return true;
+      const output = runCmd(`git branch -r --contains "${sha}"`, { allowError: true });
+      // Command can succeed with empty output; require at least one remote ref
+      const refs = output.split('\n').map(r => r.trim()).filter(Boolean);
+      if (refs.length === 0) return false;
+      // Prefer the architecture branch itself
+      return refs.some(r => r.includes('origin/ops/architecture-ledger-hardening')) || refs.length > 0;
     } catch {
       return false;
     }
@@ -1172,8 +1212,10 @@ function cmdAuditCompleted() {
 
   function fileExistsAtSha(sha, filePath) {
     if (!sha) return false;
+    const gitPath = resolveGitPath(filePath);
+    if (!gitPath) return false;
     try {
-      runCmd(`git cat-file -e "${sha}:${filePath}"`, { stdio: 'pipe' });
+      runCmd(`git cat-file -e "${sha}:${gitPath}"`, { stdio: 'pipe' });
       return true;
     } catch {
       return false;
@@ -1240,8 +1282,20 @@ function cmdAuditCompleted() {
     const { changedFiles, validationFiles } = normalizeTaskFiles(task);
     const allFiles = [...new Set([...changedFiles, ...validationFiles])];
     if (allFiles.length === 0) return { check: 'declared_files_exist_at_impl_sha', passed: true, detail: 'No declared files' };
-    const missing = allFiles.filter(f => !fileExistsAtSha(task.implementation_commit_sha, f));
-    if (missing.length > 0) return { check: 'declared_files_exist_at_impl_sha', passed: false, detail: `Missing: ${missing.join(', ')}` };
+    const missing = [];
+    const missingReasons = [];
+    for (const f of allFiles) {
+      if (!fileExistsAtSha(task.implementation_commit_sha, f)) {
+        missing.push(f);
+        const gitPath = resolveGitPath(f);
+        if (!gitPath) {
+          missingReasons.push(`${f}: INVALID_REPOSITORY_PATH`);
+        } else {
+          missingReasons.push(`${f}: FILE_NOT_PRESENT_AT_SHA`);
+        }
+      }
+    }
+    if (missing.length > 0) return { check: 'declared_files_exist_at_impl_sha', passed: false, detail: missingReasons.join('; ') };
     return { check: 'declared_files_exist_at_impl_sha', passed: true };
   }
 
@@ -1403,6 +1457,15 @@ function cmdAuditCompleted() {
     counts,
     tasks: results,
   };
+
+  // Compute deterministic content hash (excludes generated_at)
+  const contentForHash = JSON.stringify({
+    ledger_commit_sha: report.ledger_commit_sha,
+    total_completed_tasks: report.total_completed_tasks,
+    counts: report.counts,
+    tasks: report.tasks,
+  });
+  report.report_content_hash = crypto.createHash('sha256').update(contentForHash).digest('hex');
 
   // Write report
   const reportDir = path.join(REPO_ROOT, 'test-results');

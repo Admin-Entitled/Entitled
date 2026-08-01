@@ -801,6 +801,19 @@ describe('Architecture Ledger Automation Test Suite', () => {
   });
 
   describe("Completed Task Audit Suite", () => {
+    let auditGitRoot;
+
+    beforeEach(() => {
+      auditGitRoot = tmpDir;
+      tmpDir = path.join(auditGitRoot, 'shopify-product-sorter');
+      fs.mkdirSync(tmpDir, { recursive: true });
+    });
+
+    afterEach(() => {
+      fs.rmSync(auditGitRoot, { recursive: true, force: true });
+      tmpDir = auditGitRoot;
+    });
+
     function setupAuditFixture(tasksOverride = [], historyOverride = null) {
       const ledgerDir = path.join(tmpDir, 'docs', 'architecture', 'ledger');
       const snapDir = path.join(ledgerDir, 'snapshots');
@@ -908,7 +921,15 @@ describe('Architecture Ledger Automation Test Suite', () => {
       return { ledgerDir, snapDir };
     }
 
-    function runAudit() {
+    function runAudit({ push = true } = {}) {
+      if (push && fs.existsSync(path.join(auditGitRoot, '.git'))) {
+        const originDir = path.join(auditGitRoot, '.origin.git');
+        if (!fs.existsSync(originDir)) {
+          execSync(`git init --bare "${originDir}"`, { cwd: auditGitRoot, stdio: 'pipe' });
+          execSync(`git remote add origin "${originDir}"`, { cwd: auditGitRoot, stdio: 'pipe' });
+        }
+        execSync('git push -u origin HEAD', { cwd: auditGitRoot, stdio: 'pipe' });
+      }
       const out = execSync(`node ${CLI_PATH} audit-completed`, { cwd: tmpDir, encoding: 'utf-8' });
       const reportPath = path.join(tmpDir, 'test-results', 'architecture-completed-task-audit.json');
       return JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
@@ -916,7 +937,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
     it("classifies valid completed task as PASS", () => {
       // Init git repo in tmpDir first so we can get its HEAD SHA
-      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
       execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
@@ -944,12 +965,13 @@ describe('Architecture Ledger Automation Test Suite', () => {
       const ledgerDir = path.join(tmpDir, "docs", "architecture", "ledger");
       const historyPath = path.join(ledgerDir, "history.jsonl");
       const existingHistory = fs.readFileSync(historyPath, "utf-8").trim();
+      const previousEntry = JSON.parse(existingHistory.split("\n").at(-1));
       const entry = {
         timestamp: "2026-07-31T00:00:00Z", task_id: "AUDIT-001",
         previous_status: "validated", new_status: "completed",
         reason: "Completed", evidence_summary: "Done",
         branch: "test", actor: "test",
-        previous_entry_hash: "0".repeat(64)
+        previous_entry_hash: previousEntry.current_entry_hash
       };
       // Compute hash
       const payload = { timestamp: entry.timestamp, task_id: entry.task_id,
@@ -994,7 +1016,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
-      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
       execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
@@ -1082,7 +1104,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: false, overallStatus: "FAILED", implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
-      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
       execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
@@ -1164,7 +1186,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
-      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
       execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
@@ -1179,7 +1201,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
     it("completion-record commit missing is AUDIT_REQUIRED for modern task", () => {
       // Init git repo in tmpDir first
-      execSync("git init", { cwd: tmpDir, stdio: "pipe" });
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
       execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
@@ -1239,6 +1261,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
       assert.ok(typeof report.counts.AUDIT_REQUIRED === "number");
       assert.ok(typeof report.counts.INVALID_COMPLETION === "number");
       assert.ok(Array.isArray(report.tasks));
+      assert.ok(typeof report.report_content_hash === "string");
+      assert.strictEqual(report.report_content_hash.length, 64);
       for (const t of report.tasks) {
         assert.ok(typeof t.id === "string");
         assert.ok(["PASS", "AUDIT_REQUIRED", "INVALID_COMPLETION"].includes(t.classification));
@@ -1246,6 +1270,331 @@ describe('Architecture Ledger Automation Test Suite', () => {
         assert.ok(Array.isArray(t.declared_files));
         assert.ok(typeof t.checks === "object");
       }
+    });
+
+    // --- Path resolution tests ---
+
+    it("application-relative path resolves to repository-relative Git path", () => {
+      // The CLI runs from tmpDir, which acts as the app directory.
+      // When a task declares "server/src/routes/api.js", the audit should
+      // resolve it to "shopify-product-sorter/server/src/routes/api.js"
+      // when the git prefix is "shopify-product-sorter/".
+      // This is tested indirectly: a file present at the prefixed path
+      // should pass the check, even though it wouldn't exist without the prefix.
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b shopify-product-sorter", { cwd: tmpDir, stdio: "pipe" });
+      // Create the file at the correct relative location
+      fs.mkdirSync(path.join(tmpDir, "server", "src", "routes"), { recursive: true });
+      fs.writeFileSync(path.join(tmpDir, "server", "src", "routes", "api.js"), "// api");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PATH-001", title: "Path Test", description: "Test path resolution", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["server/src/routes/api.js"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "PATH-001");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true,
+        "File should be found via path resolution, not reported as missing");
+    });
+
+    it("path already prefixed with shopify-product-sorter/ is not double-prefixed", () => {
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b shopify-product-sorter", { cwd: tmpDir, stdio: "pipe" });
+      fs.mkdirSync(path.join(tmpDir, "server", "src"), { recursive: true });
+      fs.writeFileSync(path.join(tmpDir, "server", "src", "app.js"), "// app");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PATH-002", title: "Double Prefix Test", description: "Test no double prefix", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        // Already has the prefix — should not become "shopify-product-sorter/shopify-product-sorter/server/..."
+        changed_files: ["shopify-product-sorter/server/src/app.js"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "PATH-002");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true,
+        "Already-prefixed path should not be double-prefixed");
+    });
+
+    it("absolute paths are rejected", () => {
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      fs.writeFileSync(path.join(tmpDir, "placeholder.txt"), "init");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PATH-003", title: "Absolute Path Test", description: "Test absolute path rejection", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["/etc/passwd"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "PATH-003");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, false);
+      assert.ok(task.checks.declared_files_exist_at_impl_sha.detail.includes("INVALID_REPOSITORY_PATH"));
+    });
+
+    it("parent traversal paths are rejected", () => {
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      fs.writeFileSync(path.join(tmpDir, "placeholder.txt"), "init");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PATH-004", title: "Traversal Test", description: "Test traversal rejection", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["../etc/passwd"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "PATH-004");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, false);
+      assert.ok(task.checks.declared_files_exist_at_impl_sha.detail.includes("INVALID_REPOSITORY_PATH"));
+    });
+
+    it("declared file present at shopify-product-sorter/server/... passes", () => {
+      // This is the core path-resolution test: the file exists at the
+      // prefixed path in git, and the audit should find it.
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b shopify-product-sorter", { cwd: tmpDir, stdio: "pipe" });
+      fs.mkdirSync(path.join(tmpDir, "server", "src"), { recursive: true });
+      fs.writeFileSync(path.join(tmpDir, "server", "src", "app.js"), "// app");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PATH-005", title: "Prefix Exists Test", description: "File exists at prefixed path", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["server/src/app.js"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit({ push: false });
+      const task = report.tasks.find(t => t.id === "PATH-005");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true);
+    });
+
+    it("genuinely absent file fails", () => {
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b shopify-product-sorter", { cwd: tmpDir, stdio: "pipe" });
+      fs.writeFileSync(path.join(tmpDir, "placeholder.txt"), "init");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PATH-006", title: "Missing File Test", description: "File genuinely absent", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["server/src/nonexistent.js"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "PATH-006");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, false);
+      assert.ok(task.checks.declared_files_exist_at_impl_sha.detail.includes("FILE_NOT_PRESENT_AT_SHA"));
+    });
+
+    // --- Remote containment tests ---
+
+    it("empty git branch -r --contains output returns false", () => {
+      // Create a commit on a local-only branch not pushed to any remote
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
+      fs.writeFileSync(path.join(tmpDir, "placeholder.txt"), "init");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      // This SHA exists locally but has no remote refs
+      // We can't easily test shaExistsOnOrigin directly, but we can verify
+      // the audit correctly classifies a task with a local-only SHA
+      setupAuditFixture([{
+        id: "REMOTE-001", title: "Local Only SHA", description: "SHA only local", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["placeholder.txt"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit({ push: false });
+      const task = report.tasks.find(t => t.id === "REMOTE-001");
+      // The SHA exists locally but not on any remote, so implementation_sha_exists_on_remote should fail
+      assert.strictEqual(task.checks.implementation_sha_exists_on_remote.passed, false);
+    });
+
+    it("matching remote branch returns true", () => {
+      // Use a SHA from the real repo that is on the architecture branch
+      const sha = execSync("git rev-parse HEAD", { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
+      setupAuditFixture([{
+        id: "REMOTE-002", title: "Remote Branch Test", description: "SHA on remote branch", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: [], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "REMOTE-002");
+      assert.strictEqual(task.checks.implementation_sha_exists_on_remote.passed, true);
+    });
+
+    // --- Deterministic output test ---
+
+    it("repeated normalized audit output is deterministic", () => {
+      setupAuditFixture();
+      const report1 = runAudit();
+      const report2 = runAudit();
+      // Compare everything except generated_at
+      assert.strictEqual(report1.ledger_commit_sha, report2.ledger_commit_sha);
+      assert.strictEqual(report1.total_completed_tasks, report2.total_completed_tasks);
+      assert.deepStrictEqual(report1.counts, report2.counts);
+      assert.strictEqual(report1.report_content_hash, report2.report_content_hash);
+      // Task order and content must be identical
+      for (let i = 0; i < report1.tasks.length; i++) {
+        assert.strictEqual(report1.tasks[i].id, report2.tasks[i].id);
+        assert.strictEqual(report1.tasks[i].classification, report2.tasks[i].classification);
+        assert.deepStrictEqual(report1.tasks[i].reasons, report2.tasks[i].reasons);
+        assert.deepStrictEqual(report1.tasks[i].checks, report2.tasks[i].checks);
+      }
+    });
+
+    // --- Path-prefix false positive removal test ---
+
+    it("path-prefix false positives are not classified as INVALID_COMPLETION", () => {
+      // This tests the core fix: files that exist at the prefixed path
+      // should NOT be classified as INVALID_COMPLETION.
+      // We simulate the exact scenario that caused the 13 false positives:
+      // a task declares "server/src/routes/sorter.js" and the file exists
+      // at "shopify-product-sorter/server/src/routes/sorter.js" in git.
+      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: "pipe" });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: "pipe" });
+      execSync("git checkout -b shopify-product-sorter", { cwd: tmpDir, stdio: "pipe" });
+      fs.mkdirSync(path.join(tmpDir, "server", "src", "routes"), { recursive: true });
+      fs.writeFileSync(path.join(tmpDir, "server", "src", "routes", "sorter.js"), "// sorter");
+      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
+      execSync('git commit -m "init"', { cwd: tmpDir, stdio: "pipe" });
+      const sha = execSync("git rev-parse HEAD", { cwd: tmpDir, encoding: "utf-8" }).trim();
+
+      setupAuditFixture([{
+        id: "PREFIX-001", title: "Prefix False Positive", description: "Simulates the false positive scenario", severity: "HIGH",
+        status: "completed", dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
+        changed_files: ["server/src/routes/sorter.js"], validation_files: [],
+        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
+        implementation_commit_sha: sha, clean_validation_commit_sha: sha,
+        completion_record_commit_sha: sha,
+        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
+      }]);
+
+      const report = runAudit();
+      const task = report.tasks.find(t => t.id === "PREFIX-001");
+      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true,
+        "Path-prefix mismatch should not report the declared file as missing");
+    });
+
+    // --- Audit read-only tests (reinforced) ---
+
+    it("audit does not modify tasks.json (reinforced)", () => {
+      const { ledgerDir } = setupAuditFixture();
+      const tasksPath = path.join(ledgerDir, 'tasks.json');
+      const before = fs.readFileSync(tasksPath, 'utf-8');
+      const beforeHash = crypto.createHash('sha256').update(before).digest('hex');
+      runAudit();
+      const after = fs.readFileSync(tasksPath, 'utf-8');
+      const afterHash = crypto.createHash('sha256').update(after).digest('hex');
+      assert.strictEqual(beforeHash, afterHash);
+    });
+
+    it("audit does not modify history.jsonl (reinforced)", () => {
+      const { ledgerDir } = setupAuditFixture();
+      const historyPath = path.join(ledgerDir, 'history.jsonl');
+      const before = fs.readFileSync(historyPath, 'utf-8');
+      const beforeHash = crypto.createHash('sha256').update(before).digest('hex');
+      runAudit();
+      const after = fs.readFileSync(historyPath, 'utf-8');
+      const afterHash = crypto.createHash('sha256').update(after).digest('hex');
+      assert.strictEqual(beforeHash, afterHash);
     });
   });
 
