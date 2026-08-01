@@ -336,7 +336,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
     setupFixture();
     assert.throws(() => {
       execSync(`node ${CLI_PATH} checkpoint TEST-002`, { cwd: tmpDir, encoding: 'utf-8' });
-    }, /must be in validated status/i);
+    }, /must be in validated or completed status/i);
   });
 
   it('maintains deterministic output on repeated generation', () => {
@@ -637,7 +637,13 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
   describe("Checkpoint and Preflight Hardening Suite", () => {
     it("blocks checkpoint when untracked implementation file exists (UNTRACKED_IMPLEMENTATION_FILE)", () => {
-      setupFixture();
+      const { ledgerDir } = setupFixture();
+      // Give TEST-002 a changed_files entry so validateDeclaredFilesNonEmpty passes
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      ledger.tasks.find(t => t.id === "TEST-002").changed_files = ["docs/architecture/ledger/tasks.json"];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
       execSync("git init", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.name \"Test User\"", { cwd: tmpDir, stdio: "pipe" });
       execSync("git config user.email \"test@example.com\"", { cwd: tmpDir, stdio: "pipe" });
@@ -702,10 +708,42 @@ describe('Architecture Ledger Automation Test Suite', () => {
       }, /(MISSING_DECLARED_FILE|FILE_ABSENT_FROM_HEAD)/i);
     });
 
-    it("returns PASS and is idempotent when checkpointing already completed task", () => {
+    it("rejects completed task with empty changed_files (no false PASS shortcut)", () => {
       setupFixture();
-      const out = execSync("node " + CLI_PATH + " checkpoint TEST-001", { cwd: tmpDir, encoding: "utf-8" });
-      assert.match(out, /COMMITTED-STATE VALIDATION: PASS/);
+      // TEST-001 is completed but has empty changed_files — Phase 1 rejects this
+      assert.throws(() => {
+        execSync("node " + CLI_PATH + " checkpoint TEST-001", { cwd: tmpDir, encoding: "utf-8", stdio: "pipe" });
+      }, /EMPTY_DECLARED_FILES/i);
+    });
+
+    it("rejects checkpoint when both files_changed and changed_files are present (CONFLICTING_FILE_FIELDS)", () => {
+      const { ledgerDir } = setupFixture();
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      const t2 = ledger.tasks.find(t => t.id === "TEST-002");
+      t2.status = "validated";
+      t2.files_changed = ["scripts/architecture-ledger.mjs"];
+      t2.changed_files = ["scripts/architecture-ledger.mjs"];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      assert.throws(() => {
+        execSync("node " + CLI_PATH + " checkpoint TEST-002", { cwd: tmpDir, encoding: "utf-8", stdio: "pipe" });
+      }, /CONFLICTING_FILE_FIELDS/i);
+    });
+
+    it("rejects checkpoint when changed_files and validation_files are both empty (EMPTY_DECLARED_FILES)", () => {
+      const { ledgerDir } = setupFixture();
+      const tasksPath = path.join(ledgerDir, "tasks.json");
+      const ledger = JSON.parse(fs.readFileSync(tasksPath, "utf-8"));
+      const t2 = ledger.tasks.find(t => t.id === "TEST-002");
+      t2.status = "validated";
+      t2.changed_files = [];
+      t2.validation_files = [];
+      fs.writeFileSync(tasksPath, JSON.stringify(ledger, null, 2));
+
+      assert.throws(() => {
+        execSync("node " + CLI_PATH + " checkpoint TEST-002", { cwd: tmpDir, encoding: "utf-8", stdio: "pipe" });
+      }, /EMPTY_DECLARED_FILES/i);
     });
 
     it("preflightSuite flags missing test file (MISSING_TEST_FILE)", () => {

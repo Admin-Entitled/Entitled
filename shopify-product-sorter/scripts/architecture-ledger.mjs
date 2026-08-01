@@ -187,6 +187,43 @@ function saveTasksAtomic(data) {
   fs.renameSync(tmpPath, TASKS_PATH);
 }
 
+// Phase 1: Canonical field helpers
+function normalizeTaskFiles(task) {
+  const hasLegacy = Array.isArray(task.files_changed) && task.files_changed.length > 0;
+  const hasCanonical = Array.isArray(task.changed_files) && task.changed_files.length > 0;
+
+  if (hasLegacy && hasCanonical) {
+    throw new Error(
+      `CONFLICTING_FILE_FIELDS: Task ${task.id} has both 'files_changed' (legacy) and 'changed_files' (canonical). ` +
+      `Migrate 'files_changed' contents to 'changed_files' and remove the legacy field.`
+    );
+  }
+
+  const changedFiles = hasCanonical
+    ? [...new Set(task.changed_files)]
+    : hasLegacy
+      ? [...new Set(task.files_changed)]
+      : [];
+
+  const validationFiles = Array.isArray(task.validation_files)
+    ? [...new Set(task.validation_files)]
+    : [];
+
+  return { changedFiles, validationFiles, hasLegacy };
+}
+
+function validateDeclaredFilesNonEmpty(task) {
+  const { changedFiles, validationFiles } = normalizeTaskFiles(task);
+  const declaredFiles = [...new Set([...changedFiles, ...validationFiles])];
+  if (declaredFiles.length === 0) {
+    throw new Error(
+      `EMPTY_DECLARED_FILES: Task ${task.id} declares no changed_files or validation_files. ` +
+      `Populate at least one before checkpointing to prevent trivially-passing validation.`
+    );
+  }
+  return { changedFiles, validationFiles, declaredFiles };
+}
+
 function appendHistoryEvent(taskId, prevStatus, newStatus, reason, evidenceSummary) {
   const chainResult = validateHistoryChain();
   if (!chainResult.valid) {
@@ -851,41 +888,22 @@ function cmdCheckpoint(taskId) {
 
   const branch = runCmd("git branch --show-current", { allowError: true }) || "main";
 
-  // 0. Idempotency Check: if task is already completed
-  if (task.status === "completed") {
-    const currentSha = runCmd("git rev-parse HEAD", { allowError: true }) || "unknown";
-    let remoteSha = currentSha;
-    try {
-      remoteSha = runCmd(`git rev-parse origin/${branch}`, { allowError: true });
-    } catch (e) {}
-
-    const shaMatch = (currentSha === remoteSha) ? "YES" : "NO";
-    console.log(`\nCOMMITTED-STATE VALIDATION: PASS`);
-    console.log(`Tested implementation SHA: ${currentSha}`);
-    console.log(`Completion-record SHA:     ${currentSha}`);
-    console.log(`Remote SHA match:          ${shaMatch}`);
-    return;
+  // 0. Require task to be in validated or completed status (check first, before file validation)
+  if (!["validated", "completed"].includes(task.status)) {
+    throw new Error(`Task ${taskId} must be in validated or completed status before checkpoint (current: ${task.status})`);
   }
 
-  // 1. Require task to be in validated status
-  if (task.status !== "validated") {
-    throw new Error(`Task ${taskId} must be in validated status before checkpoint (current: ${task.status})`);
-  }
+  // 1. Canonical file field resolution (Phase 1: reject conflicts, prevent empty bypass)
+  const { changedFiles, validationFiles, declaredFiles } = validateDeclaredFilesNonEmpty(task);
 
   console.log(`=== Checkpointing Task ${taskId} ===`);
-
-  // 2. Determine all declared changed files and validation files
-  const declaredFiles = [...new Set([
-    ...(Array.isArray(task.files_changed) ? task.files_changed : []),
-    ...(Array.isArray(task.validation_files) ? task.validation_files : [])
-  ])];
 
   let prefix = "";
   try {
     prefix = runCmd("git rev-parse --show-prefix", { allowError: true });
   } catch (e) {}
 
-  // 3 & 4. Confirm every declared file is tracked and exists in Git / HEAD / working tree
+  // 2. Confirm every declared file is tracked and exists in Git / HEAD / working tree
   for (const file of declaredFiles) {
     const absFile = path.join(REPO_ROOT, file);
     if (!fs.existsSync(absFile)) {
@@ -909,7 +927,7 @@ function cmdCheckpoint(taskId) {
     }
   }
 
-  // 5. Reject relevant untracked implementation or test files
+  // 3. Reject relevant untracked implementation or test files
   const statusShort = runCmd("git status --short -uall", { allowError: true });
   const untrackedLines = statusShort.split("\n")
     .filter(line => line.startsWith("??"))
@@ -932,8 +950,8 @@ function cmdCheckpoint(taskId) {
   for (const file of dirtyFiles) {
     const fullPath = path.join(REPO_ROOT, file);
     if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
-      const content = fs.readFileSync(fullPath, "utf-8");
-      if (secretPattern.test(content)) {
+      const fileContent = fs.readFileSync(fullPath, "utf-8");
+      if (secretPattern.test(fileContent)) {
         throw new Error(`CRITICAL: Potential secret detected in file ${file}! Aborting checkpoint.`);
       }
     }
@@ -942,7 +960,7 @@ function cmdCheckpoint(taskId) {
   cmdValidate();
   cmdGenerate();
 
-  // 6. Stage and commit implementation & validation files
+  // 4. Stage and commit implementation & validation files
   for (const file of declaredFiles) {
     if (fs.existsSync(path.join(REPO_ROOT, file))) {
       runCmd(`git add "${file}"`);
@@ -952,12 +970,14 @@ function cmdCheckpoint(taskId) {
   const commitMsg = `arch(${taskId}): ${task.title}`;
   try {
     runCmd(`git commit -m "${commitMsg}"`);
-    console.log(`✓ Committed implementation: ${commitMsg}`);
+    console.log(`\u2713 Committed implementation: ${commitMsg}`);
   } catch (e) {
     console.log("Notice: No new implementation changes to commit.");
   }
 
-  const localImplSha = runCmd("git rev-parse HEAD");
+  // 5. Record implementation_commit_sha (Phase 1)
+  const implementationCommitSha = runCmd("git rev-parse HEAD");
+  task.implementation_commit_sha = implementationCommitSha;
 
   // Push implementation commit
   let pushSuccess = false;
@@ -965,47 +985,88 @@ function cmdCheckpoint(taskId) {
     runCmd(`git push origin ${branch}`);
     pushSuccess = true;
   } catch (e) {
-    console.error(`✕ Failed to push branch ${branch} to origin: ${e.message}`);
+    console.error(`\u2717 Failed to push branch ${branch} to origin: ${e.message}`);
   }
 
   if (!pushSuccess) {
-    console.warn(`⚠ Checkpoint push failed. Task ${taskId} remains in status validated (unpushed checkpoint).`);
-    throw new Error(`PUSH_FAILED: Failed to push implementation commit ${localImplSha} to origin/${branch}`);
+    console.warn(`\u26a0 Checkpoint push failed. Task ${taskId} remains in status validated (unpushed checkpoint).`);
+    throw new Error(`PUSH_FAILED: Failed to push implementation commit ${implementationCommitSha} to origin/${branch}`);
   }
 
-  // 7. Verify remote SHA matches implementation commit
+  // 6. Verify remote SHA matches implementation commit
   const remoteImplSha = runCmd(`git rev-parse origin/${branch}`);
-  if (localImplSha !== remoteImplSha) {
-    throw new Error(`REMOTE_SHA_MISMATCH: Local SHA (${localImplSha}) != Remote SHA (${remoteImplSha}). Task remains uncompleted.`);
+  if (implementationCommitSha !== remoteImplSha) {
+    throw new Error(`REMOTE_SHA_MISMATCH: Local SHA (${implementationCommitSha}) != Remote SHA (${remoteImplSha}). Task remains uncompleted.`);
   }
 
-  // 8. Run required validation from a clean detached worktree at localImplSha
-  console.log(`\n=== Running Clean Detached-Worktree Validation at ${localImplSha} ===`);
+  // 7. Run required validation from a clean detached worktree at implementationCommitSha
+  console.log(`\n=== Running Clean Detached-Worktree Validation at ${implementationCommitSha} ===`);
   const verifyRoot = runCmd("mktemp -d /tmp/entitled-checkpoint-verify-XXXXXX");
   let cleanValidationPassed = false;
+  let validationResults = { regression_gate: { passed: false }, verify: { passed: false } };
 
   try {
     const repoTop = runCmd("git rev-parse --show-toplevel");
-    runCmd(`git -C "${repoTop}" worktree add --detach "${verifyRoot}" ${localImplSha}`);
+    runCmd(`git -C "${repoTop}" worktree add --detach "${verifyRoot}" ${implementationCommitSha}`);
 
     const appDir = path.join(verifyRoot, "shopify-product-sorter");
     const targetDir = fs.existsSync(appDir) ? appDir : verifyRoot;
 
-    console.log("Running regression gate in clean worktree...");
-    const regOutput = runCmd("npm run test:regression-gate", { cwd: targetDir, allowError: true });
-    const verifyOutput = runCmd("npm run verify", { cwd: targetDir, allowError: true });
-
-    if (!regOutput.includes("Overall Status:   PASSED") && !regOutput.includes("overallStatus: \"PASSED\"")) {
-      throw new Error(`Clean regression-gate failed:\n${regOutput}`);
+    // Phase 1: npm ci in detached worktree before running tests
+    console.log("Running npm ci in clean worktree...");
+    try {
+      runCmd("npm ci", { cwd: targetDir });
+      console.log("\u2713 npm ci succeeded in clean worktree");
+    } catch (e) {
+      throw new Error(`npm ci failed in clean worktree: ${e.message}`);
     }
-    if (!verifyOutput.includes("System verification completed successfully")) {
-      throw new Error(`Clean verify failed:\n${verifyOutput}`);
+
+    // Run regression gate using actual exit code (Phase 1: no string matching)
+    console.log("Running regression gate in clean worktree...");
+    let regExitCode = 1;
+    let regOutput = "";
+    try {
+      regOutput = runCmd("npm run test:regression-gate", { cwd: targetDir });
+      regExitCode = 0;
+    } catch (e) {
+      regOutput = (e.stdout || "") + (e.stderr || "");
+      regExitCode = e.status || 1;
+    }
+
+    validationResults.regression_gate = {
+      passed: regExitCode === 0,
+      exit_code: regExitCode,
+      output_summary: regOutput.split("\n").filter(l => l.includes("Overall Status:") || l.includes("Suites")).join(" | ")
+    };
+
+    // Run verify using actual exit code (Phase 1: no string matching)
+    let verifyExitCode = 1;
+    let verifyOutput = "";
+    try {
+      verifyOutput = runCmd("npm run verify", { cwd: targetDir });
+      verifyExitCode = 0;
+    } catch (e) {
+      verifyOutput = (e.stdout || "") + (e.stderr || "");
+      verifyExitCode = e.status || 1;
+    }
+
+    validationResults.verify = {
+      passed: verifyExitCode === 0,
+      exit_code: verifyExitCode,
+      output_summary: verifyOutput.split("\n").filter(l => l.includes("verification")).join(" | ")
+    };
+
+    if (regExitCode !== 0) {
+      throw new Error(`Clean regression-gate failed (exit ${regExitCode}):\n${regOutput}`);
+    }
+    if (verifyExitCode !== 0) {
+      throw new Error(`Clean verify failed (exit ${verifyExitCode}):\n${verifyOutput}`);
     }
 
     cleanValidationPassed = true;
-    console.log(`✓ Clean detached-worktree validation PASSED at ${localImplSha}`);
+    console.log(`\u2713 Clean detached-worktree validation PASSED at ${implementationCommitSha}`);
   } catch (err) {
-    console.error(`✕ Clean committed-state validation FAILED: ${err.message}`);
+    console.error(`\u2717 Clean committed-state validation FAILED: ${err.message}`);
     cleanValidationPassed = false;
   } finally {
     try {
@@ -1014,13 +1075,23 @@ function cmdCheckpoint(taskId) {
     } catch (e) {}
   }
 
+  // 8. Record clean_validation_commit_sha (Phase 1: set regardless of pass/fail for audit trail)
+  task.clean_validation_commit_sha = cleanValidationPassed ? implementationCommitSha : null;
+  task.validation_results = {
+    ...validationResults,
+    timestamp: new Date().toISOString(),
+    implementation_commit_sha: implementationCommitSha,
+    passed: cleanValidationPassed
+  };
+
   if (!cleanValidationPassed) {
-    cmdTransition(taskId, "validation_pending", "Clean committed-state validation failed", `Attempted SHA: ${localImplSha}`);
-    throw new Error(`CLEAN_VALIDATION_FAILED: Clean committed-state validation failed at SHA ${localImplSha}. Task moved to validation_pending.`);
+    saveTasksAtomic(ledger);
+    cmdTransition(taskId, "validation_pending", "Clean committed-state validation failed", `Attempted SHA: ${implementationCommitSha}`);
+    throw new Error(`CLEAN_VALIDATION_FAILED: Clean committed-state validation failed at SHA ${implementationCommitSha}. Task moved to validation_pending.`);
   }
 
   // 9. Transition to completed, append history, regenerate Markdown, commit completion record & push
-  cmdTransition(taskId, "completed", "Clean committed-state verification passed", `Tested SHA: ${localImplSha}`);
+  cmdTransition(taskId, "completed", "Clean committed-state verification passed", `Tested SHA: ${implementationCommitSha}`);
 
   runCmd(`git add "${LEDGER_DIR}" "${PLAN_MARKDOWN_PATH}"`);
   const completionMsg = `docs(${taskId}): complete task and record evidence`;
@@ -1030,17 +1101,29 @@ function cmdCheckpoint(taskId) {
 
   runCmd(`git push origin ${branch}`);
 
+  // 10. Record completion_record_commit_sha (Phase 1)
   const completionRecordSha = runCmd("git rev-parse HEAD");
-  const remoteCompletionSha = runCmd(`git rev-parse origin/${branch}`);
+  task.completion_record_commit_sha = completionRecordSha;
+  saveTasksAtomic(ledger);
 
-  if (completionRecordSha !== remoteCompletionSha) {
-    throw new Error(`SHA mismatch on completion record! Local (${completionRecordSha}) != Remote (${remoteCompletionSha})`);
+  // Final sync: re-add and re-commit the SHA update if it changed
+  runCmd(`git add "${LEDGER_DIR}"`);
+  try {
+    runCmd(`git commit -m "docs(${taskId}): record completion_record_commit_sha"`);
+    runCmd(`git push origin ${branch}`);
+  } catch (e) {}
+
+  const remoteCompletionSha = runCmd(`git rev-parse origin/${branch}`);
+  const finalCompletionSha = runCmd("git rev-parse HEAD");
+
+  if (finalCompletionSha !== remoteCompletionSha) {
+    throw new Error(`SHA mismatch on completion record! Local (${finalCompletionSha}) != Remote (${remoteCompletionSha})`);
   }
 
   console.log(`\n==============================================`);
   console.log(`COMMITTED-STATE VALIDATION: PASS`);
-  console.log(`Tested implementation SHA: ${localImplSha}`);
-  console.log(`Completion-record SHA:     ${completionRecordSha}`);
+  console.log(`Tested implementation SHA: ${implementationCommitSha}`);
+  console.log(`Completion-record SHA:     ${finalCompletionSha}`);
   console.log(`Remote SHA match:          YES`);
   console.log(`==============================================\n`);
 }
