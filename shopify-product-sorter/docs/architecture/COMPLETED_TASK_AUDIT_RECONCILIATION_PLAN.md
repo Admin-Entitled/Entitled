@@ -176,5 +176,5 @@ The current suite also passed `npm run test:architecture-ledger`, `npm run arch:
 
 ## 11. Phase 3B commit record
 
-- Reconciliation evidence/transition commit: pending until the scoped commit is created.
-- Completion-record finalization commit: pending until the real reconciliation commit SHA is known.
+- Reconciliation evidence/transition commit: `748223c7c730c3d619b988e54acb79f8625e89cf` (`fix(ledger): reconcile historical completed-task evidence`).
+- Completion-record finalization commit: this documentation-only follow-up records the real reconciliation commit SHA; its own SHA is intentionally not self-referential.
