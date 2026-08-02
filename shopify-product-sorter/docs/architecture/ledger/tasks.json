@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-02T00:01:28.279Z",
+  "last_updated": "2026-08-02T00:06:27.197Z",
   "tasks": [
     {
       "id": "SAFE-001",
       "title": "Confirm recoverable Git backup",
       "description": "Remediation task SAFE-001: Confirm recoverable Git backup",
       "severity": "CRITICAL",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [],
       "blocking_reasons": [],
       "acceptance_criteria": [
@@ -21,7 +21,8 @@
       "evidence": [
         "Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001.",
-        "Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required."
+        "Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required.",
+        "SAFE-001 completed after clean committed-state validation at 8fe7ea1208b774ab3272a990e396b3264927018f: baseline 4956310183cf53043b0c3a27b04869833cf53654 is recoverable through remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; isolated restore evidence, 77/77 architecture tests, 13/13 regression gate, offline verify, and dirty-path preservation passed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -29,19 +30,44 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-02T00:01:28.279Z",
+      "updated_timestamp": "2026-08-02T00:06:27.196Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-02T00:01:28.279Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-08-02T00:06:27.196Z",
       "notes": "Imported from master plan. Previous raw status: COMPLETED",
       "validation_files": [
         "tests/architecture-ledger.test.js"
       ],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "implementation_commit_sha": "8fe7ea1208b774ab3272a990e396b3264927018f",
+      "clean_validation_commit_sha": "8fe7ea1208b774ab3272a990e396b3264927018f",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "8fe7ea1208b774ab3272a990e396b3264927018f",
+        "tested_commit": "8fe7ea1208b774ab3272a990e396b3264927018f",
+        "timestamp": "2026-08-02T00:05:00Z",
+        "safe_001": {
+          "git_object_readable": true,
+          "baseline_ancestor_of_remote_main": true,
+          "remote_ref_verified": true,
+          "isolated_restore_evidence_verified": true,
+          "dirty_path_preservation": true
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        }
+      }
     },
     {
       "id": "SAFE-002",

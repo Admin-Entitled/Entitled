@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-02T00:01:28.279Z` |
+| Generated timestamp | `2026-08-02T00:06:27.197Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `ea2df57` |
+| Local commit | `8fe7ea1` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -41,11 +41,11 @@
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 76 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 1 |
-| Completion percentage | 0.8% |
+| Completed | 2 |
+| Completion percentage | 1.6% |
 
 ## 4. Current execution focus
 
@@ -60,7 +60,7 @@
 
 | Task ID | Title | Severity | Status | Dependencies | Notes |
 | --- | --- | --- | --- | --- | --- |
-| SAFE-001 | Confirm recoverable Git backup | CRITICAL | VALIDATED | None | Imported from master plan. Previous raw status: COMPLETED |
+| SAFE-001 | Confirm recoverable Git backup | CRITICAL | COMPLETED | None | Imported from master plan. Previous raw status: COMPLETED |
 | SAFE-002 | Capture working-tree and baseline manifest | CRITICAL | VALIDATION_PENDING | None | Imported from master plan. Previous raw status: COMPLETED |
 | SAFE-003 | Confirm SQLite backups | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: READY |
 | SAFE-004 | Complete PostgreSQL/Neon backup | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -195,9 +195,9 @@
 ### `SAFE-001` Confirm recoverable Git backup
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** None
-**Last updated:** 2026-08-02T00:01:28.279Z
+**Last updated:** 2026-08-02T00:06:27.196Z
 
 #### Description
 
@@ -217,7 +217,7 @@ Static: `git rev-parse`, `git show --stat`. Unit/integration: not applicable. Ro
 
 #### Completion evidence
 
-Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001., Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required.
+Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001., Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required., SAFE-001 completed after clean committed-state validation at 8fe7ea1208b774ab3272a990e396b3264927018f: baseline 4956310183cf53043b0c3a27b04869833cf53654 is recoverable through remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; isolated restore evidence, 77/77 architecture tests, 13/13 regression gate, offline verify, and dirty-path preservation passed.
 
 ---
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-02T00:06:27.217Z | SAFE-001 | validated | completed | shivam | SAFE-001 completed after clean committed-state validation at 8fe7ea1208b774ab3272a990e396b3264927018f: baseline 4956310183cf53043b0c3a27b04869833cf53654 is recoverable through remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; isolated restore evidence, 77/77 architecture tests, 13/13 regression gate, offline verify, and dirty-path preservation passed. | `10e0c915` |
 | 2026-08-02T00:01:28.299Z | SAFE-001 | validation_pending | validated | shivam | Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required. | `255531a7` |
 | 2026-08-01T23:16:47.208Z | FINAL-002 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `33421d79` |
 | 2026-08-01T23:16:47.208Z | FINAL-001 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `64462871` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-01T23:16:47.208Z | DOC-009 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `cdf7a879` |
 | 2026-08-01T23:16:47.208Z | DOC-008 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `ead5bb5d` |
 | 2026-08-01T23:16:47.208Z | DOC-005 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `b82048ce` |
-| 2026-08-01T23:16:47.208Z | DOC-004 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `4058929c` |
