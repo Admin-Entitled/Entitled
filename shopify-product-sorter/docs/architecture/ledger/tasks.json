@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-01T23:16:47.208Z",
+  "last_updated": "2026-08-02T00:01:28.279Z",
   "tasks": [
     {
       "id": "SAFE-001",
       "title": "Confirm recoverable Git backup",
       "description": "Remediation task SAFE-001: Confirm recoverable Git backup",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [],
       "blocking_reasons": [],
       "acceptance_criteria": [
@@ -20,17 +20,24 @@
       ],
       "evidence": [
         "Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-001.",
+        "Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.175Z",
+      "updated_timestamp": "2026-08-02T00:01:28.279Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-02T00:01:28.279Z",
       "completed_timestamp": "2026-07-31T00:00:00Z",
       "notes": "Imported from master plan. Previous raw status: COMPLETED",
-      "validation_files": [],
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
       "implementation_commit_sha": null,
       "clean_validation_commit_sha": null,
       "completion_record_commit_sha": null,
