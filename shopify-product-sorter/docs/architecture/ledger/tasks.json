@@ -1312,7 +1312,7 @@
       ],
       "implementation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
       "clean_validation_commit_sha": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
-      "completion_record_commit_sha": "634ad1afdd9e400e923bb37740b78a758a4a6a2e",
+      "completion_record_commit_sha": "e464957f20bdbc3c2d8196b83d052947148f9cb5",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
@@ -1347,6 +1347,12 @@
             "manual_override_lock": "MANUAL source and force flag override locks and terminal status",
             "retry_behavior": "deterministic retry count and error categories"
           }
+        },
+        "completion_record_state": {
+          "sha": "e464957f20bdbc3c2d8196b83d052947148f9cb5",
+          "remote_branch": "origin/ops/architecture-ledger-hardening",
+          "remote_contained": true,
+          "semantics": "actual repository commit containing the recovered completed status and evidence metadata"
         }
       }
     },
@@ -1394,7 +1400,7 @@
       ],
       "implementation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
       "clean_validation_commit_sha": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
-      "completion_record_commit_sha": "7890a0ef38dd5dec9454d0a583edafc3977c2a86",
+      "completion_record_commit_sha": "e464957f20bdbc3c2d8196b83d052947148f9cb5",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
@@ -1428,6 +1434,12 @@
             "preview_and_commit_contract": "preview is zero-write; commit is executed in a single client transaction",
             "safe_logging": "log assertions explicitly exclude customer PII, phone numbers, emails, addresses, and raw CSV rows"
           }
+        },
+        "completion_record_state": {
+          "sha": "e464957f20bdbc3c2d8196b83d052947148f9cb5",
+          "remote_branch": "origin/ops/architecture-ledger-hardening",
+          "remote_contained": true,
+          "semantics": "actual repository commit containing the recovered completed status and evidence metadata"
         }
       }
     },
