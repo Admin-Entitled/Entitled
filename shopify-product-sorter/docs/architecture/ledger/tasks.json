@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-03T12:25:10.175Z",
+  "last_updated": "2026-08-03T12:33:53.118Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -975,13 +975,15 @@
         "Sorter scoring test suite server/src/services/sorter.test.js (11 pass).",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-001.",
         "TEST foundation recovery: clean task-specific validation passed at reconciliation baseline de60749ede00db385016f6428144f440d72566ca; this baseline is not represented as the original test implementation commit.",
-        "Historical containing commit 4939e06a53b285829d2a4f1d9665e88d05ffd910 is locally available and contained by origin/ops/architecture-ledger-hardening."
+        "Historical containing commit 4939e06a53b285829d2a4f1d9665e88d05ffd910 is locally available and contained by origin/ops/architecture-ledger-hardening.",
+        "TEST foundation completion-record finalization: recovery commit 251cda92d76309159da69ceca4f363d0b9432fc8 is the actual ledger completion-record commit; task status is unchanged.",
+        "Post-push verification: recovery completion-record commit 251cda92d76309159da69ceca4f363d0b9432fc8 is contained by origin/ops/architecture-ledger-hardening; task status is unchanged."
       ],
       "changed_files": [
         "server/src/services/sorter.test.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T12:25:10.175Z",
+      "updated_timestamp": "2026-08-03T12:33:53.118Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T12:25:10.175Z",
@@ -992,7 +994,7 @@
       ],
       "implementation_commit_sha": "de60749ede00db385016f6428144f440d72566ca",
       "clean_validation_commit_sha": "de60749ede00db385016f6428144f440d72566ca",
-      "completion_record_commit_sha": "de60749ede00db385016f6428144f440d72566ca",
+      "completion_record_commit_sha": "251cda92d76309159da69ceca4f363d0b9432fc8",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
@@ -1008,8 +1010,10 @@
           "original_vs_baseline": "original containing commit retained as provenance; top-level implementation SHA is the shared clean reconciliation baseline required by the completed-task audit"
         },
         "completion_record_state": {
-          "provisional_sha": "de60749ede00db385016f6428144f440d72566ca",
-          "semantics": "pre-recovery remote-contained baseline used only until the first recovery commit exists; finalization commit will replace this field with the actual recovery completion-record SHA"
+          "sha": "251cda92d76309159da69ceca4f363d0b9432fc8",
+          "remote_branch": "origin/ops/architecture-ledger-hardening",
+          "remote_contained": true,
+          "semantics": "actual repository commit containing the recovered completed status and evidence metadata"
         },
         "commands": [
           "npm ci",
@@ -1082,7 +1086,11 @@
           "protected_dirty_paths": 38,
           "deleted_path_sentinels": 7,
           "application_files_changed": false
-        }
+        },
+        "completion_record_commit_sha": "251cda92d76309159da69ceca4f363d0b9432fc8",
+        "completion_record_finalization_timestamp": "2026-08-03T12:26:37.060Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "remote_verification_timestamp": "2026-08-03T12:33:53.118Z"
       }
     },
     {
@@ -1109,13 +1117,15 @@
         "Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028",
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-008.",
         "TEST foundation recovery: clean task-specific validation passed at reconciliation baseline de60749ede00db385016f6428144f440d72566ca; this baseline is not represented as the original test implementation commit.",
-        "Historical containing commit f3690e88bead0c46576d1e8002e50804b22ade42 is locally available and contained by origin/ops/architecture-ledger-hardening."
+        "Historical containing commit f3690e88bead0c46576d1e8002e50804b22ade42 is locally available and contained by origin/ops/architecture-ledger-hardening.",
+        "TEST foundation completion-record finalization: recovery commit 251cda92d76309159da69ceca4f363d0b9432fc8 is the actual ledger completion-record commit; task status is unchanged.",
+        "Post-push verification: recovery completion-record commit 251cda92d76309159da69ceca4f363d0b9432fc8 is contained by origin/ops/architecture-ledger-hardening; task status is unchanged."
       ],
       "changed_files": [
         "server/src/services/collectionSyncApplyRollback.test.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T12:25:10.175Z",
+      "updated_timestamp": "2026-08-03T12:33:53.118Z",
       "started_timestamp": "2026-07-31T08:01:56.894Z",
       "implemented_timestamp": "2026-07-31T08:01:56.971Z",
       "validated_timestamp": "2026-08-03T12:25:10.175Z",
@@ -1126,7 +1136,7 @@
       ],
       "implementation_commit_sha": "de60749ede00db385016f6428144f440d72566ca",
       "clean_validation_commit_sha": "de60749ede00db385016f6428144f440d72566ca",
-      "completion_record_commit_sha": "de60749ede00db385016f6428144f440d72566ca",
+      "completion_record_commit_sha": "251cda92d76309159da69ceca4f363d0b9432fc8",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
@@ -1142,8 +1152,10 @@
           "original_vs_baseline": "original containing commit retained as provenance; top-level implementation SHA is the shared clean reconciliation baseline required by the completed-task audit"
         },
         "completion_record_state": {
-          "provisional_sha": "de60749ede00db385016f6428144f440d72566ca",
-          "semantics": "pre-recovery remote-contained baseline used only until the first recovery commit exists; finalization commit will replace this field with the actual recovery completion-record SHA"
+          "sha": "251cda92d76309159da69ceca4f363d0b9432fc8",
+          "remote_branch": "origin/ops/architecture-ledger-hardening",
+          "remote_contained": true,
+          "semantics": "actual repository commit containing the recovered completed status and evidence metadata"
         },
         "commands": [
           "npm ci",
@@ -1215,7 +1227,11 @@
           "protected_dirty_paths": 38,
           "deleted_path_sentinels": 7,
           "application_files_changed": false
-        }
+        },
+        "completion_record_commit_sha": "251cda92d76309159da69ceca4f363d0b9432fc8",
+        "completion_record_finalization_timestamp": "2026-08-03T12:26:37.060Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "remote_verification_timestamp": "2026-08-03T12:33:53.118Z"
       }
     },
     {
