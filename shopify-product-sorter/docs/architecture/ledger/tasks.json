@@ -1311,14 +1311,14 @@
         "server/src/services/orderMapping.test.js"
       ],
       "implementation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
-      "clean_validation_commit_sha": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
+      "clean_validation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
       "completion_record_commit_sha": "e464957f20bdbc3c2d8196b83d052947148f9cb5",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
         "tested_commit": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
         "implementation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
-        "clean_validation_commit_sha": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
+        "clean_validation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
         "historical_provenance": {
           "original_containing_commit_sha": "634ad1afdd9e400e923bb37740b78a758a4a6a2e",
           "remote_branch": "origin/ops/architecture-ledger-hardening",
@@ -1395,18 +1395,17 @@
       "completed_timestamp": "2026-08-03T16:08:40.443Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
-        "server/src/services/orderMapping.test.js",
-        "server/src/app.test.js"
+        "server/src/services/orderMapping.test.js"
       ],
       "implementation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
-      "clean_validation_commit_sha": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
+      "clean_validation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
       "completion_record_commit_sha": "e464957f20bdbc3c2d8196b83d052947148f9cb5",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
         "tested_commit": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
         "implementation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
-        "clean_validation_commit_sha": "917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b",
+        "clean_validation_commit_sha": "8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc",
         "historical_provenance": {
           "original_containing_commit_sha": "7890a0ef38dd5dec9454d0a583edafc3977c2a86",
           "remote_branch": "origin/ops/architecture-ledger-hardening",
