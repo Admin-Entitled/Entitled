@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-03T07:40:37.718Z",
+  "last_updated": "2026-08-03T07:57:37.641Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -89,21 +89,104 @@
         "Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002.",
         "R1-A verification: the preserved SAFE-002 baseline manifest at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/git/2026-07-30T12-28-53+0530-safe-002-baseline.manifest explicitly supersedes /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest and satisfies the plan acceptance checks recorded in the manifest validation block.",
-        "R1-A restore: Group A evidence verified from the preserved baseline manifest copy referenced above; no application files changed."
+        "R1-A restore: Group A evidence verified from the preserved baseline manifest copy referenced above; no application files changed.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:38:40.104Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:38:39.976Z",
       "completed_timestamp": "2026-08-03T07:38:40.104Z",
       "notes": "Imported from master plan. Previous raw status: COMPLETED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/git/2026-07-30T12-28-53+0530-safe-002-baseline.manifest",
+          "exists": true,
+          "supersedes_original_tmp_manifest": true,
+          "required_baseline_categories_verified": true,
+          "secret_content_exposed": false
+        },
+        "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "SAFE-003",
@@ -127,21 +210,106 @@
         "SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003.",
         "R1-A verification: the SQLite backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite contains labeled manifests plus integrity and restore-open logs for both captured SQLite paths, matching the plan evidence.",
-        "R1-A restore: SAFE-003 external backup evidence verified on disk; dependencies satisfied by restored SAFE-002."
+        "R1-A restore: SAFE-003 external backup evidence verified on disk; dependencies satisfied by restored SAFE-002.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:07.050Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:06.929Z",
       "completed_timestamp": "2026-08-03T07:40:07.050Z",
       "notes": "Imported from master plan. Previous raw status: READY",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite",
+          "exists": true,
+          "labeled_manifests_present": true,
+          "integrity_logs_present": true,
+          "restore_open_logs_present": true,
+          "git_tracked": false,
+          "secret_content_exposed": false
+        },
+        "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "SAFE-004",
@@ -165,21 +333,107 @@
         "PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004.",
         "R1-A verification: the PostgreSQL backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres contains the custom dump, schema dump, restore logs, and manifest metadata cited by the plan evidence.",
-        "R1-A restore: SAFE-004 backup and isolated restore evidence verified on disk; dependencies satisfied by restored SAFE-002."
+        "R1-A restore: SAFE-004 backup and isolated restore evidence verified on disk; dependencies satisfied by restored SAFE-002.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:07.282Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:07.180Z",
       "completed_timestamp": "2026-08-03T07:40:07.282Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres",
+          "exists": true,
+          "custom_dump_present": true,
+          "schema_dump_present": true,
+          "restore_logs_present": true,
+          "manifest_metadata_present": true,
+          "production_writes": false,
+          "secret_content_exposed": false
+        },
+        "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "SAFE-005",
@@ -203,21 +457,107 @@
         "Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005.",
         "R1-A verification: the encrypted secret archive artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets contains the encrypted archive, decrypt verification log, permissions log, and rotation runbook cited by the plan evidence.",
-        "R1-A restore: SAFE-005 encrypted archive and rotation evidence verified on disk; dependencies satisfied by restored SAFE-002."
+        "R1-A restore: SAFE-005 encrypted archive and rotation evidence verified on disk; dependencies satisfied by restored SAFE-002.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:07.556Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:07.401Z",
       "completed_timestamp": "2026-08-03T07:40:07.556Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets",
+          "exists": true,
+          "encrypted_archive_present": true,
+          "decrypt_verification_log_present": true,
+          "permissions_log_present": true,
+          "rotation_runbook_present": true,
+          "plaintext_exposed": false,
+          "secret_content_exposed": false
+        },
+        "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "SAFE-006",
@@ -245,23 +585,104 @@
         "Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005.",
         "R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening.",
-        "R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005."
+        "R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:19.261Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-31T10:28:10.186Z",
       "implemented_timestamp": "2026-07-31T10:30:39.545Z",
       "validated_timestamp": "2026-08-03T07:40:19.158Z",
       "completed_timestamp": "2026-08-03T07:40:19.261Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
       "implementation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
       "clean_validation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
       "completion_record_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3"
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+        "clean_validation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+        "completion_record_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+        "artifact_specific_safe_checks": {
+          "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice",
+          "exists": true,
+          "bundle_sha256": "97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d",
+          "hash_verified": true,
+          "backup_classes_verified": 3,
+          "secret_content_exposed": false
+        },
+        "provenance": "The documented implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is preserved and remotely contained; the external artifact predates the reconciliation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
       }
     },
     {
@@ -288,21 +709,109 @@
         "Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007.",
         "R1-A verification: the rehearsal bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal contains SQLite, PostgreSQL, runtime, git-restore, and off-device checksum logs plus restore-operator-sequence.txt, matching the plan evidence and showing an independent restore rehearsal without production writes.",
-        "R1-A restore: SAFE-007 rehearsal bundle verified on disk after restoring SAFE-003, SAFE-004, and SAFE-006."
+        "R1-A restore: SAFE-007 rehearsal bundle verified on disk after restoring SAFE-003, SAFE-004, and SAFE-006.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:37.426Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:37.323Z",
       "completed_timestamp": "2026-08-03T07:40:37.426Z",
       "notes": "Imported from master plan. Previous raw status: BLOCKED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal",
+          "exists": true,
+          "sqlite_restore_logs_present": true,
+          "postgres_restore_logs_present": true,
+          "runtime_path_logs_present": true,
+          "git_restore_logs_present": true,
+          "offdevice_checksum_logs_present": true,
+          "operator_sequence_present": true,
+          "production_writes": false,
+          "secret_content_exposed": false
+        },
+        "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "SAFE-008",
@@ -325,21 +834,103 @@
         "Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008.",
         "R1-A verification: docs/architecture/DATABASE_OWNERSHIP_REGISTER.md exists on disk and records provisional owners plus explicit unknown states that block deletion, matching the plan evidence and acceptance criteria.",
-        "R1-A restore: SAFE-008 ownership-register evidence verified on disk; dependencies satisfied by restored SAFE-002."
+        "R1-A restore: SAFE-008 ownership-register evidence verified on disk; dependencies satisfied by restored SAFE-002.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:07.778Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:07.673Z",
       "completed_timestamp": "2026-08-03T07:40:07.778Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "docs/architecture/DATABASE_OWNERSHIP_REGISTER.md",
+          "exists": true,
+          "provisional_owners_and_unknown_states_verified": true,
+          "runtime_writes": false
+        },
+        "provenance": "The documentation artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original documentation commit.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "TEST-001",
@@ -864,21 +1455,104 @@
         "Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created.",
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001.",
         "R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria.",
-        "R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008."
+        "R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008.",
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
+        "docs/architecture/ledger/tasks.json",
+        "docs/architecture/ledger/history.jsonl"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:37.654Z",
+      "updated_timestamp": "2026-08-03T07:57:37.641Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:37.547Z",
       "completed_timestamp": "2026-08-03T07:40:37.654Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architecture-ledger.test.js"
+      ],
+      "implementation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+      "clean_validation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "validation_results": {
+        "commands": [
+          "npm ci",
+          "npm run test:architecture-ledger",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run arch:generate",
+          "npm run arch:validate",
+          "npm run arch:doctor",
+          "npm run arch:audit-completed",
+          "npm run verify",
+          "npm run test:regression-gate",
+          "git diff --check"
+        ],
+        "exit_codes": {
+          "npm ci": 0,
+          "npm run test:architecture-ledger": 0,
+          "npm run arch:validate (pre-sync)": 1,
+          "npm run arch:generate": 0,
+          "npm run arch:validate (post-sync)": 0,
+          "npm run arch:doctor": 0,
+          "npm run arch:audit-completed": 0,
+          "npm run verify": 0,
+          "npm run test:regression-gate": 0,
+          "git diff --check": 0
+        },
+        "passed": true,
+        "tested_commit": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "pre_validation_generated_report_sync_required": true,
+        "remote_containment": {
+          "branch": "origin/ops/architecture-ledger-hardening",
+          "baseline": {
+            "sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+            "contained": true
+          },
+          "safe006": {
+            "sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+            "contained": true
+          },
+          "own001": {
+            "sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+            "contained": true
+          }
+        },
+        "dirty_path_preservation": {
+          "baseline_snapshot": "/tmp/r1_a_finalization_dirty_baseline.json",
+          "protected_dirty_path_hashes_recorded": true,
+          "deleted_path_sentinels_recorded": 7,
+          "application_files_changed": false
+        },
+        "architecture_tests": {
+          "passed": true,
+          "tests": 77
+        },
+        "regression_gate": {
+          "passed": true,
+          "suites_passed": 13,
+          "suites_total": 13
+        },
+        "verify": {
+          "passed": true,
+          "mode": "offline"
+        },
+        "implementation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+        "clean_validation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
+        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "artifact_specific_safe_checks": {
+          "path": "docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md",
+          "exists": true,
+          "canonical_names_and_statuses_verified": true,
+          "disabled_labels_excluded": true,
+          "legacy_aliases_documented": true
+        },
+        "provenance": "The true documentation-containing commit c05bd0a0c9871e6522b95d5575203dfb79f0fcd8 is preserved and remotely contained.",
+        "timestamp": "2026-08-03T07:57:37.641Z"
+      }
     },
     {
       "id": "OWN-002",
