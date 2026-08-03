@@ -325,30 +325,30 @@ These features have never been implemented or committed in git history and do no
 - **Reimplementation Required**: **NO**
 
 ### OWN-002: Define Product Sorter boundary
-- **Classification**: `A. RESTORE_WITH_EXISTING_EVIDENCE`
+- **Classification**: `C. NEEDS_EVIDENCE_BACKFILL`
 - **Historical Completed Transition**: undefined
 - **Implementation Commit**: `Artifact/Doc`
 - **Commit Exists Locally & Remotely**: Local: `NO` | Remote: `NO`
 - **Declared Implementation Files**: None declared (Metadata gap)
 - **Declared Validation Files**: None declared
-- **Files Exist at Commit / Disk**: `YES (Artifact/File verified on disk)`
-- **Test / Artifact Evidence**: Documentation matrix in docs/architecture/
+- **Files Exist at Commit / Disk**: `YES, but the pre-recovery specification required current-code correction`
+- **Test / Artifact Evidence**: Fresh committed-state route, service, store, environment, dependency, and test inventory is required.
 - **Dependency State**: `OWN-001, TEST-001`
-- **Exact Minimum Action Required**: Verify document/artifact on disk/git and restore completed status.
+- **Exact Minimum Action Required**: Do not restore completion from this recovery row alone. Correct the specification against current committed code, commit the corrected artifact, validate the exact committed state, and record truthful ledger evidence.
 - **Reimplementation Required**: **NO**
 
 ### OWN-003: Classify Order Mapping versus legacy Delivery Resolution
-- **Classification**: `A. RESTORE_WITH_EXISTING_EVIDENCE`
+- **Classification**: `E. GENUINELY_INCOMPLETE`
 - **Historical Completed Transition**: undefined
 - **Implementation Commit**: `77e237a2fc9b042546976255b522af9bce8381af`
 - **Commit Exists Locally & Remotely**: Local: `YES` | Remote: `YES`
 - **Declared Implementation Files**: `shopify-product-sorter/docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md`, `shopify-product-sorter/docs/architecture/ledger/history.jsonl`, `shopify-product-sorter/docs/architecture/ledger/snapshots/tasks-completed-1785498221.json`, `shopify-product-sorter/docs/architecture/ledger/tasks.json`
 - **Declared Validation Files**: None declared
-- **Files Exist at Commit / Disk**: `YES (4 files in commit diff)`
-- **Test / Artifact Evidence**: Documentation matrix in docs/architecture/
+- **Files Exist at Commit / Disk**: `NO — commit 77e237a contains ledger/generated-report files but not docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md`
+- **Test / Artifact Evidence**: The standalone classification artifact claimed by the ledger is absent from the cited commit and the current committed baseline.
 - **Dependency State**: `SAFE-008, TEST-004, TEST-005`
-- **Exact Minimum Action Required**: Verify document/artifact on disk/git and restore completed status.
-- **Reimplementation Required**: **NO**
+- **Exact Minimum Action Required**: Reconstruct a current classification report from committed repository evidence, commit it, validate the exact committed state, and replace the unsupported implementation evidence. Commit 77e237a may be retained only as historical ledger provenance.
+- **Reimplementation Required**: **YES (documentation reconstruction only)**
 
 ### OWN-004: Define SKU Image Manager boundary
 - **Classification**: `A. RESTORE_WITH_EXISTING_EVIDENCE`

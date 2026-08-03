@@ -1,189 +1,154 @@
 # Product Sorter Application Boundary Specification
 
-## 1. Document Control & Overview
+## 1. Document Control
 
 | Field | Value |
 | --- | --- |
 | Task ID | `OWN-002` |
-| Application Name | Shopify Product Sorter / Collection Placement Manager |
-| Canonical Name | `Product Sorter` |
-| Primary Owner | Product Sorter Lead |
-| Target Frontend Location | `client/src/apps/sorter` |
-| Target Backend Location | `server/src/apps/sorter` |
-| Creation Date | 2026-07-30 |
-| Status | `APPROVED` |
+| Canonical application | `Product Sorter` |
+| Current frontend location | `client/src/App.jsx` with shared client `client/src/api.js` |
+| Current backend locations | `server/src/routes/api.js` and `server/src/routes/sorter.js` |
+| Target frontend boundary | `client/src/apps/sorter` |
+| Target backend boundary | `server/src/apps/sorter` |
+| Evidence baseline | Commit `a3b204aa0bf9259e60b69891d86dc11cf15dcbc4` |
+| Last validated | 2026-08-03 |
+| Status | `VALIDATED OWNERSHIP SPECIFICATION` |
 
----
+This task defines ownership only. The target directories are future extraction boundaries, not current implementation paths. No route, table, file, or public contract is moved by `OWN-002`.
 
-## 2. Executive Summary
+## 2. Current Frontend Ownership
 
-This document establishes the authoritative ownership boundary for the **Product Sorter** (Collection Placement Manager) application. It identifies all frontend components, backend routes, services, database tables, file assets, external integrations, environment configurations, and test suites owned by the Product Sorter application.
+The Product Sorter owner owns the Sorter behavior embedded in `client/src/App.jsx`: collection selection and sync, strategy controls, product scoring and placement, pin/hide preferences, generate/apply/rollback actions, batch reorder progress, and Sorter action/network log views. `client/src/sidebarModules.js` declares the enabled Sorter module.
 
----
+`client/src/App.jsx`, `client/src/api.js`, `client/src/styles.css`, and `client/src/sidebarModules.js` are shared application-shell files. Product Sorter owns only its feature-specific behavior inside them until frontend extraction is completed. The target extraction must preserve `/` and all existing `/api/collections*` and `/api/collection-products*` contracts.
 
-## 3. Frontend Boundary (`client/src/apps/sorter`)
+## 3. Current Route Ownership
 
-Currently embedded within `client/src/App.jsx`, the Product Sorter frontend comprises the following functional components and UI capabilities:
+All listed public contracts are owned by Product Sorter. The shared `/api` router in `server/src/routes/api.js` remains a composition boundary rather than exclusive Sorter ownership.
 
-### 3.1 UI Views & Subcomponents
-- **Collection Selector**: Dropdown and search interface for selecting target Shopify collections.
-- **Strategy Controls Slider**: Interactive sliders for configuring strategy weights:
-  - Revenue / Sales Weight (`salesWeight`)
-  - Profit Margin Weight (`marginWeight`)
-  - Inventory / Stock Level Weight (`inventoryWeight`)
-  - Recency / New Arrival Weight (`recencyWeight`)
-- **Product Grid / Table**: Detailed product list displaying:
-  - Product thumbnail, title, SKU, price, stock
-  - Total calculated score and individual metric scores
-  - `primaryReason` score explanation tag
-  - Position control inputs
-- **Pinning & Hiding Controls**:
-  - Pin product to fixed position (1-based index)
-  - Hide product from sorted collection view
-- **Sorting Actions Bar**:
-  - Sync collection products from Shopify (`POST /api/collections/sync`)
-  - Generate sorted order (`POST /api/collections/generate`)
-  - Apply generated order to Shopify (`POST /api/collections/apply`)
-  - Rollback to previous snapshot (`POST /api/collections/rollback`)
-- **Batch Reorder Control**:
-  - Reorder all eligible custom collections (`POST /api/collections/reorder-all-v2`)
-  - Job status polling & progress bar
-- **Sorter Logs Viewer**:
-  - Action logs viewer (`GET /api/collections/logs/actions`)
-  - Network logs viewer (`GET /api/collections/logs/network`)
-
----
-
-## 4. Backend Boundary (`server/src/apps/sorter`)
-
-### 4.1 Route Ownership (13 Endpoints)
-
-| Method | Endpoint Route | Handler Location | Function / Capability |
+| Method | Public contract | Current definition | Ownership note |
 | --- | --- | --- | --- |
-| `GET` | `/api/collections` | `server/src/routes/api.js:424` | List all collections with local sync/state summary |
-| `GET` | `/api/collection-products` | `server/src/routes/api.js:438` | Fetch products for a collection |
-| `POST` | `/api/collections/sync` | `server/src/routes/api.js:465` | Sync collection products from Shopify & store snapshot |
-| `GET` | `/api/collections/state` | `server/src/routes/api.js:486` | Retrieve current sorter state (rules, preferences, strategy) |
-| `PUT` | `/api/collections/settings` | `server/src/routes/api.js:504` | Update strategy weights & settings |
-| `PUT` | `/api/collections/products/preference` | `server/src/routes/api.js:522` | Update product pin/hide preferences |
-| `POST` | `/api/collections/generate` | `server/src/routes/api.js:539` | Calculate & generate new product order |
-| `POST` | `/api/collections/apply` | `server/src/routes/api.js:574` | Apply new order to Shopify & record state |
-| `POST` | `/api/collections/reorder-all-v2` | `server/src/routes/api.js:608` | Async batch reorder all custom collections |
-| `POST` | `/api/collections/reorder-all` | `server/src/routes/api.js:1021,1025` | Legacy duplicate batch reorder endpoint |
-| `POST` | `/api/collections/rollback` | `server/src/routes/api.js:1067` | Restore collection order from historical snapshot |
-| `GET` | `/api/collections/logs/actions` | `server/src/routes/api.js:212` | Retrieve sorter action logs |
-| `GET` | `/api/collections/logs/network` | `server/src/routes/api.js:229` | Retrieve sorter network logs |
+| `GET` | `/api/collections/logs/actions` | `server/src/routes/api.js` | Product Sorter action-log contract. |
+| `GET` | `/api/collections/logs/network` | `server/src/routes/api.js` | Product Sorter network-log contract. |
+| `GET` | `/api/collections` | `server/src/routes/api.js` | Lists Shopify collections with Sorter settings/state. |
+| `GET` | `/api/collection-products` | `server/src/routes/api.js` | Reads a selected collection and its products. |
+| `POST` | `/api/collections/sync` | `server/src/routes/api.js` | Syncs Shopify collection data into the Sorter snapshot. |
+| `GET` | `/api/collections/state` | `server/src/routes/api.js` | Reads settings, preferences, snapshot, and strategy. |
+| `PUT` | `/api/collections/settings` | `server/src/routes/api.js` | Updates collection-level settings. |
+| `PUT` | `/api/collections/products/preference` | `server/src/routes/api.js` | Updates pin/hide placement preferences. |
+| `POST` | `/api/collections/generate` | `server/src/routes/sorter.js` | Generates a deterministic proposed order. |
+| `POST` | `/api/collections/apply` | `server/src/routes/sorter.js` | Applies a generated order and records backup/state. |
+| `POST` | `/api/collections/reorder-all-v2` | `server/src/routes/sorter.js` | Starts the guarded batch reorder workflow. |
+| `POST` | `/api/collections/reorder-all` | `server/src/routes/sorter.js` | Compatibility contract; the first registered handler redirects `307` to `reorder-all-v2`. |
+| `POST` | `/api/collections/rollback` | `server/src/routes/sorter.js` | Restores the latest recorded collection order. |
 
-### 4.2 Services & Modules
+There are 13 distinct public contracts. `server/src/routes/sorter.js` declares `POST /collections/reorder-all` twice; Express reaches the redirecting declaration first, so the later declaration is unreachable. This is an existing implementation defect, not an additional owned contract and not approved for cleanup by `OWN-002`.
 
-| Module Name | File Location | Responsibilities |
+## 4. Service and Repository Ownership
+
+| File | Owner | Responsibility |
 | --- | --- | --- |
-| **Sorter Engine** | `server/src/services/sorter.js` | Score calculation algorithm, strategy weighting, pinning/hiding placement logic, tie-breaking, score explanations (`primaryReason`) |
-| **Collection State Service** | `server/src/services/collectionStateService.js` | Snapshot creation & retrieval, collection state persistence, preference updates, strategy settings IO |
-| **Sorter Runtime Service** | `server/src/services/sorterRuntimeService.js` | SQLite table initialization, DB queries for collections/snapshots/logs, action and network logging |
+| `server/src/services/sorter.js` | Product Sorter | Scoring, strategy weighting, placement, membership preservation, and deterministic ordering. |
+| `server/src/services/collectionStateService.js` | Product Sorter | Collection settings, preferences, snapshots, and order backups in SQLite. |
+| `server/src/services/sorterRuntimeService.js` | Product Sorter | Sorter run state plus action and network telemetry in SQLite. |
+| `server/src/services/strategySettings.js` | Product Sorter | Validates and persists strategy weights in a JSON file. |
+| `server/src/routes/sorter.js` | Product Sorter | Dedicated Sorter workflow handlers; currently mounted by the shared API router. |
+| `server/src/routes/api.js` | Shared composition | Contains Product Sorter contracts alongside Sales Intelligence, SKU Image Manager, diagnostics, and health contracts. |
+| `server/src/db/database.js` | Shared SQLite bootstrap | Creates Sorter, Shopify-auth, and legacy Delivery tables; no application owns the module exclusively. |
+| `server/src/services/shopifyService.js` | Shared integration | Shopify Admin GraphQL transport used by Product Sorter and other applications. |
+| `server/src/services/shopifyAuth.js` | Shared integration | Shopify credential and token-cache boundary used across Shopify features. |
+| `server/src/utils/logger.js` and diagnostics routes | Shared diagnostics | Shared operational logging and health visibility. |
 
----
+No separate Sorter repository file exists. `collectionStateService.js` and `sorterRuntimeService.js` currently contain the Sorter-owned persistence operations over the shared SQLite connection.
 
-## 5. Data & Storage Boundary
+## 5. Data and Runtime File Ownership
 
-### 5.1 SQLite Database Tables (`server/data/app.db`)
+The default SQLite file is `server/data/app.db`, resolved from repository root and overridden by `SQLITE_PATH`. The database file and WAL/SHM sidecars are runtime data and are ignored by Git.
 
-Product Sorter has 100% exclusive ownership of the following 6 SQLite tables:
+### 5.1 Proven Sorter-owned SQLite tables
 
-1. `collections`: Stores collection metadata, sync timestamp, product count, and current status.
-2. `collection_products`: Stores products within collections, titles, prices, stock levels, sales data, margin data, current position, and updated position.
-3. `sorter_snapshots`: Stores snapshot headers (collection ID, product count, created timestamp, snapshot reason).
-4. `sorter_snapshot_items`: Stores individual product position mappings within historical snapshots.
-5. `sorter_logs`: Stores detailed sorter execution logs (log level, component, action, message, metadata).
-6. `strategy_settings`: Stores saved strategy weight configurations per collection or globally.
+| Table | Owner | Current writer/reader |
+| --- | --- | --- |
+| `collection_settings` | Product Sorter | `collectionStateService.js` |
+| `product_preferences` | Product Sorter | `collectionStateService.js` |
+| `collection_snapshots` | Product Sorter | `collectionStateService.js` |
+| `order_backups` | Product Sorter | `collectionStateService.js` |
+| `sorter_runs` | Product Sorter | `sorterRuntimeService.js` |
+| `sorter_action_logs` | Product Sorter | `sorterRuntimeService.js` |
+| `sorter_network_logs` | Product Sorter | `sorterRuntimeService.js` |
 
-### 5.2 File Storage
+### 5.2 Shared or excluded SQLite tables
 
-- `server/data/strategy-settings.json`: Strategy settings persistence fallback file.
-- Runtime log files (if configured under `server/data/logs/sorter*.log`).
+| Table | Classification | Reason |
+| --- | --- | --- |
+| `shopify_auth_cache` | `UNRESOLVED / SHARED` | Created in the shared database and tied to shared Shopify authentication. Product Sorter may consume authenticated transport but cannot claim exclusive ownership. |
+| `delivery_orders` | Legacy Delivery / Order Mapping migration source | Not Product Sorter data. |
+| `legacy_imports` | Legacy Delivery retained data | Not Product Sorter data. |
+| `delivery_logs` | Legacy Delivery retained data | Not Product Sorter data. |
 
----
+### 5.3 JSON and generated/runtime files
 
-## 6. Integration & External System Boundary
+- `server/data/strategy-settings.json` is Product Sorter strategy persistence. `STRATEGY_SETTINGS_FILE` may replace the path directly.
+- `server/data/app.db`, `server/data/app.db-wal`, and `server/data/app.db-shm` are generated runtime files. Product Sorter owns only the seven tables listed above, not the complete shared database file.
+- No committed Sorter log-file writer was found. Sorter logs are stored in SQLite, so no `server/data/logs/sorter*.log` ownership is claimed.
 
-### 6.1 External Systems
+## 6. Shopify and Transport Dependencies
 
-- **Shopify Admin API**: Product Sorter relies on Shopify Admin GraphQL & REST API for collection and product data:
-  - Reading custom and smart collections (`GET /admin/api/2024-01/custom_collections.json`, `smart_collections.json`)
-  - Reading collection products (`GET /admin/api/2024-01/collections/{id}/products.json`)
-  - Reordering collection products via GraphQL (`mutation collectionReorderProducts`) or REST (`PUT /admin/api/2024-01/custom_collections/{id}.json`)
+Product Sorter uses Shopify Admin GraphQL through `shopifyService.js` and `shopifyAuth.js` to list collections, read collection products and sales metrics, ensure manual sorting, and run `collectionReorderProducts` through `syncCollectionOrder()`. The configured API version defaults to `2026-04`.
 
-### 6.2 Transport Module
+The Shopify transport, credentials, OAuth/token cache, retry/error handling, and store connection are shared integration surfaces. Product Sorter owns its collection operations and required scopes, but it does not exclusively own either transport module or `shopify_auth_cache`.
 
-- `server/src/services/shopifyService.js`: Shared Shopify transport adapter currently used by Sorter.
+## 7. Environment-variable Ownership
 
----
+| Variable | Product Sorter relationship | Ownership |
+| --- | --- | --- |
+| `SQLITE_PATH` | Selects the shared SQLite file containing Sorter tables. | Shared runtime configuration. |
+| `STRATEGY_SETTINGS_FILE` | Selects Product Sorter strategy JSON storage. | Product Sorter. |
+| `SHOPIFY_STORE_DOMAIN` | Identifies the Shopify store. | Shared Shopify integration. |
+| `SHOPIFY_CLIENT_ID` | Required by the shared Shopify auth boundary. | Shared Shopify integration. |
+| `SHOPIFY_CLIENT_SECRET` | Required by the shared Shopify auth boundary. | Shared Shopify integration. |
+| `SHOPIFY_ADMIN_ACCESS_TOKEN` | Optional static Shopify Admin token. | Shared Shopify integration. |
+| `SHOPIFY_API_VERSION` | Shopify Admin API version; default `2026-04`. | Shared Shopify integration. |
 
-## 7. Environment Variables & Configuration
+`SHOPIFY_SHOP_DOMAIN`, `SHOPIFY_ACCESS_TOKEN`, `DATABASE_PATH`, and `STRATEGY_SETTINGS_PATH` are not current committed configuration names.
 
-The following environment variables govern Product Sorter operations:
+## 8. Test Ownership
 
-| Variable | Required | Purpose | Default |
-| --- | --- | --- | --- |
-| `SHOPIFY_SHOP_DOMAIN` | Yes | Target Shopify store domain | - |
-| `SHOPIFY_ACCESS_TOKEN` | Yes | Shopify Admin API Token | - |
-| `SHOPIFY_API_VERSION` | No | API version string | `2024-01` |
-| `DATABASE_PATH` | No | SQLite database file location | `./data/app.db` |
-| `STRATEGY_SETTINGS_PATH` | No | Strategy JSON file location | `./data/strategy-settings.json` |
+| Test file | Ownership evidence |
+| --- | --- |
+| `server/src/services/sorter.test.js` | Sorter strategy, deterministic ranking, stock behavior, move construction, and membership safety. |
+| `server/src/services/collectionSyncApplyRollback.test.js` | Sync/apply/backup/rollback and failure-ordering contracts. |
+| `server/src/app.test.js` | Product Sorter route smoke coverage and `reorder-all` compatibility redirect. Shared with other applications. |
+| `client/src/api.test.js` | Sorter API paths and log endpoints. Shared client test file. |
+| `client/src/frontendRegression.test.js` | Enabled-module and frontend isolation contracts. Shared frontend test file. |
+| `client/src/styles.test.js` | Shared dashboard style-boundary regression. |
 
----
+No committed `collectionReorderContracts.test.js`, `collectionStateService.test.js`, or `routes/sorter.test.js` exists at the evidence baseline; they are not claimed as current evidence.
 
-## 8. Test Suite Boundary
+## 9. Cross-application Dependencies and Ownership Questions
 
-Product Sorter owns the following test files:
+| Surface | Classification | Boundary rule |
+| --- | --- | --- |
+| `client/src/App.jsx`, `client/src/api.js`, `client/src/styles.css`, `client/src/sidebarModules.js` | Shared frontend shell | Extract only Product Sorter behavior; preserve other applications and public routes. |
+| `server/src/routes/api.js` | Shared backend router | Delegate Sorter contracts without changing URLs or response contracts. |
+| `server/src/db/database.js` and `server/data/app.db` | Shared runtime/store | Extract only proven Sorter tables; do not move or delete shared/legacy tables. |
+| `shopifyService.js`, `shopifyAuth.js`, `shopify_auth_cache` | Shared Shopify integration | Inject or import the shared boundary; do not duplicate credentials or transport. |
+| Shared health, Shopify debug, logger, and diagnostics surfaces | Shared diagnostics | Product Sorter consumes them but does not own their application-wide contract. |
+| Sales metrics from `shopifyService.js` | Shared Shopify data | Product Sorter owns the scoring use, not the shared provider transport. |
 
-- `server/src/services/sorter.test.js` (11 test cases covering sorting algorithm, strategy weighting, pinned/hidden products, empty inputs, tie-breaking, primaryReason explanations).
-- Target additional tests:
-  - `server/src/services/collectionStateService.test.js` (Covering sync, snapshot creation, and rollback)
-  - `server/src/routes/sorter.test.js` (Covering sorter API endpoints)
+### Unresolved owner decision
 
----
+- **Question:** Which future application boundary owns `shopify_auth_cache` and the shared SQLite bootstrap after extraction?
+- **Evidence reviewed:** `server/src/db/database.js`, `server/src/services/shopifyAuth.js`, shared Shopify importers, and `docs/architecture/DATABASE_OWNERSHIP_REGISTER.md`.
+- **Blocked downstream tasks:** `OWN-008`, `OWN-010`, `DATA-003`, and any extraction that would split the shared SQLite/auth boundary.
+- **Required decision:** Assign the cache and connection bootstrap to a named shared platform/integration owner before moving tables or duplicating storage. Until then they remain `UNRESOLVED / SHARED`.
 
-## 9. Cross-Application Dependencies & Shared Surfaces
+## 10. Approved Target Extraction Boundary
 
-- **App Shell Navigation**: `App.jsx` provides the top-level tab switcher to toggle between Product Sorter, Order Mapping, and SKU Image Manager.
-- **Shared Diagnostics**: `/api/health` and `/api/debug/shopify` endpoints read general system health and Shopify connectivity used by Sorter.
-- **Shared Transport**: `shopifyService.js` handles HTTP request signing and retries for Shopify Admin API.
+Future `FE-004` and `BE-002` work may extract the Product Sorter frontend, API client, dedicated router, owned services, and repository access for only the seven proven Sorter tables into `client/src/apps/sorter` and `server/src/apps/sorter`. The extraction must preserve current URLs, response contracts, Shopify behavior, runtime data, and shared diagnostics. It must not move shared Shopify credentials/transport, `shopify_auth_cache`, or legacy Delivery data by assumption.
 
----
+## 11. Safety and Rollback
 
-## 10. Target Directory Structure (Extraction Plan)
-
-```
-client/src/apps/sorter/
-  ├── components/
-  │   ├── CollectionSelector.jsx
-  │   ├── StrategyControls.jsx
-  │   ├── ProductTable.jsx
-  │   ├── PinHideModal.jsx
-  │   ├── BatchReorderProgress.jsx
-  │   └── SorterLogViewer.jsx
-  ├── hooks/
-  │   └── useSorterState.js
-  ├── api/
-  │   └── sorterClient.js
-  └── SorterApp.jsx
-
-server/src/apps/sorter/
-  ├── routes/
-  │   └── sorterRoutes.js
-  ├── services/
-  │   ├── sorterEngine.js
-  │   └── collectionStateService.js
-  ├── db/
-  │   └── sorterRepository.js
-  └── index.js
-```
-
----
-
-## 11. Rollback & Safety Plan
-
-- **Zero Route Breaking**: During future extraction phases (`BE-002`, `FE-004`), the existing route mounts (`/api/collections/*`) and URL paths (`/`) will be preserved verbatim using router delegation.
-- **Data Safety**: No database tables are moved or altered during this boundary definition task (`OWN-002`). SQLite table structures and locations remain unchanged.
-- **Isolated Testing**: All changes can be validated independently by running `node --test server/src/services/sorter.test.js`.
+- `OWN-002` changes documentation only; application code, data, and routes remain unchanged.
+- A future extraction rolls back by restoring router delegation and frontend composition without changing public URLs or table contents.
+- Minimum current validation is the committed route/table/environment inventory plus `node --test server/src/services/sorter.test.js` and the existing architecture-ledger validation commands.
