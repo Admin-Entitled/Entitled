@@ -1449,6 +1449,8 @@ function cmdCheckpoint(taskId) {
     ...validationResults,
     timestamp: new Date().toISOString(),
     implementation_commit_sha: implementationCommitSha,
+    clean_validation_commit_sha: cleanValidationPassed ? implementationCommitSha : null,
+    tested_commit: cleanValidationPassed ? implementationCommitSha : null,
     passed: cleanValidationPassed
   };
 
@@ -1518,10 +1520,14 @@ function cmdAuditCompleted() {
     return PHASE1_FIELDS.some(f => task[f] != null && task[f] !== undefined);
   }
 
-  function shaExistsOnRemote(sha) {
-    if (!sha) return false;
+  function isCommitSha(sha) {
+    return typeof sha === 'string' && /^[0-9a-f]{40}$/i.test(sha);
+  }
+
+  function shaExistsLocally(sha) {
+    if (!isCommitSha(sha)) return false;
     try {
-      runCmd(`git cat-file -e "${sha}"`);
+      runCmd(`git cat-file -e "${sha}^{commit}"`);
       return true;
     } catch {
       return false;
@@ -1529,9 +1535,9 @@ function cmdAuditCompleted() {
   }
 
   function shaExistsOnOrigin(sha) {
-    if (!sha) return false;
+    if (!isCommitSha(sha)) return false;
     try {
-      const output = runCmd(`git branch -r --contains "${sha}"`, { allowError: true });
+      const output = runCmd(`git branch -r --contains "${sha}"`);
       // Command can succeed with empty output; require at least one remote ref
       const refs = output.split('\n').map(r => r.trim()).filter(Boolean);
       if (refs.length === 0) return false;
@@ -1542,8 +1548,18 @@ function cmdAuditCompleted() {
     }
   }
 
+  function shaIsAncestor(ancestorSha, descendantSha) {
+    if (!shaExistsLocally(ancestorSha) || !shaExistsLocally(descendantSha)) return false;
+    try {
+      runCmd(`git merge-base --is-ancestor "${ancestorSha}" "${descendantSha}"`);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   function fileExistsAtSha(sha, filePath) {
-    if (!sha) return false;
+    if (!shaExistsLocally(sha)) return false;
     const gitPath = resolveGitPath(filePath);
     if (!gitPath) return false;
     try {
@@ -1551,6 +1567,83 @@ function cmdAuditCompleted() {
       return true;
     } catch {
       return false;
+    }
+  }
+
+  function filesChangedAtSha(sha) {
+    if (!shaExistsLocally(sha)) return new Set();
+    const output = runCmd(`git diff-tree --root --no-commit-id --name-only -r "${sha}"`);
+    return new Set(output.split('\n').map(file => file.trim()).filter(Boolean));
+  }
+
+  function fileBlobAtSha(sha, filePath) {
+    if (!shaExistsLocally(sha)) return null;
+    const gitPath = resolveGitPath(filePath);
+    if (!gitPath) return null;
+    try {
+      return runCmd(`git rev-parse "${sha}:${gitPath}"`);
+    } catch {
+      return null;
+    }
+  }
+
+  function getReconciliationBaseline(task) {
+    const results = task.validation_results || {};
+    const semantics = results.implementation_sha_semantics;
+    const provenance = results.historical_provenance;
+    const declared = typeof semantics === 'string' && /reconciliation baseline/i.test(semantics);
+    if (!declared) return { declared: false, valid: true };
+
+    const originalSha = provenance?.original_containing_commit_sha;
+    const originalVsBaseline = provenance?.original_vs_baseline;
+    const explicitlyNotOriginal = /not the original implementation commit/i.test(semantics);
+    const provenanceExplainsRelationship = typeof originalVsBaseline === 'string' &&
+      /original/i.test(originalVsBaseline) && /baseline/i.test(originalVsBaseline);
+    const byteIdenticalEvidence = results.evidence_files?.byte_identical_at_original_and_validation_baselines === true;
+    const originalCommitValid = shaExistsLocally(originalSha) && shaExistsOnOrigin(originalSha);
+    const { changedFiles } = normalizeTaskFiles(task);
+    const changedFilesMatchBaseline = changedFiles.length > 0 && changedFiles.every(file => {
+      const originalBlob = fileBlobAtSha(originalSha, file);
+      const baselineBlob = fileBlobAtSha(task.implementation_commit_sha, file);
+      return originalBlob !== null && originalBlob === baselineBlob;
+    });
+    const valid = explicitlyNotOriginal && provenance?.remote_contained === true &&
+      provenanceExplainsRelationship && byteIdenticalEvidence && originalCommitValid && changedFilesMatchBaseline;
+
+    return {
+      declared: true,
+      valid,
+      detail: valid
+        ? `Explicit reconciliation baseline; original implementation provenance ${originalSha}`
+        : 'Reconciliation baseline requires non-original semantics, original commit provenance, remote containment, relationship detail, declared byte-identical evidence, and matching Git blobs for every changed_file'
+    };
+  }
+
+  function getCompletionRecordState(task) {
+    if (!shaExistsLocally(task.completion_record_commit_sha)) return { valid: false };
+    const tasksGitPath = resolveGitPath('docs/architecture/ledger/tasks.json');
+    if (!tasksGitPath) return { valid: false };
+    try {
+      const raw = runCmd(`git show "${task.completion_record_commit_sha}:${tasksGitPath}"`);
+      const record = JSON.parse(raw).tasks?.find(candidate => candidate.id === task.id);
+      const hasEvidence = record?.evidence && (
+        Array.isArray(record.evidence) ? record.evidence.length > 0 : String(record.evidence).trim().length > 0
+      );
+      if (record?.status !== 'completed' || !hasEvidence) return { valid: false };
+
+      const validationPassed = record.validation_results?.passed === true ||
+        record.validation_results?.overallStatus === 'PASSED';
+      const hasModernCommitEvidence = isCommitSha(record.implementation_commit_sha) &&
+        isCommitSha(record.clean_validation_commit_sha) &&
+        isCommitSha(record.validation_results?.tested_commit) && validationPassed;
+      if (hasModernCommitEvidence) return { valid: true, detail: 'Completed task record contains modern commit and passing validation evidence' };
+
+      if (task.id === 'OPS-ARCH-001') {
+        return { valid: true, detail: 'Explicit legacy compatibility: OPS-ARCH-001 completion predates modern commit-evidence fields' };
+      }
+      return { valid: false, detail: 'Completed task record lacks modern implementation, clean-validation, tested-commit, or passing validation evidence' };
+    } catch {
+      return { valid: false };
     }
   }
 
@@ -1595,30 +1688,63 @@ function cmdAuditCompleted() {
     return { check: 'validation_files_populated', passed: validationFiles.length > 0 };
   }
 
-  function checkImplSha(task) {
-    return { check: 'implementation_commit_sha_exists', passed: !!task.implementation_commit_sha };
-  }
-
-  function checkImplShaLocal(task) {
-    if (!task.implementation_commit_sha) return { check: 'implementation_sha_exists_locally', passed: false };
-    return { check: 'implementation_sha_exists_locally', passed: shaExistsOnRemote(task.implementation_commit_sha) };
+  function checkImplShaExists(task) {
+    return { check: 'implementation_sha_exists', passed: shaExistsLocally(task.implementation_commit_sha) };
   }
 
   function checkImplShaRemote(task) {
-    if (!task.implementation_commit_sha) return { check: 'implementation_sha_exists_on_remote', passed: false };
-    return { check: 'implementation_sha_exists_on_remote', passed: shaExistsOnOrigin(task.implementation_commit_sha) };
+    return { check: 'implementation_sha_remote_contained', passed: shaExistsOnOrigin(task.implementation_commit_sha) };
   }
 
-  function checkDeclaredFilesAtImplSha(task) {
-    if (!task.implementation_commit_sha) return { check: 'declared_files_exist_at_impl_sha', passed: false };
-    const { changedFiles, validationFiles } = normalizeTaskFiles(task);
-    const allFiles = [...new Set([...changedFiles, ...validationFiles])];
-    if (allFiles.length === 0) return { check: 'declared_files_exist_at_impl_sha', passed: true, detail: 'No declared files' };
-    const missing = [];
+  function checkCleanValidationShaExists(task) {
+    return { check: 'clean_validation_sha_exists', passed: shaExistsLocally(task.clean_validation_commit_sha) };
+  }
+
+  function checkCleanValidationShaRemote(task) {
+    return { check: 'clean_validation_sha_remote_contained', passed: shaExistsOnOrigin(task.clean_validation_commit_sha) };
+  }
+
+  function checkImplementationIsAncestorOfValidation(task) {
+    return {
+      check: 'implementation_is_ancestor_of_validation',
+      passed: shaIsAncestor(task.implementation_commit_sha, task.clean_validation_commit_sha)
+    };
+  }
+
+  function checkTestedCommitMatchesValidation(task) {
+    return {
+      check: 'tested_commit_matches_clean_validation_sha',
+      passed: !!task.validation_results?.tested_commit &&
+        task.validation_results.tested_commit === task.clean_validation_commit_sha
+    };
+  }
+
+  function checkValidationResultsCleanValidationSha(task) {
+    const recordedSha = task.validation_results?.clean_validation_commit_sha;
+    return {
+      check: 'validation_results_clean_validation_sha_matches',
+      passed: !recordedSha || recordedSha === task.clean_validation_commit_sha,
+      ...(!recordedSha ? { detail: 'Nested clean-validation SHA not recorded by legacy workflow' } : {})
+    };
+  }
+
+  function checkReconciliationBaselineProvenance(task) {
+    const baseline = getReconciliationBaseline(task);
+    return {
+      check: 'reconciliation_baseline_provenance_valid',
+      passed: baseline.valid,
+      ...(baseline.detail ? { detail: baseline.detail } : { detail: 'Normal implementation provenance' })
+    };
+  }
+
+  function checkChangedFilesAtImplSha(task) {
+    const { changedFiles } = normalizeTaskFiles(task);
+    if (changedFiles.length === 0) {
+      return { check: 'declared_changed_files_exist_at_impl_sha', passed: true, detail: 'No changed_files declared' };
+    }
     const missingReasons = [];
-    for (const f of allFiles) {
+    for (const f of changedFiles) {
       if (!fileExistsAtSha(task.implementation_commit_sha, f)) {
-        missing.push(f);
         const gitPath = resolveGitPath(f);
         if (!gitPath) {
           missingReasons.push(`${f}: INVALID_REPOSITORY_PATH`);
@@ -1627,14 +1753,50 @@ function cmdAuditCompleted() {
         }
       }
     }
-    if (missing.length > 0) return { check: 'declared_files_exist_at_impl_sha', passed: false, detail: missingReasons.join('; ') };
-    return { check: 'declared_files_exist_at_impl_sha', passed: true };
+    return {
+      check: 'declared_changed_files_exist_at_impl_sha',
+      passed: missingReasons.length === 0,
+      ...(missingReasons.length > 0 ? { detail: missingReasons.join('; ') } : {})
+    };
   }
 
-  function checkCleanValSha(task) {
-    if (!task.clean_validation_commit_sha) return { check: 'clean_validation_sha_matches', passed: false };
-    const matches = task.clean_validation_commit_sha === task.implementation_commit_sha;
-    return { check: 'clean_validation_sha_matches', passed: matches };
+  function checkChangedFilesMatchImplDiff(task) {
+    const { changedFiles } = normalizeTaskFiles(task);
+    if (changedFiles.length === 0) {
+      return { check: 'declared_changed_files_match_impl_diff', passed: true, detail: 'No changed_files declared' };
+    }
+    const baseline = getReconciliationBaseline(task);
+    if (baseline.declared) {
+      return {
+        check: 'declared_changed_files_match_impl_diff',
+        passed: baseline.valid,
+        detail: baseline.valid ? 'Explicit reconciliation baseline uses file presence instead of diff membership' : baseline.detail
+      };
+    }
+    const implementationDiff = filesChangedAtSha(task.implementation_commit_sha);
+    const missing = changedFiles.filter(file => {
+      const gitPath = resolveGitPath(file);
+      return !gitPath || !implementationDiff.has(gitPath);
+    });
+    return {
+      check: 'declared_changed_files_match_impl_diff',
+      passed: missing.length === 0,
+      ...(missing.length > 0 ? { detail: missing.map(file => `${file}: NOT_CHANGED_AT_IMPLEMENTATION_SHA`).join('; ') } : {})
+    };
+  }
+
+  function checkValidationFilesAtValidationSha(task) {
+    const { validationFiles } = normalizeTaskFiles(task);
+    if (validationFiles.length === 0) {
+      return { check: 'declared_validation_files_exist_at_validation_sha', passed: true, detail: 'No validation_files declared' };
+    }
+    const missingReasons = validationFiles.filter(file => !fileExistsAtSha(task.clean_validation_commit_sha, file))
+      .map(file => `${file}: FILE_NOT_PRESENT_AT_VALIDATION_SHA`);
+    return {
+      check: 'declared_validation_files_exist_at_validation_sha',
+      passed: missingReasons.length === 0,
+      ...(missingReasons.length > 0 ? { detail: missingReasons.join('; ') } : {})
+    };
   }
 
   function checkValidationPassed(task) {
@@ -1650,12 +1812,34 @@ function cmdAuditCompleted() {
   }
 
   function checkCompletionRecordSha(task) {
-    return { check: 'completion_record_sha_exists', passed: !!task.completion_record_commit_sha };
+    return { check: 'completion_record_sha_exists', passed: shaExistsLocally(task.completion_record_commit_sha) };
   }
 
   function checkCompletionRecordRemote(task) {
-    if (!task.completion_record_commit_sha) return { check: 'completion_record_sha_exists_on_remote', passed: false };
-    return { check: 'completion_record_sha_exists_on_remote', passed: shaExistsOnOrigin(task.completion_record_commit_sha) };
+    return { check: 'completion_record_sha_remote_contained', passed: shaExistsOnOrigin(task.completion_record_commit_sha) };
+  }
+
+  function checkCompletionRecordAfterImplementation(task) {
+    return {
+      check: 'completion_record_succeeds_implementation',
+      passed: shaIsAncestor(task.implementation_commit_sha, task.completion_record_commit_sha)
+    };
+  }
+
+  function checkCompletionRecordAfterValidation(task) {
+    return {
+      check: 'completion_record_succeeds_validation',
+      passed: shaIsAncestor(task.clean_validation_commit_sha, task.completion_record_commit_sha)
+    };
+  }
+
+  function checkCompletionRecordContainsTask(task) {
+    const state = getCompletionRecordState(task);
+    return {
+      check: 'completion_record_contains_completed_task',
+      passed: state.valid,
+      ...(state.detail ? { detail: state.detail } : {})
+    };
   }
 
   function checkHistoryTransitions(task) {
@@ -1680,15 +1864,24 @@ function cmdAuditCompleted() {
       checkEvidence(task),
       checkChangedFiles(task),
       checkValidationFiles(task),
-      checkImplSha(task),
-      checkImplShaLocal(task),
+      checkImplShaExists(task),
       checkImplShaRemote(task),
-      checkDeclaredFilesAtImplSha(task),
-      checkCleanValSha(task),
+      checkCleanValidationShaExists(task),
+      checkCleanValidationShaRemote(task),
+      checkImplementationIsAncestorOfValidation(task),
+      checkTestedCommitMatchesValidation(task),
+      checkValidationResultsCleanValidationSha(task),
+      checkReconciliationBaselineProvenance(task),
+      checkChangedFilesAtImplSha(task),
+      checkChangedFilesMatchImplDiff(task),
+      checkValidationFilesAtValidationSha(task),
       checkValidationPassed(task),
       checkValidationRefImplSha(task),
       checkCompletionRecordSha(task),
       checkCompletionRecordRemote(task),
+      checkCompletionRecordAfterImplementation(task),
+      checkCompletionRecordAfterValidation(task),
+      checkCompletionRecordContainsTask(task),
       checkHistoryTransitions(task),
       checkDirtyWorktree(task),
     ].filter(Boolean);
@@ -1702,7 +1895,7 @@ function cmdAuditCompleted() {
 
     // Classification logic
     // Contradictions = hard failures that prove completion is invalid
-    const CONTRADICTION_CHECKS = new Set([
+    const ALWAYS_CONTRADICTION_CHECKS = new Set([
       'dependencies_complete',
       'has_history_transitions',
     ]);
@@ -1719,7 +1912,7 @@ function cmdAuditCompleted() {
     const hasModernMetadata = hasPhase1Metadata(task);
 
     // Determine contradictions vs metadata gaps
-    const contradictionFails = failedChecks.filter(c => CONTRADICTION_CHECKS.has(c));
+    const contradictionFails = failedChecks.filter(c => ALWAYS_CONTRADICTION_CHECKS.has(c));
     const metadataFails = failedChecks.filter(c => METADATA_CHECKS.has(c));
 
     // Phase 1 validation checks are contradictions ONLY if the field is present
@@ -1729,21 +1922,27 @@ function cmdAuditCompleted() {
         (task.validation_results.overallStatus && task.validation_results.overallStatus !== 'PASSED'))) {
       contradictionFails.push('validation_results_passed');
     }
-    if (failedChecks.includes('implementation_sha_exists_locally') && hasModernMetadata &&
-        task.implementation_commit_sha) {
-      contradictionFails.push('implementation_sha_exists_locally');
-    }
-    if (failedChecks.includes('implementation_sha_exists_on_remote') && hasModernMetadata &&
-        task.implementation_commit_sha) {
-      contradictionFails.push('implementation_sha_exists_on_remote');
-    }
-    if (failedChecks.includes('clean_validation_sha_matches') && hasModernMetadata &&
-        task.clean_validation_commit_sha != null) {
-      contradictionFails.push('clean_validation_sha_matches');
-    }
-    if (failedChecks.includes('declared_files_exist_at_impl_sha') && hasModernMetadata &&
-        task.implementation_commit_sha) {
-      contradictionFails.push('declared_files_exist_at_impl_sha');
+    const contradictionWhenPopulated = {
+      implementation_sha_exists: !!task.implementation_commit_sha,
+      implementation_sha_remote_contained: !!task.implementation_commit_sha,
+      clean_validation_sha_exists: !!task.clean_validation_commit_sha,
+      clean_validation_sha_remote_contained: !!task.clean_validation_commit_sha,
+      implementation_is_ancestor_of_validation: !!task.implementation_commit_sha && !!task.clean_validation_commit_sha,
+      tested_commit_matches_clean_validation_sha: !!task.validation_results?.tested_commit && !!task.clean_validation_commit_sha,
+      validation_results_clean_validation_sha_matches: !!task.validation_results?.clean_validation_commit_sha && !!task.clean_validation_commit_sha,
+      reconciliation_baseline_provenance_valid: getReconciliationBaseline(task).declared,
+      declared_changed_files_exist_at_impl_sha: !!task.implementation_commit_sha && normalizeTaskFiles(task).changedFiles.length > 0,
+      declared_changed_files_match_impl_diff: !!task.implementation_commit_sha && normalizeTaskFiles(task).changedFiles.length > 0,
+      declared_validation_files_exist_at_validation_sha: !!task.clean_validation_commit_sha && normalizeTaskFiles(task).validationFiles.length > 0,
+      validation_results_ref_impl_sha: !!task.validation_results?.implementation_commit_sha && !!task.implementation_commit_sha,
+      completion_record_sha_exists: !!task.completion_record_commit_sha,
+      completion_record_sha_remote_contained: !!task.completion_record_commit_sha,
+      completion_record_succeeds_implementation: !!task.completion_record_commit_sha && !!task.implementation_commit_sha,
+      completion_record_succeeds_validation: !!task.completion_record_commit_sha && !!task.clean_validation_commit_sha,
+      completion_record_contains_completed_task: !!task.completion_record_commit_sha,
+    };
+    for (const failedCheck of failedChecks) {
+      if (contradictionWhenPopulated[failedCheck]) contradictionFails.push(failedCheck);
     }
 
     if (contradictionFails.length > 0) {

@@ -1312,6 +1312,103 @@ describe('Architecture Ledger Automation Test Suite', () => {
       return JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
     }
 
+    function initAuditRepository(branch = 'main') {
+      execSync('git init', { cwd: auditGitRoot, stdio: 'pipe' });
+      execSync('git config user.name "Test"', { cwd: tmpDir, stdio: 'pipe' });
+      execSync('git config user.email "test@test.com"', { cwd: tmpDir, stdio: 'pipe' });
+      execSync(`git checkout -b ${branch}`, { cwd: tmpDir, stdio: 'pipe' });
+    }
+
+    function commitAuditFiles(message, files) {
+      for (const [file, content] of Object.entries(files)) {
+        const filePath = path.join(tmpDir, file);
+        fs.mkdirSync(path.dirname(filePath), { recursive: true });
+        fs.writeFileSync(filePath, content);
+      }
+      execSync('git add .', { cwd: tmpDir, stdio: 'pipe' });
+      execSync(`git commit -m ${JSON.stringify(message)}`, { cwd: tmpDir, stdio: 'pipe' });
+      return execSync('git rev-parse HEAD', { cwd: tmpDir, encoding: 'utf-8' }).trim();
+    }
+
+    function appendAuditCompletionHistory(taskId) {
+      const historyPath = path.join(tmpDir, 'docs', 'architecture', 'ledger', 'history.jsonl');
+      const existingHistory = fs.readFileSync(historyPath, 'utf-8').trim();
+      const previousEntry = JSON.parse(existingHistory.split('\n').at(-1));
+      const entry = {
+        timestamp: '2026-08-03T00:00:00Z', task_id: taskId,
+        previous_status: 'validated', new_status: 'completed',
+        reason: 'Completed', evidence_summary: 'Done',
+        branch: 'test', actor: 'test',
+        previous_entry_hash: previousEntry.current_entry_hash
+      };
+      const payload = {
+        timestamp: entry.timestamp, task_id: entry.task_id,
+        previous_status: entry.previous_status, new_status: entry.new_status,
+        reason: entry.reason, evidence_summary: entry.evidence_summary,
+        branch: entry.branch, actor: entry.actor,
+        previous_entry_hash: entry.previous_entry_hash
+      };
+      const sortedObj = {};
+      for (const key of Object.keys(payload).sort()) sortedObj[key] = payload[key];
+      entry.current_entry_hash = crypto.createHash('sha256').update(JSON.stringify(sortedObj)).digest('hex');
+      fs.writeFileSync(historyPath, `${existingHistory}\n${JSON.stringify(entry)}\n`);
+    }
+
+    function setupModernAuditTask({
+      id,
+      implementationSha,
+      validationSha = implementationSha,
+      completionSha = validationSha,
+      changedFiles = ['implementation.js'],
+      validationFiles = [],
+      testedCommit = validationSha,
+      validationCommands = [],
+      validationResults = {},
+    }) {
+      setupAuditFixture([{
+        id, title: id, description: id, severity: 'HIGH',
+        status: 'completed', dependencies: [], blocking_reasons: [],
+        acceptance_criteria: ['Pass'], validation_commands: validationCommands, evidence: 'Done',
+        changed_files: changedFiles, validation_files: validationFiles,
+        created_timestamp: '2026-08-03T00:00:00Z', updated_timestamp: '2026-08-03T00:00:00Z',
+        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
+        completed_timestamp: '2026-08-03T00:00:00Z', notes: '',
+        implementation_commit_sha: implementationSha,
+        clean_validation_commit_sha: validationSha,
+        completion_record_commit_sha: completionSha,
+        validation_results: {
+          passed: true,
+          implementation_commit_sha: implementationSha,
+          clean_validation_commit_sha: validationSha,
+          tested_commit: testedCommit,
+          timestamp: '2026-08-03T00:00:00Z',
+          ...validationResults,
+        }
+      }]);
+      appendAuditCompletionHistory(id);
+      const completionRecordSha = commitAuditFiles(`completion record for ${id}`, {});
+      if (completionSha === validationSha) {
+        const tasksPath = path.join(tmpDir, 'docs', 'architecture', 'ledger', 'tasks.json');
+        const payload = JSON.parse(fs.readFileSync(tasksPath, 'utf-8'));
+        const task = payload.tasks.find(candidate => candidate.id === id);
+        task.completion_record_commit_sha = completionRecordSha;
+        fs.writeFileSync(tasksPath, JSON.stringify(payload, null, 2));
+        commitAuditFiles(`record completion SHA for ${id}`, {});
+      }
+    }
+
+    function addTestedCommitToAuditFixtures() {
+      const tasksPath = path.join(tmpDir, 'docs', 'architecture', 'ledger', 'tasks.json');
+      const payload = JSON.parse(fs.readFileSync(tasksPath, 'utf-8'));
+      for (const task of payload.tasks) {
+        if (task.validation_results && task.clean_validation_commit_sha && !task.validation_results.tested_commit) {
+          task.validation_results.tested_commit = task.clean_validation_commit_sha;
+          task.validation_results.clean_validation_commit_sha = task.clean_validation_commit_sha;
+        }
+      }
+      fs.writeFileSync(tasksPath, JSON.stringify(payload, null, 2));
+    }
+
     it("classifies valid completed task as PASS", () => {
       // Init git repo in tmpDir first so we can get its HEAD SHA
       execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
@@ -1362,6 +1459,15 @@ describe('Architecture Ledger Automation Test Suite', () => {
       entry.current_entry_hash = crypto.createHash("sha256").update(JSON.stringify(sortedObj)).digest("hex");
       fs.writeFileSync(historyPath, existingHistory + "\n" + JSON.stringify(entry) + "\n");
 
+      addTestedCommitToAuditFixtures();
+      execSync('git add .', { cwd: tmpDir, stdio: 'pipe' });
+      execSync('git commit -m "completion record"', { cwd: tmpDir, stdio: 'pipe' });
+      const completionSha = execSync('git rev-parse HEAD', { cwd: tmpDir, encoding: 'utf-8' }).trim();
+      const tasksPath = path.join(tmpDir, 'docs', 'architecture', 'ledger', 'tasks.json');
+      const tasksPayload = JSON.parse(fs.readFileSync(tasksPath, 'utf-8'));
+      tasksPayload.tasks.find(candidate => candidate.id === 'AUDIT-001').completion_record_commit_sha = completionSha;
+      fs.writeFileSync(tasksPath, JSON.stringify(tasksPayload, null, 2));
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-001");
       assert.strictEqual(task.classification, "PASS");
@@ -1371,6 +1477,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
     it("classifies task without Phase 1 metadata as AUDIT_REQUIRED", () => {
       setupAuditFixture();
+      addTestedCommitToAuditFixtures();
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "TEST-001");
       assert.strictEqual(task.classification, "AUDIT_REQUIRED");
@@ -1399,6 +1506,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
       execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
       execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
       execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+
+      addTestedCommitToAuditFixtures();
 
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-002");
@@ -1439,6 +1548,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
       entry.current_entry_hash = crypto.createHash("sha256").update(JSON.stringify(sortedObj)).digest("hex");
       fs.writeFileSync(historyPath, existingHistory + "\n" + JSON.stringify(entry) + "\n");
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-003");
       // No implementation_commit_sha, no Phase 1 fields → AUDIT_REQUIRED (historical pattern)
@@ -1460,10 +1571,12 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: "0000000000000000000000000000000000000000", timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-004");
       assert.strictEqual(task.classification, "INVALID_COMPLETION");
-      assert.ok(task.reasons.some(r => r.includes("declared_files_exist_at_impl_sha")));
+      assert.ok(task.reasons.some(r => r.includes("declared_changed_files_exist_at_impl_sha")));
     });
 
     it("classifies task with failed validation as INVALID_COMPLETION", () => {
@@ -1488,6 +1601,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
       execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
       execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-005");
       assert.strictEqual(task.classification, "INVALID_COMPLETION");
@@ -1504,6 +1619,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
         started_timestamp: "2026-07-29T00:00:00Z", implemented_timestamp: null,
         validated_timestamp: null, completed_timestamp: null, notes: ""
       }]);
+
+      addTestedCommitToAuditFixtures();
 
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-006");
@@ -1547,33 +1664,201 @@ describe('Architecture Ledger Automation Test Suite', () => {
       assert.match(after, /healthy/);
     });
 
-    it("clean-validation SHA mismatch is INVALID_COMPLETION", () => {
-      const sha = execSync("git rev-parse HEAD", { cwd: REPO_ROOT, encoding: "utf-8" }).trim();
-      setupAuditFixture([{
-        id: "AUDIT-007", title: "Mismatch SHA", description: "Clean val sha mismatch", severity: "HIGH",
-        status: "completed", dependencies: [], blocking_reasons: [],
-        acceptance_criteria: ["Pass"], validation_commands: [], evidence: "Done",
-        changed_files: ["docs/architecture/ledger/tasks.json"], validation_files: [],
-        created_timestamp: "2026-07-29T00:00:00Z", updated_timestamp: "2026-07-31T00:00:00Z",
-        started_timestamp: null, implemented_timestamp: null, validated_timestamp: null,
-        completed_timestamp: "2026-07-31T00:00:00Z", notes: "",
-        implementation_commit_sha: sha,
-        clean_validation_commit_sha: "0000000000000000000000000000000000000000",
-        completion_record_commit_sha: sha,
-        validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
-      }]);
+    it("accepts equal implementation and clean-validation commits", () => {
+      initAuditRepository();
+      const sha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      setupModernAuditTask({ id: 'AUDIT-EQUAL', implementationSha: sha });
 
-      execSync("git init", { cwd: auditGitRoot, stdio: "pipe" });
-      execSync("git config user.name \"Test\"", { cwd: tmpDir, stdio: "pipe" });
-      execSync("git config user.email \"test@test.com\"", { cwd: tmpDir, stdio: "pipe" });
-      execSync("git checkout -b main", { cwd: tmpDir, stdio: "pipe" });
-      execSync("git add .", { cwd: tmpDir, stdio: "pipe" });
-      execSync("git commit -m \"init\"", { cwd: tmpDir, stdio: "pipe" });
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-EQUAL');
+      assert.strictEqual(task.classification, 'PASS');
+      assert.strictEqual(task.checks.implementation_is_ancestor_of_validation.passed, true);
+    });
 
-      const report = runAudit();
-      const task = report.tasks.find(t => t.id === "AUDIT-007");
-      assert.strictEqual(task.classification, "INVALID_COMPLETION");
-      assert.ok(task.reasons.some(r => r.includes("clean_validation_sha_matches")));
+    it("accepts a descendant clean-validation commit and validation file added there", () => {
+      initAuditRepository();
+      const implementationSha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const validationSha = commitAuditFiles('validation', { 'validation.test.js': 'test("value", () => {});\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-DESCENDANT', implementationSha, validationSha,
+        validationFiles: ['validation.test.js'], validationCommands: ['node --test validation.test.js']
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-DESCENDANT');
+      assert.strictEqual(task.classification, 'PASS');
+      assert.strictEqual(task.checks.declared_validation_files_exist_at_validation_sha.passed, true);
+    });
+
+    it("rejects a clean-validation commit that predates implementation", () => {
+      initAuditRepository();
+      const validationSha = commitAuditFiles('validation first', { 'validation.test.js': 'test("value", () => {});\n' });
+      const implementationSha = commitAuditFiles('implementation second', { 'implementation.js': 'export const value = 1;\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-PREDATES', implementationSha, validationSha,
+        completionSha: implementationSha, validationFiles: ['validation.test.js'],
+        validationCommands: ['node --test validation.test.js']
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-PREDATES');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('implementation_is_ancestor_of_validation')));
+    });
+
+    it("rejects an unrelated clean-validation commit", () => {
+      initAuditRepository();
+      const implementationSha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      execSync(`git checkout --orphan unrelated`, { cwd: tmpDir, stdio: 'pipe' });
+      execSync('git rm -rf .', { cwd: tmpDir, stdio: 'pipe' });
+      const validationSha = commitAuditFiles('unrelated validation', { 'validation.test.js': 'test("value", () => {});\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-UNRELATED', implementationSha, validationSha,
+        validationFiles: ['validation.test.js'], validationCommands: ['node --test validation.test.js']
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-UNRELATED');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('implementation_is_ancestor_of_validation')));
+    });
+
+    it("rejects tested_commit that differs from clean-validation commit", () => {
+      initAuditRepository();
+      const implementationSha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const validationSha = commitAuditFiles('validation', { 'validation.test.js': 'test("value", () => {});\n' });
+      setupModernAuditTask({ id: 'AUDIT-TESTED-MISMATCH', implementationSha, validationSha, testedCommit: implementationSha });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-TESTED-MISMATCH');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('tested_commit_matches_clean_validation_sha')));
+    });
+
+    it("rejects nested clean-validation SHA that differs from the canonical clean-validation commit", () => {
+      initAuditRepository();
+      const implementationSha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const validationSha = commitAuditFiles('validation', { 'validation.test.js': 'test("value", () => {});\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-NESTED-VALIDATION-MISMATCH', implementationSha, validationSha,
+        validationResults: { clean_validation_commit_sha: implementationSha }
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-NESTED-VALIDATION-MISMATCH');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('validation_results_clean_validation_sha_matches')));
+    });
+
+    it("rejects a normal changed file that merely exists at implementation commit", () => {
+      initAuditRepository();
+      commitAuditFiles('base file', { 'implementation.js': 'export const value = 1;\n' });
+      const implementationSha = commitAuditFiles('unrelated implementation', { 'other.js': 'export const other = 1;\n' });
+      setupModernAuditTask({ id: 'AUDIT-NOT-IN-DIFF', implementationSha });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-NOT-IN-DIFF');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('declared_changed_files_match_impl_diff')));
+    });
+
+    it("rejects a validation file absent from clean-validation commit", () => {
+      initAuditRepository();
+      const implementationSha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const validationSha = commitAuditFiles('validation', { 'other.test.js': 'test("value", () => {});\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-MISSING-VALIDATION', implementationSha, validationSha,
+        validationFiles: ['validation.test.js'], validationCommands: ['node --test validation.test.js']
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-MISSING-VALIDATION');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('declared_validation_files_exist_at_validation_sha')));
+    });
+
+    it("accepts an explicit reconciliation baseline with complete provenance", () => {
+      initAuditRepository();
+      const originalSha = commitAuditFiles('original implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const baselineSha = commitAuditFiles('reconciliation baseline', { 'baseline.txt': 'baseline\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-BASELINE', implementationSha: baselineSha,
+        validationResults: {
+          implementation_sha_semantics: 'verified reconciliation baseline containing byte-identical committed evidence; not the original implementation commit',
+          historical_provenance: {
+            original_containing_commit_sha: originalSha,
+            remote_contained: true,
+            original_vs_baseline: 'original containing commit retained; reconciliation baseline records the verified file state'
+          },
+          evidence_files: { byte_identical_at_original_and_validation_baselines: true }
+        }
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-BASELINE');
+      assert.strictEqual(task.classification, 'PASS');
+      assert.strictEqual(task.checks.reconciliation_baseline_provenance_valid.passed, true);
+    });
+
+    it("rejects declared byte-identical baseline evidence when Git blobs differ", () => {
+      initAuditRepository();
+      const originalSha = commitAuditFiles('original implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const baselineSha = commitAuditFiles('reconciliation baseline changed file', { 'implementation.js': 'export const value = 2;\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-BASELINE-BLOB-MISMATCH', implementationSha: baselineSha,
+        validationResults: {
+          implementation_sha_semantics: 'verified reconciliation baseline containing byte-identical committed evidence; not the original implementation commit',
+          historical_provenance: {
+            original_containing_commit_sha: originalSha,
+            remote_contained: true,
+            original_vs_baseline: 'original containing commit retained; reconciliation baseline records the verified file state'
+          },
+          evidence_files: { byte_identical_at_original_and_validation_baselines: true }
+        }
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-BASELINE-BLOB-MISMATCH');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('reconciliation_baseline_provenance_valid')));
+    });
+
+    it("rejects a modern completion record that omits commit evidence metadata", () => {
+      initAuditRepository();
+      const implementationSha = commitAuditFiles('implementation', { 'implementation.js': 'export const value = 1;\n' });
+      setupModernAuditTask({ id: 'AUDIT-COMPLETION-METADATA', implementationSha });
+
+      const tasksPath = path.join(tmpDir, 'docs', 'architecture', 'ledger', 'tasks.json');
+      const payload = JSON.parse(fs.readFileSync(tasksPath, 'utf-8'));
+      const taskRecord = payload.tasks.find(candidate => candidate.id === 'AUDIT-COMPLETION-METADATA');
+      taskRecord.implementation_commit_sha = null;
+      taskRecord.clean_validation_commit_sha = null;
+      taskRecord.validation_results = { passed: true };
+      fs.writeFileSync(tasksPath, JSON.stringify(payload, null, 2));
+      const incompleteCompletionSha = commitAuditFiles('incomplete completion metadata', {});
+
+      const currentPayload = JSON.parse(fs.readFileSync(tasksPath, 'utf-8'));
+      const currentTask = currentPayload.tasks.find(candidate => candidate.id === 'AUDIT-COMPLETION-METADATA');
+      currentTask.implementation_commit_sha = implementationSha;
+      currentTask.clean_validation_commit_sha = implementationSha;
+      currentTask.completion_record_commit_sha = incompleteCompletionSha;
+      currentTask.validation_results = {
+        passed: true,
+        implementation_commit_sha: implementationSha,
+        clean_validation_commit_sha: implementationSha,
+        tested_commit: implementationSha
+      };
+      fs.writeFileSync(tasksPath, JSON.stringify(currentPayload, null, 2));
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-COMPLETION-METADATA');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('completion_record_contains_completed_task')));
+    });
+
+    it("rejects a reconciliation baseline exception without provenance", () => {
+      initAuditRepository();
+      commitAuditFiles('original implementation', { 'implementation.js': 'export const value = 1;\n' });
+      const baselineSha = commitAuditFiles('reconciliation baseline', { 'baseline.txt': 'baseline\n' });
+      setupModernAuditTask({
+        id: 'AUDIT-BASELINE-MISSING', implementationSha: baselineSha,
+        validationResults: {
+          implementation_sha_semantics: 'verified reconciliation baseline containing byte-identical committed evidence; not the original implementation commit'
+        }
+      });
+
+      const task = runAudit().tasks.find(candidate => candidate.id === 'AUDIT-BASELINE-MISSING');
+      assert.strictEqual(task.classification, 'INVALID_COMPLETION');
+      assert.ok(task.reasons.some(reason => reason.includes('reconciliation_baseline_provenance_valid')));
     });
 
     it("completion-record commit missing is AUDIT_REQUIRED for modern task", () => {
@@ -1622,6 +1907,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
       entry.current_entry_hash = crypto.createHash("sha256").update(JSON.stringify(sortedObj)).digest("hex");
       fs.writeFileSync(historyPath, existingHistory + "\n" + JSON.stringify(entry) + "\n");
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "AUDIT-008");
       // completion_record_commit_sha is null but has other Phase 1 fields → AUDIT_REQUIRED (missing metadata)
@@ -1630,6 +1917,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
     it("audit report has correct JSON structure", () => {
       setupAuditFixture();
+      addTestedCommitToAuditFixtures();
       const report = runAudit();
       assert.ok(report.generated_at);
       assert.ok(typeof report.ledger_commit_sha === "string");
@@ -1682,9 +1970,11 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "PATH-001");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true,
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, true,
         "File should be found via path resolution, not reported as missing");
     });
 
@@ -1713,9 +2003,11 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "PATH-002");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true,
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, true,
         "Already-prefixed path should not be double-prefixed");
     });
 
@@ -1742,10 +2034,12 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "PATH-003");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, false);
-      assert.ok(task.checks.declared_files_exist_at_impl_sha.detail.includes("INVALID_REPOSITORY_PATH"));
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, false);
+      assert.ok(task.checks.declared_changed_files_exist_at_impl_sha.detail.includes("INVALID_REPOSITORY_PATH"));
     });
 
     it("parent traversal paths are rejected", () => {
@@ -1771,10 +2065,12 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "PATH-004");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, false);
-      assert.ok(task.checks.declared_files_exist_at_impl_sha.detail.includes("INVALID_REPOSITORY_PATH"));
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, false);
+      assert.ok(task.checks.declared_changed_files_exist_at_impl_sha.detail.includes("INVALID_REPOSITORY_PATH"));
     });
 
     it("declared file present at shopify-product-sorter/server/... passes", () => {
@@ -1805,7 +2101,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
       const report = runAudit({ push: false });
       const task = report.tasks.find(t => t.id === "PATH-005");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true);
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, true);
     });
 
     it("genuinely absent file fails", () => {
@@ -1831,10 +2127,12 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "PATH-006");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, false);
-      assert.ok(task.checks.declared_files_exist_at_impl_sha.detail.includes("FILE_NOT_PRESENT_AT_SHA"));
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, false);
+      assert.ok(task.checks.declared_changed_files_exist_at_impl_sha.detail.includes("FILE_NOT_PRESENT_AT_SHA"));
     });
 
     // --- Remote containment tests ---
@@ -1868,8 +2166,8 @@ describe('Architecture Ledger Automation Test Suite', () => {
 
       const report = runAudit({ push: false });
       const task = report.tasks.find(t => t.id === "REMOTE-001");
-      // The SHA exists locally but not on any remote, so implementation_sha_exists_on_remote should fail
-      assert.strictEqual(task.checks.implementation_sha_exists_on_remote.passed, false);
+      // The SHA exists locally but not on any remote, so implementation_sha_remote_contained should fail
+      assert.strictEqual(task.checks.implementation_sha_remote_contained.passed, false);
     });
 
     it("matching remote branch returns true", () => {
@@ -1888,9 +2186,33 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "REMOTE-002");
-      assert.strictEqual(task.checks.implementation_sha_exists_on_remote.passed, true);
+      assert.strictEqual(task.checks.implementation_sha_remote_contained.passed, true);
+    });
+
+    it("real TEST-004 and TEST-005 pass with distinct implementation and validation SHAs", () => {
+      const reportPath = path.join(REPO_ROOT, 'test-results', 'architecture-completed-task-audit.json');
+      execSync(`node ${CLI_PATH} audit-completed`, { cwd: REPO_ROOT, encoding: 'utf-8' });
+      const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+
+      assert.deepStrictEqual(report.counts, {
+        PASS: 14,
+        AUDIT_REQUIRED: 0,
+        INVALID_COMPLETION: 0,
+      });
+
+      for (const taskId of ['TEST-004', 'TEST-005']) {
+        const task = report.tasks.find(candidate => candidate.id === taskId);
+        assert.strictEqual(task.classification, 'PASS');
+        assert.notStrictEqual(task.implementation_commit_sha, task.clean_validation_commit_sha);
+        assert.strictEqual(task.checks.implementation_is_ancestor_of_validation.passed, true);
+        assert.strictEqual(task.checks.tested_commit_matches_clean_validation_sha.passed, true);
+        assert.strictEqual(task.checks.declared_changed_files_match_impl_diff.passed, true);
+        assert.strictEqual(task.checks.declared_validation_files_exist_at_validation_sha.passed, true);
+      }
     });
 
     // --- Deterministic output test ---
@@ -1944,9 +2266,11 @@ describe('Architecture Ledger Automation Test Suite', () => {
         validation_results: { passed: true, implementation_commit_sha: sha, timestamp: "2026-07-31T00:00:00Z" }
       }]);
 
+      addTestedCommitToAuditFixtures();
+
       const report = runAudit();
       const task = report.tasks.find(t => t.id === "PREFIX-001");
-      assert.strictEqual(task.checks.declared_files_exist_at_impl_sha.passed, true,
+      assert.strictEqual(task.checks.declared_changed_files_exist_at_impl_sha.passed, true,
         "Path-prefix mismatch should not report the declared file as missing");
     });
 

@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-03T16:08:40.444Z` |
+| Generated timestamp | `2026-08-03T18:30:00.000Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `502189b` |
+| Local commit | `35adf9d` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -342,7 +342,7 @@ Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30
 **Severity:** CRITICAL
 **Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-005
-**Last updated:** 2026-08-03T07:58:29.272Z
+**Last updated:** 2026-08-03T18:30:00.000Z
 
 #### Description
 
@@ -362,7 +362,7 @@ Hash verification, authorized access test, restore-read test, and status review.
 
 #### Completion evidence
 
-Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks., Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005., R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening., R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005., R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records., R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed.
+Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks., Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005., R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening., R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005., R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records., R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed., Ledger evidence correction on August 3, 2026: clean_validation_commit_sha now records the actual clean-validation baseline 24757badcbd9e75a7372bcd698be43810fd44782; status unchanged.
 
 ---
 
@@ -515,7 +515,7 @@ Collection reorder contract test suite server/src/services/collectionReorderCont
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** SAFE-004
-**Last updated:** 2026-08-03T16:08:40.211Z
+**Last updated:** 2026-08-03T18:30:00.000Z
 
 #### Description
 
@@ -535,7 +535,7 @@ Unit, integration, isolated PostgreSQL integrity, network-log assertions, and no
 
 #### Completion evidence
 
-Approved correctness remediation completed for TEST-004: status preservation, failed provider retry, and unknown status non-overwrite contracts., Historical SHA 634ad1afdd9e400e923bb37740b78a758a4a6a2e retained as ledger historical completion record; implementation evidence updated to real commit 8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc., Clean validation commit 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b contains 16 passing unit and integration tests in server/src/services/orderMapping.test.js., Clean validation passed, Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b
+Approved correctness remediation completed for TEST-004: status preservation, failed provider retry, and unknown status non-overwrite contracts., Historical SHA 634ad1afdd9e400e923bb37740b78a758a4a6a2e retained as ledger historical completion record; implementation evidence updated to real commit 8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc., Clean validation commit 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b contains 16 passing unit and integration tests in server/src/services/orderMapping.test.js., Clean validation passed, Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b, Ledger evidence correction on August 3, 2026: implementation and clean-validation commits are recorded separately; status unchanged.
 
 ---
 
@@ -544,7 +544,7 @@ Approved correctness remediation completed for TEST-004: status preservation, fa
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** SAFE-004
-**Last updated:** 2026-08-03T16:08:40.443Z
+**Last updated:** 2026-08-03T18:30:00.000Z
 
 #### Description
 
@@ -564,7 +564,7 @@ Unit, integration, database integrity, route contract, and synthetic CSV manual 
 
 #### Completion evidence
 
-Approved correctness remediation completed for TEST-005: canonical object manual override contract, stable machine-readable error codes, zero-write preview, single transaction commit, and safe logging assertions excluding customer PII., Historical SHA 7890a0ef38dd5dec9454d0a583edafc3977c2a86 retained as ledger historical completion record; implementation evidence updated to real commit 8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc., Clean validation commit 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b contains 16 passing unit and integration tests in server/src/services/orderMapping.test.js and 4 passing health tests in server/src/app.test.js., Clean validation passed, Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b
+Approved correctness remediation completed for TEST-005: canonical object manual override contract, stable machine-readable error codes, zero-write preview, single transaction commit, and safe logging assertions excluding customer PII., Historical SHA 7890a0ef38dd5dec9454d0a583edafc3977c2a86 retained as ledger historical completion record; implementation evidence updated to real commit 8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc., Clean validation commit 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b contains 16 passing unit and integration tests in server/src/services/orderMapping.test.js and 3 passing Order Mapping endpoint tests in server/src/app.test.js., Clean validation passed, Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b, Ledger evidence correction on August 3, 2026: implementation and clean-validation commits are recorded separately; status unchanged.
 
 ---
 
@@ -776,7 +776,7 @@ Unit, integration, E2E, startup, migration, route, and test-isolation checks.
 **Severity:** MEDIUM
 **Status:** COMPLETED
 **Dependencies:** SAFE-008
-**Last updated:** 2026-08-03T07:58:29.272Z
+**Last updated:** 2026-08-03T18:30:00.000Z
 
 #### Description
 
@@ -796,7 +796,7 @@ Static path/symbol review and owner sign-off; no runtime change.
 
 #### Completion evidence
 
-Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001., R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria., R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008., R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records., R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed.
+Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001., R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria., R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008., R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records., R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed., Ledger evidence correction on August 3, 2026: clean_validation_commit_sha now records the actual clean-validation baseline 24757badcbd9e75a7372bcd698be43810fd44782; status unchanged.
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-03T18:30:00.000Z | OWN-001 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `14ce54d0` |
+| 2026-08-03T18:30:00.000Z | SAFE-006 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `d67b464d` |
+| 2026-08-03T18:30:00.000Z | TEST-005 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `4d0f0579` |
+| 2026-08-03T18:30:00.000Z | TEST-004 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `68c082c9` |
 | 2026-08-03T16:08:40.467Z | TEST-005 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `5d067f9a` |
 | 2026-08-03T16:08:40.360Z | TEST-005 | in_progress | validated | shivam | Clean validation passed | `def4f1ab` |
 | 2026-08-03T16:08:40.233Z | TEST-004 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `3c6b0bce` |
 | 2026-08-03T16:08:40.127Z | TEST-004 | in_progress | validated | shivam | Clean validation passed | `ac9b741a` |
 | 2026-08-03T14:49:08.027Z | TEST-005 | validation_pending | in_progress | shivam | Approved correctness remediation underway for manual override contract, stable CSV errors, and atomic commit behavior. | `920bf6c0` |
 | 2026-08-03T14:49:07.148Z | TEST-004 | validation_pending | in_progress | shivam | Approved correctness remediation underway for partial provider status preservation and lifecycle failure contracts. | `c0f10b8b` |
-| 2026-08-03T12:33:53.118Z | TEST-002 | completed | completed | shivam | TEST foundation post-push finalization: record verified remote containment without changing task status | `ad288699` |
-| 2026-08-03T12:33:53.118Z | TEST-001 | completed | completed | shivam | TEST foundation post-push finalization: record verified remote containment without changing task status | `76fca260` |
-| 2026-08-03T12:26:37.060Z | TEST-002 | completed | completed | shivam | TEST foundation completion-record finalization: record recovery commit 251cda92d76309159da69ceca4f363d0b9432fc8 without changing task status | `d48d42ff` |
-| 2026-08-03T12:26:37.060Z | TEST-001 | completed | completed | shivam | TEST foundation completion-record finalization: record recovery commit 251cda92d76309159da69ceca4f363d0b9432fc8 without changing task status | `fdb9142c` |
