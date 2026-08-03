@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-03T07:58:29.272Z` |
+| Generated timestamp | `2026-08-03T12:25:10.175Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `00a91ff` |
+| Local commit | `de60749` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,19 +40,19 @@
 | Ready | 1 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 68 |
+| Validation pending | 66 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 10 |
-| Completion percentage | 7.8% |
+| Completed | 12 |
+| Completion percentage | 9.3% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-011`
-- Dependency-safe validation-pending tasks: `TEST-001`, `TEST-002`, `TEST-003`, `TEST-004`, `TEST-005`
-- Tasks awaiting prerequisites: `TEST-012`, `OWN-002`, `OWN-003`, `OWN-004`, `OWN-005`
+- Dependency-safe validation-pending tasks: `TEST-003`, `TEST-004`, `TEST-005`, `TEST-006`, `TEST-007`
+- Tasks awaiting prerequisites: `TEST-012`, `OWN-003`, `OWN-004`, `OWN-005`, `OWN-006`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -68,8 +68,8 @@
 | SAFE-006 | Create off-device backup copy | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SAFE-007 | Validate restoration instructions | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
 | SAFE-008 | Record database ownership uncertainties | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-001 | Protect sorter scoring and core logic | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
+| TEST-001 | Protect sorter scoring and core logic | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
+| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | COMPLETED | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-003 | Protect collection reorder contracts | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | VALIDATION_PENDING | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-005 | Protect CSV import and manual overrides | HIGH | VALIDATION_PENDING | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -426,9 +426,9 @@ Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md cre
 ### `TEST-001` Protect sorter scoring and core logic
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-08-01T22:10:15.191Z
+**Last updated:** 2026-08-03T12:25:10.175Z
 
 #### Description
 
@@ -448,16 +448,16 @@ Unit tests, coverage report, static import check, and sorter regression review.
 
 #### Completion evidence
 
-Sorter scoring test suite server/src/services/sorter.test.js (11 pass)., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-001.
+Sorter scoring test suite server/src/services/sorter.test.js (11 pass)., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for TEST-001., TEST foundation recovery: clean task-specific validation passed at reconciliation baseline de60749ede00db385016f6428144f440d72566ca; this baseline is not represented as the original test implementation commit., Historical containing commit 4939e06a53b285829d2a4f1d9665e88d05ffd910 is locally available and contained by origin/ops/architecture-ledger-hardening.
 
 ---
 
 ### `TEST-002` Protect collection sync/apply/rollback
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-008
-**Last updated:** 2026-08-01T22:10:15.193Z
+**Last updated:** 2026-08-03T12:25:10.175Z
 
 #### Description
 
@@ -477,7 +477,7 @@ Unit, route contract, mocked integration, SQLite test-db integrity, and manual r
 
 #### Completion evidence
 
-Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass)., Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-008.
+Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass)., Commit SHA: 8741148fc7fe83b9926c77e227c0b45359ef2028, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-008., TEST foundation recovery: clean task-specific validation passed at reconciliation baseline de60749ede00db385016f6428144f440d72566ca; this baseline is not represented as the original test implementation commit., Historical containing commit f3690e88bead0c46576d1e8002e50804b22ade42 is locally available and contained by origin/ops/architecture-ledger-hardening.
 
 ---
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-03T12:25:10.175Z | TEST-002 | validation_pending | completed | shivam | TEST foundation evidence recovery: task-specific clean validation and durable committed evidence verified | `3e6414d0` |
+| 2026-08-03T12:25:10.175Z | TEST-001 | validation_pending | completed | shivam | TEST foundation evidence recovery: task-specific clean validation and durable committed evidence verified | `223990e8` |
 | 2026-08-03T07:58:29.272Z | OWN-001 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `46bfb395` |
 | 2026-08-03T07:58:29.272Z | SAFE-008 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `428daa7b` |
 | 2026-08-03T07:58:29.272Z | SAFE-007 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `f35e5119` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-03T07:58:29.272Z | SAFE-004 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `ef653b64` |
 | 2026-08-03T07:58:29.272Z | SAFE-003 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `c16470cb` |
 | 2026-08-03T07:58:29.272Z | SAFE-002 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `34113efa` |
-| 2026-08-03T07:57:37.641Z | OWN-001 | completed | completed | shivam | R1-A finalization: populate truthful audit metadata and structured validation evidence without changing task status. | `d99a6ff2` |
-| 2026-08-03T07:57:37.641Z | SAFE-008 | completed | completed | shivam | R1-A finalization: populate truthful audit metadata and structured validation evidence without changing task status. | `5f491381` |
