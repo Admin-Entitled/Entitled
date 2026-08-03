@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-02T00:06:27.197Z",
+  "last_updated": "2026-08-03T07:40:37.718Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -74,7 +74,7 @@
       "title": "Capture working-tree and baseline manifest",
       "description": "Remediation task SAFE-002: Capture working-tree and baseline manifest",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [],
       "blocking_reasons": [],
       "acceptance_criteria": [
@@ -87,15 +87,17 @@
       ],
       "evidence": [
         "Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002.",
+        "R1-A verification: the preserved SAFE-002 baseline manifest at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/git/2026-07-30T12-28-53+0530-safe-002-baseline.manifest explicitly supersedes /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest and satisfies the plan acceptance checks recorded in the manifest validation block.",
+        "R1-A restore: Group A evidence verified from the preserved baseline manifest copy referenced above; no application files changed."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.177Z",
+      "updated_timestamp": "2026-08-03T07:38:40.104Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:38:39.976Z",
+      "completed_timestamp": "2026-08-03T07:38:40.104Z",
       "notes": "Imported from master plan. Previous raw status: COMPLETED",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -108,7 +110,7 @@
       "title": "Confirm SQLite backups",
       "description": "Remediation task SAFE-003: Confirm SQLite backups",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-002"
       ],
@@ -123,15 +125,17 @@
       ],
       "evidence": [
         "SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003.",
+        "R1-A verification: the SQLite backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite contains labeled manifests plus integrity and restore-open logs for both captured SQLite paths, matching the plan evidence.",
+        "R1-A restore: SAFE-003 external backup evidence verified on disk; dependencies satisfied by restored SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.179Z",
+      "updated_timestamp": "2026-08-03T07:40:07.050Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:40:06.929Z",
+      "completed_timestamp": "2026-08-03T07:40:07.050Z",
       "notes": "Imported from master plan. Previous raw status: READY",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -144,7 +148,7 @@
       "title": "Complete PostgreSQL/Neon backup",
       "description": "Remediation task SAFE-004: Complete PostgreSQL/Neon backup",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-002"
       ],
@@ -159,15 +163,17 @@
       ],
       "evidence": [
         "PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004.",
+        "R1-A verification: the PostgreSQL backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres contains the custom dump, schema dump, restore logs, and manifest metadata cited by the plan evidence.",
+        "R1-A restore: SAFE-004 backup and isolated restore evidence verified on disk; dependencies satisfied by restored SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.181Z",
+      "updated_timestamp": "2026-08-03T07:40:07.282Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:40:07.180Z",
+      "completed_timestamp": "2026-08-03T07:40:07.282Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -180,7 +186,7 @@
       "title": "Encrypt secret archive",
       "description": "Remediation task SAFE-005: Encrypt secret archive",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-002"
       ],
@@ -195,15 +201,17 @@
       ],
       "evidence": [
         "Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005.",
+        "R1-A verification: the encrypted secret archive artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets contains the encrypted archive, decrypt verification log, permissions log, and rotation runbook cited by the plan evidence.",
+        "R1-A restore: SAFE-005 encrypted archive and rotation evidence verified on disk; dependencies satisfied by restored SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.183Z",
+      "updated_timestamp": "2026-08-03T07:40:07.556Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:40:07.401Z",
+      "completed_timestamp": "2026-08-03T07:40:07.556Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -216,7 +224,7 @@
       "title": "Create off-device backup copy",
       "description": "Remediation task SAFE-006: Create off-device backup copy",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-003",
         "SAFE-004",
@@ -235,15 +243,17 @@
         "Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d)",
         "Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks.",
         "Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005.",
+        "R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening.",
+        "R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.185Z",
+      "updated_timestamp": "2026-08-03T07:40:19.261Z",
       "started_timestamp": "2026-07-31T10:28:10.186Z",
       "implemented_timestamp": "2026-07-31T10:30:39.545Z",
-      "validated_timestamp": "2026-07-31T10:30:47.678Z",
-      "completed_timestamp": "2026-07-31T10:31:03.307Z",
+      "validated_timestamp": "2026-08-03T07:40:19.158Z",
+      "completed_timestamp": "2026-08-03T07:40:19.261Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
@@ -259,7 +269,7 @@
       "title": "Validate restoration instructions",
       "description": "Remediation task SAFE-007: Validate restoration instructions",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-003",
         "SAFE-004",
@@ -276,15 +286,17 @@
       ],
       "evidence": [
         "Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007.",
+        "R1-A verification: the rehearsal bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal contains SQLite, PostgreSQL, runtime, git-restore, and off-device checksum logs plus restore-operator-sequence.txt, matching the plan evidence and showing an independent restore rehearsal without production writes.",
+        "R1-A restore: SAFE-007 rehearsal bundle verified on disk after restoring SAFE-003, SAFE-004, and SAFE-006."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.187Z",
+      "updated_timestamp": "2026-08-03T07:40:37.426Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:40:37.323Z",
+      "completed_timestamp": "2026-08-03T07:40:37.426Z",
       "notes": "Imported from master plan. Previous raw status: BLOCKED",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -297,7 +309,7 @@
       "title": "Record database ownership uncertainties",
       "description": "Remediation task SAFE-008: Record database ownership uncertainties",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-002"
       ],
@@ -311,15 +323,17 @@
       ],
       "evidence": [
         "Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008.",
+        "R1-A verification: docs/architecture/DATABASE_OWNERSHIP_REGISTER.md exists on disk and records provisional owners plus explicit unknown states that block deletion, matching the plan evidence and acceptance criteria.",
+        "R1-A restore: SAFE-008 ownership-register evidence verified on disk; dependencies satisfied by restored SAFE-002."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.189Z",
+      "updated_timestamp": "2026-08-03T07:40:07.778Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:40:07.673Z",
+      "completed_timestamp": "2026-08-03T07:40:07.778Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -833,7 +847,7 @@
       "title": "Establish canonical application names and statuses",
       "description": "Remediation task OWN-001: Establish canonical application names and statuses",
       "severity": "MEDIUM",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-008"
       ],
@@ -848,15 +862,17 @@
       ],
       "evidence": [
         "Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001.",
+        "R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria.",
+        "R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.215Z",
+      "updated_timestamp": "2026-08-03T07:40:37.654Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
-      "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "validated_timestamp": "2026-08-03T07:40:37.547Z",
+      "completed_timestamp": "2026-08-03T07:40:37.654Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": null,
@@ -4236,7 +4252,7 @@
       "title": "Create ADRs and separate Shopify theme context",
       "description": "Remediation task DOC-011: Create ADRs and separate Shopify theme context",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001"
       ],
@@ -4252,7 +4268,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-03T07:40:37.703Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

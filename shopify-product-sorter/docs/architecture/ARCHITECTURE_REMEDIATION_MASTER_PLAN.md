@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-02T00:06:27.197Z` |
+| Generated timestamp | `2026-08-03T07:40:37.718Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `2886e03` |
+| Local commit | `631a457` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 40 |
-| Ready | 0 |
+| Not started | 39 |
+| Ready | 1 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 76 |
+| Validation pending | 68 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 2 |
-| Completion percentage | 1.6% |
+| Completed | 10 |
+| Completion percentage | 7.8% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: None
-- Dependency-safe validation-pending tasks: `SAFE-002`
-- Tasks awaiting prerequisites: `SAFE-003`, `SAFE-004`, `SAFE-005`, `SAFE-006`, `SAFE-007`
+- Next dependency-actionable ready tasks: `DOC-011`
+- Dependency-safe validation-pending tasks: `TEST-001`, `TEST-002`, `TEST-003`, `TEST-004`, `TEST-005`
+- Tasks awaiting prerequisites: `TEST-012`, `OWN-002`, `OWN-003`, `OWN-004`, `OWN-005`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -61,13 +61,13 @@
 | Task ID | Title | Severity | Status | Dependencies | Notes |
 | --- | --- | --- | --- | --- | --- |
 | SAFE-001 | Confirm recoverable Git backup | CRITICAL | COMPLETED | None | Imported from master plan. Previous raw status: COMPLETED |
-| SAFE-002 | Capture working-tree and baseline manifest | CRITICAL | VALIDATION_PENDING | None | Imported from master plan. Previous raw status: COMPLETED |
-| SAFE-003 | Confirm SQLite backups | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: READY |
-| SAFE-004 | Complete PostgreSQL/Neon backup | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-005 | Encrypt secret archive | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-006 | Create off-device backup copy | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| SAFE-007 | Validate restoration instructions | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
-| SAFE-008 | Record database ownership uncertainties | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-002 | Capture working-tree and baseline manifest | CRITICAL | COMPLETED | None | Imported from master plan. Previous raw status: COMPLETED |
+| SAFE-003 | Confirm SQLite backups | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: READY |
+| SAFE-004 | Complete PostgreSQL/Neon backup | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-005 | Encrypt secret archive | CRITICAL | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-006 | Create off-device backup copy | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| SAFE-007 | Validate restoration instructions | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-006 | Imported from master plan. Previous raw status: BLOCKED |
+| SAFE-008 | Record database ownership uncertainties | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-001 | Protect sorter scoring and core logic | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-002 | Protect collection sync/apply/rollback | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-003 | Protect collection reorder contracts | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
@@ -80,7 +80,7 @@
 | TEST-010 | Protect startup and environment isolation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-011 | Protect frontend navigation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-012 | Add integrated existing-app regression gate | HIGH | VALIDATION_PENDING | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-001 | Establish canonical application names and statuses | MEDIUM | VALIDATION_PENDING | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-002 | Define Product Sorter boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | VALIDATION_PENDING | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-004 | Define SKU Image Manager boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -163,7 +163,7 @@
 | DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-009 | Create backup and restore guide | CRITICAL | NOT_STARTED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | NOT_STARTED | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | BLOCKED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -224,9 +224,9 @@ Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 o
 ### `SAFE-002` Capture working-tree and baseline manifest
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** None
-**Last updated:** 2026-08-01T22:10:15.177Z
+**Last updated:** 2026-08-03T07:38:40.104Z
 
 #### Description
 
@@ -246,16 +246,16 @@ Static: compare `git status`, `git ls-files`, and inventory counts. Data: verify
 
 #### Completion evidence
 
-Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002.
+Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002., R1-A verification: the preserved SAFE-002 baseline manifest at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/git/2026-07-30T12-28-53+0530-safe-002-baseline.manifest explicitly supersedes /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest and satisfies the plan acceptance checks recorded in the manifest validation block., R1-A restore: Group A evidence verified from the preserved baseline manifest copy referenced above; no application files changed.
 
 ---
 
 ### `SAFE-003` Confirm SQLite backups
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-08-01T22:10:15.179Z
+**Last updated:** 2026-08-03T07:40:07.050Z
 
 #### Description
 
@@ -275,16 +275,16 @@ Data integrity check, hash comparison, restore-open test on copies, and status c
 
 #### Completion evidence
 
-SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003.
+SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003., R1-A verification: the SQLite backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite contains labeled manifests plus integrity and restore-open logs for both captured SQLite paths, matching the plan evidence., R1-A restore: SAFE-003 external backup evidence verified on disk; dependencies satisfied by restored SAFE-002.
 
 ---
 
 ### `SAFE-004` Complete PostgreSQL/Neon backup
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-08-01T22:10:15.181Z
+**Last updated:** 2026-08-03T07:40:07.282Z
 
 #### Description
 
@@ -304,16 +304,16 @@ Migration/schema inventory, restore test, read-only smoke queries, and no produc
 
 #### Completion evidence
 
-PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004.
+PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004., R1-A verification: the PostgreSQL backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres contains the custom dump, schema dump, restore logs, and manifest metadata cited by the plan evidence., R1-A restore: SAFE-004 backup and isolated restore evidence verified on disk; dependencies satisfied by restored SAFE-002.
 
 ---
 
 ### `SAFE-005` Encrypt secret archive
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-08-01T22:10:15.183Z
+**Last updated:** 2026-08-03T07:40:07.556Z
 
 #### Description
 
@@ -333,16 +333,16 @@ Security review, archive decrypt test by authorized operator, repository secret 
 
 #### Completion evidence
 
-Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005.
+Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005., R1-A verification: the encrypted secret archive artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets contains the encrypted archive, decrypt verification log, permissions log, and rotation runbook cited by the plan evidence., R1-A restore: SAFE-005 encrypted archive and rotation evidence verified on disk; dependencies satisfied by restored SAFE-002.
 
 ---
 
 ### `SAFE-006` Create off-device backup copy
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-005
-**Last updated:** 2026-08-01T22:10:15.185Z
+**Last updated:** 2026-08-03T07:40:19.261Z
 
 #### Description
 
@@ -362,16 +362,16 @@ Hash verification, authorized access test, restore-read test, and status review.
 
 #### Completion evidence
 
-Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks., Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005.
+Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d), Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks., Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005., R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening., R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005.
 
 ---
 
 ### `SAFE-007` Validate restoration instructions
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-006
-**Last updated:** 2026-08-01T22:10:15.187Z
+**Last updated:** 2026-08-03T07:40:37.426Z
 
 #### Description
 
@@ -391,16 +391,16 @@ Git status/ref, SQLite integrity, PostgreSQL schema smoke test, runtime path che
 
 #### Completion evidence
 
-Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007.
+Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007., R1-A verification: the rehearsal bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal contains SQLite, PostgreSQL, runtime, git-restore, and off-device checksum logs plus restore-operator-sequence.txt, matching the plan evidence and showing an independent restore rehearsal without production writes., R1-A restore: SAFE-007 rehearsal bundle verified on disk after restoring SAFE-003, SAFE-004, and SAFE-006.
 
 ---
 
 ### `SAFE-008` Record database ownership uncertainties
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-08-01T22:10:15.189Z
+**Last updated:** 2026-08-03T07:40:07.778Z
 
 #### Description
 
@@ -419,7 +419,7 @@ Static import/reference search and owner review; no runtime writes.
 
 #### Completion evidence
 
-Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008.
+Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008., R1-A verification: docs/architecture/DATABASE_OWNERSHIP_REGISTER.md exists on disk and records provisional owners plus explicit unknown states that block deletion, matching the plan evidence and acceptance criteria., R1-A restore: SAFE-008 ownership-register evidence verified on disk; dependencies satisfied by restored SAFE-002.
 
 ---
 
@@ -774,9 +774,9 @@ Unit, integration, E2E, startup, migration, route, and test-isolation checks.
 ### `OWN-001` Establish canonical application names and statuses
 
 **Severity:** MEDIUM
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-008
-**Last updated:** 2026-08-01T22:10:15.215Z
+**Last updated:** 2026-08-03T07:40:37.654Z
 
 #### Description
 
@@ -796,7 +796,7 @@ Static path/symbol review and owner sign-off; no runtime change.
 
 #### Completion evidence
 
-Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001.
+Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001., R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria., R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008.
 
 ---
 
@@ -3178,9 +3178,9 @@ Not completed.
 ### `DOC-011` Create ADRs and separate Shopify theme context
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-03T07:40:37.703Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-02T00:06:27.217Z | SAFE-001 | validated | completed | shivam | SAFE-001 completed after clean committed-state validation at 8fe7ea1208b774ab3272a990e396b3264927018f: baseline 4956310183cf53043b0c3a27b04869833cf53654 is recoverable through remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; isolated restore evidence, 77/77 architecture tests, 13/13 regression gate, offline verify, and dirty-path preservation passed. | `10e0c915` |
-| 2026-08-02T00:01:28.299Z | SAFE-001 | validation_pending | validated | shivam | Fresh SAFE-001 validation: baseline 4956310183cf53043b0c3a27b04869833cf53654 is readable and a direct ancestor of remote origin/main at c4783f33677530108f8c64acbaf4deb04bcc9097; git object, ancestry, connectivity, remote-ref, and isolated restore evidence passed; all 34 protected dirty-path hashes matched and seven deleted-path sentinels remained absent. No secrets or encryption material required. | `255531a7` |
-| 2026-08-01T23:16:47.208Z | FINAL-002 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `33421d79` |
-| 2026-08-01T23:16:47.208Z | FINAL-001 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `64462871` |
-| 2026-08-01T23:16:47.208Z | CLEAN-004 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `16749160` |
-| 2026-08-01T23:16:47.208Z | CLEAN-003 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `401471c1` |
-| 2026-08-01T23:16:47.208Z | DOC-011 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `e6314d8b` |
-| 2026-08-01T23:16:47.208Z | DOC-009 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `cdf7a879` |
-| 2026-08-01T23:16:47.208Z | DOC-008 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `ead5bb5d` |
-| 2026-08-01T23:16:47.208Z | DOC-005 | ready | not_started | shivam | Phase 4.1 readiness reconciliation: Phase 3B exposed stale ready status with unmet dependencies | `b82048ce` |
+| 2026-08-03T07:40:37.718Z | DOC-011 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `62b17b4e` |
+| 2026-08-03T07:40:37.674Z | OWN-001 | validated | completed | shivam | R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008. | `21acb03f` |
+| 2026-08-03T07:40:37.567Z | OWN-001 | validation_pending | validated | shivam | R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria. | `aad7a853` |
+| 2026-08-03T07:40:37.445Z | SAFE-007 | validated | completed | shivam | R1-A restore: SAFE-007 rehearsal bundle verified on disk after restoring SAFE-003, SAFE-004, and SAFE-006. | `ce55379f` |
+| 2026-08-03T07:40:37.343Z | SAFE-007 | validation_pending | validated | shivam | R1-A verification: the rehearsal bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal contains SQLite, PostgreSQL, runtime, git-restore, and off-device checksum logs plus restore-operator-sequence.txt, matching the plan evidence and showing an independent restore rehearsal without production writes. | `2cf48c90` |
+| 2026-08-03T07:40:19.280Z | SAFE-006 | validated | completed | shivam | R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005. | `39cc09f6` |
+| 2026-08-03T07:40:19.178Z | SAFE-006 | validation_pending | validated | shivam | R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening. | `1cc4ea22` |
+| 2026-08-03T07:40:07.797Z | SAFE-008 | validated | completed | shivam | R1-A restore: SAFE-008 ownership-register evidence verified on disk; dependencies satisfied by restored SAFE-002. | `66e8774f` |
+| 2026-08-03T07:40:07.692Z | SAFE-008 | validation_pending | validated | shivam | R1-A verification: docs/architecture/DATABASE_OWNERSHIP_REGISTER.md exists on disk and records provisional owners plus explicit unknown states that block deletion, matching the plan evidence and acceptance criteria. | `a2fc9fa1` |
+| 2026-08-03T07:40:07.576Z | SAFE-005 | validated | completed | shivam | R1-A restore: SAFE-005 encrypted archive and rotation evidence verified on disk; dependencies satisfied by restored SAFE-002. | `5494344e` |
