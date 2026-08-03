@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-03T07:57:37.641Z",
+  "last_updated": "2026-08-03T07:58:29.272Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -90,7 +90,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-002.",
         "R1-A verification: the preserved SAFE-002 baseline manifest at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/git/2026-07-30T12-28-53+0530-safe-002-baseline.manifest explicitly supersedes /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest and satisfies the plan acceptance checks recorded in the manifest validation block.",
         "R1-A restore: Group A evidence verified from the preserved baseline manifest copy referenced above; no application files changed.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -98,7 +99,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:38:39.976Z",
@@ -109,7 +110,7 @@
       ],
       "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
       "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -176,7 +177,7 @@
         },
         "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
         "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/git/2026-07-30T12-28-53+0530-safe-002-baseline.manifest",
           "exists": true,
@@ -185,7 +186,9 @@
           "secret_content_exposed": false
         },
         "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -211,7 +214,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-003.",
         "R1-A verification: the SQLite backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite contains labeled manifests plus integrity and restore-open logs for both captured SQLite paths, matching the plan evidence.",
         "R1-A restore: SAFE-003 external backup evidence verified on disk; dependencies satisfied by restored SAFE-002.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -219,7 +223,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:06.929Z",
@@ -230,7 +234,7 @@
       ],
       "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
       "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -297,7 +301,7 @@
         },
         "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
         "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite",
           "exists": true,
@@ -308,7 +312,9 @@
           "secret_content_exposed": false
         },
         "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -334,7 +340,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-004.",
         "R1-A verification: the PostgreSQL backup artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres contains the custom dump, schema dump, restore logs, and manifest metadata cited by the plan evidence.",
         "R1-A restore: SAFE-004 backup and isolated restore evidence verified on disk; dependencies satisfied by restored SAFE-002.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -342,7 +349,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:07.180Z",
@@ -353,7 +360,7 @@
       ],
       "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
       "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -420,7 +427,7 @@
         },
         "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
         "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres",
           "exists": true,
@@ -432,7 +439,9 @@
           "secret_content_exposed": false
         },
         "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -458,7 +467,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-005.",
         "R1-A verification: the encrypted secret archive artifact at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets contains the encrypted archive, decrypt verification log, permissions log, and rotation runbook cited by the plan evidence.",
         "R1-A restore: SAFE-005 encrypted archive and rotation evidence verified on disk; dependencies satisfied by restored SAFE-002.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -466,7 +476,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:07.401Z",
@@ -477,7 +487,7 @@
       ],
       "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
       "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -544,7 +554,7 @@
         },
         "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
         "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets",
           "exists": true,
@@ -556,7 +566,9 @@
           "secret_content_exposed": false
         },
         "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -586,7 +598,8 @@
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-005.",
         "R1-A verification: the off-device bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice is present, its verification JSON records all three backup classes as verified, hash_verified=true, and the cited implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is contained on origin/ops/architecture-ledger-hardening.",
         "R1-A restore: SAFE-006 off-device bundle, hash evidence, and remote-contained commit verification passed after restoring SAFE-003, SAFE-004, and SAFE-005.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -594,7 +607,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-31T10:28:10.186Z",
       "implemented_timestamp": "2026-07-31T10:30:39.545Z",
       "validated_timestamp": "2026-08-03T07:40:19.158Z",
@@ -605,7 +618,7 @@
       ],
       "implementation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
       "clean_validation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
-      "completion_record_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -672,7 +685,7 @@
         },
         "implementation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
         "clean_validation_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
-        "completion_record_commit_sha": "e2bb549c2ec7e7b2291a09750932c80b0ab547e3",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice",
           "exists": true,
@@ -682,7 +695,9 @@
           "secret_content_exposed": false
         },
         "provenance": "The documented implementation commit e2bb549c2ec7e7b2291a09750932c80b0ab547e3 is preserved and remotely contained; the external artifact predates the reconciliation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -710,7 +725,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-007.",
         "R1-A verification: the rehearsal bundle at /home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal contains SQLite, PostgreSQL, runtime, git-restore, and off-device checksum logs plus restore-operator-sequence.txt, matching the plan evidence and showing an independent restore rehearsal without production writes.",
         "R1-A restore: SAFE-007 rehearsal bundle verified on disk after restoring SAFE-003, SAFE-004, and SAFE-006.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -718,7 +734,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:37.323Z",
@@ -729,7 +745,7 @@
       ],
       "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
       "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -796,7 +812,7 @@
         },
         "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
         "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "/home/shivam/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal",
           "exists": true,
@@ -810,7 +826,9 @@
           "secret_content_exposed": false
         },
         "provenance": "External artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original artifact-creation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -835,7 +853,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for SAFE-008.",
         "R1-A verification: docs/architecture/DATABASE_OWNERSHIP_REGISTER.md exists on disk and records provisional owners plus explicit unknown states that block deletion, matching the plan evidence and acceptance criteria.",
         "R1-A restore: SAFE-008 ownership-register evidence verified on disk; dependencies satisfied by restored SAFE-002.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -843,7 +862,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:07.673Z",
@@ -854,7 +873,7 @@
       ],
       "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
       "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -921,7 +940,7 @@
         },
         "implementation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
         "clean_validation_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "docs/architecture/DATABASE_OWNERSHIP_REGISTER.md",
           "exists": true,
@@ -929,7 +948,9 @@
           "runtime_writes": false
         },
         "provenance": "The documentation artifact predates the reconciliation commit; 24757badcbd9e75a7372bcd698be43810fd44782 is the durable ledger/evidence baseline and is not represented as the original documentation commit.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
@@ -1456,7 +1477,8 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-001.",
         "R1-A verification: docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md exists on disk and documents canonical current surfaces, disabled placeholder labels as non-applications, and legacy aliases, matching the plan evidence and acceptance criteria.",
         "R1-A restore: OWN-001 canonical-name register verified on disk after restoring SAFE-008.",
-        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records."
+        "R1-A finalization evidence metadata: implementation and remote-containment checks recorded; clean validation was performed from reconciliation baseline 24757badcbd9e75a7372bcd698be43810fd44782; artifact-specific safe checks recorded without exposing secrets or records.",
+        "R1-A completion-record finalization: Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 is the remotely contained completion-record baseline; no task status changed."
       ],
       "changed_files": [
         "docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md",
@@ -1464,7 +1486,7 @@
         "docs/architecture/ledger/history.jsonl"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:57:37.641Z",
+      "updated_timestamp": "2026-08-03T07:58:29.272Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-08-03T07:40:37.547Z",
@@ -1475,7 +1497,7 @@
       ],
       "implementation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
       "clean_validation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
-      "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+      "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
       "validation_results": {
         "commands": [
           "npm ci",
@@ -1542,7 +1564,7 @@
         },
         "implementation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
         "clean_validation_commit_sha": "c05bd0a0c9871e6522b95d5575203dfb79f0fcd8",
-        "completion_record_commit_sha": "24757badcbd9e75a7372bcd698be43810fd44782",
+        "completion_record_commit_sha": "00a91ff6553050f9a4f2a0cfdc3ec36005a9a074",
         "artifact_specific_safe_checks": {
           "path": "docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md",
           "exists": true,
@@ -1551,7 +1573,9 @@
           "legacy_aliases_documented": true
         },
         "provenance": "The true documentation-containing commit c05bd0a0c9871e6522b95d5575203dfb79f0fcd8 is preserved and remotely contained.",
-        "timestamp": "2026-08-03T07:57:37.641Z"
+        "timestamp": "2026-08-03T07:57:37.641Z",
+        "completion_record_commit_sha_remote_contained": true,
+        "completion_record_finalization_timestamp": "2026-08-03T07:58:29.272Z"
       }
     },
     {
