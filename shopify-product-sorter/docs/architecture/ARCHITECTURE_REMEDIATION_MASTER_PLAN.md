@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-03T12:33:53.118Z` |
+| Generated timestamp | `2026-08-03T16:08:40.444Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `028ea82` |
+| Local commit | `917ec9f` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,19 +40,19 @@
 | Ready | 1 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 66 |
+| Validation pending | 64 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 12 |
-| Completion percentage | 9.3% |
+| Completed | 14 |
+| Completion percentage | 10.9% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-011`
-- Dependency-safe validation-pending tasks: `TEST-003`, `TEST-004`, `TEST-005`, `TEST-006`, `TEST-007`
-- Tasks awaiting prerequisites: `TEST-012`, `OWN-003`, `OWN-004`, `OWN-005`, `OWN-006`
+- Dependency-safe validation-pending tasks: `TEST-003`, `TEST-006`, `TEST-007`, `TEST-008`, `TEST-009`
+- Tasks awaiting prerequisites: `TEST-012`, `OWN-004`, `OWN-005`, `OWN-006`, `OWN-007`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
 
@@ -71,8 +71,8 @@
 | TEST-001 | Protect sorter scoring and core logic | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-002 | Protect collection sync/apply/rollback | CRITICAL | COMPLETED | SAFE-003, SAFE-008 | Imported from master plan. Previous raw status: COMPLETED |
 | TEST-003 | Protect collection reorder contracts | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: COMPLETED |
-| TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | VALIDATION_PENDING | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-005 | Protect CSV import and manual overrides | HIGH | VALIDATION_PENDING | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-005 | Protect CSV import and manual overrides | HIGH | COMPLETED | SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-006 | Protect SKU media operations | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-007 | Protect Sales Intelligence API contracts | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-008 | Protect public route compatibility | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -513,9 +513,9 @@ Collection reorder contract test suite server/src/services/collectionReorderCont
 ### `TEST-004` Protect Order Mapping sync/status lifecycle
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-004
-**Last updated:** 2026-08-01T22:10:15.197Z
+**Last updated:** 2026-08-03T16:08:40.211Z
 
 #### Description
 
@@ -535,16 +535,16 @@ Unit, integration, isolated PostgreSQL integrity, network-log assertions, and no
 
 #### Completion evidence
 
-Starting task TEST-004: Protect Order Mapping sync/status lifecycle, Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides., Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override)., Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004.
+Approved correctness remediation completed for TEST-004: status preservation, failed provider retry, and unknown status non-overwrite contracts., Historical SHA 634ad1afdd9e400e923bb37740b78a758a4a6a2e retained as ledger historical completion record; implementation evidence updated to real commit 8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc., Clean validation commit 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b contains 16 passing unit and integration tests in server/src/services/orderMapping.test.js., Clean validation passed, Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b
 
 ---
 
 ### `TEST-005` Protect CSV import and manual overrides
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-004
-**Last updated:** 2026-08-01T22:10:15.199Z
+**Last updated:** 2026-08-03T16:08:40.443Z
 
 #### Description
 
@@ -564,7 +564,7 @@ Unit, integration, database integrity, route contract, and synthetic CSV manual 
 
 #### Completion evidence
 
-Starting implementation of TEST-005: Protect CSV import and manual overrides, Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction., Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics., Commit SHA: 7890a0ef38dd5dec9454d0a583edafc3977c2a86, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004.
+Approved correctness remediation completed for TEST-005: canonical object manual override contract, stable machine-readable error codes, zero-write preview, single transaction commit, and safe logging assertions excluding customer PII., Historical SHA 7890a0ef38dd5dec9454d0a583edafc3977c2a86 retained as ledger historical completion record; implementation evidence updated to real commit 8c28ff5c3b8d966a41bf4094c7de8bc3bfa950cc., Clean validation commit 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b contains 16 passing unit and integration tests in server/src/services/orderMapping.test.js and 4 passing health tests in server/src/app.test.js., Clean validation passed, Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-03T16:08:40.467Z | TEST-005 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `5d067f9a` |
+| 2026-08-03T16:08:40.360Z | TEST-005 | in_progress | validated | shivam | Clean validation passed | `def4f1ab` |
+| 2026-08-03T16:08:40.233Z | TEST-004 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `3c6b0bce` |
+| 2026-08-03T16:08:40.127Z | TEST-004 | in_progress | validated | shivam | Clean validation passed | `ac9b741a` |
+| 2026-08-03T14:49:08.027Z | TEST-005 | validation_pending | in_progress | shivam | Approved correctness remediation underway for manual override contract, stable CSV errors, and atomic commit behavior. | `920bf6c0` |
+| 2026-08-03T14:49:07.148Z | TEST-004 | validation_pending | in_progress | shivam | Approved correctness remediation underway for partial provider status preservation and lifecycle failure contracts. | `c0f10b8b` |
 | 2026-08-03T12:33:53.118Z | TEST-002 | completed | completed | shivam | TEST foundation post-push finalization: record verified remote containment without changing task status | `ad288699` |
 | 2026-08-03T12:33:53.118Z | TEST-001 | completed | completed | shivam | TEST foundation post-push finalization: record verified remote containment without changing task status | `76fca260` |
 | 2026-08-03T12:26:37.060Z | TEST-002 | completed | completed | shivam | TEST foundation completion-record finalization: record recovery commit 251cda92d76309159da69ceca4f363d0b9432fc8 without changing task status | `d48d42ff` |
 | 2026-08-03T12:26:37.060Z | TEST-001 | completed | completed | shivam | TEST foundation completion-record finalization: record recovery commit 251cda92d76309159da69ceca4f363d0b9432fc8 without changing task status | `fdb9142c` |
-| 2026-08-03T12:25:10.175Z | TEST-002 | validation_pending | completed | shivam | TEST foundation evidence recovery: task-specific clean validation and durable committed evidence verified | `3e6414d0` |
-| 2026-08-03T12:25:10.175Z | TEST-001 | validation_pending | completed | shivam | TEST foundation evidence recovery: task-specific clean validation and durable committed evidence verified | `223990e8` |
-| 2026-08-03T07:58:29.272Z | OWN-001 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `46bfb395` |
-| 2026-08-03T07:58:29.272Z | SAFE-008 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `428daa7b` |
-| 2026-08-03T07:58:29.272Z | SAFE-007 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `f35e5119` |
-| 2026-08-03T07:58:29.272Z | SAFE-006 | completed | completed | shivam | R1-A completion-record finalization: record evidence Commit 1 00a91ff6553050f9a4f2a0cfdc3ec36005a9a074 without changing task status. | `b3182152` |

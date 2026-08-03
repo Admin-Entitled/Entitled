@@ -2,11 +2,17 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ArchitectureLedgerTasks",
   "type": "object",
-  "required": ["version", "last_updated", "tasks"],
+  "required": [
+    "version",
+    "last_updated",
+    "tasks"
+  ],
   "properties": {
     "version": {
       "type": "string",
-      "enum": ["1.0.0"]
+      "enum": [
+        "1.0.0"
+      ]
     },
     "last_updated": {
       "type": "string",
@@ -40,7 +46,12 @@
         "implemented_timestamp",
         "validated_timestamp",
         "completed_timestamp",
-        "notes"
+        "notes",
+        "validation_files",
+        "implementation_commit_sha",
+        "clean_validation_commit_sha",
+        "completion_record_commit_sha",
+        "validation_results"
       ],
       "properties": {
         "id": {
@@ -56,7 +67,12 @@
         },
         "severity": {
           "type": "string",
-          "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
         },
         "status": {
           "type": "string",
@@ -75,48 +91,112 @@
         },
         "dependencies": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "blocking_reasons": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "acceptance_criteria": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "validation_commands": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "evidence": {
-          "type": ["string", "array"],
-          "items": { "type": "string" }
+          "type": [
+            "string",
+            "array"
+          ],
+          "items": {
+            "type": "string"
+          }
         },
         "changed_files": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "created_timestamp": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "updated_timestamp": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "started_timestamp": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "implemented_timestamp": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "validated_timestamp": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "completed_timestamp": {
-          "type": ["string", "null"]
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "notes": {
           "type": "string"
+        },
+        "validation_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "implementation_commit_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "clean_validation_commit_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "completion_record_commit_sha": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "validation_results": {
+          "type": [
+            "object",
+            "array",
+            "null"
+          ]
         }
       }
     }
