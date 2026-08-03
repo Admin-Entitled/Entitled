@@ -3,6 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import express from "express";
 import multer from "multer";
+import { requireAdminAuth } from "../middleware/authBoundary.js";
+import { normalizeOrderMappingError, orderMappingError } from "../services/orderMappingError.js";
 import {
   clearManualOrderMappingShipmentStatus,
   commitOrderMappingCsvImport,
@@ -26,17 +28,12 @@ const upload = multer({
   fileFilter: (req, file, done) => done(null, file.originalname.toLowerCase().endsWith(".csv")),
 });
 
-function errorResponse(res, error) {
-  res.status(error.statusCode || 500).json({
-    success: false,
-    code: error.code || "ORDER_MAPPING_REQUEST_FAILED",
-    message: error.message || "Order Mapping request failed",
-  });
+function asyncRoute(handler) {
+  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 }
 
-router.get("/orders", async (req, res) => {
-  try {
-    res.json(
+router.get("/orders", asyncRoute(async (req, res) => {
+  res.json(
       await listOrderMappings({
         page: req.query.page,
         pageSize: req.query.pageSize,
@@ -51,117 +48,80 @@ router.get("/orders", async (req, res) => {
         sortDirection: String(req.query.sortDirection || "desc"),
       }),
     );
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+}));
 
-router.get("/orders/:id", async (req, res) => {
-  try {
-    const payload = await getOrderMappingDetails(req.params.id);
-    if (!payload) {
-      return res.status(404).json({
-        success: false,
-        code: "ORDER_MAPPING_NOT_FOUND",
-        message: "Order not found",
-      });
-    }
-    return res.json(payload);
-  } catch (error) {
-    return errorResponse(res, error);
+router.get("/orders/:id", asyncRoute(async (req, res) => {
+  const payload = await getOrderMappingDetails(req.params.id);
+  if (!payload) {
+    throw orderMappingError("ORDER_MAPPING_NOT_FOUND", "Order not found", { statusCode: 404 });
   }
-});
+  res.json(payload);
+}));
 
-router.get("/logs/network", async (req, res) => {
-  try {
-    res.json(await listNetworkLogs(req.query.limit));
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.get("/logs/network", asyncRoute(async (req, res) => {
+  res.json(await listNetworkLogs(req.query.limit));
+}));
 
-router.get("/logs/actions", async (req, res) => {
-  try {
-    res.json(await listActionLogs(req.query.limit));
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.get("/logs/actions", asyncRoute(async (req, res) => {
+  res.json(await listActionLogs(req.query.limit));
+}));
 
-router.post("/sync/shopify", async (req, res) => {
-  try {
-    res.json(await syncOrderMappingShopify(req.body || {}));
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.post("/sync/shopify", asyncRoute(async (req, res) => {
+  res.json(await syncOrderMappingShopify(req.body || {}));
+}));
 
-router.post("/sync/shiprocket", async (req, res) => {
-  try {
-    res.json(await refreshOrderMappingShiprocket({ force: Boolean(req.body?.force) }));
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.post("/sync/shiprocket", asyncRoute(async (req, res) => {
+  res.json(await refreshOrderMappingShiprocket({ force: Boolean(req.body?.force) }));
+}));
 
-router.post("/shipments/:id/refresh", async (req, res) => {
-  try {
-    res.json(
-      await refreshOrderMappingShiprocket({
-        shipmentId: req.params.id,
-        force: Boolean(req.body?.force),
-      }),
-    );
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.post("/shipments/:id/refresh", asyncRoute(async (req, res) => {
+  res.json(
+    await refreshOrderMappingShiprocket({
+      shipmentId: req.params.id,
+      force: Boolean(req.body?.force),
+    }),
+  );
+}));
 
-router.post("/shipments/:id/manual", async (req, res) => {
+router.post("/shipments/:id/manual", asyncRoute(async (req, res) => {
   if (!ORDER_MAPPING_STATUSES.includes(req.body?.normalizedStatus)) {
-    return res.status(400).json({
-      success: false,
-      code: "ORDER_MAPPING_INVALID_STATUS",
-      message: "Invalid status",
-    });
+    throw orderMappingError("ORDER_MAPPING_INVALID_STATUS", "Invalid status");
   }
 
-  try {
-    res.json(
-      await setManualOrderMappingShipmentStatus(
-        req.params.id,
-        req.body.normalizedStatus,
-        String(req.body.rawStatus || ""),
-        req.body.effectiveAt,
-        String(req.body.remarks || ""),
-        Boolean(req.body.locked),
-      ),
-    );
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+  res.json(
+    await setManualOrderMappingShipmentStatus(req.params.id, {
+      normalizedStatus: req.body.normalizedStatus,
+      rawStatus: String(req.body.rawStatus || ""),
+      effectiveAt: req.body.effectiveAt,
+      remarks: String(req.body.remarks || ""),
+      locked: Boolean(req.body.locked),
+      actor: req.body.actor ? String(req.body.actor) : undefined,
+      metadata: req.body.metadata,
+    }),
+  );
+}));
 
-router.post("/shipments/:id/clear-manual", async (req, res) => {
-  try {
-    res.json(await clearManualOrderMappingShipmentStatus(req.params.id));
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.post("/shipments/:id/clear-manual", asyncRoute(async (req, res) => {
+  res.json(await clearManualOrderMappingShipmentStatus(req.params.id));
+}));
 
-router.post("/imports/preview", upload.single("file"), async (req, res) => {
+router.post("/imports/preview", upload.single("file"), asyncRoute(async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        code: "ORDER_MAPPING_CSV_REQUIRED",
-        message: "CSV file required",
-      });
+      throw orderMappingError("ORDER_MAPPING_CSV_REQUIRED", "CSV file required");
     }
 
     const text = await fs.readFile(req.file.path, "utf8");
-    const mapping = req.body.mapping ? JSON.parse(req.body.mapping) : undefined;
+    let mapping;
+    try {
+      mapping = req.body.mapping ? JSON.parse(req.body.mapping) : undefined;
+    } catch (error) {
+      throw orderMappingError(
+        "ORDER_MAPPING_CSV_MAPPING_INVALID",
+        "CSV mapping is invalid",
+        { cause: error },
+      );
+    }
     return res.json(
       await previewOrderMappingCsvImport({
         text,
@@ -169,29 +129,34 @@ router.post("/imports/preview", upload.single("file"), async (req, res) => {
         mapping,
       }),
     );
-  } catch (error) {
-    return errorResponse(res, error);
   } finally {
     if (req.file?.path) {
       await fs.unlink(req.file.path).catch(() => {});
     }
   }
-});
+}));
 
-router.post("/imports/:id/commit", async (req, res) => {
-  try {
-    res.json(await commitOrderMappingCsvImport(req.params.id));
-  } catch (error) {
-    errorResponse(res, error);
-  }
-});
+router.post("/imports/:id/commit", asyncRoute(async (req, res) => {
+  res.json(await commitOrderMappingCsvImport(req.params.id));
+}));
 
-router.post("/admin/migrate-sqlite", async (req, res) => {
-  try {
-    res.json(await migrateOrderMappingSqliteData());
-  } catch (error) {
-    errorResponse(res, error);
+router.post("/admin/migrate-sqlite", requireAdminAuth, asyncRoute(async (req, res) => {
+  res.json(await migrateOrderMappingSqliteData());
+}));
+
+router.use((error, req, res, next) => {
+  if (res.headersSent) {
+    next(error);
+    return;
   }
+
+  const safeError = normalizeOrderMappingError(error);
+  res.status(safeError.statusCode).json({
+    success: false,
+    code: safeError.code,
+    message: safeError.message,
+    ...(safeError.details === undefined ? {} : { details: safeError.details }),
+  });
 });
 
 export default router;

@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { orderMappingError } from "./orderMappingError.js";
 import { createNetworkLog } from "./orderMappingRepository.js";
 
 let token = env.shiprocketToken;
@@ -60,10 +61,14 @@ async function shiprocketRequest(url, options, allowRefresh = true, operation = 
         continue;
       }
 
-      const error = new Error(
+      const error = orderMappingError(
+        response.status === 401
+          ? "ORDER_MAPPING_PROVIDER_AUTH_FAILED"
+          : "ORDER_MAPPING_PROVIDER_REQUEST_FAILED",
         response.status === 401
           ? "Shiprocket authentication failed"
-          : `Shiprocket API request failed (${response.status})`,
+          : "Shiprocket request failed",
+        { statusCode: response.status === 401 ? 502 : 503 },
       );
       error.category = response.status === 401 ? "shiprocket_authentication" : "shiprocket_api";
       await createNetworkLog({
@@ -119,7 +124,11 @@ async function authenticateShiprocket() {
   );
 
   if (!payload.token) {
-    const error = new Error("Shiprocket authentication failed");
+    const error = orderMappingError(
+      "ORDER_MAPPING_PROVIDER_AUTH_FAILED",
+      "Shiprocket authentication failed",
+      { statusCode: 502 },
+    );
     error.category = "shiprocket_authentication";
     throw error;
   }

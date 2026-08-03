@@ -10,6 +10,7 @@ import {
   normalizeOrderMappingStatus,
 } from "./orderMappingStatus.js";
 import { orderMappingQuery, orderMappingTable, withOrderMappingClient } from "./orderMappingDb.js";
+import { orderMappingError } from "./orderMappingError.js";
 
 const ordersTable = orderMappingTable("orders");
 const shipmentsTable = orderMappingTable("shipments");
@@ -742,7 +743,8 @@ export async function listEligibleShipmentsForRefresh({ shipmentId = null, force
   return rows;
 }
 
-export async function applyShipmentUpdate(
+async function applyShipmentUpdateWithClient(
+  client,
   shipmentId,
   {
     awb,
@@ -763,65 +765,48 @@ export async function applyShipmentUpdate(
     importBatchId = null,
     actor = null,
     force = false,
+    preserveStatus = false,
   },
 ) {
-  return withOrderMappingClient(async (client) => {
-    const current = await findShipmentById(client, shipmentId);
-    if (!current) {
-      throw new Error("Shipment not found");
-    }
+  const current = await findShipmentById(client, shipmentId);
+  if (!current) {
+    throw orderMappingError("ORDER_MAPPING_SHIPMENT_NOT_FOUND", "Shipment not found", {
+      statusCode: 404,
+    });
+  }
 
-    const incoming = {
-      normalizedStatus,
-      rawStatus,
-      source,
-      statusTimestamp: parseTimestamp(statusTimestamp) || nowIso(),
-    };
+  const incoming = {
+    normalizedStatus,
+    rawStatus,
+    source,
+    statusTimestamp: parseTimestamp(statusTimestamp) || nowIso(),
+  };
 
-    if (!canApplyStatusUpdate(current, incoming, { force })) {
-      if (source === "SHIPROCKET_API") {
-        await client.query("BEGIN");
-        try {
-          if (shiprocketResponseId) {
-            await client.query(
-              `UPDATE ${shipmentsTable}
-               SET shiprocket_response_id = NULL,
-                   shiprocket_order_reference = NULL,
-                   shiprocket_channel_reference = NULL,
-                   updated_at = NOW()
-               WHERE id <> $1
-                 AND shiprocket_response_id = $2`,
-              [shipmentId, shiprocketResponseId],
-            );
-          }
-          await client.query(
-            `UPDATE ${shipmentsTable}
-             SET shiprocket_response_id = COALESCE($2, shiprocket_response_id),
-                 shiprocket_order_reference = COALESCE($3, shiprocket_order_reference),
-                 shiprocket_channel_reference = COALESCE($4, shiprocket_channel_reference),
-                 last_shiprocket_sync_at = NOW(),
-                 sync_error = NULL,
-                 updated_at = NOW()
-             WHERE id = $1`,
-            [
-              shipmentId,
-              shiprocketResponseId || null,
-              shiprocketOrderReference || null,
-              shiprocketChannelReference || null,
-            ],
-          );
-          await client.query("COMMIT");
-        } catch (error) {
-          await client.query("ROLLBACK");
-          throw error;
-        }
-      }
-      return { applied: false, reason: current.manual_override_lock ? "manual_lock" : "precedence" };
-    }
+  if (preserveStatus) {
+    await client.query(
+      `UPDATE ${shipmentsTable}
+       SET shiprocket_response_id = COALESCE($2, shiprocket_response_id),
+           shiprocket_order_reference = COALESCE($3, shiprocket_order_reference),
+           shiprocket_channel_reference = COALESCE($4, shiprocket_channel_reference),
+           last_shiprocket_sync_at = CASE WHEN $5 = 'SHIPROCKET_API' THEN NOW() ELSE last_shiprocket_sync_at END,
+           sync_error = $6,
+           updated_at = NOW()
+       WHERE id = $1`,
+      [
+        shipmentId,
+        shiprocketResponseId || null,
+        shiprocketOrderReference || null,
+        shiprocketChannelReference || null,
+        source,
+        "Provider response did not include a recognized status",
+      ],
+    );
+    return { applied: false, reason: "ignored_unknown" };
+  }
 
-    await client.query("BEGIN");
-    try {
-      if (source === "SHIPROCKET_API" && shiprocketResponseId) {
+  if (!canApplyStatusUpdate(current, incoming, { force })) {
+    if (source === "SHIPROCKET_API") {
+      if (shiprocketResponseId) {
         await client.query(
           `UPDATE ${shipmentsTable}
            SET shiprocket_response_id = NULL,
@@ -833,8 +818,40 @@ export async function applyShipmentUpdate(
           [shipmentId, shiprocketResponseId],
         );
       }
-
       await client.query(
+        `UPDATE ${shipmentsTable}
+         SET shiprocket_response_id = COALESCE($2, shiprocket_response_id),
+             shiprocket_order_reference = COALESCE($3, shiprocket_order_reference),
+             shiprocket_channel_reference = COALESCE($4, shiprocket_channel_reference),
+             last_shiprocket_sync_at = NOW(),
+             sync_error = NULL,
+             updated_at = NOW()
+         WHERE id = $1`,
+        [
+          shipmentId,
+          shiprocketResponseId || null,
+          shiprocketOrderReference || null,
+          shiprocketChannelReference || null,
+        ],
+      );
+    }
+    return { applied: false, reason: current.manual_override_lock ? "manual_lock" : "precedence" };
+  }
+
+  if (source === "SHIPROCKET_API" && shiprocketResponseId) {
+    await client.query(
+      `UPDATE ${shipmentsTable}
+       SET shiprocket_response_id = NULL,
+           shiprocket_order_reference = NULL,
+           shiprocket_channel_reference = NULL,
+           updated_at = NOW()
+       WHERE id <> $1
+         AND shiprocket_response_id = $2`,
+      [shipmentId, shiprocketResponseId],
+    );
+  }
+
+  await client.query(
         `UPDATE ${shipmentsTable}
          SET normalized_status = $2,
              raw_status = $3,
@@ -878,7 +895,7 @@ export async function applyShipmentUpdate(
         ],
       );
 
-      await insertStatusHistory(client, {
+  await insertStatusHistory(client, {
         orderId: current.order_id,
         shipmentId,
         previousStatus: current.normalized_status,
@@ -892,7 +909,7 @@ export async function applyShipmentUpdate(
         manualOverrideLock,
       });
 
-      const events = trackingEvents.length
+  const events = trackingEvents.length
         ? trackingEvents.map((event) => ({
             normalizedStatus: normalizeOrderMappingStatus(
               event.normalizedHint || event.rawStatus || normalizedStatus,
@@ -914,12 +931,23 @@ export async function applyShipmentUpdate(
             },
           ];
 
-      for (const event of events) {
-        await insertTrackingEvent(client, shipmentId, event);
-      }
+  for (const event of events) {
+    await insertTrackingEvent(client, shipmentId, event);
+  }
 
+  return {
+    applied: true,
+    reason: current.normalized_status === normalizedStatus ? "no_change" : "advanced",
+  };
+}
+
+export async function applyShipmentUpdate(shipmentId, payload) {
+  return withOrderMappingClient(async (client) => {
+    await client.query("BEGIN");
+    try {
+      const result = await applyShipmentUpdateWithClient(client, shipmentId, payload);
       await client.query("COMMIT");
-      return { applied: true };
+      return result;
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -928,6 +956,10 @@ export async function applyShipmentUpdate(
 }
 
 export async function setManualShipmentStatus(shipmentId, payload) {
+  if (!payload?.normalizedStatus) {
+    throw orderMappingError("ORDER_MAPPING_INVALID_STATUS", "Invalid status");
+  }
+
   return applyShipmentUpdate(shipmentId, {
     normalizedStatus: payload.normalizedStatus,
     rawStatus: payload.rawStatus || payload.normalizedStatus,
@@ -1004,14 +1036,6 @@ export async function clearManualShipmentStatus(shipmentId) {
 
 export async function previewCsvImport({ fileName, fileHash, mapping, parsedRows }) {
   return withOrderMappingClient(async (client) => {
-    const existing = (
-      await client.query(`SELECT * FROM ${importBatchesTable} WHERE file_hash = $1`, [fileHash])
-    ).rows[0];
-
-    if (existing?.status === "committed") {
-      return { duplicate: true, batchId: existing.id, status: existing.status };
-    }
-
     const candidates = (
       await client.query(
         `SELECT
@@ -1065,14 +1089,76 @@ export async function previewCsvImport({ fileName, fileHash, mapping, parsedRows
       updatedRows: preparedRows.filter((row) => row.wouldUpdate).length,
     };
 
+    return {
+      batchId: fileHash,
+      commitToken: {
+        fileName,
+        fileHash,
+        mapping,
+        rows: preparedRows.map((row) => ({
+          rowNumber: row.rowNumber,
+          rowHash: row.rowHash,
+          rawStatus: row.rawStatus,
+          normalizedStatus: row.normalizedStatus,
+          statusTimestamp: row.statusTimestamp,
+          deliveredAt: row.deliveredAt,
+          courier: row.courier,
+          remarks: row.remarks,
+          matchedOrderId: row.matchedOrderId,
+          matchedShipmentId: row.matchedShipmentId,
+          matchingMethod: row.matchingMethod,
+          validationStatus: row.validationStatus,
+          validationErrors: row.validationErrors,
+          wouldUpdate: row.wouldUpdate,
+        })),
+      },
+      duplicate: false,
+      counts,
+      mapping,
+      sample: preparedRows.slice(0, 5),
+    };
+  });
+}
+
+export async function commitCsvImport(commitToken) {
+  return withOrderMappingClient(async (client) => {
+    if (!commitToken?.fileHash || !Array.isArray(commitToken.rows)) {
+      throw orderMappingError("ORDER_MAPPING_IMPORT_NOT_FOUND", "Import preview not found", {
+        statusCode: 404,
+      });
+    }
+
     await client.query("BEGIN");
     try {
+      const existing = (
+        await client.query(`SELECT * FROM ${importBatchesTable} WHERE file_hash = $1`, [commitToken.fileHash])
+      ).rows[0];
+      if (existing?.status === "committed") {
+        await client.query("COMMIT");
+        return { duplicate: true, batchId: existing.id };
+      }
+
+      const counts = {
+        totalRows: commitToken.rows.length,
+        matchedRows: commitToken.rows.filter((row) => row.matchedOrderId).length,
+        unmatchedRows: commitToken.rows.filter((row) => !row.matchedOrderId).length,
+        invalidRows: commitToken.rows.filter((row) => row.validationStatus !== "valid").length,
+        updatedRows: commitToken.rows.filter((row) => row.wouldUpdate).length,
+      };
+      if (counts.invalidRows) {
+        throw orderMappingError(
+          "ORDER_MAPPING_CSV_PREVIEW_INVALID",
+          "CSV preview contains invalid rows",
+          { details: { invalidRows: counts.invalidRows } },
+        );
+      }
+
       const batch =
         (
           await client.query(
             `INSERT INTO ${importBatchesTable} (
                file_name, file_hash, total_rows, matched_rows, unmatched_rows, invalid_rows, updated_rows, status, mapping
-             ) VALUES ($1,$2,$3,$4,$5,$6,$7,'preview',$8)
+             ) VALUES ($1,$2,$3,$4,$5,$6,$7,'committing',$8)
              ON CONFLICT (file_hash) DO UPDATE SET
                file_name = EXCLUDED.file_name,
                total_rows = EXCLUDED.total_rows,
@@ -1080,86 +1166,32 @@ export async function previewCsvImport({ fileName, fileHash, mapping, parsedRows
                unmatched_rows = EXCLUDED.unmatched_rows,
                invalid_rows = EXCLUDED.invalid_rows,
                updated_rows = EXCLUDED.updated_rows,
-               status = 'preview',
+               status = 'committing',
                error_summary = NULL,
                mapping = EXCLUDED.mapping
              RETURNING *`,
-            [fileName, fileHash, counts.totalRows, counts.matchedRows, counts.unmatchedRows, counts.invalidRows, counts.updatedRows, mapping],
+            [
+              commitToken.fileName,
+              commitToken.fileHash,
+              counts.totalRows,
+              counts.matchedRows,
+              counts.unmatchedRows,
+              counts.invalidRows,
+              counts.updatedRows,
+              commitToken.mapping,
+            ],
           )
         ).rows[0];
 
-      await client.query(`DELETE FROM ${importRowsTable} WHERE import_batch_id = $1`, [batch.id]);
-
-      for (const row of preparedRows) {
-        await client.query(
-          `INSERT INTO ${importRowsTable} (
-             import_batch_id, row_number, row_hash, raw_row, matched_order_id, matched_shipment_id,
-             matching_method, normalized_status, validation_status, validation_errors, processing_result, status_timestamp
-           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
-          [
-            batch.id,
-            row.rowNumber,
-            row.rowHash,
-            row,
-            row.matchedOrderId,
-            row.matchedShipmentId,
-            row.matchingMethod,
-            row.normalizedStatus,
-            row.validationStatus,
-            row.validationErrors,
-            row.wouldUpdate ? "will_update" : "no_change",
-            parseTimestamp(row.statusTimestamp || row.deliveredAt),
-          ],
-        );
-      }
-      await client.query("COMMIT");
-
-      return {
-        batchId: batch.id,
-        duplicate: false,
-        counts,
-        mapping,
-        sample: preparedRows.slice(0, 5),
-      };
-    } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
-    }
-  });
-}
-
-export async function commitCsvImport(batchId) {
-  return withOrderMappingClient(async (client) => {
-    const batch = (await client.query(`SELECT * FROM ${importBatchesTable} WHERE id = $1`, [batchId])).rows[0];
-    if (!batch) {
-      throw new Error("Import batch not found");
-    }
-
-    if (batch.status === "committed") {
-      return { duplicate: true, batchId };
-    }
-
-    const rows = (
-      await client.query(`SELECT * FROM ${importRowsTable} WHERE import_batch_id = $1 ORDER BY row_number`, [batchId])
-    ).rows;
-
-    await client.query("BEGIN");
-    try {
       let updated = 0;
       const failures = [];
-      for (const row of rows) {
-        if (row.validation_status !== "valid") {
-          failures.push(row.row_number);
-          continue;
-        }
-
-        const raw = row.raw_row;
-        let shipmentId = row.matched_shipment_id;
-        if (!shipmentId && row.matched_order_id) {
+      for (const row of commitToken.rows) {
+        let shipmentId = row.matchedShipmentId;
+        if (!shipmentId && row.matchedOrderId) {
           const existingShipment = (
             await client.query(
               `SELECT id FROM ${shipmentsTable} WHERE order_id = $1 ORDER BY COALESCE(status_timestamp, updated_at) DESC NULLS LAST LIMIT 1`,
-              [row.matched_order_id],
+              [row.matchedOrderId],
             )
           ).rows[0];
 
@@ -1169,35 +1201,70 @@ export async function commitCsvImport(batchId) {
         }
 
         if (!shipmentId) {
-          failures.push(row.row_number);
-          continue;
+          throw orderMappingError(
+            "ORDER_MAPPING_CSV_CONFLICT",
+            "CSV row no longer matches a shipment",
+            { statusCode: 409, details: { rowNumber: row.rowNumber } },
+          );
         }
 
-        const result = await applyShipmentUpdate(shipmentId, {
-          normalizedStatus: row.normalized_status,
-          rawStatus: raw.rawStatus,
+        const result = await applyShipmentUpdateWithClient(client, shipmentId, {
+          normalizedStatus: row.normalizedStatus,
+          rawStatus: row.rawStatus,
           source: "CSV_IMPORT",
-          statusTimestamp: row.status_timestamp || raw.deliveredAt || nowIso(),
-          courier: raw.courier,
-          deliveredAt: raw.deliveredAt,
-          latestProviderPayload: { importBatchId: batchId, remarks: raw.remarks },
-          remarks: raw.remarks || `Imported from ${batch.file_name}`,
-          importBatchId: batchId,
+          statusTimestamp: row.statusTimestamp || row.deliveredAt || nowIso(),
+          courier: row.courier,
+          deliveredAt: row.deliveredAt,
+          latestProviderPayload: { importBatchId: batch.id },
+          remarks: row.remarks || `Imported from ${batch.file_name}`,
+          importBatchId: batch.id,
         });
 
         if (result.applied) {
           updated += 1;
         }
+
+        await client.query(
+          `INSERT INTO ${importRowsTable} (
+             import_batch_id, row_number, row_hash, raw_row, matched_order_id, matched_shipment_id,
+             matching_method, normalized_status, validation_status, validation_errors, processing_result, status_timestamp
+           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'valid','[]'::jsonb,$9,$10)`,
+          [
+            batch.id,
+            row.rowNumber,
+            row.rowHash,
+            {
+              rawStatus: row.rawStatus,
+              normalizedStatus: row.normalizedStatus,
+              statusTimestamp: row.statusTimestamp,
+              deliveredAt: row.deliveredAt,
+              courier: row.courier,
+            },
+            row.matchedOrderId,
+            shipmentId,
+            row.matchingMethod,
+            row.normalizedStatus,
+            result.applied ? result.reason : `skipped_${result.reason}`,
+            parseTimestamp(row.statusTimestamp || row.deliveredAt),
+          ],
+        );
       }
 
       await client.query(
         `UPDATE ${importBatchesTable}
          SET status = 'committed', updated_rows = $2, error_summary = $3
          WHERE id = $1`,
-        [batchId, updated, failures.length ? `Rows skipped: ${failures.join(", ")}` : null],
+        [batch.id, updated, failures.length ? `Rows skipped: ${failures.join(", ")}` : null],
       );
       await client.query("COMMIT");
-      return { duplicate: false, updatedRows: updated, failedRows: failures };
+      return {
+        duplicate: false,
+        batchId: batch.id,
+        totalRows: counts.totalRows,
+        invalidRows: counts.invalidRows,
+        updatedRows: updated,
+        failedRows: failures,
+      };
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;

@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import Database from "better-sqlite3";
 import { env } from "../config/env.js";
+import { normalizeOrderMappingError, orderMappingError } from "./orderMappingError.js";
 import { parseOrderMappingCsv } from "./orderMappingCsv.js";
 import { fetchOrderMappingOrders } from "./orderMappingShopify.js";
 import {
@@ -130,18 +131,22 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
       } catch {
         trackingFallbacks += 1;
       }
-      const normalizedStatus = normalizeOrderMappingStatus(
-        trackingPayload?.rawStatus || match.row.rawStatus || match.row.rawStatusCode,
-        "UNKNOWN",
-      );
+      const providerStatus =
+        trackingPayload?.rawStatus ||
+        trackingPayload?.rawStatusCode ||
+        match.row.rawStatus ||
+        match.row.rawStatusCode ||
+        "";
+      const normalizedStatus = normalizeOrderMappingStatus(providerStatus, null);
       const result = await applyShipmentUpdate(shipment.id, {
         awb: trackingPayload?.awb || match.row.awb,
-        normalizedStatus,
+        normalizedStatus: normalizedStatus || shipment.normalized_status,
         rawStatus:
           trackingPayload?.rawStatus ||
           trackingPayload?.rawStatusCode ||
           match.row.rawStatus ||
-          match.row.rawStatusCode,
+          match.row.rawStatusCode ||
+          shipment.raw_status,
         source: "SHIPROCKET_API",
         statusTimestamp:
           trackingPayload?.statusTimestamp ||
@@ -159,6 +164,7 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
         },
         trackingEvents: trackingPayload?.trackingEvents || [],
         force,
+        preserveStatus: !normalizedStatus,
       });
       if (result.applied) {
         updated += 1;
@@ -265,29 +271,17 @@ export async function refreshOrderMappingShiprocket({ shipmentId = null, force =
 }
 
 export async function previewOrderMappingCsvImport({ text, fileName, mapping }) {
-  const syncRun = await createSyncRun("csv_preview");
   try {
     const parsed = parseOrderMappingCsv(text, mapping);
     const fileHash = crypto.createHash("sha256").update(text).digest("hex");
-    const preview = await previewCsvImport({
+    return await previewCsvImport({
       fileName,
       fileHash,
       mapping: parsed.mapping,
       parsedRows: parsed.rows,
     });
-    await completeSyncRun(syncRun.id, {
-      status: "completed",
-      processedCount: preview.counts.totalRows,
-      updatedCount: preview.counts.updatedRows,
-      failedCount: preview.counts.invalidRows,
-    });
-    return preview;
   } catch (error) {
-    await completeSyncRun(syncRun.id, {
-      status: "failed",
-      errorSummary: error.message,
-    });
-    throw error;
+    throw normalizeOrderMappingError(error);
   }
 }
 
@@ -307,14 +301,21 @@ export async function commitOrderMappingCsvImport(batchId) {
       status: "failed",
       errorSummary: error.message,
     });
-    throw error;
+    if (error.code) {
+      throw error;
+    }
+    throw orderMappingError(
+      "ORDER_MAPPING_CSV_COMMIT_FAILED",
+      "CSV import could not be committed",
+      { statusCode: 500, cause: error },
+    );
   }
 }
 
-export async function setManualOrderMappingShipmentStatus(...args) {
+export async function setManualOrderMappingShipmentStatus(shipmentId, payload) {
   const syncRun = await createSyncRun("manual_update");
   try {
-    const result = await setManualShipmentStatus(...args);
+    const result = await setManualShipmentStatus(shipmentId, payload);
     await completeSyncRun(syncRun.id, {
       status: "completed",
       processedCount: 1,
@@ -326,7 +327,7 @@ export async function setManualOrderMappingShipmentStatus(...args) {
       status: "failed",
       errorSummary: error.message,
     });
-    throw error;
+    throw normalizeOrderMappingError(error);
   }
 }
 

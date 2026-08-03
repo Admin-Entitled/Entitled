@@ -185,26 +185,23 @@ export function canApplyStatusUpdate(current, incoming, { force = false } = {}) 
     return true;
   }
 
-  if (force || incoming.source === "MANUAL") {
+  if (incoming.source === "MANUAL" || force) {
     return true;
-  }
-
-  if (current.manual_override_lock) {
-    return false;
   }
 
   if (
     isTerminalOrderMappingStatus(current.normalized_status) &&
     !isTerminalOrderMappingStatus(incoming.normalizedStatus)
   ) {
-    const currentAt = current.status_timestamp ? new Date(current.status_timestamp).getTime() : 0;
-    const incomingAt = incoming.statusTimestamp ? new Date(incoming.statusTimestamp).getTime() : 0;
-    const sameAuthoritativeSource =
-      current.status_source === "SHIPROCKET_API" && incoming.source === "SHIPROCKET_API";
+    return false;
+  }
 
-    if (!(sameAuthoritativeSource && incomingAt && incomingAt >= currentAt)) {
-      return false;
-    }
+  if (current.normalized_status !== "UNKNOWN" && incoming.normalizedStatus === "UNKNOWN") {
+    return false;
+  }
+
+  if (current.manual_override_lock) {
+    return false;
   }
 
   const currentAt = current.status_timestamp ? new Date(current.status_timestamp).getTime() : 0;
