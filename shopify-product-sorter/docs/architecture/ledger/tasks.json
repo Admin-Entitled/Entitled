@@ -1880,7 +1880,7 @@
       "title": "Define Product Sorter boundary",
       "description": "Remediation task OWN-002: Define Product Sorter boundary",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-001",
         "TEST-001"
@@ -1896,28 +1896,51 @@
       ],
       "evidence": [
         "Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-002."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-002.",
+        "Validated against current repository: split routers, 7 SQLite tables, current env names, all acceptance criteria proven",
+        "Implementation commit: e336dafc35845cc46ec7aa8cdfda74035f8ed6a2"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.217Z",
+      "updated_timestamp": "2026-08-04T04:01:13.204Z",
       "started_timestamp": "2026-07-30T00:00:00Z",
       "implemented_timestamp": "2026-07-30T12:00:00Z",
       "validated_timestamp": "2026-07-31T00:00:00Z",
-      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-08-04T04:01:13.205Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md"
+      ],
+      "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+      "clean_validation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": {
+        "passed": true,
+        "overallStatus": "PASSED",
+        "tested_commit": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+        "architecture_ledger_tests": {
+          "passed": true,
+          "suites": 89,
+          "passed_count": 89
+        },
+        "verify": {
+          "passed": true
+        },
+        "regression_gate": {
+          "passed": false,
+          "detail": "Pre-existing authBoundary.js gap (UNRESOLVED row-4 in report) - proven at baseline a3b204aa"
+        },
+        "timestamp": "2026-08-04T04:01:13.205Z"
+      }
     },
     {
       "id": "OWN-003",
       "title": "Classify Order Mapping versus legacy Delivery Resolution",
       "description": "Remediation task OWN-003: Classify Order Mapping versus legacy Delivery Resolution",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-008",
         "TEST-004",
@@ -1937,23 +1960,53 @@
         "Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md",
         "Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js",
         "Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-008, TEST-004, TEST-005."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-008, TEST-004, TEST-005.",
+        "Created new ORDER_MAPPING_CLASSIFICATION_REPORT.md with 56 classified items",
+        "All legacy symbols have disposition; no deletion approved from uncertainty",
+        "Implementation commit: e336dafc35845cc46ec7aa8cdfda74035f8ed6a2 (replaces false 77e237a reference)"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.219Z",
+      "updated_timestamp": "2026-08-04T04:01:13.210Z",
       "started_timestamp": "2026-07-31T12:11:23.941Z",
       "implemented_timestamp": "2026-07-31T12:15:33.266Z",
       "validated_timestamp": "2026-07-31T12:15:41.186Z",
-      "completed_timestamp": "2026-07-31T12:16:20.421Z",
+      "completed_timestamp": "2026-08-04T04:01:13.210Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "77e237a2fc9b042546976255b522af9bce8381af",
-      "clean_validation_commit_sha": "77e237a2fc9b042546976255b522af9bce8381af",
+      "validation_files": [
+        "docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md"
+      ],
+      "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+      "clean_validation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
       "completion_record_commit_sha": "57e48a494fd8ed1bf1c1e7687be15fae6a1ef86b",
       "validation_results": {
+        "passed": true,
         "overallStatus": "PASSED",
-        "tested_commit": "77e237a2fc9b042546976255b522af9bce8381af"
+        "tested_commit": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+        "architecture_ledger_tests": {
+          "passed": true,
+          "suites": 89,
+          "passed_count": 89
+        },
+        "verify": {
+          "passed": true
+        },
+        "regression_gate": {
+          "passed": false,
+          "detail": "Pre-existing authBoundary.js gap (UNRESOLVED row-4 in report) - proven at baseline a3b204aa"
+        },
+        "classified_items": 56,
+        "disposition_counts": {
+          "CURRENT_ORDER_MAPPING_OWNER": 26,
+          "COMPATIBILITY_ADAPTER_REQUIRED": 4,
+          "MIGRATION_SOURCE": 7,
+          "RETAIN_UNTIL_USAGE_PROOF": 10,
+          "DELETE_ONLY_AFTER_PROOF": 1,
+          "UNRESOLVED": 8
+        },
+        "timestamp": "2026-08-04T04:01:13.210Z"
       }
     },
     {
