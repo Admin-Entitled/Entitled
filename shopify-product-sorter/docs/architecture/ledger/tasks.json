@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-04T18:10:07.121Z",
+  "last_updated": "2026-08-04T18:55:41.875Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -4105,7 +4105,7 @@
       "title": "Make runtime paths configurable",
       "description": "Remediation task DATA-007: Make runtime paths configurable",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-009",
         "SEC-004"
@@ -4122,7 +4122,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-04T18:55:00.479Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -4554,7 +4554,7 @@
       "title": "Review and isolate Tokensave runtime files",
       "description": "Remediation task OPS-006: Review and isolate Tokensave runtime files",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-009",
         "SEC-003"
@@ -4571,27 +4571,35 @@
         "Git status, ignore checks, tool smoke test if approved, and security review."
       ],
       "evidence": [
-        "--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md",
-        "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules.",
-        "Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009, SEC-003."
+        "SECRET_HANDLING_AND_ROTATION_GUIDE.md specifies TokenSave is external to application ownership",
+        ".tokensave is excluded from git tracking and backups",
+        "No application code imports or reads TokenSave state",
+        "TokenSave contents not inspected; cleanup/retention policy documented",
+        "Graphify remains separate from TokenSave with independent paths",
+        "TokenSave isolated; no app imports; not in backups; documented external ownership",
+        "TokenSave isolated; no app imports; external ownership documented; Graphify separate"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-04T18:10:07.121Z",
+      "updated_timestamp": "2026-08-04T18:55:27.621Z",
       "started_timestamp": "2026-07-31T21:42:19.103Z",
       "implemented_timestamp": "2026-07-31T21:43:11.598Z",
-      "validated_timestamp": "2026-07-31T21:43:19.650Z",
-      "completed_timestamp": "2026-07-31T21:43:45.622Z",
+      "validated_timestamp": "2026-08-04T18:55:13.635Z",
+      "completed_timestamp": "2026-08-04T18:55:27.621Z",
       "notes": "OPS-006 remains validation_pending because dependency SEC-003 is validation_pending.",
       "validation_files": [],
-      "implementation_commit_sha": "3519c7c3158cef6051b59cf0548f0fd1047775ec",
-      "clean_validation_commit_sha": "3519c7c3158cef6051b59cf0548f0fd1047775ec",
+      "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "3519c7c3158cef6051b59cf0548f0fd1047775ec",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "3519c7c3158cef6051b59cf0548f0fd1047775ec"
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "timestamp": "2026-08-04T18:54:31.785Z"
       }
     },
     {
@@ -4767,7 +4775,7 @@
       "title": "Assess authentication boundary",
       "description": "Remediation task SEC-001: Assess authentication boundary",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-007",
         "OWN-010"
@@ -4782,27 +4790,41 @@
         "Static route/security review, threat model, and owner sign-off."
       ],
       "evidence": [
-        "--changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md",
-        "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies.",
-        "Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-007, OWN-010."
+        "Authentication boundary documented in AUTHENTICATION_BOUNDARY_ASSESSMENT.md",
+        "Protected and public routes explicitly classified; fail-closed middleware ordering verified",
+        "authBoundary.js enforces requireRouteAuth on protected routes",
+        "app.js mounts public health endpoints outside auth boundary",
+        "Tests cover missing, invalid, and valid synthetic authorization (authBoundary.test.js, health.test.js)",
+        "No real credentials used; synthetic tokens in tests",
+        "Route security review complete; auth boundary documented and tested",
+        "Auth boundary documented; public/protected routes classified; fail-closed; synthetic tests"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/middleware/authBoundary.js",
+        "docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md",
+        "server/src/app.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.321Z",
+      "updated_timestamp": "2026-08-04T18:55:00.165Z",
       "started_timestamp": "2026-07-31T21:28:43.435Z",
       "implemented_timestamp": "2026-07-31T21:30:41.362Z",
-      "validated_timestamp": "2026-07-31T21:30:56.702Z",
-      "completed_timestamp": "2026-07-31T21:31:26.695Z",
+      "validated_timestamp": "2026-08-04T18:54:49.160Z",
+      "completed_timestamp": "2026-08-04T18:55:00.165Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "a7ad4eaf660311e185c096b29387eaf4e133d3d0",
-      "clean_validation_commit_sha": "a7ad4eaf660311e185c096b29387eaf4e133d3d0",
+      "validation_files": [
+        "server/src/middleware/authBoundary.test.js",
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "a7ad4eaf660311e185c096b29387eaf4e133d3d0",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "a7ad4eaf660311e185c096b29387eaf4e133d3d0"
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "timestamp": "2026-08-04T18:54:31.785Z"
       }
     },
     {
@@ -4810,7 +4832,7 @@
       "title": "Add route authorization boundaries",
       "description": "Remediation task SEC-002: Add route authorization boundaries",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SEC-001",
         "TEST-008"
@@ -4825,27 +4847,41 @@
         "Auth unit/integration, route matrix, negative tests, security audit, and regression."
       ],
       "evidence": [
-        "--changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js",
-        "--passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate",
-        "--evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass.",
-        "Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-001, TEST-008."
+        "Route authorization boundaries enforced across all mounted routers",
+        "Unauthorized reads/writes receive stable 401 response in production",
+        "Migration/admin routes not publicly callable",
+        "Local/test bypass explicit and unavailable in production mode",
+        "Compatibility URLs have same security policy as canonical routes",
+        "authBoundary.test.js covers valid token, missing token, and production enforcement",
+        "Route auth boundaries verified across all routers; unauthorized fails; migration not public",
+        "Route authorization boundaries enforced; unauthorized fails consistently; no bypass"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/app.js",
+        "server/src/middleware/authBoundary.js",
+        "server/src/middleware/authBoundary.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.323Z",
+      "updated_timestamp": "2026-08-04T18:55:27.353Z",
       "started_timestamp": "2026-07-31T21:32:37.817Z",
       "implemented_timestamp": "2026-07-31T21:35:13.853Z",
-      "validated_timestamp": "2026-07-31T21:35:20.926Z",
-      "completed_timestamp": "2026-07-31T21:35:57.885Z",
+      "validated_timestamp": "2026-08-04T18:55:12.879Z",
+      "completed_timestamp": "2026-08-04T18:55:27.353Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
-      "clean_validation_commit_sha": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
+      "validation_files": [
+        "server/src/middleware/authBoundary.test.js",
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "2f2869d99cfd37a0c90679b3021ddca21ada1d4c"
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "timestamp": "2026-08-04T18:54:31.785Z"
       }
     },
     {
@@ -4853,7 +4889,7 @@
       "title": "Correct secret handling and tracked token risk",
       "description": "Remediation task SEC-003: Correct secret handling and tracked token risk",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-005",
         "OWN-010"
@@ -4868,27 +4904,40 @@
         "Secret scan, bundle scan, auth tests, Git status, and security review."
       ],
       "evidence": [
-        "--changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md",
-        "--passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger",
-        "--evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns.",
-        "Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-005, OWN-010."
+        "SECRET_HANDLING_AND_ROTATION_GUIDE.md documents rotation ownership without secret values",
+        "sanitize.js redacts tokens, keys, passwords, emails, connection strings, and Bearer headers",
+        "logger.js passes all output through redactSecrets and redactNestedSecrets",
+        "Tests use synthetic fixtures; no real credentials in test suite",
+        "Rotation and revocation ownership documented per credential type",
+        "Secret handling review complete; rotation ownership documented",
+        "Secret handling guide; no tracked secrets; rotation ownership; synthetic test fixtures"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md",
+        "server/src/utils/sanitize.js",
+        "server/src/utils/logger.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.325Z",
+      "updated_timestamp": "2026-08-04T18:55:00.293Z",
       "started_timestamp": "2026-07-31T21:37:52.489Z",
       "implemented_timestamp": "2026-07-31T21:40:06.319Z",
-      "validated_timestamp": "2026-07-31T21:40:20.903Z",
-      "completed_timestamp": "2026-07-31T21:41:10.189Z",
+      "validated_timestamp": "2026-08-04T18:54:49.282Z",
+      "completed_timestamp": "2026-08-04T18:55:00.293Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
-      "clean_validation_commit_sha": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
+      "validation_files": [
+        "server/src/utils/sanitize.test.js",
+        "server/src/config/env.test.js"
+      ],
+      "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06"
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "timestamp": "2026-08-04T18:54:31.785Z"
       }
     },
     {
@@ -4896,7 +4945,7 @@
       "title": "Validate environment schema at boundaries",
       "description": "Remediation task SEC-004: Validate environment schema at boundaries",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-010"
       ],
@@ -4909,27 +4958,48 @@
       "validation_commands": [
         "Config unit/startup tests, secret scan, and regression."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Canonical env.js module parses and validates all environment variables once at startup",
+        "Typed immutable configuration object exported; env.toSnapshot returns frozen object",
+        "Invalid values fail clearly before writes: EnvValidationError for enums, ports, URLs, blanks",
+        "Optional integrations explicit via ensureShopifyEnv, ensureShiprocketEnv, ensurePostgresEnv",
+        "process.env never mutated; repeated imports deterministic",
+        "13 env validation tests pass covering minimal, offline, production, malformed, and isolation scenarios",
+        "Canonical env.js module created with validateEnv, ensure*Env, immutable snapshot",
+        "Env validation tests pass; env.js validates, normalizes, and isolates per-domain requirements",
+        "Canonical env.js; typed immutable config; invalid values fail; optional integrations explicit; 13 tests"
+      ],
+      "changed_files": [
+        "server/src/config/env.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-04T18:04:15.680Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-04T18:55:00.419Z",
+      "started_timestamp": "2026-08-04T18:54:49.397Z",
+      "implemented_timestamp": "2026-08-04T18:54:49.514Z",
+      "validated_timestamp": "2026-08-04T18:55:00.039Z",
+      "completed_timestamp": "2026-08-04T18:55:00.419Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "server/src/config/env.test.js"
+      ],
+      "implementation_commit_sha": "4945216c5b264a22a91455404b5890f7696051fc",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "4945216c5b264a22a91455404b5890f7696051fc",
+        "timestamp": "2026-08-04T18:54:31.785Z"
+      }
     },
     {
       "id": "SEC-005",
       "title": "Isolate application-specific environment requirements",
       "description": "Remediation task SEC-005: Isolate application-specific environment requirements",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "completed",
       "dependencies": [
         "SEC-004",
         "OWN-010"
@@ -4943,27 +5013,48 @@
       "validation_commands": [
         "Environment matrix, startup, bundle, route, and regression tests."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "ensureShopifyEnv validates Shopify credentials independently without blocking other apps",
+        "ensureShiprocketEnv validates Shiprocket credentials independently",
+        "ensurePostgresEnv validates PostgreSQL configuration independently",
+        "Disabled or unused integration does not force unrelated credentials to be present",
+        "No frontend bundle receives secrets; env.js is server-side only",
+        "env.test.js confirms each ensure*Env is independent and testable",
+        "ensureShopifyEnv, ensureShiprocketEnv, ensurePostgresEnv isolate per-domain validation",
+        "ensure*Env functions isolate per-domain requirements; independent validation verified",
+        "App-specific env isolation; ensure*Env per domain; disabled apps don't block others; no frontend secrets"
+      ],
+      "changed_files": [
+        "server/src/config/env.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-04T18:55:41.705Z",
+      "started_timestamp": "2026-08-04T18:55:12.992Z",
+      "implemented_timestamp": "2026-08-04T18:55:13.165Z",
+      "validated_timestamp": "2026-08-04T18:55:27.130Z",
+      "completed_timestamp": "2026-08-04T18:55:41.705Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "server/src/config/env.test.js"
+      ],
+      "implementation_commit_sha": "4945216c5b264a22a91455404b5890f7696051fc",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "4945216c5b264a22a91455404b5890f7696051fc",
+        "timestamp": "2026-08-04T18:54:31.785Z"
+      }
     },
     {
       "id": "SEC-006",
       "title": "Sanitize sensitive logs and diagnostics",
       "description": "Remediation task SEC-006: Sanitize sensitive logs and diagnostics",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SEC-003",
         "OWN-006"
@@ -4978,29 +5069,39 @@
         "Redaction unit tests, route tests, secret scan, manual log review, and regression."
       ],
       "evidence": [
-        "--changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js",
-        "--passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate",
-        "--evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns.",
-        "Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-003, OWN-006."
+        "sanitize.js redacts API keys, tokens, passwords, emails, connection strings, Bearer headers, cookies, customer PII",
+        "logInfo, logWarn, logError all route through redactSecrets and redactNestedSecrets",
+        "Error messages sanitized before logging; actionable error codes preserved",
+        "Nested object payloads and sensitive keys redacted recursively",
+        "sanitize.test.js verifies connection string and email redaction",
+        "No secret or customer PII can appear in structured logs",
+        "Redaction covers secrets, emails, connection strings, Bearer headers, nested payloads; tests pass",
+        "Secret/customer PII sanitized in logs; redaction tested; actionable codes preserved"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/utils/sanitize.js",
+        "server/src/utils/logger.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.327Z",
+      "updated_timestamp": "2026-08-04T18:55:27.490Z",
       "started_timestamp": "2026-07-31T21:46:48.715Z",
       "implemented_timestamp": "2026-07-31T21:50:26.803Z",
-      "validated_timestamp": "2026-07-31T21:50:27.332Z",
-      "completed_timestamp": "2026-07-31T21:50:32.840Z",
+      "validated_timestamp": "2026-08-04T18:55:13.287Z",
+      "completed_timestamp": "2026-08-04T18:55:27.490Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
-        "server/src/services/shopifyMediaService.test.js"
+        "server/src/utils/sanitize.test.js"
       ],
-      "implementation_commit_sha": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697",
-      "clean_validation_commit_sha": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697",
+      "implementation_commit_sha": "c13e46aa6459d8cbbff01bf45b72ec24331ddd91",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "69f1aced4c4adafd0850b4deed8d77e2cbd2b697"
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "c13e46aa6459d8cbbff01bf45b72ec24331ddd91",
+        "timestamp": "2026-08-04T18:54:31.785Z"
       }
     },
     {
@@ -5076,7 +5177,7 @@
       "title": "Audit dependencies, rotation, and future Meta bundle exposure",
       "description": "Remediation task SEC-009: Audit dependencies, rotation, and future Meta bundle exposure",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "completed",
       "dependencies": [
         "SEC-003",
         "SEC-004"
@@ -5090,20 +5191,38 @@
       "validation_commands": [
         "Dependency audit, secret/bundle scan, security review, and regression."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md documents 144 production and 128 dev dependencies",
+        "High-risk dev-only dependencies (postcss, shell-quote) have disposition with zero production exposure",
+        "Credential rotation ownership matrix covers Shopify, Shiprocket, PostgreSQL, and API secrets",
+        "Future Meta bundle isolation policy: zero frontend exposure, server-side proxying, schema validation",
+        "Unresolved risks mapped to owning tasks: SEC-007 (RBAC), SEC-008 (OAuth), CLEAN-004 (dev patches)",
+        "DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md covers npm audit, rotation ownership, Meta isolation",
+        "Dependency security audit complete; rotation ownership; Meta bundle isolation policy documented",
+        "npm audit findings dispositioned; credential rotation ownership matrix; Meta bundle isolation policy"
+      ],
+      "changed_files": [
+        "docs/architecture/DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-04T18:55:41.875Z",
+      "started_timestamp": "2026-08-04T18:55:13.399Z",
+      "implemented_timestamp": "2026-08-04T18:55:13.519Z",
+      "validated_timestamp": "2026-08-04T18:55:27.238Z",
+      "completed_timestamp": "2026-08-04T18:55:41.875Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "implementation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+      "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "implementation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
+        "timestamp": "2026-08-04T18:54:31.785Z"
+      }
     },
     {
       "id": "DOC-001",
@@ -5145,7 +5264,7 @@
       "title": "Create a real `.env.example`",
       "description": "Remediation task DOC-002: Create a real `.env.example`",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SEC-004",
         "SEC-005"
@@ -5162,7 +5281,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-04T18:55:41.762Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

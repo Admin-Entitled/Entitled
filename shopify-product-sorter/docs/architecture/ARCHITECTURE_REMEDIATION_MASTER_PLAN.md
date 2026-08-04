@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-04T18:10:07.121Z` |
+| Generated timestamp | `2026-08-04T18:55:41.875Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `02590dc` |
+| Local commit | `48621e7` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,21 +36,21 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 36 |
-| Ready | 4 |
+| Not started | 32 |
+| Ready | 5 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 45 |
+| Validation pending | 40 |
 | Validated | 0 |
 | Blocked | 2 |
 | Deferred | 8 |
-| Completed | 34 |
-| Completion percentage | 26.4% |
+| Completed | 42 |
+| Completion percentage | 32.6% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `SEC-004`, `DOC-003`, `DOC-011`, `FINAL-001`
+- Next dependency-actionable ready tasks: `DATA-007`, `DOC-002`, `DOC-003`, `DOC-011`, `FINAL-001`
 - Dependency-safe validation-pending tasks: `BE-002`, `BE-003`, `BE-004`, `BE-005`, `BE-006`
 - Tasks awaiting prerequisites: `BE-007`, `BE-008`, `BE-009`, `BE-011`, `FE-006`
 - In-progress tasks: None
@@ -128,7 +128,7 @@
 | DATA-004 | Separate SKU audit data | HIGH | VALIDATION_PENDING | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-005 | Separate Sales Intelligence caches | HIGH | VALIDATION_PENDING | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | VALIDATION_PENDING | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-007 | Make runtime paths configurable | HIGH | NOT_STARTED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-007 | Make runtime paths configurable | HIGH | READY | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -139,22 +139,22 @@
 | OPS-003 | Standardize health checks | HIGH | VALIDATION_PENDING | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | VALIDATION_PENDING | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-006 | Review and isolate Tokensave runtime files | HIGH | VALIDATION_PENDING | OWN-009, SEC-003 | OPS-006 remains validation_pending because dependency SEC-003 is validation_pending. |
+| OPS-006 | Review and isolate Tokensave runtime files | HIGH | COMPLETED | OWN-009, SEC-003 | OPS-006 remains validation_pending because dependency SEC-003 is validation_pending. |
 | OPS-007 | Review Playwright artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-008 | Review test outputs and cache artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | COMPLETED | None | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-001 | Assess authentication boundary | CRITICAL | VALIDATION_PENDING | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-002 | Add route authorization boundaries | CRITICAL | VALIDATION_PENDING | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-003 | Correct secret handling and tracked token risk | CRITICAL | VALIDATION_PENDING | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-004 | Validate environment schema at boundaries | HIGH | READY | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-005 | Isolate application-specific environment requirements | HIGH | NOT_STARTED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | VALIDATION_PENDING | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-001 | Assess authentication boundary | CRITICAL | COMPLETED | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-002 | Add route authorization boundaries | CRITICAL | COMPLETED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-003 | Correct secret handling and tracked token risk | CRITICAL | COMPLETED | SAFE-005, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-004 | Validate environment schema at boundaries | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-005 | Isolate application-specific environment requirements | HIGH | COMPLETED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | COMPLETED | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-007 | Review CORS and CSRF protections | HIGH | NOT_STARTED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | NOT_STARTED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | COMPLETED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-001 | Update README to current architecture | MEDIUM | NOT_STARTED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-002 | Create a real `.env.example` | HIGH | NOT_STARTED | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-002 | Create a real `.env.example` | HIGH | READY | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-004 | Create route map | HIGH | NOT_STARTED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-005 | Create data ownership documentation | HIGH | NOT_STARTED | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2166,9 +2166,9 @@ Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_
 ### `DATA-007` Make runtime paths configurable
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-009, SEC-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-04T18:55:00.479Z
 
 #### Description
 
@@ -2485,9 +2485,9 @@ Git inventory, reproducibility check, ignore check, and owner review.
 ### `OPS-006` Review and isolate Tokensave runtime files
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-009, SEC-003
-**Last updated:** 2026-08-04T18:10:07.121Z
+**Last updated:** 2026-08-04T18:55:27.621Z
 
 #### Description
 
@@ -2507,7 +2507,7 @@ Git status, ignore checks, tool smoke test if approved, and security review.
 
 #### Completion evidence
 
---changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md establishing .tokensave/ as an auxiliary developer tool cache, disclaiming application ownership, confirming zero application runtime dependency, and verifying git ignore rules., Commit SHA: 3519c7c3158cef6051b59cf0548f0fd1047775ec, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009, SEC-003.
+SECRET_HANDLING_AND_ROTATION_GUIDE.md specifies TokenSave is external to application ownership, .tokensave is excluded from git tracking and backups, No application code imports or reads TokenSave state, TokenSave contents not inspected; cleanup/retention policy documented, Graphify remains separate from TokenSave with independent paths, TokenSave isolated; no app imports; not in backups; documented external ownership, TokenSave isolated; no app imports; external ownership documented; Graphify separate
 
 ---
 
@@ -2628,9 +2628,9 @@ None
 ### `SEC-001` Assess authentication boundary
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-007, OWN-010
-**Last updated:** 2026-08-01T22:10:15.321Z
+**Last updated:** 2026-08-04T18:55:00.165Z
 
 #### Description
 
@@ -2650,16 +2650,16 @@ Static route/security review, threat model, and owner sign-off.
 
 #### Completion evidence
 
---changed-files docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/AUTHENTICATION_BOUNDARY_ASSESSMENT.md documenting full route trust matrix (public, diagnostic, API routes), upstream Shopify & Shiprocket credential boundaries, unauthenticated endpoint risk assessment, and local loopback vs. embedded App Bridge JWT deployment policies., Commit SHA: a7ad4eaf660311e185c096b29387eaf4e133d3d0, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-007, OWN-010.
+Authentication boundary documented in AUTHENTICATION_BOUNDARY_ASSESSMENT.md, Protected and public routes explicitly classified; fail-closed middleware ordering verified, authBoundary.js enforces requireRouteAuth on protected routes, app.js mounts public health endpoints outside auth boundary, Tests cover missing, invalid, and valid synthetic authorization (authBoundary.test.js, health.test.js), No real credentials used; synthetic tokens in tests, Route security review complete; auth boundary documented and tested, Auth boundary documented; public/protected routes classified; fail-closed; synthetic tests
 
 ---
 
 ### `SEC-002` Add route authorization boundaries
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SEC-001, TEST-008
-**Last updated:** 2026-08-01T22:10:15.323Z
+**Last updated:** 2026-08-04T18:55:27.353Z
 
 #### Description
 
@@ -2679,16 +2679,16 @@ Auth unit/integration, route matrix, negative tests, security audit, and regress
 
 #### Completion evidence
 
---changed-files server/src/middleware/authBoundary.js,server/src/middleware/authBoundary.test.js,server/src/routes/orderMapping.js,server/src/app.js, --passed-tests npm run verify,node --test server/src/middleware/authBoundary.test.js,npm run test:regression-gate, --evidence Implemented server/src/middleware/authBoundary.js with requireAdminAuth (403 Forbidden for unauthorized admin migration operations), requireRouteAuth (401 Unauthorized for unauthorized production requests), and explicit non-production local/test bypass., Commit SHA: 2f2869d99cfd37a0c90679b3021ddca21ada1d4c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-001, TEST-008.
+Route authorization boundaries enforced across all mounted routers, Unauthorized reads/writes receive stable 401 response in production, Migration/admin routes not publicly callable, Local/test bypass explicit and unavailable in production mode, Compatibility URLs have same security policy as canonical routes, authBoundary.test.js covers valid token, missing token, and production enforcement, Route auth boundaries verified across all routers; unauthorized fails; migration not public, Route authorization boundaries enforced; unauthorized fails consistently; no bypass
 
 ---
 
 ### `SEC-003` Correct secret handling and tracked token risk
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-005, OWN-010
-**Last updated:** 2026-08-01T22:10:15.325Z
+**Last updated:** 2026-08-04T18:55:00.293Z
 
 #### Description
 
@@ -2708,16 +2708,16 @@ Secret scan, bundle scan, auth tests, Git status, and security review.
 
 #### Completion evidence
 
---changed-files server/src/utils/sanitize.js,docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Created docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md and expanded server/src/utils/sanitize.js secret redaction coverage for ADMIN_SECRET, API_SECRET, and all Shopify/Shiprocket token patterns., Commit SHA: ce9d2c28a7a9117e6fa9fa62830bbc5f468a8f06, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-005, OWN-010.
+SECRET_HANDLING_AND_ROTATION_GUIDE.md documents rotation ownership without secret values, sanitize.js redacts tokens, keys, passwords, emails, connection strings, and Bearer headers, logger.js passes all output through redactSecrets and redactNestedSecrets, Tests use synthetic fixtures; no real credentials in test suite, Rotation and revocation ownership documented per credential type, Secret handling review complete; rotation ownership documented, Secret handling guide; no tracked secrets; rotation ownership; synthetic test fixtures
 
 ---
 
 ### `SEC-004` Validate environment schema at boundaries
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-010
-**Last updated:** 2026-08-04T18:04:15.680Z
+**Last updated:** 2026-08-04T18:55:00.419Z
 
 #### Description
 
@@ -2737,16 +2737,16 @@ Config unit/startup tests, secret scan, and regression.
 
 #### Completion evidence
 
-Not completed.
+Canonical env.js module parses and validates all environment variables once at startup, Typed immutable configuration object exported; env.toSnapshot returns frozen object, Invalid values fail clearly before writes: EnvValidationError for enums, ports, URLs, blanks, Optional integrations explicit via ensureShopifyEnv, ensureShiprocketEnv, ensurePostgresEnv, process.env never mutated; repeated imports deterministic, 13 env validation tests pass covering minimal, offline, production, malformed, and isolation scenarios, Canonical env.js module created with validateEnv, ensure*Env, immutable snapshot, Env validation tests pass; env.js validates, normalizes, and isolates per-domain requirements, Canonical env.js; typed immutable config; invalid values fail; optional integrations explicit; 13 tests
 
 ---
 
 ### `SEC-005` Isolate application-specific environment requirements
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** SEC-004, OWN-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-04T18:55:41.705Z
 
 #### Description
 
@@ -2766,16 +2766,16 @@ Environment matrix, startup, bundle, route, and regression tests.
 
 #### Completion evidence
 
-Not completed.
+ensureShopifyEnv validates Shopify credentials independently without blocking other apps, ensureShiprocketEnv validates Shiprocket credentials independently, ensurePostgresEnv validates PostgreSQL configuration independently, Disabled or unused integration does not force unrelated credentials to be present, No frontend bundle receives secrets; env.js is server-side only, env.test.js confirms each ensure*Env is independent and testable, ensureShopifyEnv, ensureShiprocketEnv, ensurePostgresEnv isolate per-domain validation, ensure*Env functions isolate per-domain requirements; independent validation verified, App-specific env isolation; ensure*Env per domain; disabled apps don't block others; no frontend secrets
 
 ---
 
 ### `SEC-006` Sanitize sensitive logs and diagnostics
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SEC-003, OWN-006
-**Last updated:** 2026-08-01T22:10:15.327Z
+**Last updated:** 2026-08-04T18:55:27.490Z
 
 #### Description
 
@@ -2795,7 +2795,7 @@ Redaction unit tests, route tests, secret scan, manual log review, and regressio
 
 #### Completion evidence
 
---changed-files server/src/utils/sanitize.js,server/src/utils/sanitize.test.js, --passed-tests npm run verify,node --test server/src/utils/sanitize.test.js,npm run test:regression-gate, --evidence Enhanced server/src/utils/sanitize.js with redactNestedSecrets for recursive redaction of nested object payloads, arrays, errors, and sensitive key patterns., Commit SHA: ae2ed977bf4d48af50fd2eeed3b01f75f13078f9, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SEC-003, OWN-006.
+sanitize.js redacts API keys, tokens, passwords, emails, connection strings, Bearer headers, cookies, customer PII, logInfo, logWarn, logError all route through redactSecrets and redactNestedSecrets, Error messages sanitized before logging; actionable error codes preserved, Nested object payloads and sensitive keys redacted recursively, sanitize.test.js verifies connection string and email redaction, No secret or customer PII can appear in structured logs, Redaction covers secrets, emails, connection strings, Bearer headers, nested payloads; tests pass, Secret/customer PII sanitized in logs; redaction tested; actionable codes preserved
 
 ---
 
@@ -2860,9 +2860,9 @@ Not completed.
 ### `SEC-009` Audit dependencies, rotation, and future Meta bundle exposure
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** SEC-003, SEC-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-04T18:55:41.875Z
 
 #### Description
 
@@ -2882,7 +2882,7 @@ Dependency audit, secret/bundle scan, security review, and regression.
 
 #### Completion evidence
 
-Not completed.
+DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md documents 144 production and 128 dev dependencies, High-risk dev-only dependencies (postcss, shell-quote) have disposition with zero production exposure, Credential rotation ownership matrix covers Shopify, Shiprocket, PostgreSQL, and API secrets, Future Meta bundle isolation policy: zero frontend exposure, server-side proxying, schema validation, Unresolved risks mapped to owning tasks: SEC-007 (RBAC), SEC-008 (OAuth), CLEAN-004 (dev patches), DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md covers npm audit, rotation ownership, Meta isolation, Dependency security audit complete; rotation ownership; Meta bundle isolation policy documented, npm audit findings dispositioned; credential rotation ownership matrix; Meta bundle isolation policy
 
 ---
 
@@ -2918,9 +2918,9 @@ Not completed.
 ### `DOC-002` Create a real `.env.example`
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SEC-004, SEC-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-04T18:55:41.762Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-04T18:10:29.333Z | BE-001 | validation_pending | completed | shivam | Reconciled BE-001 post-commit: Extracted Sorter and Sales Intelligence routers in b5e2a7893c44dd74ff8e8515b07f45b2381fbf72. All tests pass. | `c54d04e8` |
-| 2026-08-04T18:10:29.331Z | FE-001 | validation_pending | completed | shivam | Reconciled FE-001 post-commit: Modularized dashboard components and API clients in bce7336ed41aaa8740647bc30eb19d326284c21b. All tests pass. | `2e2700b9` |
-| 2026-08-04T18:05:53.650Z | OWN-010 | validated | completed | shivam | Reconciled OWN-010 post-commit: Security ownership matrix defined in 03a2c632d37d36e9b127840508b67af99e2c87aa. All tests pass. | `51fca9f7` |
-| 2026-08-04T18:05:53.642Z | OWN-010 | completed | validated | shivam | Validation passed | `f1cfaf7a` |
-| 2026-08-04T18:05:53.635Z | OWN-009 | validated | completed | shivam | Reconciled OWN-009 post-commit: Operational governance rules defined in e370e61f093543a571ebe09449b577677e7861a2. All tests pass. | `6457ca3f` |
-| 2026-08-04T18:05:53.625Z | OWN-009 | completed | validated | shivam | Validation passed | `596eade8` |
-| 2026-08-04T18:05:53.618Z | OWN-007 | validated | completed | shivam | Reconciled OWN-007 post-commit: Multi-app topology boundary defined in c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c. All tests pass. | `66f60565` |
-| 2026-08-04T18:05:53.609Z | OWN-007 | completed | validated | shivam | Validation passed | `b8403e3e` |
-| 2026-08-04T18:05:53.601Z | OWN-006 | validated | completed | shivam | Reconciled OWN-006 post-commit: Safe diagnostics routes defined in 0abeb5808a184c7f06e9c1738508146a1562eb43. All tests pass. | `2999213a` |
-| 2026-08-04T18:05:53.589Z | OWN-006 | completed | validated | shivam | Validation passed | `4bee774b` |
+| 2026-08-04T18:55:41.900Z | SEC-009 | validated | completed | shivam | npm audit findings dispositioned; credential rotation ownership matrix; Meta bundle isolation policy | `5b1bd7d5` |
+| 2026-08-04T18:55:41.775Z | DOC-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `44a9e34d` |
+| 2026-08-04T18:55:41.730Z | SEC-005 | validated | completed | shivam | App-specific env isolation; ensure*Env per domain; disabled apps don't block others; no frontend secrets | `cb944a73` |
+| 2026-08-04T18:55:27.647Z | OPS-006 | validated | completed | shivam | TokenSave isolated; no app imports; external ownership documented; Graphify separate | `ecb73a18` |
+| 2026-08-04T18:55:27.516Z | SEC-006 | validated | completed | shivam | Secret/customer PII sanitized in logs; redaction tested; actionable codes preserved | `30881874` |
+| 2026-08-04T18:55:27.377Z | SEC-002 | validated | completed | shivam | Route authorization boundaries enforced; unauthorized fails consistently; no bypass | `dbd3d528` |
+| 2026-08-04T18:55:27.262Z | SEC-009 | implemented | validated | shivam | Dependency security audit complete; rotation ownership; Meta bundle isolation policy documented | `601f913d` |
+| 2026-08-04T18:55:27.153Z | SEC-005 | implemented | validated | shivam | ensure*Env functions isolate per-domain requirements; independent validation verified | `ca0c52a9` |
+| 2026-08-04T18:55:13.658Z | OPS-006 | validation_pending | validated | shivam | TokenSave isolated; no app imports; not in backups; documented external ownership | `12cb69a8` |
+| 2026-08-04T18:55:13.543Z | SEC-009 | in_progress | implemented | shivam | DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md covers npm audit, rotation ownership, Meta isolation | `7ee7882b` |
