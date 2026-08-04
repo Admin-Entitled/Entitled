@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import cors from "cors";
 import express from "express";
 import { env } from "./config/env.js";
+import { requireRouteAuth } from "./middleware/authBoundary.js";
 import apiRouter from "./routes/api.js";
 import orderMappingRouter from "./routes/orderMapping.js";
 
@@ -17,6 +18,7 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "30mb" }));
+app.use("/api", requireRouteAuth);
 app.use("/api", apiRouter);
 app.use("/api/order-mapping", orderMappingRouter);
 app.get("/delivery-resolution", (req, res) => res.redirect(302, env.orderMappingRoute));
