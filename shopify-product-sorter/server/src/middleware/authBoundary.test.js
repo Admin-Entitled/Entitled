@@ -108,6 +108,28 @@ describe("Authorization Boundary Middleware (SEC-002)", () => {
     assert.equal(calledNext, true);
   });
 
+  it("requireRouteAuth passes valid X-API-Token or Bearer header", () => {
+    const originalEnv = process.env.NODE_ENV;
+    const originalSecret = process.env.API_SECRET;
+    try {
+      process.env.NODE_ENV = "production";
+      process.env.API_SECRET = "super-secret-api-key";
+
+      let calledNext = false;
+      const req = { path: "/collections", headers: { "x-api-token": "super-secret-api-key" } };
+      const res = {};
+      const next = () => {
+        calledNext = true;
+      };
+
+      requireRouteAuth(req, res, next);
+      assert.equal(calledNext, true);
+    } finally {
+      process.env.NODE_ENV = originalEnv;
+      process.env.API_SECRET = originalSecret;
+    }
+  });
+
   it("requireRouteAuth rejects unauthorized requests in production with 401 Unauthorized", () => {
     const originalEnv = process.env.NODE_ENV;
     const originalSecret = process.env.API_SECRET;

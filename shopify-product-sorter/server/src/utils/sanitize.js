@@ -1,6 +1,6 @@
 import { env } from "../config/env.js";
 
-const SENSITIVE_KEY_PATTERN = /^(password|secret|token|access_token|authorization|credit_card|cvv|ssn|api_key|admin_secret|shiprocket_password|shopify_client_secret)$/i;
+const SENSITIVE_KEY_PATTERN = /^(password|secret|token|access_token|authorization|credit_card|cvv|ssn|api_key|admin_secret|shiprocket_password|shopify_client_secret|email|phone|customer_name|customerName|address|cookie|cookies|connection_string|connectionString|raw_csv|rawCsv)$/i;
 
 export function redactSecrets(input) {
   if (input === null || input === undefined) {
@@ -13,6 +13,8 @@ export function redactSecrets(input) {
   text = text.replace(/shpca_[a-zA-Z0-9_-]+/gi, "[REDACTED_SHOPIFY_TOKEN]");
   text = text.replace(/shpua_[a-zA-Z0-9_-]+/gi, "[REDACTED_SHOPIFY_TOKEN]");
   text = text.replace(/bearer\s+[a-zA-Z0-9._~+/-]+=*/gi, "Bearer [REDACTED_TOKEN]");
+  text = text.replace(/(postgres|postgresql|mongodb|mysql):\/\/[^\s"']+/gi, "[REDACTED_CONNECTION_STRING]");
+  text = text.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, "[REDACTED_EMAIL]");
 
   const sensitiveValues = [
     process.env.ADMIN_SECRET,
@@ -21,10 +23,14 @@ export function redactSecrets(input) {
     process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
     process.env.SHIPROCKET_PASSWORD,
     process.env.SHIPROCKET_TOKEN,
+    process.env.DATABASE_URL,
     env?.shopifyClientSecret,
     env?.shopifyAdminAccessToken,
     env?.shiprocketPassword,
     env?.shiprocketToken,
+    env?.adminSecret,
+    env?.apiSecret,
+    env?.databaseUrl,
   ].filter((v) => typeof v === "string" && v.trim().length > 3);
 
   for (const secret of sensitiveValues) {
