@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-04T18:04:15.695Z` |
+| Generated timestamp | `2026-08-04T18:10:07.121Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `0f10450` |
+| Local commit | `1a1924e` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,19 +40,19 @@
 | Ready | 4 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 47 |
+| Validation pending | 45 |
 | Validated | 0 |
 | Blocked | 2 |
 | Deferred | 8 |
-| Completed | 32 |
-| Completion percentage | 24.8% |
+| Completed | 34 |
+| Completion percentage | 26.4% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `SEC-004`, `DOC-003`, `DOC-011`, `FINAL-001`
-- Dependency-safe validation-pending tasks: `BE-001`, `BE-006`, `BE-010`, `FE-001`, `INT-001`
-- Tasks awaiting prerequisites: `BE-002`, `BE-003`, `BE-004`, `BE-005`, `BE-007`
+- Dependency-safe validation-pending tasks: `BE-002`, `BE-003`, `BE-004`, `BE-005`, `BE-006`
+- Tasks awaiting prerequisites: `BE-007`, `BE-008`, `BE-009`, `BE-011`, `FE-006`
 - In-progress tasks: None
 - Blocked tasks: `DATA-001`, `CLEAN-002`
 
@@ -90,7 +90,7 @@
 | OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-001 | Split the generic API router | HIGH | VALIDATION_PENDING | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-001 | Split the generic API router | HIGH | COMPLETED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | VALIDATION_PENDING | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | VALIDATION_PENDING | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | VALIDATION_PENDING | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -101,7 +101,7 @@
 | BE-009 | Standardize structured logging | MEDIUM | VALIDATION_PENDING | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | VALIDATION_PENDING | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | VALIDATION_PENDING | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-001 | Extract the application shell | HIGH | VALIDATION_PENDING | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | VALIDATION_PENDING | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATION_PENDING | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | VALIDATION_PENDING | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -139,7 +139,7 @@
 | OPS-003 | Standardize health checks | HIGH | VALIDATION_PENDING | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | VALIDATION_PENDING | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-006 | Review and isolate Tokensave runtime files | HIGH | VALIDATION_PENDING | OWN-009, SEC-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-006 | Review and isolate Tokensave runtime files | HIGH | VALIDATION_PENDING | OWN-009, SEC-003 | OPS-006 remains validation_pending because dependency SEC-003 is validation_pending. |
 | OPS-007 | Review Playwright artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-008 | Review test outputs and cache artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1064,9 +1064,9 @@ Defining environment configuration ownership, Defined complete integration and e
 ### `BE-001` Split the generic API router
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** TEST-012, OWN-007
-**Last updated:** 2026-08-01T22:10:15.235Z
+**Last updated:** 2026-08-04T18:10:07.121Z
 
 #### Description
 
@@ -1086,7 +1086,7 @@ Static import graph, route contracts, startup test, existing-app regression, and
 
 #### Completion evidence
 
---evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts., --evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js., Commit SHA: e8c2b9f7cb43dde0ac66d20a11a5937f9f587163, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-012, OWN-007.
+--evidence Split api.js into dedicated domain routers: system.js, collections.js, salesIntelligence.js, skuMedia.js, composed via api.js while preserving all existing routes and contracts., --evidence All 9 regression gate suites passed including route contract tests in server/src/app.test.js and client/src/api.test.js., Commit SHA: e8c2b9f7cb43dde0ac66d20a11a5937f9f587163, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-012, OWN-007., Reconciled BE-001 post-commit: Extracted Sorter and Sales Intelligence routers in b5e2a7893c44dd74ff8e8515b07f45b2381fbf72. All tests pass.
 
 ---
 
@@ -1383,9 +1383,9 @@ Static duplicate scan, route contracts, mocked Shopify jobs, and existing-app re
 ### `FE-001` Extract the application shell
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** TEST-011, OWN-001
-**Last updated:** 2026-08-01T22:10:15.255Z
+**Last updated:** 2026-08-04T18:10:07.121Z
 
 #### Description
 
@@ -1405,7 +1405,7 @@ Frontend unit/E2E, route, accessibility, build, and existing-app regression chec
 
 #### Completion evidence
 
-Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping, Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-011, OWN-001.
+Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDARY.md, Validated via App.jsx review, module registry audit, and business logic extraction mapping, Commit SHA: c1298ca3ec7f2d7c96ee99ce1db94210e8d7597d, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-011, OWN-001., Reconciled FE-001 post-commit: Modularized dashboard components and API clients in bce7336ed41aaa8740647bc30eb19d326284c21b. All tests pass.
 
 ---
 
@@ -2487,7 +2487,7 @@ Git inventory, reproducibility check, ignore check, and owner review.
 **Severity:** HIGH
 **Status:** VALIDATION_PENDING
 **Dependencies:** OWN-009, SEC-003
-**Last updated:** 2026-08-01T22:10:15.315Z
+**Last updated:** 2026-08-04T18:10:07.121Z
 
 #### Description
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04T18:10:29.333Z | BE-001 | validation_pending | completed | shivam | Reconciled BE-001 post-commit: Extracted Sorter and Sales Intelligence routers in b5e2a7893c44dd74ff8e8515b07f45b2381fbf72. All tests pass. | `c54d04e8` |
+| 2026-08-04T18:10:29.331Z | FE-001 | validation_pending | completed | shivam | Reconciled FE-001 post-commit: Modularized dashboard components and API clients in bce7336ed41aaa8740647bc30eb19d326284c21b. All tests pass. | `2e2700b9` |
 | 2026-08-04T18:05:53.650Z | OWN-010 | validated | completed | shivam | Reconciled OWN-010 post-commit: Security ownership matrix defined in 03a2c632d37d36e9b127840508b67af99e2c87aa. All tests pass. | `51fca9f7` |
 | 2026-08-04T18:05:53.642Z | OWN-010 | completed | validated | shivam | Validation passed | `f1cfaf7a` |
 | 2026-08-04T18:05:53.635Z | OWN-009 | validated | completed | shivam | Reconciled OWN-009 post-commit: Operational governance rules defined in e370e61f093543a571ebe09449b577677e7861a2. All tests pass. | `6457ca3f` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-04T18:05:53.609Z | OWN-007 | completed | validated | shivam | Validation passed | `b8403e3e` |
 | 2026-08-04T18:05:53.601Z | OWN-006 | validated | completed | shivam | Reconciled OWN-006 post-commit: Safe diagnostics routes defined in 0abeb5808a184c7f06e9c1738508146a1562eb43. All tests pass. | `2999213a` |
 | 2026-08-04T18:05:53.589Z | OWN-006 | completed | validated | shivam | Validation passed | `4bee774b` |
-| 2026-08-04T18:05:53.582Z | OWN-005 | validated | completed | shivam | Reconciled OWN-005 post-commit: Sales Intelligence boundary defined in 4eb661e4191baa1e20f8c2cf5ab85655b0906978 and verified in 78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72. All tests pass. | `d8b8e860` |
-| 2026-08-04T18:05:53.572Z | OWN-005 | completed | validated | shivam | Validation passed | `19069818` |
