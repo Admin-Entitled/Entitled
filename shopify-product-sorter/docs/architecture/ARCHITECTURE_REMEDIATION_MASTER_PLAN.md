@@ -13,7 +13,7 @@
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-03T18:30:00.000Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `35adf9d` |
+| Local commit | `b7f32b7` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,12 +40,12 @@
 | Ready | 1 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 64 |
+| Validation pending | 62 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 14 |
-| Completion percentage | 10.9% |
+| Completed | 16 |
+| Completion percentage | 12.4% |
 
 ## 4. Current execution focus
 
@@ -81,8 +81,8 @@
 | TEST-011 | Protect frontend navigation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-012 | Add integrated existing-app regression gate | HIGH | VALIDATION_PENDING | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-002 | Define Product Sorter boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | VALIDATION_PENDING | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-002 | Define Product Sorter boundary | HIGH | COMPLETED | OWN-001, TEST-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-003 | Classify Order Mapping versus legacy Delivery Resolution | CRITICAL | COMPLETED | SAFE-008, TEST-004, TEST-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-004 | Define SKU Image Manager boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-006 | Define System Diagnostics ownership | MEDIUM | VALIDATION_PENDING | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -803,9 +803,9 @@ Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_ST
 ### `OWN-002` Define Product Sorter boundary
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-001, TEST-001
-**Last updated:** 2026-08-01T22:10:15.217Z
+**Last updated:** 2026-08-04T04:01:13.204Z
 
 #### Description
 
@@ -825,16 +825,16 @@ Static dependency graph, route matrix review, test inventory, and owner sign-off
 
 #### Completion evidence
 
-Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-002.
+Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OWN-002., Validated against current repository: split routers, 7 SQLite tables, current env names, all acceptance criteria proven, Implementation commit: e336dafc35845cc46ec7aa8cdfda74035f8ed6a2
 
 ---
 
 ### `OWN-003` Classify Order Mapping versus legacy Delivery Resolution
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-008, TEST-004, TEST-005
-**Last updated:** 2026-08-01T22:10:15.219Z
+**Last updated:** 2026-08-04T04:01:13.210Z
 
 #### Description
 
@@ -854,7 +854,7 @@ Static call graph, synthetic migration mapping, route regression, and owner deci
 
 #### Completion evidence
 
-Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md, Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js, Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-008, TEST-004, TEST-005.
+Starting OWN-003 classification work, Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md, Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js, Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-008, TEST-004, TEST-005., Created new ORDER_MAPPING_CLASSIFICATION_REPORT.md with 56 classified items, All legacy symbols have disposition; no deletion approved from uncertainty, Implementation commit: e336dafc35845cc46ec7aa8cdfda74035f8ed6a2 (replaces false 77e237a reference)
 
 ---
 
