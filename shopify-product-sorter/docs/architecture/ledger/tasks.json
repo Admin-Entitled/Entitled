@@ -1660,10 +1660,13 @@
       ],
       "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
       "clean_validation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
-      "completion_record_commit_sha": "b23cb9a2f00b5e375777fad515c80198617ca3a4",
+      "completion_record_commit_sha": "2edcecd372b98be05e1887d82368effa8035ea28",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "0a45ce3eb319e6a97e4ea625339d790e702dd25c"
+        "tested_commit": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "clean_validation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "passed": true
       }
     },
     {
@@ -5375,7 +5378,9 @@
         "Order Mapping tests passed (29/29)",
         "Reconciled CLEAN-001 post-commit: Retired Delivery Resolution services removed in 4dcb1bfdb265fbc7919cdbf77bde65055b72b139. All 29/29 Order Mapping tests pass."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/services/deliveryRepository.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-04T16:55:32.940Z",
       "started_timestamp": "2026-08-04T16:55:32.614Z",
@@ -5388,10 +5393,13 @@
       ],
       "implementation_commit_sha": "4dcb1bfdb265fbc7919cdbf77bde65055b72b139",
       "clean_validation_commit_sha": "4dcb1bfdb265fbc7919cdbf77bde65055b72b139",
-      "completion_record_commit_sha": null,
+      "completion_record_commit_sha": "2edcecd372b98be05e1887d82368effa8035ea28",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "4dcb1bfdb265fbc7919cdbf77bde65055b72b139"
+        "tested_commit": "4dcb1bfdb265fbc7919cdbf77bde65055b72b139",
+        "implementation_commit_sha": "4dcb1bfdb265fbc7919cdbf77bde65055b72b139",
+        "clean_validation_commit_sha": "4dcb1bfdb265fbc7919cdbf77bde65055b72b139",
+        "passed": true
       }
     },
     {

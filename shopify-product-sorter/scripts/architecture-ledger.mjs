@@ -1569,7 +1569,12 @@ function cmdAuditCompleted() {
       runCmd(`git cat-file -e "${sha}:${gitPath}"`, { stdio: 'pipe' });
       return true;
     } catch {
-      return false;
+      try {
+        runCmd(`git cat-file -e "${sha}^:${gitPath}"`, { stdio: 'pipe' });
+        return true;
+      } catch {
+        return false;
+      }
     }
   }
 
