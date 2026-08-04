@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-04T11:51:46.749Z` |
+| Generated timestamp | `2026-08-04T16:55:32.941Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `a60d571` |
+| Local commit | `4dcb1bf` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,21 +40,21 @@
 | Ready | 1 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 61 |
+| Validation pending | 60 |
 | Validated | 0 |
-| Blocked | 3 |
+| Blocked | 2 |
 | Deferred | 8 |
-| Completed | 17 |
-| Completion percentage | 13.2% |
+| Completed | 19 |
+| Completion percentage | 14.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-011`
 - Dependency-safe validation-pending tasks: `TEST-003`, `TEST-006`, `TEST-007`, `TEST-008`, `TEST-009`
-- Tasks awaiting prerequisites: `TEST-012`, `OWN-004`, `OWN-005`, `OWN-006`, `OWN-007`
+- Tasks awaiting prerequisites: `TEST-012`, `OWN-004`, `OWN-005`, `OWN-007`, `OWN-009`
 - In-progress tasks: None
-- Blocked tasks: `DATA-001`, `CLEAN-001`, `CLEAN-002`
+- Blocked tasks: `DATA-001`, `CLEAN-002`
 
 ## 10. Master task index
 
@@ -77,7 +77,7 @@
 | TEST-007 | Protect Sales Intelligence API contracts | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-008 | Protect public route compatibility | CRITICAL | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-009 | Protect database migration safety | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| TEST-010 | Protect startup and environment isolation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| TEST-010 | Protect startup and environment isolation | HIGH | COMPLETED | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-011 | Protect frontend navigation | HIGH | VALIDATION_PENDING | SAFE-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | TEST-012 | Add integrated existing-app regression gate | HIGH | VALIDATION_PENDING | TEST-001, TEST-002, TEST-003, TEST-004, TEST-005, TEST-006, TEST-007, TEST-008, TEST-009, TEST-010, TEST-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-001 | Establish canonical application names and statuses | MEDIUM | COMPLETED | SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -164,7 +164,7 @@
 | DOC-009 | Create backup and restore guide | CRITICAL | NOT_STARTED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | BLOCKED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
+| CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-004 | Classify dead components and disabled placeholders | LOW | NOT_STARTED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -687,9 +687,9 @@ Starting implementation of TEST-009: Protect database migration safety, Created 
 ### `TEST-010` Protect startup and environment isolation
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-002
-**Last updated:** 2026-08-01T22:10:15.209Z
+**Last updated:** 2026-08-04T16:55:32.379Z
 
 #### Description
 
@@ -709,7 +709,7 @@ Unit, startup integration, environment matrix, static secret scan, and no-live-n
 
 #### Completion evidence
 
-Starting implementation of TEST-010: Protect startup and environment isolation, Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation., Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully., Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002.
+Starting implementation of TEST-010: Protect startup and environment isolation, Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation., Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully., Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-002., Dependencies satisfied, Reconcile TEST-010 in progress, Environment isolation unit tests added in 0a45ce3, Environment isolation tests passed, Reconciled TEST-010 post-commit: Environment isolation unit tests added in 0a45ce3eb319e6a97e4ea625339d790e702dd25c. All 3 tests pass, required credentials validated, no live secret reads.
 
 ---
 
@@ -3207,9 +3207,9 @@ Not completed.
 ### `CLEAN-001` Classify and resolve legacy Delivery Resolution files
 
 **Severity:** HIGH
-**Status:** BLOCKED
+**Status:** COMPLETED
 **Dependencies:** OWN-003, TEST-004, TEST-005, SAFE-003
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-04T16:55:32.940Z
 
 #### Description
 
@@ -3229,7 +3229,7 @@ Static callers, synthetic data mapping, route regression, database integrity, an
 
 #### Completion evidence
 
-Not completed.
+Dependencies OWN-003, TEST-004, TEST-005, SAFE-003 completed, Reconcile CLEAN-001 in progress, Retired Delivery Resolution services removed in 4dcb1bf, Order Mapping tests passed (29/29), Reconciled CLEAN-001 post-commit: Retired Delivery Resolution services removed in 4dcb1bfdb265fbc7919cdbf77bde65055b72b139. All 29/29 Order Mapping tests pass.
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-04T11:51:46.852Z | OWN-008 | validated | completed | shivam | Reconstructed complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md with 39 inventoried data surfaces across 9 domains | `1d78a3eb` |
-| 2026-08-04T11:51:40.580Z | OWN-008 | validation_pending | validated | shivam | Reconstructed data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md | `77cca2ce` |
-| 2026-08-03T18:30:00.000Z | OWN-001 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `14ce54d0` |
-| 2026-08-03T18:30:00.000Z | SAFE-006 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `d67b464d` |
-| 2026-08-03T18:30:00.000Z | TEST-005 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `4d0f0579` |
-| 2026-08-03T18:30:00.000Z | TEST-004 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `68c082c9` |
-| 2026-08-03T16:08:40.467Z | TEST-005 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `5d067f9a` |
-| 2026-08-03T16:08:40.360Z | TEST-005 | in_progress | validated | shivam | Clean validation passed | `def4f1ab` |
-| 2026-08-03T16:08:40.233Z | TEST-004 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `3c6b0bce` |
-| 2026-08-03T16:08:40.127Z | TEST-004 | in_progress | validated | shivam | Clean validation passed | `ac9b741a` |
+| 2026-08-04T16:55:32.962Z | CLEAN-001 | validated | completed | shivam | Reconciled CLEAN-001 post-commit: Retired Delivery Resolution services removed in 4dcb1bfdb265fbc7919cdbf77bde65055b72b139. All 29/29 Order Mapping tests pass. | `cec16e28` |
+| 2026-08-04T16:55:32.847Z | CLEAN-001 | implemented | validated | shivam | Order Mapping tests passed (29/29) | `36fc8e42` |
+| 2026-08-04T16:55:32.743Z | CLEAN-001 | in_progress | implemented | shivam | Retired Delivery Resolution services removed in 4dcb1bf | `3e2fb85a` |
+| 2026-08-04T16:55:32.635Z | CLEAN-001 | ready | in_progress | shivam | Reconcile CLEAN-001 in progress | `15d026c1` |
+| 2026-08-04T16:55:32.525Z | CLEAN-001 | blocked | ready | shivam | Dependencies OWN-003, TEST-004, TEST-005, SAFE-003 completed | `ee93cf50` |
+| 2026-08-04T16:55:32.401Z | TEST-010 | validated | completed | shivam | Reconciled TEST-010 post-commit: Environment isolation unit tests added in 0a45ce3eb319e6a97e4ea625339d790e702dd25c. All 3 tests pass, required credentials validated, no live secret reads. | `d74ec27f` |
+| 2026-08-04T16:55:32.293Z | TEST-010 | implemented | validated | shivam | Environment isolation tests passed | `cdff0596` |
+| 2026-08-04T16:55:32.193Z | TEST-010 | in_progress | implemented | shivam | Environment isolation unit tests added in 0a45ce3 | `34843577` |
+| 2026-08-04T16:55:26.669Z | TEST-010 | ready | in_progress | shivam | Reconcile TEST-010 in progress | `b07439d2` |
+| 2026-08-04T16:55:26.568Z | TEST-010 | validation_pending | ready | shivam | Dependencies satisfied | `ef4a1a7a` |
