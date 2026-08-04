@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { api } from "./api";
+import { api } from "./skuImageApi";
 
 const fallbackImage =
   "data:image/svg+xml;utf8," +

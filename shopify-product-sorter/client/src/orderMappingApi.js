@@ -59,5 +59,5 @@ export const api = {
     }
     return request("/imports/preview", { method: "POST", body });
   },
-  commitImport: (batchId) => request(`/imports/${batchId}/commit`, { method: "POST" }),
+  commitImport: (commitToken) => request(`/imports/${commitToken.batchId || commitToken.fileHash}/commit`, { method: "POST" }),
 };

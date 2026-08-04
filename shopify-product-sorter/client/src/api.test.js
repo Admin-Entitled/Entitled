@@ -3,7 +3,9 @@ import test from "node:test";
 
 import { api } from "./orderMappingApi.js";
 import { getOrderStatusDisplay, getStatusFilterLabel } from "./orderMappingView.js";
-import { api as sorterApi } from "./api.js";
+import { api as sorterApi } from "./sorterApi.js";
+import { api as skuImageApi } from "./skuImageApi.js";
+import { api as salesIntelligenceApi } from "./salesIntelligenceApi.js";
 
 test("lists order mapping orders with selected filter", async () => {
   const original = global.fetch;
@@ -80,6 +82,48 @@ test("fetches sorter logs dedicated endpoints", async () => {
     "/api/collections/logs/actions?afterId=10&limit=15",
     "/api/collections/logs/network?afterId=20&limit=25",
   ]);
+});
+
+test("keeps shared API error detail parsing compatible", async () => {
+  const original = global.fetch;
+
+  global.fetch = async () =>
+    new Response(JSON.stringify({ detail: "Detailed failure" }), { status: 500 });
+
+  try {
+    await assert.rejects(() => sorterApi.getCollections(), /Detailed failure/);
+  } finally {
+    global.fetch = original;
+  }
+});
+
+test("keeps SKU image FormData upload headers browser-owned", async () => {
+  const original = global.fetch;
+  const formData = new FormData();
+  let call = {};
+
+  formData.append("file", new Blob(["sku image"]), "sku.png");
+  global.fetch = async (url, options = {}) => {
+    call = { url, options };
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  };
+
+  try {
+    await skuImageApi.addSkuImageUpload(formData);
+  } finally {
+    global.fetch = original;
+  }
+
+  assert.equal(call.url, "/api/sku-images/add-upload");
+  assert.equal(call.options.body, formData);
+  assert.equal(call.options.headers["Content-Type"], undefined);
+});
+
+test("keeps sales intelligence CSV export URL compatible", () => {
+  assert.equal(
+    salesIntelligenceApi.salesIntelligenceExportUrl("sku summary", 45),
+    "/api/sales-intelligence/export?type=sku%20summary&days=45",
+  );
 });
 
 test("syncs Shopify orders through the Order Mapping endpoint", async () => {

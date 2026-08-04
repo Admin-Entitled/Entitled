@@ -1,18 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "./api";
+import { api } from "./sorterApi";
 import OrderMapping from "./OrderMapping";
 import SkuImageManager from "./SkuImageManager";
 
-const sidebarModules = [
-  { id: "sorter", label: "Shopify Collection Manager", enabled: true },
-  { id: "order-mapping", label: "Order Mapping", enabled: true },
-  { id: "sku-image-manager", label: "SKU Image Manager", enabled: true },
-  { id: "meta-ads", label: "Meta Ads Dashboard", enabled: false },
-  { id: "analytics", label: "Product Analytics", enabled: false },
-  { id: "inventory", label: "Inventory", enabled: false },
-  { id: "reports", label: "Reports", enabled: false },
-  { id: "settings", label: "Settings", enabled: false },
-];
+import { sidebarModules } from "./sidebarModules.js";
 
 const defaultFilters = {
   search: "",
