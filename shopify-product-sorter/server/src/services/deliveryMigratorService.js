@@ -7,6 +7,15 @@ import { runOrderMappingMigrations } from "./orderMappingMigrations.js";
 import { orderMappingQuery, withOrderMappingClient } from "./orderMappingDb.js";
 import { normalizeOrderMappingStatus } from "./orderMappingStatus.js";
 
+function sanitizeErrorReason(err) {
+  if (!err) return "Unknown database error";
+  const msg = String(err.message || err);
+  const sanitized = msg
+    .replace(/postgres(?:ql)?:\/\/[^\s@]+@[^\s]+/gi, "postgres://[REDACTED]")
+    .replace(/password=[^\s;&]+/gi, "password=[REDACTED]");
+  return sanitized || "Database query failure";
+}
+
 export function computeFileHash(filePath) {
   const content = fs.readFileSync(filePath);
   return crypto.createHash("sha256").update(content).digest("hex");
@@ -103,7 +112,7 @@ export async function testSourceRestore(backupPath) {
   };
 }
 
-export async function planMigration({ sourcePath = env.sqlitePath } = {}) {
+export async function planMigration({ sourcePath = env.sqlitePath, clientOverride = null } = {}) {
   const resolved = path.resolve(sourcePath);
   if (!fs.existsSync(resolved)) {
     throw new Error(`Source SQLite file does not exist: ${resolved}`);
@@ -133,23 +142,25 @@ export async function planMigration({ sourcePath = env.sqlitePath } = {}) {
   let pgOrdersCount = 0;
   let pgShipmentsCount = 0;
   let pgConfigured = false;
+  let pgError = null;
 
-  if (env.databaseUrl) {
+  if (clientOverride || env.databaseUrl) {
     try {
       if (!clientOverride) {
-    if (!clientOverride) {
-    if (!clientOverride) {
-    await runOrderMappingMigrations();
-  }
-  }
-  }
-      const oRes = await orderMappingQuery(`SELECT count(*) as cnt FROM "${env.orderMappingSchema}"."orders"`);
-      const sRes = await orderMappingQuery(`SELECT count(*) as cnt FROM "${env.orderMappingSchema}"."shipments"`);
+        await runOrderMappingMigrations();
+      }
+      const query = clientOverride
+        ? clientOverride.query.bind(clientOverride)
+        : orderMappingQuery;
+
+      const oRes = await query(`SELECT count(*) as cnt FROM "${env.orderMappingSchema}"."orders"`);
+      const sRes = await query(`SELECT count(*) as cnt FROM "${env.orderMappingSchema}"."shipments"`);
       pgOrdersCount = Number(oRes.rows[0]?.cnt || 0);
       pgShipmentsCount = Number(sRes.rows[0]?.cnt || 0);
       pgConfigured = true;
     } catch (e) {
       pgConfigured = false;
+      pgError = sanitizeErrorReason(e);
     }
   }
 
@@ -165,14 +176,15 @@ export async function planMigration({ sourcePath = env.sqlitePath } = {}) {
       pgConfigured,
       existingOrders: pgOrdersCount,
       existingShipments: pgShipmentsCount,
+      ...(pgError ? { error: pgError } : {}),
     },
     targetGap: deliveryOrdersCount,
     readOnlyWritesPerformed: 0,
   };
 }
 
-export async function dryRunMigration({ sourcePath = env.sqlitePath } = {}) {
-  const plan = await planMigration({ sourcePath });
+export async function dryRunMigration({ sourcePath = env.sqlitePath, clientOverride = null } = {}) {
+  const plan = await planMigration({ sourcePath, clientOverride });
   const db = new Database(plan.sourcePath, { readonly: true });
 
   let validRows = 0;
@@ -618,11 +630,19 @@ export async function rollbackMigration({ migrationId = null, confirm = false, c
   };
 }
 
-export async function getMigrationStatus() {
+export async function getMigrationStatus({ clientOverride = null } = {}) {
   if (!clientOverride) {
     await runOrderMappingMigrations();
   }
-  const jRes = await orderMappingQuery(`SELECT * FROM "${env.orderMappingSchema}"."migration_journal" ORDER BY started_at DESC LIMIT 10`);
+
+  const query = clientOverride
+    ? clientOverride.query.bind(clientOverride)
+    : orderMappingQuery;
+
+  const jRes = await query(
+    `SELECT * FROM "${env.orderMappingSchema}"."migration_journal" ORDER BY started_at DESC LIMIT 10`
+  );
+
   return {
     journals: jRes.rows,
   };

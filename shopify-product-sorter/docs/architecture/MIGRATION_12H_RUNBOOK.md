@@ -136,3 +136,41 @@ npm run test:regression-gate
 - **Deferred Post-Cutover Tasks**:
   - Archiving legacy SQLite app.db to cold backup storage.
   - Final removal of legacy Delivery Resolution fallback handlers in future major release.
+
+---
+
+## 9. Production Migration Execution & Closure Record
+
+- **Migration Status**: COMPLETED
+- **Migration ID**: `mig_12h_1785847644829`
+- **Execution Timestamp**: `2026-08-04T12:58:14.191Z`
+- **Source Database**: `server/data/app.db`
+- **Source Checksum (SHA-256)**: `5f825b2f2b6d0a412e175fc07ff70157f07b966228126d9cecae45b7f60c8b22`
+- **Migration Performance Metrics**:
+  - `delivery_orders`: 0
+  - `legacy_imports`: 0
+  - `delivery_logs`: 0
+  - `inserted_count`: 0
+  - `skipped_count`: 0
+  - `conflict_count`: 0
+  - `failure_count`: 0
+  - `planned_count`: 0
+- **PostgreSQL Target Verified Counts**:
+  - `orders`: 254
+  - `shipments`: 343
+- **Final Verified Backup**:
+  - Path: `server/data/backups/app.db.2026-08-04T12-58-14.191Z.bak`
+  - Checksum (SHA-256): `5f825b2f2b6d0a412e175fc07ff70157f07b966228126d9cecae45b7f60c8b22` (Matches source)
+  - Isolated Restore Verification: PASSED (`valid: true`)
+- **Validation & Test Suite Verification**:
+  - Order Mapping Tests: 29/29 PASSED
+  - Regression Gate: 13/13 PASSED
+  - Architecture Ledger Tests: 89/89 PASSED
+- **Source Retention Policy**:
+  - Source file `server/data/app.db` is retained on local disk.
+  - Reason: The SQLite database also contains non-migration Product Sorter data, including `order_backups` and `collection_snapshots`.
+  - Directive: Do not delete, archive, chmod, relocate, or decommission `server/data/app.db`.
+- **Rollback Status**: Rollback NOT required (production cutover completed successfully and verified read-only).
+- **Non-Blocking Follow-up Security Action**:
+  - Action: Update the securely stored production connection string to use `sslmode=verify-full`.
+  - Directive: Never commit or print the connection string in code, logs, or repository files.

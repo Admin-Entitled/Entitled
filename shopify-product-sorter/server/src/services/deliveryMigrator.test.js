@@ -1,3 +1,4 @@
+import { closeOrderMappingPool } from "./orderMappingDb.js";
 import assert from "node:assert/strict";
 import test from "node:test";
 import path from "node:path";
@@ -14,6 +15,7 @@ import {
   verifyMigration,
   rollbackMigration,
   normalizeSqliteRow,
+  getMigrationStatus,
 } from "./deliveryMigratorService.js";
 
 function createTestDb(dbPath, rows = []) {
@@ -212,8 +214,15 @@ function createMockPgClient(pgDbPath) {
         return { rows: [] };
       }
 
+
+
       // Emulate PG queries for migration testing
       if (sql.includes("INSERT INTO") && sql.includes("migration_journal")) {
+        if (params.length === 0) {
+          const cleanSql = sql.replaceAll(/\"[^\"]+\"\./g, "");
+          db.prepare(cleanSql).run();
+          return { rows: [] };
+        }
         const id = "mj_" + Math.random().toString(36).slice(2);
         if (sql.includes("ON CONFLICT")) {
           const stmt = db.prepare(`
@@ -225,7 +234,7 @@ function createMockPgClient(pgDbPath) {
         } else {
           const stmt = db.prepare(`
             INSERT INTO migration_journal (id, migration_id, source_fingerprint, source_table, target_table, planned_count, status)
-            VALUES (?, ?, ?, ?, ?, ?, running)
+            VALUES (?, ?, ?, ?, ?, ?, 'running')
           `);
           stmt.run(id, params[0], params[1], params[2], params[3], params[4]);
         }
@@ -233,6 +242,7 @@ function createMockPgClient(pgDbPath) {
       }
 
       if (sql.includes("INSERT INTO") && sql.includes("orders")) {
+        if (params.length === 0) { const cleanSql = sql.replaceAll(/\"[^\"]+\"\./g, ""); db.prepare(cleanSql).run(); return { rows: [] }; }
         const id = "ord_" + Math.random().toString(36).slice(2);
         const stmt = db.prepare(`
           INSERT INTO orders (id, shopify_order_id, shopify_order_name, shopify_order_number, order_date, customer_name, shopify_fulfillment_status, cancellation_status, shopify_updated_at)
@@ -250,6 +260,7 @@ function createMockPgClient(pgDbPath) {
       }
 
       if (sql.includes("INSERT INTO") && sql.includes("shipments")) {
+        if (params.length === 0) { const cleanSql = sql.replaceAll(/\"[^\"]+\"\./g, ""); db.prepare(cleanSql).run(); return { rows: [] }; }
         const id = "ship_" + Math.random().toString(36).slice(2);
         const stmt = db.prepare(`
           INSERT INTO shipments (id, order_id, shopify_tracking_number, awb, courier, normalized_status, raw_status, status_source, status_timestamp, delivered_at, shiprocket_order_reference, shiprocket_channel_reference, shiprocket_response_id, manual_override, manual_override_lock)
@@ -268,6 +279,7 @@ function createMockPgClient(pgDbPath) {
       }
 
       if (sql.includes("INSERT INTO") && sql.includes("status_history")) {
+        if (params.length === 0) { const cleanSql = sql.replaceAll(/\"[^\"]+\"\./g, ""); db.prepare(cleanSql).run(); return { rows: [] }; }
         const id = "sh_" + Math.random().toString(36).slice(2);
         const stmt = db.prepare(`
           INSERT INTO status_history (id, order_id, shipment_id, next_status, raw_status, source, remarks, actor)
@@ -338,6 +350,12 @@ function createMockPgClient(pgDbPath) {
         return { rows };
       }
 
+      if (params.length === 0 && !sql.includes("$1")) {
+        const stmt = db.prepare(sql);
+        const rows = stmt.reader ? stmt.all() : (stmt.run(), []);
+        return { rows };
+      }
+
       return { rows: [] };
     },
     close() {
@@ -348,36 +366,44 @@ function createMockPgClient(pgDbPath) {
 
 test("MIGRATION-001: plan mode performs zero target writes and returns source counts", async () => {
   const tmpDbPath = path.resolve("/tmp/test_migrator_plan.db");
+  const tmpTargetDb = path.resolve("/tmp/test_migrator_plan_target_001.db");
   createTestDb(tmpDbPath, [
     { shopify_order_id: "gid://101", shopify_order_name: "#1001" },
     { shopify_order_id: "gid://102", shopify_order_name: "#1002" },
   ]);
+  const mockPg = createMockPgClient(tmpTargetDb);
 
   const hashBefore = computeFileHash(tmpDbPath);
-  const plan = await planMigration({ sourcePath: tmpDbPath });
+  const plan = await planMigration({ sourcePath: tmpDbPath, clientOverride: mockPg });
   const hashAfter = computeFileHash(tmpDbPath);
 
   assert.equal(hashBefore, hashAfter);
   assert.equal(plan.readOnlyWritesPerformed, 0);
   assert.equal(plan.plannedRecords.delivery_orders, 2);
 
+  mockPg.close();
   fs.unlinkSync(tmpDbPath);
+  if (fs.existsSync(tmpTargetDb)) fs.unlinkSync(tmpTargetDb);
 });
 
 test("MIGRATION-002: dry-run performs zero target writes and detects duplicate orders/AWBs", async () => {
   const tmpDbPath = path.resolve("/tmp/test_migrator_dryrun.db");
+  const tmpTargetDb = path.resolve("/tmp/test_migrator_dryrun_target_002.db");
   createTestDb(tmpDbPath, [
     { shopify_order_id: "gid://101", shopify_order_name: "#1001", awb: "AWB-100" },
     { shopify_order_id: "gid://101", shopify_order_name: "#1001-dup", awb: "AWB-100" },
   ]);
+  const mockPg = createMockPgClient(tmpTargetDb);
 
-  const dryRun = await dryRunMigration({ sourcePath: tmpDbPath });
+  const dryRun = await dryRunMigration({ sourcePath: tmpDbPath, clientOverride: mockPg });
   assert.equal(dryRun.dryRun, true);
   assert.equal(dryRun.targetWritesPerformed, 0);
   assert.equal(dryRun.duplicateOrders, 1);
   assert.equal(dryRun.duplicateAwbs, 1);
 
+  mockPg.close();
   fs.unlinkSync(tmpDbPath);
+  if (fs.existsSync(tmpTargetDb)) fs.unlinkSync(tmpTargetDb);
 });
 
 test("MIGRATION-003: createSourceBackup creates integrity-verified backup and matches source SHA-256", async () => {
@@ -502,4 +528,101 @@ test("MIGRATION-009: rollbackMigration reverts migration target entries without 
   mockPg.close();
   fs.unlinkSync(tmpSrcDb);
   if (fs.existsSync(tmpTargetDb)) fs.unlinkSync(tmpTargetDb);
+});
+
+test("MIGRATION-010: getMigrationStatus returns journals and supports injected test client without ReferenceError", async () => {
+  const tmpTargetDb = path.resolve("/tmp/test_status_target.db");
+  const mockPg = createMockPgClient(tmpTargetDb);
+
+  await mockPg.query(`
+    INSERT INTO migration_journal (id, migration_id, source_fingerprint, source_table, target_table, planned_count, status)
+    VALUES ('mj_test_1', 'mig_123', 'fingerprint123', 'delivery_orders', 'orders', 10, 'completed')
+  `);
+
+  const statusRes = await getMigrationStatus({ clientOverride: mockPg });
+  assert.ok(statusRes.journals);
+  assert.equal(Array.isArray(statusRes.journals), true);
+  assert.equal(statusRes.journals.length, 1);
+  assert.equal(statusRes.journals[0].migration_id, "mig_123");
+  assert.equal(statusRes.journals[0].status, "completed");
+
+  mockPg.close();
+  if (fs.existsSync(tmpTargetDb)) fs.unlinkSync(tmpTargetDb);
+});
+
+test("MIGRATION-011: planMigration with mocked PostgreSQL client reports pgConfigured: true and correct target counts", async () => {
+  const tmpSrcDb = path.resolve("/tmp/test_plan_src.db");
+  const tmpTargetDb = path.resolve("/tmp/test_plan_target.db");
+  createTestDb(tmpSrcDb, [
+    { shopify_order_id: "gid://701", shopify_order_name: "#7001" },
+  ]);
+
+  const mockPg = createMockPgClient(tmpTargetDb);
+  await mockPg.query(`
+    INSERT INTO orders (id, shopify_order_id, shopify_order_name)
+    VALUES ('ord_1', 'gid://existing_1', '#9001'), ('ord_2', 'gid://existing_2', '#9002')
+  `);
+  await mockPg.query(`
+    INSERT INTO shipments (id, order_id, normalized_status, status_source)
+    VALUES ('shp_1', 'ord_1', 'DELIVERED', 'AUTO')
+  `);
+
+  const plan = await planMigration({ sourcePath: tmpSrcDb, clientOverride: mockPg });
+
+  assert.equal(plan.targetState.pgConfigured, true);
+  assert.equal(plan.targetState.existingOrders, 2);
+  assert.equal(plan.targetState.existingShipments, 1);
+  assert.equal(plan.readOnlyWritesPerformed, 0);
+
+  mockPg.close();
+  fs.unlinkSync(tmpSrcDb);
+  if (fs.existsSync(tmpTargetDb)) fs.unlinkSync(tmpTargetDb);
+});
+
+test("MIGRATION-012: planMigration handles query failure safely reporting pgConfigured: false without exposing credentials", async () => {
+  const tmpSrcDb = path.resolve("/tmp/test_plan_fail_src.db");
+  createTestDb(tmpSrcDb, []);
+
+  const secretConnectionString = "postgres://sensitive_user:super_secret_pass@db.example.com:5432/production_db?sslmode=require";
+  const failingMockPg = {
+    async query() {
+      throw new Error(`Connection failed for ${secretConnectionString}: connection refused`);
+    },
+  };
+
+  const plan = await planMigration({ sourcePath: tmpSrcDb, clientOverride: failingMockPg });
+
+  assert.equal(plan.targetState.pgConfigured, false);
+  assert.ok(plan.targetState.error);
+  assert.equal(plan.targetState.error.includes("super_secret_pass"), false);
+  assert.equal(plan.targetState.error.includes("sensitive_user"), false);
+  assert.equal(plan.readOnlyWritesPerformed, 0);
+
+  fs.unlinkSync(tmpSrcDb);
+});
+
+test("MIGRATION-013: planMigration and getMigrationStatus remain strictly read-only", async () => {
+  const tmpSrcDb = path.resolve("/tmp/test_readonly_src.db");
+  const tmpTargetDb = path.resolve("/tmp/test_readonly_target.db");
+  createTestDb(tmpSrcDb, [{ shopify_order_id: "gid://801", shopify_order_name: "#8001" }]);
+
+  const mockPg = createMockPgClient(tmpTargetDb);
+  const srcHashBefore = computeFileHash(tmpSrcDb);
+
+  await planMigration({ sourcePath: tmpSrcDb, clientOverride: mockPg });
+  await getMigrationStatus({ clientOverride: mockPg });
+
+  const srcHashAfter = computeFileHash(tmpSrcDb);
+  assert.equal(srcHashBefore, srcHashAfter);
+
+  const jRes = await mockPg.query(`SELECT count(*) as cnt FROM migration_journal`);
+  assert.equal(Number(jRes.rows[0].cnt), 0);
+
+  mockPg.close();
+  fs.unlinkSync(tmpSrcDb);
+  if (fs.existsSync(tmpTargetDb)) fs.unlinkSync(tmpTargetDb);
+});
+
+test.after(async () => {
+  await closeOrderMappingPool();
 });
