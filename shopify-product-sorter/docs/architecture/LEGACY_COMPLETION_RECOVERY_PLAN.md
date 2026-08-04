@@ -403,17 +403,17 @@ These features have never been implemented or committed in git history and do no
 - **Reimplementation Required**: **NO**
 
 ### OWN-008: Approve data ownership matrix
-- **Classification**: `A. RESTORE_WITH_EXISTING_EVIDENCE`
+- **Classification**: `RECONSTRUCTED_CURRENT_SESSION`
 - **Historical Completed Transition**: undefined
-- **Implementation Commit**: `87ff3ea1e36fb81e85e8da123e2a1256d022d330`
+- **Implementation Commit**: Current Session Reconstruction (historical ledger-only SHA `87ff3ea1e36fb81e85e8da123e2a1256d022d330` preserved as provenance only)
 - **Commit Exists Locally & Remotely**: Local: `YES` | Remote: `YES`
-- **Declared Implementation Files**: `shopify-product-sorter/docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md`, `shopify-product-sorter/docs/architecture/ledger/history.jsonl`, `shopify-product-sorter/docs/architecture/ledger/snapshots/tasks-completed-1785504549.json`, `shopify-product-sorter/docs/architecture/ledger/tasks.json`
+- **Declared Implementation Files**: `docs/architecture/DATA_OWNERSHIP_MATRIX.md`
 - **Declared Validation Files**: None declared
-- **Files Exist at Commit / Disk**: `YES (4 files in commit diff)`
-- **Test / Artifact Evidence**: Documentation matrix in docs/architecture/
+- **Files Exist at Commit / Disk**: `YES`
+- **Test / Artifact Evidence**: Current reconstructed documentation matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md
 - **Dependency State**: `SAFE-003, SAFE-004, SAFE-008`
-- **Exact Minimum Action Required**: Verify document/artifact on disk/git and restore completed status.
-- **Reimplementation Required**: **NO**
+- **Exact Minimum Action Required**: Reconstruct DATA_OWNERSHIP_MATRIX.md in task session OWN-008, validate, commit, and update ledger.
+- **Reimplementation Required**: **YES (Reconstructed in current session)**
 
 ### OWN-009: Approve runtime file ownership
 - **Classification**: `A. RESTORE_WITH_EXISTING_EVIDENCE`
@@ -1084,7 +1084,7 @@ The following 73 restorable tasks are ordered strictly according to their prereq
 24. **OWN-005** (Define Actual Sales Intelligence boundary) — `A. RESTORE_WITH_EXISTING_EVIDENCE` [Sha: `4eb661e4191baa1e20f8c2cf5ab85655b0906978` | Action: Verify document/artifact on disk/git and restore completed status.]
 25. **OWN-006** (Define System Diagnostics ownership) — `A. RESTORE_WITH_EXISTING_EVIDENCE` [Sha: `25de38d76639b4d48e2cde564482bee7c278131f` | Action: Verify document/artifact on disk/git and restore completed status.]
 26. **OWN-007** (Approve route ownership matrix) — `A. RESTORE_WITH_EXISTING_EVIDENCE` [Sha: `c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c` | Action: Verify document/artifact on disk/git and restore completed status.]
-27. **OWN-008** (Approve data ownership matrix) — `A. RESTORE_WITH_EXISTING_EVIDENCE` [Sha: `87ff3ea1e36fb81e85e8da123e2a1256d022d330` | Action: Verify document/artifact on disk/git and restore completed status.]
+27. **OWN-008** (Approve data ownership matrix) — `RECONSTRUCTED_CURRENT_SESSION` [Action: Reconstruct DATA_OWNERSHIP_MATRIX.md, validate, commit, and update ledger.]
 28. **OWN-009** (Approve runtime file ownership) — `A. RESTORE_WITH_EXISTING_EVIDENCE` [Sha: `e370e61f093543a571ebe09449b577677e7861a2` | Action: Verify document/artifact on disk/git and restore completed status.]
 29. **OWN-010** (Approve integration and environment ownership) — `A. RESTORE_WITH_EXISTING_EVIDENCE` [Sha: `03a2c632d37d36e9b127840508b67af99e2c87aa` | Action: Verify document/artifact on disk/git and restore completed status.]
 30. **BE-001** (Split the generic API router) — `C. NEEDS_EVIDENCE_BACKFILL` [Sha: `e8c2b9f7cb43dde0ac66d20a11a5937f9f587163` | Action: Backfill changed_files from commit e8c2b9f7cb43dde0ac66d20a11a5937f9f587163 into tasks.json metadata.]
