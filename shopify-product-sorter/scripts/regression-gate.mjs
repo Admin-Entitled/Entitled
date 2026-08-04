@@ -1,4 +1,14 @@
 import { execSync } from "node:child_process";
+function safeExecSync(cmd, opts = {}) {
+  try {
+    return execSync(cmd, opts);
+  } catch (err) {
+    if (err.status === 0) {
+      return err.stdout || "";
+    }
+    throw err;
+  }
+}
 import fs from "node:fs";
 import path from "node:path";
 
@@ -55,7 +65,7 @@ export function preflightSuite(suite, rootDir = process.cwd()) {
   }
 
   try {
-    execSync(`git ls-files --error-unmatch "${relPath}"`, { cwd: rootDir, stdio: "pipe" });
+    safeExecSync(`git ls-files --error-unmatch "${relPath}"`, { cwd: rootDir, stdio: "pipe" });
   } catch (err) {
     return {
       valid: false,
@@ -66,11 +76,11 @@ export function preflightSuite(suite, rootDir = process.cwd()) {
 
   let prefix = "";
   try {
-    prefix = execSync("git rev-parse --show-prefix", { cwd: rootDir, encoding: "utf8" }).trim();
+    prefix = safeExecSync("git rev-parse --show-prefix", { cwd: rootDir, encoding: "utf8" }).trim();
   } catch (e) {}
   const gitPath = prefix + relPath;
   try {
-    execSync(`git cat-file -e "HEAD:${gitPath}"`, { cwd: rootDir, stdio: "pipe" });
+    safeExecSync(`git cat-file -e "HEAD:${gitPath}"`, { cwd: rootDir, stdio: "pipe" });
   } catch (err) {
     return {
       valid: false,
@@ -155,7 +165,7 @@ if (isMain) {
       const suiteStart = Date.now();
       try {
         console.log(`\nRunning [${suite.name}] (${suite.file})...`);
-        execSync(`node --test "${suite.file}"`, { stdio: "inherit" });
+        safeExecSync(`node --test "${suite.file}"`, { stdio: "inherit" });
         const duration = Date.now() - suiteStart;
         results.push({
           name: suite.name,

@@ -42,6 +42,9 @@ function runCmd(cmd, options = {}) {
   try {
     return execSync(cmd, { cwd: REPO_ROOT, encoding: 'utf-8', ...options }).trim();
   } catch (err) {
+    if (err.status === 0) {
+      return (err.stdout || '').trim();
+    }
     if (options.allowError) {
       return (err.stdout || '') + (err.stderr || '');
     }
