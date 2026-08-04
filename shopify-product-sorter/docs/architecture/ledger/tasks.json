@@ -2131,14 +2131,14 @@
       "validation_files": [
         "server/src/services/shopifyMediaService.test.js"
       ],
-      "implementation_commit_sha": "43c636777b7e1e62947ee14f0cdc0b918f952445",
+      "implementation_commit_sha": "7c895103aa2edac691ad7e890fa6b1cf874b3361",
       "clean_validation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
       "completion_record_commit_sha": "8d1b254f4c793f186519a16bde6c4143b13934e3",
       "validation_results": {
         "overallStatus": "PASSED",
         "tested_commit": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
         "clean_validation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
-        "implementation_commit_sha": "43c636777b7e1e62947ee14f0cdc0b918f952445",
+        "implementation_commit_sha": "7c895103aa2edac691ad7e890fa6b1cf874b3361",
         "passed": true,
         "timestamp": "2026-08-04T18:05:53.551Z"
       }
@@ -2183,14 +2183,14 @@
       "validation_files": [
         "server/src/services/actualSalesService.test.js"
       ],
-      "implementation_commit_sha": "4eb661e4191baa1e20f8c2cf5ab85655b0906978",
+      "implementation_commit_sha": "7c895103aa2edac691ad7e890fa6b1cf874b3361",
       "clean_validation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
       "completion_record_commit_sha": "8d1b254f4c793f186519a16bde6c4143b13934e3",
       "validation_results": {
         "overallStatus": "PASSED",
         "tested_commit": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
         "clean_validation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
-        "implementation_commit_sha": "4eb661e4191baa1e20f8c2cf5ab85655b0906978",
+        "implementation_commit_sha": "7c895103aa2edac691ad7e890fa6b1cf874b3361",
         "passed": true,
         "timestamp": "2026-08-04T18:05:53.566Z"
       }
@@ -2504,7 +2504,7 @@
       ],
       "implementation_commit_sha": "b5e2a7893c44dd74ff8e8515b07f45b2381fbf72",
       "clean_validation_commit_sha": "b5e2a7893c44dd74ff8e8515b07f45b2381fbf72",
-      "completion_record_commit_sha": "1a1924e839344d905f0722e79cbb0208598ac7e5",
+      "completion_record_commit_sha": "02590dc39d05ff3ad71d30753a09785d8be5baf6",
       "validation_results": {
         "overallStatus": "PASSED",
         "tested_commit": "b5e2a7893c44dd74ff8e8515b07f45b2381fbf72",
@@ -2987,7 +2987,7 @@
       ],
       "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
       "clean_validation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
-      "completion_record_commit_sha": "1a1924e839344d905f0722e79cbb0208598ac7e5",
+      "completion_record_commit_sha": "02590dc39d05ff3ad71d30753a09785d8be5baf6",
       "validation_results": {
         "overallStatus": "PASSED",
         "tested_commit": "bce7336ed41aaa8740647bc30eb19d326284c21b",
