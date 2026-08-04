@@ -37,7 +37,8 @@
     "test:client": "node --test --test-name-pattern='feature form and table styles stay inside dashboard features|front-end regression: Sorter, SKU Image Manager, and Order Mapping all render in dashboard' client/src/styles.test.js",
     "arch:reconcile": "node scripts/architecture-ledger.mjs reconcile",
     "arch:next": "node scripts/architecture-ledger.mjs next",
-    "arch:audit-completed": "node scripts/architecture-ledger.mjs audit-completed"
+    "arch:audit-completed": "node scripts/architecture-ledger.mjs audit-completed",
+    "delivery-migrator": "node server/src/scripts/deliveryMigrator.js"
   },
   "devDependencies": {
     "concurrently": "^10.0.3"
