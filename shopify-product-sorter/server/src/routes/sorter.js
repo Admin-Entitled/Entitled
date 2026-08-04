@@ -567,48 +567,6 @@ router.post("/collections/reorder-all", async (req, res) => {
   return res.redirect(307, "/api/collections/reorder-all-v2");
 });
 
-router.post("/collections/reorder-all", async (req, res) => {
-  const summary = { checked: 0, updated: 0, skipped: 0, failed: 0, productsRepositioned: 0, failures: [] };
-  try {
-    const collections = await fetchCollections();
-    const payloads = await Promise.all(collections.filter((collection) => collection.type === "custom").map((collection) => fetchCollectionProducts(collection.id)));
-    const allSales = await fetchSalesMetrics([...new Set(payloads.flatMap((payload) => payload.products.map((product) => product.id)))]);
-    const payloadById = new Map(payloads.map((payload) => [payload.collection.id, payload]));
-    for (const collection of collections) {
-      summary.checked += 1;
-      if (collection.type !== "custom") {
-        summary.skipped += 1;
-        continue;
-      }
-      try {
-        const snapshot = saveSnapshot(payloadById.get(collection.id), allSales);
-        if (!snapshot.products.length) {
-          summary.skipped += 1;
-          continue;
-        }
-        const settings = await settingsFor(collection.id);
-        const orderIds = generateOrder(mergeSnapshotWithPreferences(collection.id, snapshot).products, settings).map((product) => product.id);
-        const currentOrderIds = snapshot.products.slice().sort((left, right) => left.collectionPosition - right.collectionPosition).map((product) => product.id);
-        if (currentOrderIds.every((productId, index) => productId === orderIds[index])) {
-          summary.skipped += 1;
-          continue;
-        }
-        const result = await applyGeneratedOrder(collection.id, snapshot, orderIds);
-        summary.updated += 1;
-        summary.productsRepositioned += result.changed;
-      } catch (error) {
-        summary.failed += 1;
-        summary.failures.push({ collection: collection.title, error: error.message });
-        logError("Failed to reorder collection", error, { collectionId: collection.id });
-      }
-    }
-    res.json(summary);
-  } catch (error) {
-    logError("Failed to start collection reorder", error);
-    res.status(500).json({ error: "Failed to load collections", detail: error.message });
-  }
-});
-
 router.post("/collections/rollback", async (req, res) => {
   try {
     const { collectionId } = req.body;

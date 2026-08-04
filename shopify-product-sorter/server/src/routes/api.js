@@ -1,5 +1,6 @@
 import db from "../db/database.js";
 import { redactSecrets } from "../utils/sanitize.js";
+import salesIntelligenceRouter from "./salesIntelligence.js";
 import skuMediaRouter from "./skuMedia.js";
 import sorterRouter from "./sorter.js";
 import express from "express";
@@ -25,14 +26,6 @@ import { env } from "../config/env.js";
 import { generateOrder } from "../services/sorter.js";
 import { getStrategySettings, saveStrategySettings } from "../services/strategySettings.js";
 import {
-  getActualSalesSummary,
-  getSalesAnalyticsSlice,
-  getSalesExport,
-  reconcileSalesData,
-  refreshShopifySalesData,
-  refreshShiprocketSalesData,
-} from "../services/actualSalesService.js";
-import {
   addActionLog,
   addNetworkLog,
   clearCurrentSorterRunContext,
@@ -54,6 +47,7 @@ const router = express.Router();
 const MAX_DIAGNOSTIC_DETAIL_LENGTH = 500;
 router.use(sorterRouter);
 router.use(skuMediaRouter);
+router.use(salesIntelligenceRouter);
 
 function diagnosticDetail(value) {
   return value ? redactSecrets(value).slice(0, MAX_DIAGNOSTIC_DETAIL_LENGTH) : null;
@@ -176,14 +170,14 @@ router.get("/health/readiness", (req, res) => {
     db.prepare("SELECT 1").get();
     const requiredTables = ["collection_settings", "product_preferences", "collection_snapshots", "order_backups", "delivery_orders"];
     const checkTableStmt = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name=?");
-    const missingTables = requiredTables.filter((table) => !checkTableStmt.get(table));
+    const missingTables = requiredTables.filter((tbl) => !checkTableStmt.get(tbl));
     const isReady = missingTables.length === 0;
 
     res.status(isReady ? 200 : 503).json({
       ok: isReady,
       status: isReady ? "ready" : "degraded",
       db: "connected",
-      missingTables: missingTables.length ? missingTables : undefined,
+      missingTables: missingTables.length > 0 ? missingTables : undefined,
       config: {
         shopifyConfigured: Boolean(env.shopifyStoreDomain && (env.shopifyAdminAccessToken || (env.shopifyClientId && env.shopifyClientSecret))),
         shiprocketConfigured: Boolean(env.shiprocketEmail && env.shiprocketPassword),
@@ -268,7 +262,7 @@ router.get("/debug/shopify", async (req, res) => {
     });
   } catch (error) {
     logError("Shopify debug check failed", error);
-    res.status(500).json({ error: "Shopify debug check failed", detail: diagnosticDetail(error.message) });
+    res.status(500).json({ error: "Shopify debug check failed", detail: redactSecrets(error.message) });
   }
 });
 
@@ -285,7 +279,7 @@ router.get("/debug/shiprocket", (req, res) => {
     });
   } catch (error) {
     logError("Shiprocket debug check failed", error);
-    res.status(500).json({ error: "Shiprocket debug check failed", detail: diagnosticDetail(error.message) });
+    res.status(500).json({ error: "Shiprocket debug check failed", detail: redactSecrets(error.message) });
   }
 });
 
@@ -300,8 +294,8 @@ router.get("/health/diagnostics", async (req, res) => {
     if (shopifyConfigured) {
       try {
         shopifyCounts = await fetchShopCounts();
-      } catch (error) {
-        shopifyError = diagnosticDetail(error.message);
+      } catch (err) {
+        shopifyError = diagnosticDetail(err.message);
       }
     }
 
@@ -329,153 +323,7 @@ router.get("/health/diagnostics", async (req, res) => {
     });
   } catch (error) {
     logError("Health diagnostics check failed", error);
-    res.status(500).json({ error: "Health diagnostics check failed", detail: diagnosticDetail(error.message) });
-  }
-});
-
-router.post("/sales-intelligence/refresh-shopify", async (req, res) => {
-  try {
-    const payload = await refreshShopifySalesData({ days: req.query.days || req.body?.days });
-    res.json(payload);
-  } catch (error) {
-    logError("Failed to refresh Shopify sales intelligence data", error, { days: req.query.days || req.body?.days });
-    res.status(500).json({
-      error: "Failed to refresh Shopify sales intelligence data",
-      detail: error.message,
-    });
-  }
-});
-
-router.post("/sales-intelligence/refresh-shiprocket", async (req, res) => {
-  try {
-    const payload = await refreshShiprocketSalesData({ days: req.query.days || req.body?.days });
-    res.json(payload);
-  } catch (error) {
-    logError("Failed to refresh Shiprocket sales intelligence data", error, { days: req.query.days || req.body?.days });
-    res.status(500).json({
-      error: "Failed to refresh Shiprocket sales intelligence data",
-      detail: error.message,
-    });
-  }
-});
-
-router.post("/sales-intelligence/reconcile", async (req, res) => {
-  try {
-    const payload = await reconcileSalesData({
-      days: req.query.days || req.body?.days,
-      forceRefresh: Boolean(req.body?.refresh),
-    });
-    res.json(payload);
-  } catch (error) {
-    logError("Failed to reconcile sales intelligence data", error, { days: req.query.days || req.body?.days });
-    res.status(500).json({
-      error: "Failed to reconcile sales intelligence data",
-      detail: error.message,
-    });
-  }
-});
-
-router.get("/sales-intelligence/summary", async (req, res) => {
-  try {
-    const payload = await getActualSalesSummary({
-      days: req.query.days,
-      refresh: String(req.query.refresh || "") === "1",
-    });
-    res.json(payload);
-  } catch (error) {
-    logError("Failed to build sales intelligence summary", error, { days: req.query.days });
-    res.status(500).json({
-      error: "Failed to build sales intelligence summary",
-      detail: error.message,
-    });
-  }
-});
-
-router.get("/sales-intelligence/reconciled-orders", async (req, res) => {
-  try {
-    const payload = await getActualSalesSummary({
-      days: req.query.days,
-      refresh: String(req.query.refresh || "") === "1",
-    });
-    res.json({
-      meta: payload.meta,
-      reconciledOrders: payload.reconciledOrders,
-      unmatchedShiprocketOrders: payload.unmatchedShiprocketOrders,
-    });
-  } catch (error) {
-    logError("Failed to load reconciled sales intelligence orders", error, { days: req.query.days });
-    res.status(500).json({
-      error: "Failed to load reconciled sales intelligence orders",
-      detail: error.message,
-    });
-  }
-});
-
-for (const [pathSuffix, sliceKey] of [
-  ["brand-performance", "brandPerformance"],
-  ["type-performance", "typePerformance"],
-  ["color-performance", "colorPerformance"],
-  ["sku-performance", "skuPerformance"],
-  ["courier-performance", "courierPerformance"],
-  ["pincode-performance", "pincodePerformance"],
-  ["state-performance", "statePerformance"],
-  ["city-performance", "cityPerformance"],
-  ["payment-method-performance", "paymentMethodPerformance"],
-  ["rto-analysis", "rtoAnalysis"],
-  ["restock-suggestions", "restockSuggestions"],
-  ["reconciliation-issues", "reconciliationIssues"],
-  ["recommendations", "recommendations"],
-  ["pending-risk", "pendingRisk"],
-]) {
-  router.get(`/sales-intelligence/${pathSuffix}`, async (req, res) => {
-    try {
-      const payload = await getSalesAnalyticsSlice(sliceKey, {
-        days: req.query.days,
-        refresh: String(req.query.refresh || "") === "1",
-      });
-      res.json(payload);
-    } catch (error) {
-      logError(`Failed to load sales intelligence ${sliceKey}`, error, { days: req.query.days });
-      res.status(500).json({
-        error: `Failed to load sales intelligence ${sliceKey}`,
-        detail: error.message,
-      });
-    }
-  });
-}
-
-router.get("/sales-intelligence/export", async (req, res) => {
-  try {
-    const { filename, csv } = await getSalesExport({
-      type: req.query.type,
-      days: req.query.days,
-      refresh: String(req.query.refresh || "") === "1",
-    });
-    res.setHeader("Content-Type", "text/csv; charset=utf-8");
-    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-    res.send(csv);
-  } catch (error) {
-    logError("Failed to export sales intelligence data", error, { type: req.query.type, days: req.query.days });
-    res.status(500).json({
-      error: "Failed to export sales intelligence data",
-      detail: error.message,
-    });
-  }
-});
-
-router.get("/actual-sales-intelligence", async (req, res) => {
-  try {
-    const payload = await getActualSalesSummary({
-      days: req.query.days,
-      refresh: String(req.query.refresh || "") === "1",
-    });
-    res.json(payload);
-  } catch (error) {
-    logError("Failed to build actual sales intelligence", error, { days: req.query.days });
-    res.status(500).json({
-      error: "Failed to build actual sales intelligence",
-      detail: error.message,
-    });
+    res.status(500).json({ error: "Health diagnostics check failed", detail: redactSecrets(error.message) });
   }
 });
 
@@ -593,5 +441,6 @@ router.put("/collections/products/preference", (req, res) => {
     res.status(500).json({ error: "Failed to update product preference", detail: error.message });
   }
 });
+
 
 export default router;
