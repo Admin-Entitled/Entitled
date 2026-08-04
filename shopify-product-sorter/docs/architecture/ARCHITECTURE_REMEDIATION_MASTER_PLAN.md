@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-03T18:30:00.000Z` |
+| Generated timestamp | `2026-08-04T11:51:46.749Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `435e67a` |
+| Local commit | `3a23f01` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,12 +40,12 @@
 | Ready | 1 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 62 |
+| Validation pending | 61 |
 | Validated | 0 |
 | Blocked | 3 |
 | Deferred | 8 |
-| Completed | 16 |
-| Completion percentage | 12.4% |
+| Completed | 17 |
+| Completion percentage | 13.2% |
 
 ## 4. Current execution focus
 
@@ -87,7 +87,7 @@
 | OWN-005 | Define Actual Sales Intelligence boundary | HIGH | VALIDATION_PENDING | OWN-001, TEST-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-006 | Define System Diagnostics ownership | MEDIUM | VALIDATION_PENDING | OWN-001, TEST-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-007 | Approve route ownership matrix | CRITICAL | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| OWN-008 | Approve data ownership matrix | CRITICAL | VALIDATION_PENDING | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| OWN-008 | Approve data ownership matrix | CRITICAL | COMPLETED | SAFE-003, SAFE-004, SAFE-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-009 | Approve runtime file ownership | HIGH | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | VALIDATION_PENDING | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | VALIDATION_PENDING | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -977,9 +977,9 @@ Defining data store ownership boundaries, Defined complete route ownership matri
 ### `OWN-008` Approve data ownership matrix
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, SAFE-004, SAFE-008
-**Last updated:** 2026-08-01T22:10:15.229Z
+**Last updated:** 2026-08-04T11:51:46.749Z
 
 #### Description
 
@@ -999,7 +999,7 @@ Static references, file inventory, schema inventory, and owner review.
 
 #### Completion evidence
 
-Approving data ownership matrix, Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md, Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files, Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-003, SAFE-004, SAFE-008.
+Reconstructed complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md with 39 inventoried data surfaces across 9 domains, Validated via static schema review, file inventory, owner assignments, and NUL-safe validation script /tmp/validate-data-ownership-matrix.js, Tested with all 13/13 regression gate suites passed and 89 ledger automation unit tests passed
 
 ---
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-04T11:51:46.852Z | OWN-008 | validated | completed | shivam | Reconstructed complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md with 39 inventoried data surfaces across 9 domains | `1d78a3eb` |
+| 2026-08-04T11:51:40.580Z | OWN-008 | validation_pending | validated | shivam | Reconstructed data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md | `77cca2ce` |
 | 2026-08-03T18:30:00.000Z | OWN-001 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `14ce54d0` |
 | 2026-08-03T18:30:00.000Z | SAFE-006 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `d67b464d` |
 | 2026-08-03T18:30:00.000Z | TEST-005 | completed | completed | shivam | Correct completed-task commit evidence semantics without changing task status | `4d0f0579` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-03T16:08:40.360Z | TEST-005 | in_progress | validated | shivam | Clean validation passed | `def4f1ab` |
 | 2026-08-03T16:08:40.233Z | TEST-004 | validated | completed | shivam | Tested SHA: 917ec9f7fb6c6b266364ba1d6e9a9c7a7ad4d96b | `3c6b0bce` |
 | 2026-08-03T16:08:40.127Z | TEST-004 | in_progress | validated | shivam | Clean validation passed | `ac9b741a` |
-| 2026-08-03T14:49:08.027Z | TEST-005 | validation_pending | in_progress | shivam | Approved correctness remediation underway for manual override contract, stable CSV errors, and atomic commit behavior. | `920bf6c0` |
-| 2026-08-03T14:49:07.148Z | TEST-004 | validation_pending | in_progress | shivam | Approved correctness remediation underway for partial provider status preservation and lifecycle failure contracts. | `c0f10b8b` |
