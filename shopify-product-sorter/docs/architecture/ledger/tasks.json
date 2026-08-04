@@ -2224,10 +2224,12 @@
       "validated_timestamp": "2026-08-04T11:51:40.556Z",
       "completed_timestamp": "2026-08-04T11:51:46.749Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
+      "validation_files": [
+        "docs/architecture/DATA_OWNERSHIP_MATRIX.md"
+      ],
       "implementation_commit_sha": "3a23f01c3ccf2bec611346448c4e49c6078a2a8f",
       "clean_validation_commit_sha": "3a23f01c3ccf2bec611346448c4e49c6078a2a8f",
-      "completion_record_commit_sha": "d603f2824b22c7104b2b622c72b0c2e92c2bf311",
+      "completion_record_commit_sha": "aad87cabcb4b2691f10fa3d44a090a8cb8b2ef10",
       "validation_results": {
         "overallStatus": "PASSED",
         "tested_commit": "3a23f01c3ccf2bec611346448c4e49c6078a2a8f",
