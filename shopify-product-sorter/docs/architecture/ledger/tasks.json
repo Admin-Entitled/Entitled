@@ -4589,7 +4589,9 @@
       "validated_timestamp": "2026-08-04T18:55:13.635Z",
       "completed_timestamp": "2026-08-04T18:55:27.621Z",
       "notes": "OPS-006 remains validation_pending because dependency SEC-003 is validation_pending.",
-      "validation_files": [],
+      "validation_files": [
+        "docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md"
+      ],
       "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
       "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "50a6978cf8706111b8df71830b317d5e6f57cd30",
@@ -4913,7 +4915,6 @@
         "Secret handling guide; no tracked secrets; rotation ownership; synthetic test fixtures"
       ],
       "changed_files": [
-        "docs/architecture/SECRET_HANDLING_AND_ROTATION_GUIDE.md",
         "server/src/utils/sanitize.js",
         "server/src/utils/logger.js"
       ],
@@ -4925,10 +4926,9 @@
       "completed_timestamp": "2026-08-04T18:55:00.293Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
-        "server/src/utils/sanitize.test.js",
-        "server/src/config/env.test.js"
+        "server/src/utils/sanitize.test.js"
       ],
-      "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+      "implementation_commit_sha": "c13e46aa6459d8cbbff01bf45b72ec24331ddd91",
       "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "50a6978cf8706111b8df71830b317d5e6f57cd30",
       "validation_results": {
@@ -4936,7 +4936,7 @@
         "passed": true,
         "tested_commit": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
         "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
-        "implementation_commit_sha": "0a45ce3eb319e6a97e4ea625339d790e702dd25c",
+        "implementation_commit_sha": "c13e46aa6459d8cbbff01bf45b72ec24331ddd91",
         "timestamp": "2026-08-04T18:54:31.785Z"
       }
     },
@@ -5211,7 +5211,9 @@
       "validated_timestamp": "2026-08-04T18:55:27.238Z",
       "completed_timestamp": "2026-08-04T18:55:41.875Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
+      "validation_files": [
+        "docs/architecture/DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md"
+      ],
       "implementation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "clean_validation_commit_sha": "48621e7979f6efe0d649a3e5ee43cdf517ce43b6",
       "completion_record_commit_sha": "50a6978cf8706111b8df71830b317d5e6f57cd30",
