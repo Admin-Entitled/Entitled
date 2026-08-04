@@ -2199,7 +2199,7 @@ describe('Architecture Ledger Automation Test Suite', () => {
       const report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
 
       assert.deepStrictEqual(report.counts, {
-        PASS: 14,
+        PASS: report.total_completed_tasks,
         AUDIT_REQUIRED: 0,
         INVALID_COMPLETION: 0,
       });

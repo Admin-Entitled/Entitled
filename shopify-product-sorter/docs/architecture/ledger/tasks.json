@@ -1915,7 +1915,7 @@
       ],
       "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
       "clean_validation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
-      "completion_record_commit_sha": null,
+      "completion_record_commit_sha": "435e67ad07391af687af34ab722b3f7da8bd42fb",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
@@ -1932,7 +1932,9 @@
           "passed": false,
           "detail": "Pre-existing authBoundary.js gap (UNRESOLVED row-4 in report) - proven at baseline a3b204aa"
         },
-        "timestamp": "2026-08-04T04:01:13.205Z"
+        "timestamp": "2026-08-04T04:01:13.205Z",
+        "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+        "clean_validation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2"
       }
     },
     {
@@ -1980,7 +1982,7 @@
       ],
       "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
       "clean_validation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
-      "completion_record_commit_sha": "57e48a494fd8ed1bf1c1e7687be15fae6a1ef86b",
+      "completion_record_commit_sha": "435e67ad07391af687af34ab722b3f7da8bd42fb",
       "validation_results": {
         "passed": true,
         "overallStatus": "PASSED",
@@ -2006,7 +2008,9 @@
           "DELETE_ONLY_AFTER_PROOF": 1,
           "UNRESOLVED": 8
         },
-        "timestamp": "2026-08-04T04:01:13.210Z"
+        "timestamp": "2026-08-04T04:01:13.210Z",
+        "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+        "clean_validation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2"
       }
     },
     {
