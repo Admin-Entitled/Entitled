@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-05T10:49:34.890Z` |
+| Generated timestamp | `2026-08-05T10:59:39.523Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `31c94f9` |
+| Local commit | `b2355fb` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -93,8 +93,8 @@
 | BE-001 | Split the generic API router | HIGH | COMPLETED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-002 | Create a Sorter router | HIGH | VALIDATED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | VALIDATED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-004 | Create a Sales Intelligence router | HIGH | COMPLETED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | VALIDATED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-004 | Create a Sales Intelligence router | HIGH | VALIDATED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | COMPLETED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-006 | Create application-owned service boundaries | HIGH | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | VALIDATION_PENDING | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1151,9 +1151,9 @@ Dedicated router server/src/routes/skuMedia.js owns all /sku-images/* routes, Mu
 ### `BE-004` Create a Sales Intelligence router
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATED
 **Dependencies:** BE-001, OWN-005
-**Last updated:** 2026-08-05T10:49:34.890Z
+**Last updated:** 2026-08-05T10:37:03.819Z
 
 #### Description
 
@@ -1173,16 +1173,16 @@ Route contracts, synthetic cache tests, CSV tests, startup, and regression gate.
 
 #### Completion evidence
 
-Dedicated router server/src/routes/salesIntelligence.js owns all /sales-intelligence/* routes, 14 analytics slices plus summary, export, reconcile, and compatibility URL preserved, No Sorter or SKU cross-imports, Focused route contract tests in salesIntelligence.test.js: 19 tests all pass, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, All sales intelligence routes in dedicated router with tests, Tested SHA: 31c94f9f3d885acc6db80377de79f1d86017a4df
+Dedicated router server/src/routes/salesIntelligence.js owns all /sales-intelligence/* routes, 14 analytics slices plus summary, export, reconcile, and compatibility URL preserved, No Sorter or SKU cross-imports, Focused route contract tests in salesIntelligence.test.js: 19 tests all pass, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, All sales intelligence routes in dedicated router with tests
 
 ---
 
 ### `BE-005` Preserve existing backend URLs with adapters
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, TEST-008
-**Last updated:** 2026-08-05T10:37:03.926Z
+**Last updated:** 2026-08-05T10:59:39.523Z
 
 #### Description
 
@@ -1202,7 +1202,7 @@ Route contract, integration, startup, frontend, and regression-gate checks.
 
 #### Completion evidence
 
-api.js mounts sorterRouter, skuMediaRouter, salesIntelligenceRouter via delegation, POST /collections/reorder-all 307 redirect to reorder-all-v2 preserved in sorter.js, GET /actual-sales-intelligence compatibility URL preserved in salesIntelligence.js, All existing client endpoint paths remain compatible, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Compatibility adapters verified with tests
+api.js mounts sorterRouter, skuMediaRouter, salesIntelligenceRouter via delegation, POST /collections/reorder-all 307 redirect to reorder-all-v2 preserved in sorter.js, GET /actual-sales-intelligence compatibility URL preserved in salesIntelligence.js, All existing client endpoint paths remain compatible, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Compatibility adapters verified with tests, Tested SHA: b2355fb8199ec68fc89be733adefb659518a4685
 
 ---
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-05T10:59:39.539Z | BE-005 | validated | completed | shivam | Clean committed-state verification passed | `78f8613f` |
 | 2026-08-05T10:49:34.909Z | BE-004 | validated | completed | shivam | Clean committed-state verification passed | `8d8a7b9f` |
 | 2026-08-05T10:45:57.008Z | BE-003 | validated | completed | shivam | Clean committed-state verification passed | `8c53ca74` |
 | 2026-08-05T10:41:48.068Z | BE-002 | validated | completed | shivam | Clean committed-state verification passed | `12485d21` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-05T10:37:03.731Z | BE-003 | validation_pending | validated | shivam | All SKU routes in dedicated router with tests | `506947aa` |
 | 2026-08-05T10:37:03.579Z | BE-002 | validation_pending | validated | shivam | All sorter routes in dedicated router with tests | `aa62b664` |
 | 2026-08-05T06:35:36.354Z | CLEAN-007 | validated | completed | shivam | Remove or isolate test outputs | `d41e3fb4` |
-| 2026-08-05T06:35:36.229Z | CLEAN-006 | validated | completed | shivam | Remove or isolate Playwright and Tokensave artifacts | `5ea6f29f` |

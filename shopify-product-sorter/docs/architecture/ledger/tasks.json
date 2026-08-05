@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T10:49:40.269Z",
+  "last_updated": "2026-08-05T10:59:39.575Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2709,7 +2709,7 @@
       "title": "Preserve existing backend URLs with adapters",
       "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
       "severity": "CRITICAL",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "BE-001",
         "TEST-008"
@@ -2731,17 +2731,18 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "Compatibility adapters verified with tests"
+        "Compatibility adapters verified with tests",
+        "Tested SHA: b2355fb8199ec68fc89be733adefb659518a4685"
       ],
       "changed_files": [
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:37:03.926Z",
+      "updated_timestamp": "2026-08-05T10:59:39.523Z",
       "started_timestamp": "2026-07-31T16:16:49.899Z",
       "implemented_timestamp": "2026-07-31T16:16:58.127Z",
       "validated_timestamp": "2026-08-05T10:37:03.926Z",
-      "completed_timestamp": "2026-07-31T16:17:42.883Z",
+      "completed_timestamp": "2026-08-05T10:59:39.523Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/sorter.test.js",
@@ -5444,7 +5445,7 @@
       "title": "Review CORS and CSRF protections",
       "description": "Remediation task SEC-007: Review CORS and CSRF protections",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SEC-001",
         "BE-005"
@@ -5461,7 +5462,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-05T10:59:39.566Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
