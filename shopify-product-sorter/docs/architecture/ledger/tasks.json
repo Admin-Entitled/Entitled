@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T10:59:39.575Z",
+  "last_updated": "2026-08-05T10:59:44.051Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2709,7 +2709,7 @@
       "title": "Preserve existing backend URLs with adapters",
       "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "TEST-008"
@@ -2731,30 +2731,42 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "Compatibility adapters verified with tests",
-        "Tested SHA: b2355fb8199ec68fc89be733adefb659518a4685"
+        "Compatibility adapters verified with tests"
       ],
       "changed_files": [
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:59:39.523Z",
+      "updated_timestamp": "2026-08-05T10:37:03.926Z",
       "started_timestamp": "2026-07-31T16:16:49.899Z",
       "implemented_timestamp": "2026-07-31T16:16:58.127Z",
       "validated_timestamp": "2026-08-05T10:37:03.926Z",
-      "completed_timestamp": "2026-08-05T10:59:39.523Z",
+      "completed_timestamp": "2026-07-31T16:17:42.883Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/sorter.test.js",
         "server/src/routes/skuMedia.test.js",
         "server/src/routes/salesIntelligence.test.js"
       ],
-      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "completion_record_commit_sha": "e2e720fb42ef3b1b2c26ea8a9823f7f5544c5cb9",
+      "implementation_commit_sha": "b2355fb8199ec68fc89be733adefb659518a4685",
+      "clean_validation_commit_sha": "b2355fb8199ec68fc89be733adefb659518a4685",
+      "completion_record_commit_sha": "4f7dcae02470a52df16d7f314a6bf825339ee4a9",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "8003f19e0f7c2d752bd228ef69ee2ddfec6e3377"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-05T10:59:39.520Z",
+        "implementation_commit_sha": "b2355fb8199ec68fc89be733adefb659518a4685",
+        "clean_validation_commit_sha": "b2355fb8199ec68fc89be733adefb659518a4685",
+        "tested_commit": "b2355fb8199ec68fc89be733adefb659518a4685",
+        "passed": true
       }
     },
     {
@@ -5445,7 +5457,7 @@
       "title": "Review CORS and CSRF protections",
       "description": "Remediation task SEC-007: Review CORS and CSRF protections",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "not_started",
       "dependencies": [
         "SEC-001",
         "BE-005"
@@ -5462,7 +5474,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:59:39.566Z",
+      "updated_timestamp": "2026-08-01T23:16:47.198Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
