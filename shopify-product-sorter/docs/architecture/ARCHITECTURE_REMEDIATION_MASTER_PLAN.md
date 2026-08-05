@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-05T11:05:03.649Z` |
+| Generated timestamp | `2026-08-05T11:16:29.930Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `61097f6` |
+| Local commit | `5aef241` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 19 |
-| Ready | 8 |
+| Not started | 18 |
+| Ready | 9 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 26 |
-| Validated | 4 |
+| Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 64 |
-| Completion percentage | 49.6% |
+| Completed | 68 |
+| Completion percentage | 52.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`, `DOC-010`
-- Dependency-safe validation-pending tasks: `BE-007`, `BE-009`, `FE-002`, `FE-003`, `FE-004`
-- Tasks awaiting prerequisites: `BE-008`, `BE-011`, `FE-006`, `FE-007`, `FE-008`
+- Next dependency-actionable ready tasks: `SEC-007`, `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`
+- Dependency-safe validation-pending tasks: `BE-007`, `BE-009`, `BE-011`, `FE-002`, `FE-003`
+- Tasks awaiting prerequisites: `BE-008`, `FE-006`, `FE-007`, `FE-008`, `FE-009`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -91,10 +91,10 @@
 | OWN-009 | Approve runtime file ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OWN-010 | Approve integration and environment ownership | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-001 | Split the generic API router | HIGH | COMPLETED | TEST-012, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-002 | Create a Sorter router | HIGH | VALIDATED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-003 | Create a SKU Image Manager router | HIGH | VALIDATED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-004 | Create a Sales Intelligence router | HIGH | VALIDATED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | VALIDATED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-002 | Create a Sorter router | HIGH | COMPLETED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-003 | Create a SKU Image Manager router | HIGH | COMPLETED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-004 | Create a Sales Intelligence router | HIGH | COMPLETED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | COMPLETED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | VALIDATION_PENDING | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -150,7 +150,7 @@
 | SEC-004 | Validate environment schema at boundaries | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-005 | Isolate application-specific environment requirements | HIGH | COMPLETED | SEC-004, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-006 | Sanitize sensitive logs and diagnostics | CRITICAL | COMPLETED | SEC-003, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| SEC-007 | Review CORS and CSRF protections | HIGH | NOT_STARTED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| SEC-007 | Review CORS and CSRF protections | HIGH | READY | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | NOT_STARTED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | COMPLETED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-001 | Update README to current architecture | MEDIUM | NOT_STARTED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1093,9 +1093,9 @@ Static import graph, route contracts, startup test, existing-app regression, and
 ### `BE-002` Create a Sorter router
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, OWN-002
-**Last updated:** 2026-08-05T10:37:03.554Z
+**Last updated:** 2026-08-05T10:41:48.068Z
 
 #### Description
 
@@ -1122,9 +1122,9 @@ All 13 Sorter HTTP routes owned by dedicated router server/src/routes/sorter.js,
 ### `BE-003` Create a SKU Image Manager router
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, OWN-004
-**Last updated:** 2026-08-05T10:37:03.707Z
+**Last updated:** 2026-08-05T10:45:57.008Z
 
 #### Description
 
@@ -1151,9 +1151,9 @@ Dedicated router server/src/routes/skuMedia.js owns all /sku-images/* routes, Mu
 ### `BE-004` Create a Sales Intelligence router
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, OWN-005
-**Last updated:** 2026-08-05T10:37:03.819Z
+**Last updated:** 2026-08-05T10:49:34.909Z
 
 #### Description
 
@@ -1180,9 +1180,9 @@ Dedicated router server/src/routes/salesIntelligence.js owns all /sales-intellig
 ### `BE-005` Preserve existing backend URLs with adapters
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** BE-001, TEST-008
-**Last updated:** 2026-08-05T10:37:03.926Z
+**Last updated:** 2026-08-05T10:59:39.539Z
 
 #### Description
 
@@ -1211,7 +1211,7 @@ api.js mounts sorterRouter, skuMediaRouter, salesIntelligenceRouter via delegati
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-08-05T11:05:03.649Z
+**Last updated:** 2026-08-05T11:05:03.667Z
 
 #### Description
 
@@ -1231,7 +1231,7 @@ Static dependency graph, unit/integration contracts, route regression, and start
 
 #### Completion evidence
 
-sorter.js depends only on collectionStateService, sorterRuntimeService, shopifyService, strategySettings, sorter, skuMedia.js depends only on shopifyMediaService, salesIntelligence.js depends only on actualSalesService, No router imports another application business service, No circular service dependency detected, Domain errors remain independent of Express request/response objects, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Service ownership boundaries verified, Tested SHA: 61097f60f5861839a578b46191a4be0724c9eedc
+sorter.js depends only on collectionStateService, sorterRuntimeService, shopifyService, strategySettings, sorter, skuMedia.js depends only on shopifyMediaService, salesIntelligence.js depends only on actualSalesService, No router imports another application business service, No circular service dependency detected, Domain errors remain independent of Express request/response objects, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Service ownership boundaries verified
 
 ---
 
@@ -2802,9 +2802,9 @@ sanitize.js redacts API keys, tokens, passwords, emails, connection strings, Bea
 ### `SEC-007` Review CORS and CSRF protections
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SEC-001, BE-005
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-05T11:16:29.917Z
 
 #### Description
 
