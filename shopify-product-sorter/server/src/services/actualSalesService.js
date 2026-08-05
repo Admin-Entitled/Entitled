@@ -1,14 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { env } from "../config/env.js";
 import { fetchShiprocketOrders } from "./shiprocketService.js";
 import { fetchActualSalesOrders } from "./shopifyService.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = path.resolve(__dirname, "../../data");
-const shopifyCachePath = path.join(dataDir, "sales-shopify-cache.json");
-const shiprocketCachePath = path.join(dataDir, "sales-shiprocket-cache.json");
-const reconciledCachePath = path.join(dataDir, "sales-reconciled-cache.json");
+const getShopifyCachePath = () => env.salesShopifyCachePath;
+const getShiprocketCachePath = () => env.salesShiprocketCachePath;
+const getReconciledCachePath = () => env.salesReconciledCachePath;
 const ANALYTICS_SCHEMA_VERSION = 8;
 
 const STATUS_BUCKETS = {
@@ -956,7 +955,7 @@ export async function refreshShopifySalesData({ days = 30 } = {}) {
     refreshedAt: new Date().toISOString(),
     orders,
   };
-  writeJson(shopifyCachePath, payload);
+  writeJson(getShopifyCachePath(), payload);
   return payload;
 }
 
@@ -969,7 +968,7 @@ export async function refreshShiprocketSalesData({ days = 30 } = {}) {
     configured: payload.configured,
     orders: payload.orders,
   };
-  writeJson(shiprocketCachePath, result);
+  writeJson(getShiprocketCachePath(), result);
   return result;
 }
 
@@ -981,16 +980,16 @@ export async function reconcileSalesData({ days = 30, forceRefresh = false } = {
   const safeDays = Math.max(1, Math.min(Number(days) || 30, 365));
   const shopifyCache = forceRefresh
     ? await refreshShopifySalesData({ days: safeDays })
-    : (getCachedSource(shopifyCachePath) || await refreshShopifySalesData({ days: safeDays }));
+    : (getCachedSource(getShopifyCachePath()) || await refreshShopifySalesData({ days: safeDays }));
   const warnings = [];
   let shiprocketCache;
 
   try {
     shiprocketCache = forceRefresh
       ? await refreshShiprocketSalesData({ days: Math.min(safeDays, 30) })
-      : (getCachedSource(shiprocketCachePath) || await refreshShiprocketSalesData({ days: Math.min(safeDays, 30) }));
+      : (getCachedSource(getShiprocketCachePath()) || await refreshShiprocketSalesData({ days: Math.min(safeDays, 30) }));
   } catch (error) {
-    shiprocketCache = getCachedSource(shiprocketCachePath) || {
+    shiprocketCache = getCachedSource(getShiprocketCachePath()) || {
       source: "shiprocket",
       days: Math.min(safeDays, 30),
       refreshedAt: null,
@@ -1104,9 +1103,9 @@ export async function reconcileSalesData({ days = 30, forceRefresh = false } = {
       lastReconciliation: new Date().toISOString(),
       shiprocketConfigured: Boolean(shiprocketCache.configured),
       caches: {
-        shopify: shopifyCachePath,
-        shiprocket: shiprocketCachePath,
-        reconciled: reconciledCachePath,
+        shopify: getShopifyCachePath(),
+        shiprocket: getShiprocketCachePath(),
+        reconciled: getReconciledCachePath(),
       },
     },
     summary: {
@@ -1148,7 +1147,7 @@ export async function reconcileSalesData({ days = 30, forceRefresh = false } = {
     statusMap,
   };
 
-  writeJson(reconciledCachePath, payload);
+  writeJson(getReconciledCachePath(), payload);
   return payload;
 }
 
@@ -1157,7 +1156,7 @@ export async function getActualSalesSummary({ days = 30, refresh = false } = {})
     return reconcileSalesData({ days, forceRefresh: true });
   }
 
-  const cached = readJson(reconciledCachePath);
+  const cached = readJson(getReconciledCachePath());
   if (
     cached &&
     Number(cached.meta?.days || 0) === Number(days || 30) &&
@@ -1179,8 +1178,8 @@ export async function getSalesAnalyticsSlice(type, options = {}) {
 
 export async function getSalesExport({ type = "reconciled-orders", days = 30, refresh = false } = {}) {
   const payload = await getActualSalesSummary({ days, refresh });
-  const shopifySource = getCachedSource(shopifyCachePath);
-  const shiprocketSource = getCachedSource(shiprocketCachePath);
+  const shopifySource = getCachedSource(getShopifyCachePath());
+  const shiprocketSource = getCachedSource(getShiprocketCachePath());
   const exportMap = {
     "normalized-shopify": exportRowsForNormalizedShopifyOrders(shopifySource?.orders || []),
     "normalized-shiprocket": exportRowsForNormalizedShiprocketOrders(shiprocketSource?.orders || []),

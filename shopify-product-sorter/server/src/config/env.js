@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 
@@ -93,16 +94,21 @@ function parseEnum(value, defaultValue, allowedValues, varName = "NODE_ENV") {
   return str;
 }
 
+function resolvePath(value, defaultRelativePath) {
+  if (!value || String(value).trim() === "") {
+    return path.resolve(repoRoot, defaultRelativePath);
+  }
+
+  const trimmed = String(value).trim();
+  if (path.isAbsolute(trimmed)) {
+    return path.resolve(trimmed);
+  }
+
+  return path.resolve(repoRoot, trimmed);
+}
+
 function resolveSqlitePath(value) {
-  if (!value) {
-    return path.resolve(repoRoot, "server/data/app.db");
-  }
-
-  if (path.isAbsolute(value)) {
-    return value;
-  }
-
-  return path.resolve(repoRoot, value);
+  return resolvePath(value, "server/data/app.db");
 }
 
 export function validateEnv(customEnv = process.env, options = {}) {
@@ -146,7 +152,23 @@ export const env = {
   get clientOrigin() { return overrides.clientOrigin ?? parseUrl(process.env.CLIENT_ORIGIN, "http://localhost:5173", "CLIENT_ORIGIN"); },
   set clientOrigin(v) { overrides.clientOrigin = parseUrl(v, "http://localhost:5173", "CLIENT_ORIGIN"); },
   get sqlitePath() { return overrides.sqlitePath ?? resolveSqlitePath(process.env.SQLITE_PATH); },
-  set sqlitePath(v) { overrides.sqlitePath = v; },
+  set sqlitePath(v) { overrides.sqlitePath = resolveSqlitePath(v); },
+  get strategySettingsFile() { return overrides.strategySettingsFile ?? resolvePath(process.env.STRATEGY_SETTINGS_FILE, "server/data/strategy-settings.json"); },
+  set strategySettingsFile(v) { overrides.strategySettingsFile = resolvePath(v, "server/data/strategy-settings.json"); },
+  get skuImageAuditPath() { return overrides.skuImageAuditPath ?? resolvePath(process.env.SKU_IMAGE_AUDIT_PATH, "server/data/sku-image-actions.jsonl"); },
+  set skuImageAuditPath(v) { overrides.skuImageAuditPath = resolvePath(v, "server/data/sku-image-actions.jsonl"); },
+  get salesShopifyCachePath() { return overrides.salesShopifyCachePath ?? resolvePath(process.env.SALES_SHOPIFY_CACHE_PATH, "server/data/sales-shopify-cache.json"); },
+  set salesShopifyCachePath(v) { overrides.salesShopifyCachePath = resolvePath(v, "server/data/sales-shopify-cache.json"); },
+  get salesShiprocketCachePath() { return overrides.salesShiprocketCachePath ?? resolvePath(process.env.SALES_SHIPROCKET_CACHE_PATH, "server/data/sales-shiprocket-cache.json"); },
+  set salesShiprocketCachePath(v) { overrides.salesShiprocketCachePath = resolvePath(v, "server/data/sales-shiprocket-cache.json"); },
+  get salesReconciledCachePath() { return overrides.salesReconciledCachePath ?? resolvePath(process.env.SALES_RECONCILED_CACHE_PATH, "server/data/sales-reconciled-cache.json"); },
+  set salesReconciledCachePath(v) { overrides.salesReconciledCachePath = resolvePath(v, "server/data/sales-reconciled-cache.json"); },
+  get sqliteBackupDir() { return overrides.sqliteBackupDir ?? resolvePath(process.env.SQLITE_BACKUP_DIR, "server/data/backups"); },
+  set sqliteBackupDir(v) { overrides.sqliteBackupDir = resolvePath(v, "server/data/backups"); },
+  get dataDir() { return overrides.dataDir ?? resolvePath(process.env.DATA_DIR, "server/data"); },
+  set dataDir(v) { overrides.dataDir = resolvePath(v, "server/data"); },
+  get tempUploadDir() { return overrides.tempUploadDir ?? resolvePath(process.env.TEMP_UPLOAD_DIR, os.tmpdir()); },
+  set tempUploadDir(v) { overrides.tempUploadDir = resolvePath(v, os.tmpdir()); },
   get databaseUrl() { return overrides.databaseUrl ?? parseString(process.env.DATABASE_URL); },
   set databaseUrl(v) { overrides.databaseUrl = parseString(v); },
   get directDatabaseUrl() { return overrides.directDatabaseUrl ?? parseString(process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL); },
@@ -193,6 +215,14 @@ export const env = {
       port: this.port,
       clientOrigin: this.clientOrigin,
       sqlitePath: this.sqlitePath,
+      strategySettingsFile: this.strategySettingsFile,
+      skuImageAuditPath: this.skuImageAuditPath,
+      salesShopifyCachePath: this.salesShopifyCachePath,
+      salesShiprocketCachePath: this.salesShiprocketCachePath,
+      salesReconciledCachePath: this.salesReconciledCachePath,
+      sqliteBackupDir: this.sqliteBackupDir,
+      dataDir: this.dataDir,
+      tempUploadDir: this.tempUploadDir,
       databaseUrl: this.databaseUrl,
       directDatabaseUrl: this.directDatabaseUrl,
       orderMappingSchema: this.orderMappingSchema,

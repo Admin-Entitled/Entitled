@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { env } from "../config/env.js";
 
 export const DEFAULT_STRATEGY = Object.freeze({
   salesWeight: 0.4,
@@ -11,8 +11,7 @@ export const DEFAULT_STRATEGY = Object.freeze({
 });
 
 const strategyKeys = Object.keys(DEFAULT_STRATEGY);
-const defaultPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../data/strategy-settings.json");
-const settingsPath = process.env.STRATEGY_SETTINGS_FILE || defaultPath;
+const getSettingsPath = () => env.strategySettingsFile;
 
 export function validateStrategy(input) {
   if (!input || typeof input !== "object") return { error: "All five strategy weights are required." };
@@ -31,6 +30,7 @@ export function validateStrategy(input) {
 
 async function readStore() {
   try {
+    const settingsPath = getSettingsPath();
     const parsed = JSON.parse(await fs.readFile(settingsPath, "utf8"));
     return parsed && typeof parsed === "object" ? parsed : {};
   } catch {
@@ -49,6 +49,7 @@ export async function saveStrategySettings(collectionId, input) {
   if (validated.error) throw new Error(validated.error);
   const store = await readStore();
   store[collectionId] = validated.strategy;
+  const settingsPath = getSettingsPath();
   await fs.mkdir(path.dirname(settingsPath), { recursive: true });
   const temporaryPath = `${settingsPath}.${process.pid}.tmp`;
   await fs.writeFile(temporaryPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
