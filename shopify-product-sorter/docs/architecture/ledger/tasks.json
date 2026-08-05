@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T06:35:36.332Z",
+  "last_updated": "2026-08-05T10:41:48.010Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2519,7 +2519,7 @@
       "title": "Create a Sorter router",
       "description": "Remediation task BE-002: Create a Sorter router",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "BE-001",
         "OWN-002"
@@ -2534,25 +2534,32 @@
         "Route, unit, mocked Shopify, SQLite fixture, and existing-app regression tests."
       ],
       "evidence": [
-        "--evidence Created dedicated Sorter router module server/src/routes/sorter.js owning all sorter/reorder endpoints without SKU or Sales Intelligence imports.",
-        "--evidence All sorter routes (/collections/generate, /collections/apply, /collections/reorder-all-v2, /collections/reorder-all, /collections/rollback) are owned by dedicated router server/src/routes/sorter.js without SKU or Sales Intelligence imports. All 9 regression gate test suites passed.",
-        "Commit SHA: 19bdae536ce86c4bb395e581ffb3f58db62b924b",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, OWN-002."
+        "All 13 Sorter HTTP routes owned by dedicated router server/src/routes/sorter.js",
+        "api.js only mounts sorterRouter; no inline Sorter handlers remain",
+        "No SKU/Sales Intelligence cross-imports in sorter.js",
+        "Focused route contract tests in sorter.test.js: 13 tests all pass",
+        "Regression gate 13/13 passed; verify passed; architecture tests pass",
+        "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
+        "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
+        "All sorter routes in dedicated router with tests",
+        "Tested SHA: f656dd697e8d72eadd99c895a539cf417d539f86"
       ],
       "changed_files": [
         "server/src/routes/sorter.js",
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.237Z",
+      "updated_timestamp": "2026-08-05T10:41:48.010Z",
       "started_timestamp": "2026-07-31T15:54:07.433Z",
       "implemented_timestamp": "2026-07-31T15:55:21.498Z",
-      "validated_timestamp": "2026-07-31T16:01:25.498Z",
-      "completed_timestamp": "2026-07-31T16:01:36.955Z",
+      "validated_timestamp": "2026-08-05T10:37:03.554Z",
+      "completed_timestamp": "2026-08-05T10:41:48.010Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
-      "clean_validation_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
+      "validation_files": [
+        "server/src/routes/sorter.test.js"
+      ],
+      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
       "completion_record_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
       "validation_results": {
         "overallStatus": "PASSED",
@@ -2564,7 +2571,7 @@
       "title": "Create a SKU Image Manager router",
       "description": "Remediation task BE-003: Create a SKU Image Manager router",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-004"
@@ -2579,25 +2586,30 @@
         "Route, mocked Shopify, upload cleanup, audit, and frontend regression tests."
       ],
       "evidence": [
-        "--evidence Extracted all SKU Image Manager endpoints (/sku-images/*) into dedicated router server/src/routes/skuMedia.js with multer upload limits, image validation, and error cleanup handlers. All 9 regression suites passed.",
-        "--evidence Validated SKU routes contract, multer image file handling, non-image safety checks, and temporary upload cleanup. Passed regression gate test suite.",
-        "Commit SHA: 641bf31046bc8f6f0f3bde8c8b487411225a6b8b",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, OWN-004."
+        "Dedicated router server/src/routes/skuMedia.js owns all /sku-images/* routes",
+        "Multer upload limits and image-only filter preserved",
+        "No Sorter or Sales Intelligence cross-imports",
+        "Focused route contract tests in skuMedia.test.js: 7 tests all pass",
+        "Regression gate 13/13 passed; verify passed; architecture tests pass",
+        "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
+        "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
+        "All SKU routes in dedicated router with tests"
       ],
       "changed_files": [
-        "server/src/routes/skuMedia.js",
-        "server/src/routes/api.js"
+        "server/src/routes/skuMedia.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.239Z",
+      "updated_timestamp": "2026-08-05T10:37:03.707Z",
       "started_timestamp": "2026-07-31T16:05:24.622Z",
       "implemented_timestamp": "2026-07-31T16:06:42.100Z",
-      "validated_timestamp": "2026-07-31T16:06:49.753Z",
+      "validated_timestamp": "2026-08-05T10:37:03.707Z",
       "completed_timestamp": "2026-07-31T16:07:22.600Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "641bf31046bc8f6f0f3bde8c8b487411225a6b8b",
-      "clean_validation_commit_sha": "641bf31046bc8f6f0f3bde8c8b487411225a6b8b",
+      "validation_files": [
+        "server/src/routes/skuMedia.test.js"
+      ],
+      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
       "completion_record_commit_sha": "b9d899b773651b7dc267048067da53d1f8c546d9",
       "validation_results": {
         "overallStatus": "PASSED",
@@ -2609,7 +2621,7 @@
       "title": "Create a Sales Intelligence router",
       "description": "Remediation task BE-004: Create a Sales Intelligence router",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-005"
@@ -2624,25 +2636,30 @@
         "Route contracts, synthetic cache tests, CSV tests, startup, and regression gate."
       ],
       "evidence": [
-        "--evidence Extracted sales intelligence routes into server/src/routes/salesIntelligence.js and mounted in api.js.",
-        "--evidence All 9 regression gate suites passed including Sales Intelligence API contracts test suite.",
-        "Commit SHA: d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for BE-004."
+        "Dedicated router server/src/routes/salesIntelligence.js owns all /sales-intelligence/* routes",
+        "14 analytics slices plus summary, export, reconcile, and compatibility URL preserved",
+        "No Sorter or SKU cross-imports",
+        "Focused route contract tests in salesIntelligence.test.js: 19 tests all pass",
+        "Regression gate 13/13 passed; verify passed; architecture tests pass",
+        "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
+        "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
+        "All sales intelligence routes in dedicated router with tests"
       ],
       "changed_files": [
-        "server/src/routes/salesIntelligence.js",
-        "server/src/routes/api.js"
+        "server/src/routes/salesIntelligence.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.241Z",
+      "updated_timestamp": "2026-08-05T10:37:03.819Z",
       "started_timestamp": "2026-07-31T16:08:36.095Z",
       "implemented_timestamp": "2026-07-31T16:11:51.431Z",
-      "validated_timestamp": "2026-07-31T16:11:58.116Z",
+      "validated_timestamp": "2026-08-05T10:37:03.819Z",
       "completed_timestamp": "2026-07-31T16:12:31.707Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f",
-      "clean_validation_commit_sha": "d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f",
+      "validation_files": [
+        "server/src/routes/salesIntelligence.test.js"
+      ],
+      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
       "completion_record_commit_sha": "2b3f480ce1bb8d1f5c566be2469d8cfc80f9069d",
       "validation_results": {
         "overallStatus": "PASSED",
@@ -2654,7 +2671,7 @@
       "title": "Preserve existing backend URLs with adapters",
       "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "TEST-008"
@@ -2669,26 +2686,32 @@
         "Route contract, integration, startup, frontend, and regression-gate checks."
       ],
       "evidence": [
-        "--evidence Verified backend URL structure and Express app routing contracts. Export default router added to api.js and all endpoints pass node --test server/src/app.test.js.",
-        "--evidence All 9 regression gate test suites passed and route contract tests in server/src/app.test.js passed.",
-        "Commit SHA: 8003f19e0f7c2d752bd228ef69ee2ddfec6e3377",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-001, TEST-008."
+        "api.js mounts sorterRouter, skuMediaRouter, salesIntelligenceRouter via delegation",
+        "POST /collections/reorder-all 307 redirect to reorder-all-v2 preserved in sorter.js",
+        "GET /actual-sales-intelligence compatibility URL preserved in salesIntelligence.js",
+        "All existing client endpoint paths remain compatible",
+        "Regression gate 13/13 passed; verify passed; architecture tests pass",
+        "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
+        "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
+        "Compatibility adapters verified with tests"
       ],
       "changed_files": [
-        "server/src/app.js",
-        "server/src/routes/api.js",
-        "server/src/app.test.js"
+        "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.243Z",
+      "updated_timestamp": "2026-08-05T10:37:03.926Z",
       "started_timestamp": "2026-07-31T16:16:49.899Z",
       "implemented_timestamp": "2026-07-31T16:16:58.127Z",
-      "validated_timestamp": "2026-07-31T16:17:10.799Z",
+      "validated_timestamp": "2026-08-05T10:37:03.926Z",
       "completed_timestamp": "2026-07-31T16:17:42.883Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "8003f19e0f7c2d752bd228ef69ee2ddfec6e3377",
-      "clean_validation_commit_sha": "8003f19e0f7c2d752bd228ef69ee2ddfec6e3377",
+      "validation_files": [
+        "server/src/routes/sorter.test.js",
+        "server/src/routes/skuMedia.test.js",
+        "server/src/routes/salesIntelligence.test.js"
+      ],
+      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
       "completion_record_commit_sha": "e2e720fb42ef3b1b2c26ea8a9823f7f5544c5cb9",
       "validation_results": {
         "overallStatus": "PASSED",
@@ -2700,7 +2723,7 @@
       "title": "Create application-owned service boundaries",
       "description": "Remediation task BE-006: Create application-owned service boundaries",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -2718,23 +2741,37 @@
         "Static dependency graph, unit/integration contracts, route regression, and startup checks."
       ],
       "evidence": [
-        "Extracting Shopify GraphQL client",
-        "Defined complete service boundary matrix in docs/architecture/SERVICE_BOUNDARY_MATRIX.md",
-        "Validated via static dependency graph review, layer classification, and boundary direction rules",
-        "Commit SHA: 161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-002, OWN-003, OWN-004, OWN-005, OWN-006."
+        "sorter.js depends only on collectionStateService, sorterRuntimeService, shopifyService, strategySettings, sorter",
+        "skuMedia.js depends only on shopifyMediaService",
+        "salesIntelligence.js depends only on actualSalesService",
+        "No router imports another application business service",
+        "No circular service dependency detected",
+        "Domain errors remain independent of Express request/response objects",
+        "Regression gate 13/13 passed; verify passed; architecture tests pass",
+        "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
+        "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
+        "Service ownership boundaries verified"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/routes/sorter.js",
+        "server/src/routes/skuMedia.js",
+        "server/src/routes/salesIntelligence.js",
+        "server/src/routes/api.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.245Z",
+      "updated_timestamp": "2026-08-05T10:37:04.039Z",
       "started_timestamp": "2026-07-31T13:52:45.801Z",
       "implemented_timestamp": "2026-07-31T13:54:12.580Z",
-      "validated_timestamp": "2026-07-31T13:54:12.823Z",
+      "validated_timestamp": "2026-08-05T10:37:04.039Z",
       "completed_timestamp": "2026-07-31T13:54:16.949Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
-      "clean_validation_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
+      "validation_files": [
+        "server/src/routes/sorter.test.js",
+        "server/src/routes/skuMedia.test.js",
+        "server/src/routes/salesIntelligence.test.js"
+      ],
+      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
       "completion_record_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
       "validation_results": {
         "overallStatus": "PASSED",
