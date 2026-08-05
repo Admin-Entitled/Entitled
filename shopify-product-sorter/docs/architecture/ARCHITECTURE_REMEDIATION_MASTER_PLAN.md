@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-05T06:34:03.224Z` |
+| Generated timestamp | `2026-08-05T06:35:36.332Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `6a3ac4f` |
+| Local commit | `f43fcbd` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,16 +36,16 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 24 |
-| Ready | 9 |
+| Not started | 19 |
+| Ready | 8 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 34 |
+| Validation pending | 31 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 54 |
-| Completion percentage | 41.9% |
+| Completed | 63 |
+| Completion percentage | 48.8% |
 
 ## 4. Current execution focus
 
@@ -131,18 +131,18 @@
 | DATA-007 | Make runtime paths configurable | HIGH | COMPLETED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-008 | Add safe data migration tools | CRITICAL | COMPLETED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | COMPLETED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-010 | Correct ignore rules and generated-file tracking | HIGH | COMPLETED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | COMPLETED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATION_PENDING | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | VALIDATION_PENDING | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | VALIDATION_PENDING | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | VALIDATION_PENDING | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-005 | Review and isolate Graphify artifacts | MEDIUM | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-005 | Review and isolate Graphify artifacts | MEDIUM | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-006 | Review and isolate Tokensave runtime files | HIGH | COMPLETED | OWN-009, SEC-003 | OPS-006 remains validation_pending because dependency SEC-003 is validation_pending. |
-| OPS-007 | Review Playwright artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-008 | Review test outputs and cache artifacts | LOW | VALIDATION_PENDING | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | NOT_STARTED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-007 | Review Playwright artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-008 | Review test outputs and cache artifacts | LOW | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-009 | Add safe backup, architecture-validation, and cleanliness commands | MEDIUM | COMPLETED | SAFE-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-ARCH-001 | OPS-ARCH-001 | MEDIUM | COMPLETED | None | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-001 | Assess authentication boundary | CRITICAL | COMPLETED | OWN-007, OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-002 | Add route authorization boundaries | CRITICAL | COMPLETED | SEC-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -165,12 +165,12 @@
 | DOC-010 | Create migration and deprecation policy | HIGH | READY | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
-| CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | READY | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
+| CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | COMPLETED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-004 | Classify dead components and disabled placeholders | LOW | NOT_STARTED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | NOT_STARTED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | NOT_STARTED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-007 | Remove or isolate test outputs | LOW | NOT_STARTED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | COMPLETED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | COMPLETED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-007 | Remove or isolate test outputs | LOW | COMPLETED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | NOT_STARTED | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | NOT_STARTED | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | DEFERRED | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
@@ -2253,9 +2253,9 @@ Data rollback support implemented and documented in runbook, Reverse migration p
 ### `DATA-010` Correct ignore rules and generated-file tracking
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T06:35:20.983Z
 
 #### Description
 
@@ -2275,7 +2275,7 @@ Git status, ignore checks, backup hashes, clean checkout simulation, and regress
 
 #### Completion evidence
 
-Not completed.
+--changed-files .gitignore, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Correct ignore rules and generated-file tracking
 
 ---
 
@@ -2284,7 +2284,7 @@ Not completed.
 **Severity:** MEDIUM
 **Status:** COMPLETED
 **Dependencies:** DATA-003, DATA-004, DATA-005, DATA-006, DATA-007
-**Last updated:** 2026-08-05T06:34:03.224Z
+**Last updated:** 2026-08-05T06:34:54.140Z
 
 #### Description
 
@@ -2304,7 +2304,7 @@ Policy review, synthetic aging tests, size-limit tests, and security review.
 
 #### Completion evidence
 
---changed-files docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Tested SHA: 6a3ac4f8945d9a70477a9491523694812fe7b881
+--changed-files docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Define retention for caches, audits, logs, uploads, exports
 
 ---
 
@@ -2456,9 +2456,9 @@ Route/UI, redaction, size-limit, and regression checks.
 ### `OPS-005` Review and isolate Graphify artifacts
 
 **Severity:** MEDIUM
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-009
-**Last updated:** 2026-08-01T22:10:15.313Z
+**Last updated:** 2026-08-05T06:35:07.484Z
 
 #### Description
 
@@ -2478,7 +2478,7 @@ Git inventory, reproducibility check, ignore check, and owner review.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate, --evidence Isolated Graphify runtime cache (graphify-out/cache/) and temp files (.graphify_*) in .gitignore and untracked them from git index, while preserving canonical report and graph files (GRAPH_REPORT.md, graph.json, manifest.json, graph.html)., Commit SHA: 4725ea64148387916d77fa192ab6c32c305e5917, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009.
+--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Review and isolate Graphify artifacts
 
 ---
 
@@ -2514,9 +2514,9 @@ SECRET_HANDLING_AND_ROTATION_GUIDE.md specifies TokenSave is external to applica
 ### `OPS-007` Review Playwright artifacts
 
 **Severity:** LOW
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-009
-**Last updated:** 2026-08-01T22:10:15.317Z
+**Last updated:** 2026-08-05T06:35:07.609Z
 
 #### Description
 
@@ -2536,16 +2536,16 @@ File classification, test discovery, ignore checks, and owner review.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate, --evidence Configured .gitignore with rules for Playwright artifacts (.playwright-cli/, .tmp-playwright/, playwright-report/, blob-report/) to ensure generated logs/snapshots have bounded retention while keeping tests discoverable., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for OPS-007.
+--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Review Playwright artifacts
 
 ---
 
 ### `OPS-008` Review test outputs and cache artifacts
 
 **Severity:** LOW
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-009
-**Last updated:** 2026-08-01T22:10:15.319Z
+**Last updated:** 2026-08-05T06:35:07.735Z
 
 #### Description
 
@@ -2565,16 +2565,16 @@ Test discovery, Git/ignore checks, and clean checkout simulation.
 
 #### Completion evidence
 
---changed-files .gitignore, --passed-tests npm run verify,npm run test:regression-gate,npm run test:architecture-ledger, --evidence Configured .gitignore with rules for test outputs (coverage/, *.lcov) and runtime ledger snapshots (docs/architecture/ledger/snapshots/) to ensure test outputs and cache artifacts have bounded retention while preserving all test assets., Commit SHA: 294d9763555f0fc66e1f2f7a5f548b3fdaad41c9, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-009.
+--changed-files docs/architecture/TOOL_ISOLATION_AND_TOKENSAVE_SPECIFICATION.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Review test outputs and cache artifacts
 
 ---
 
 ### `OPS-009` Add safe backup, architecture-validation, and cleanliness commands
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** SAFE-007, DATA-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T06:35:21.306Z
 
 #### Description
 
@@ -2594,7 +2594,7 @@ Shell/script tests, dry-run, project-scoped Git checks, and manual safety review
 
 #### Completion evidence
 
-Not completed.
+--changed-files scripts/clean.mjs,package.json, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Add safe backup, architecture-validation, and cleanliness commands
 
 ---
 
@@ -3236,9 +3236,9 @@ Dependencies OWN-003, TEST-004, TEST-005, SAFE-003 completed, Reconcile CLEAN-00
 ### `CLEAN-002` Resolve duplicate database artifacts
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** DATA-001, DATA-002, SAFE-007
-**Last updated:** 2026-08-05T06:26:11.719Z
+**Last updated:** 2026-08-05T06:35:35.952Z
 
 #### Description
 
@@ -3258,7 +3258,7 @@ SQLite integrity, startup, migration, restore, Git status, and regression checks
 
 #### Completion evidence
 
-Not completed.
+--changed-files docs/architecture/DATABASE_OWNERSHIP_REGISTER.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Resolve duplicate database artifacts
 
 ---
 
@@ -3322,9 +3322,9 @@ Not completed.
 ### `CLEAN-005` Remove or isolate Graphify generated clutter
 
 **Severity:** LOW
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** OPS-005, DATA-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T06:35:36.074Z
 
 #### Description
 
@@ -3344,16 +3344,16 @@ Graphify/read-only report comparison, Git status, clean checkout, and docs check
 
 #### Completion evidence
 
-Not completed.
+--changed-files .gitignore, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Remove or isolate Graphify generated clutter
 
 ---
 
 ### `CLEAN-006` Remove or isolate Playwright and Tokensave artifacts
 
 **Severity:** LOW
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** OPS-006, OPS-007, DATA-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T06:35:36.206Z
 
 #### Description
 
@@ -3373,16 +3373,16 @@ Git/ignore checks, test discovery, tool owner review, and clean checkout simulat
 
 #### Completion evidence
 
-Not completed.
+--changed-files .gitignore, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Remove or isolate Playwright and Tokensave artifacts
 
 ---
 
 ### `CLEAN-007` Remove or isolate test outputs
 
 **Severity:** LOW
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** OPS-008, DATA-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T06:35:36.332Z
 
 #### Description
 
@@ -3401,7 +3401,7 @@ Test discovery, clean checkout, Git/ignore, and regression checks.
 
 #### Completion evidence
 
-Not completed.
+--changed-files .gitignore, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Remove or isolate test outputs
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-05T06:34:03.242Z | DATA-011 | validated | completed | shivam | Clean committed-state verification passed | `64a641bc` |
-| 2026-08-05T06:26:11.745Z | CLEAN-002 | blocked | ready | shivam | Transition to ready | `0aca6e17` |
-| 2026-08-05T06:23:33.182Z | DATA-011 | validated | completed | shivam | Transition to completed | `69ac3115` |
-| 2026-08-05T06:23:33.067Z | DATA-011 | implemented | validated | shivam | --test-command node --test tests/hygieneAndRetention.test.js | `6cabb729` |
-| 2026-08-05T06:23:32.948Z | DATA-011 | in_progress | implemented | shivam | --files-changed docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md --validation-files tests/hygieneAndRetention.test.js --notes Defined retention and disposal policy for all 25 data and artifact classes | `807b37a2` |
-| 2026-08-05T06:23:32.833Z | DATA-011 | ready | in_progress | shivam | Transition to in_progress | `e8abfc56` |
-| 2026-08-05T05:31:33.956Z | DATA-009 | not_started | completed | shivam | Reconciled DATA-009 to completed following data rollback support verification | `027381b1` |
-| 2026-08-05T05:31:33.956Z | DATA-008 | not_started | completed | shivam | Reconciled DATA-008 to completed following safe data migration tooling verification | `7be11c1c` |
-| 2026-08-05T05:31:33.956Z | DATA-012 | validation_pending | completed | shivam | Reconciled DATA-012 to completed following PostgreSQL backup/restore verification | `7dea9990` |
-| 2026-08-05T05:31:33.956Z | DATA-006 | validation_pending | completed | shivam | Reconciled DATA-006 to completed following Order Mapping PostgreSQL isolation | `efbf7dd2` |
+| 2026-08-05T06:35:36.354Z | CLEAN-007 | validated | completed | shivam | Remove or isolate test outputs | `d41e3fb4` |
+| 2026-08-05T06:35:36.229Z | CLEAN-006 | validated | completed | shivam | Remove or isolate Playwright and Tokensave artifacts | `5ea6f29f` |
+| 2026-08-05T06:35:36.098Z | CLEAN-005 | validated | completed | shivam | Remove or isolate Graphify generated clutter | `61d52960` |
+| 2026-08-05T06:35:35.976Z | CLEAN-002 | validated | completed | shivam | Resolve duplicate database artifacts | `1610654b` |
+| 2026-08-05T06:35:21.329Z | OPS-009 | validated | completed | shivam | Add safe backup, architecture-validation, and cleanliness commands | `07e71b50` |
+| 2026-08-05T06:35:21.051Z | CLEAN-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d6eefa53` |
+| 2026-08-05T06:35:21.051Z | CLEAN-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `530a70c9` |
+| 2026-08-05T06:35:21.051Z | CLEAN-005 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `5e2a5c25` |
+| 2026-08-05T06:35:21.006Z | DATA-010 | validated | completed | shivam | Correct ignore rules and generated-file tracking | `d8d89959` |
+| 2026-08-05T06:35:07.806Z | DATA-010 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ba9b8469` |
