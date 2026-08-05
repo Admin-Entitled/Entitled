@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T06:34:03.224Z",
+  "last_updated": "2026-08-05T06:34:07.437Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -4380,7 +4380,7 @@
       "title": "Define retention for caches, audits, logs, uploads, exports",
       "description": "Remediation task DATA-011: Define retention for caches, audits, logs, uploads, exports",
       "severity": "MEDIUM",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "DATA-003",
         "DATA-004",
@@ -4400,26 +4400,41 @@
       "evidence": [
         "--changed-files docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md",
         "--validation-files tests/hygieneAndRetention.test.js",
-        "--passed-tests node --test tests/hygieneAndRetention.test.js",
-        "Tested SHA: 6a3ac4f8945d9a70477a9491523694812fe7b881"
+        "--passed-tests node --test tests/hygieneAndRetention.test.js"
       ],
       "changed_files": [
         "docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T06:34:03.224Z",
+      "updated_timestamp": "2026-08-05T06:23:33.159Z",
       "started_timestamp": "2026-08-05T06:23:32.808Z",
       "implemented_timestamp": "2026-08-05T06:23:32.925Z",
       "validated_timestamp": "2026-08-05T06:23:33.035Z",
-      "completed_timestamp": "2026-08-05T06:34:03.224Z",
+      "completed_timestamp": "2026-08-05T06:23:33.159Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "tests/hygieneAndRetention.test.js"
       ],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "implementation_commit_sha": "6a3ac4f8945d9a70477a9491523694812fe7b881",
+      "clean_validation_commit_sha": "6a3ac4f8945d9a70477a9491523694812fe7b881",
+      "completion_record_commit_sha": "4da2be4e96e598a8f52cb90b4e980439d0b20818",
+      "validation_results": {
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-05T06:34:03.222Z",
+        "implementation_commit_sha": "6a3ac4f8945d9a70477a9491523694812fe7b881",
+        "clean_validation_commit_sha": "6a3ac4f8945d9a70477a9491523694812fe7b881",
+        "tested_commit": "6a3ac4f8945d9a70477a9491523694812fe7b881",
+        "passed": true
+      }
     },
     {
       "id": "DATA-012",
