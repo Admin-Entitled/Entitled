@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-05T05:32:07.604Z` |
+| Generated timestamp | `2026-08-05T06:34:03.224Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `3ace66f` |
+| Local commit | `6a3ac4f` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -42,19 +42,19 @@
 | Implemented | 0 |
 | Validation pending | 34 |
 | Validated | 0 |
-| Blocked | 1 |
+| Blocked | 0 |
 | Deferred | 8 |
-| Completed | 53 |
-| Completion percentage | 41.1% |
+| Completed | 54 |
+| Completion percentage | 41.9% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `DATA-011`, `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`
+- Next dependency-actionable ready tasks: `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`, `DOC-010`
 - Dependency-safe validation-pending tasks: `BE-002`, `BE-003`, `BE-004`, `BE-005`, `BE-006`
 - Tasks awaiting prerequisites: `BE-007`, `BE-008`, `BE-009`, `BE-011`, `FE-006`
 - In-progress tasks: None
-- Blocked tasks: `CLEAN-002`
+- Blocked tasks: None
 
 ## 10. Master task index
 
@@ -132,7 +132,7 @@
 | DATA-008 | Add safe data migration tools | CRITICAL | COMPLETED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-009 | Add data rollback support | CRITICAL | COMPLETED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | READY | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | COMPLETED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATION_PENDING | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | VALIDATION_PENDING | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -165,7 +165,7 @@
 | DOC-010 | Create migration and deprecation policy | HIGH | READY | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
-| CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
+| CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | READY | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | NOT_STARTED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-004 | Classify dead components and disabled placeholders | LOW | NOT_STARTED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | NOT_STARTED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -2282,9 +2282,9 @@ Not completed.
 ### `DATA-011` Define retention for caches, audits, logs, uploads, exports
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** DATA-003, DATA-004, DATA-005, DATA-006, DATA-007
-**Last updated:** 2026-08-05T05:29:29.664Z
+**Last updated:** 2026-08-05T06:34:03.224Z
 
 #### Description
 
@@ -2304,7 +2304,7 @@ Policy review, synthetic aging tests, size-limit tests, and security review.
 
 #### Completion evidence
 
-Not completed.
+--changed-files docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md, --validation-files tests/hygieneAndRetention.test.js, --passed-tests node --test tests/hygieneAndRetention.test.js, Tested SHA: 6a3ac4f8945d9a70477a9491523694812fe7b881
 
 ---
 
@@ -3236,9 +3236,9 @@ Dependencies OWN-003, TEST-004, TEST-005, SAFE-003 completed, Reconcile CLEAN-00
 ### `CLEAN-002` Resolve duplicate database artifacts
 
 **Severity:** CRITICAL
-**Status:** BLOCKED
+**Status:** READY
 **Dependencies:** DATA-001, DATA-002, SAFE-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T06:26:11.719Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-05T06:34:03.242Z | DATA-011 | validated | completed | shivam | Clean committed-state verification passed | `64a641bc` |
+| 2026-08-05T06:26:11.745Z | CLEAN-002 | blocked | ready | shivam | Transition to ready | `0aca6e17` |
+| 2026-08-05T06:23:33.182Z | DATA-011 | validated | completed | shivam | Transition to completed | `69ac3115` |
+| 2026-08-05T06:23:33.067Z | DATA-011 | implemented | validated | shivam | --test-command node --test tests/hygieneAndRetention.test.js | `6cabb729` |
+| 2026-08-05T06:23:32.948Z | DATA-011 | in_progress | implemented | shivam | --files-changed docs/architecture/DATA_RETENTION_AND_DISPOSAL_POLICY.md --validation-files tests/hygieneAndRetention.test.js --notes Defined retention and disposal policy for all 25 data and artifact classes | `807b37a2` |
+| 2026-08-05T06:23:32.833Z | DATA-011 | ready | in_progress | shivam | Transition to in_progress | `e8abfc56` |
 | 2026-08-05T05:31:33.956Z | DATA-009 | not_started | completed | shivam | Reconciled DATA-009 to completed following data rollback support verification | `027381b1` |
 | 2026-08-05T05:31:33.956Z | DATA-008 | not_started | completed | shivam | Reconciled DATA-008 to completed following safe data migration tooling verification | `7be11c1c` |
 | 2026-08-05T05:31:33.956Z | DATA-012 | validation_pending | completed | shivam | Reconciled DATA-012 to completed following PostgreSQL backup/restore verification | `7dea9990` |
 | 2026-08-05T05:31:33.956Z | DATA-006 | validation_pending | completed | shivam | Reconciled DATA-006 to completed following Order Mapping PostgreSQL isolation | `efbf7dd2` |
-| 2026-08-05T05:31:33.956Z | DATA-005 | validation_pending | completed | shivam | Reconciled DATA-005 to completed following Sales Intelligence cache isolation | `d29dd654` |
-| 2026-08-05T05:31:33.956Z | DATA-004 | validation_pending | completed | shivam | Reconciled DATA-004 to completed following SKU audit data isolation | `a646027d` |
-| 2026-08-05T05:31:33.956Z | DATA-003 | not_started | completed | shivam | Reconciled DATA-003 to completed following Sorter runtime data isolation | `a5ff4656` |
-| 2026-08-05T05:31:33.956Z | DATA-002 | validation_pending | completed | shivam | Reconciled DATA-002 to completed following SQLite table ownership documentation verification | `6d741bd7` |
-| 2026-08-05T05:31:33.956Z | DATA-001 | blocked | completed | shivam | Unblocked and completed DATA-001 following canonical SQLite database path resolution | `d45bee15` |
-| 2026-08-05T05:31:33.956Z | DATA-007 | ready | completed | shivam | Reconciled DATA-007 to completed following configurable runtime path implementation | `05405678` |
