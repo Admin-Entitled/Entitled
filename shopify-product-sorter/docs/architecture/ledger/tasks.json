@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T10:45:56.988Z",
+  "last_updated": "2026-08-05T10:46:01.512Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2583,7 +2583,7 @@
       "title": "Create a SKU Image Manager router",
       "description": "Remediation task BE-003: Create a SKU Image Manager router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-004"
@@ -2605,28 +2605,40 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "All SKU routes in dedicated router with tests",
-        "Tested SHA: 482ccb49089f12374901b86c3529e18b6e0beeaf"
+        "All SKU routes in dedicated router with tests"
       ],
       "changed_files": [
         "server/src/routes/skuMedia.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:45:56.988Z",
+      "updated_timestamp": "2026-08-05T10:37:03.707Z",
       "started_timestamp": "2026-07-31T16:05:24.622Z",
       "implemented_timestamp": "2026-07-31T16:06:42.100Z",
       "validated_timestamp": "2026-08-05T10:37:03.707Z",
-      "completed_timestamp": "2026-08-05T10:45:56.988Z",
+      "completed_timestamp": "2026-07-31T16:07:22.600Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/skuMedia.test.js"
       ],
-      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "completion_record_commit_sha": "b9d899b773651b7dc267048067da53d1f8c546d9",
+      "implementation_commit_sha": "482ccb49089f12374901b86c3529e18b6e0beeaf",
+      "clean_validation_commit_sha": "482ccb49089f12374901b86c3529e18b6e0beeaf",
+      "completion_record_commit_sha": "14055dfe675ebf5103d58a6c5c896ef243aae8d9",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "641bf31046bc8f6f0f3bde8c8b487411225a6b8b"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-05T10:45:56.985Z",
+        "implementation_commit_sha": "482ccb49089f12374901b86c3529e18b6e0beeaf",
+        "clean_validation_commit_sha": "482ccb49089f12374901b86c3529e18b6e0beeaf",
+        "tested_commit": "482ccb49089f12374901b86c3529e18b6e0beeaf",
+        "passed": true
       }
     },
     {
