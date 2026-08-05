@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T10:41:48.010Z",
+  "last_updated": "2026-08-05T10:41:52.908Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2519,7 +2519,7 @@
       "title": "Create a Sorter router",
       "description": "Remediation task BE-002: Create a Sorter router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-002"
@@ -2541,29 +2541,41 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "All sorter routes in dedicated router with tests",
-        "Tested SHA: f656dd697e8d72eadd99c895a539cf417d539f86"
+        "All sorter routes in dedicated router with tests"
       ],
       "changed_files": [
         "server/src/routes/sorter.js",
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:41:48.010Z",
+      "updated_timestamp": "2026-08-05T10:37:03.554Z",
       "started_timestamp": "2026-07-31T15:54:07.433Z",
       "implemented_timestamp": "2026-07-31T15:55:21.498Z",
       "validated_timestamp": "2026-08-05T10:37:03.554Z",
-      "completed_timestamp": "2026-08-05T10:41:48.010Z",
+      "completed_timestamp": "2026-07-31T16:01:36.955Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/sorter.test.js"
       ],
       "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
       "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "completion_record_commit_sha": "292e70e99ab975b1408b22e846601b6cccd99c38",
+      "completion_record_commit_sha": "1e2b5a640517c7d297f4bae99658ebea9e5344a3",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "292e70e99ab975b1408b22e846601b6cccd99c38"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-05T10:41:48.007Z",
+        "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+        "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
+        "tested_commit": "f656dd697e8d72eadd99c895a539cf417d539f86",
+        "passed": true
       }
     },
     {
