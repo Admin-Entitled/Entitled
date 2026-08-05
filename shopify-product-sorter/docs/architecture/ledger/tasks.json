@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T11:05:03.649Z",
+  "last_updated": "2026-08-05T11:05:08.223Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2774,7 +2774,7 @@
       "title": "Create application-owned service boundaries",
       "description": "Remediation task BE-006: Create application-owned service boundaries",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -2801,8 +2801,7 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "Service ownership boundaries verified",
-        "Tested SHA: 61097f60f5861839a578b46191a4be0724c9eedc"
+        "Service ownership boundaries verified"
       ],
       "changed_files": [
         "server/src/routes/sorter.js",
@@ -2811,23 +2810,36 @@
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T11:05:03.649Z",
+      "updated_timestamp": "2026-08-05T10:37:04.039Z",
       "started_timestamp": "2026-07-31T13:52:45.801Z",
       "implemented_timestamp": "2026-07-31T13:54:12.580Z",
       "validated_timestamp": "2026-08-05T10:37:04.039Z",
-      "completed_timestamp": "2026-08-05T11:05:03.649Z",
+      "completed_timestamp": "2026-07-31T13:54:16.949Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/sorter.test.js",
         "server/src/routes/skuMedia.test.js",
         "server/src/routes/salesIntelligence.test.js"
       ],
-      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "completion_record_commit_sha": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564",
+      "implementation_commit_sha": "61097f60f5861839a578b46191a4be0724c9eedc",
+      "clean_validation_commit_sha": "61097f60f5861839a578b46191a4be0724c9eedc",
+      "completion_record_commit_sha": "cf85c19c33095f9a508337aaccdf97d690e039e6",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "161a62bea3a3b38dbdbac592caf8ca9d96e6b564"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-05T11:05:03.646Z",
+        "implementation_commit_sha": "61097f60f5861839a578b46191a4be0724c9eedc",
+        "clean_validation_commit_sha": "61097f60f5861839a578b46191a4be0724c9eedc",
+        "tested_commit": "61097f60f5861839a578b46191a4be0724c9eedc",
+        "passed": true
       }
     },
     {
