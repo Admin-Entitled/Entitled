@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T10:49:34.890Z",
+  "last_updated": "2026-08-05T10:49:40.269Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2646,7 +2646,7 @@
       "title": "Create a Sales Intelligence router",
       "description": "Remediation task BE-004: Create a Sales Intelligence router",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "BE-001",
         "OWN-005"
@@ -2668,28 +2668,40 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "All sales intelligence routes in dedicated router with tests",
-        "Tested SHA: 31c94f9f3d885acc6db80377de79f1d86017a4df"
+        "All sales intelligence routes in dedicated router with tests"
       ],
       "changed_files": [
         "server/src/routes/salesIntelligence.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:49:34.890Z",
+      "updated_timestamp": "2026-08-05T10:37:03.819Z",
       "started_timestamp": "2026-07-31T16:08:36.095Z",
       "implemented_timestamp": "2026-07-31T16:11:51.431Z",
       "validated_timestamp": "2026-08-05T10:37:03.819Z",
-      "completed_timestamp": "2026-08-05T10:49:34.890Z",
+      "completed_timestamp": "2026-07-31T16:12:31.707Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/salesIntelligence.test.js"
       ],
-      "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "clean_validation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
-      "completion_record_commit_sha": "2b3f480ce1bb8d1f5c566be2469d8cfc80f9069d",
+      "implementation_commit_sha": "31c94f9f3d885acc6db80377de79f1d86017a4df",
+      "clean_validation_commit_sha": "31c94f9f3d885acc6db80377de79f1d86017a4df",
+      "completion_record_commit_sha": "be7fce99f12ff433fb9f8f1777db1f434f0fbe81",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "d9cdfb53ce79cdafd43b42d5b7c88b55d4e0325f"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-05T10:49:34.887Z",
+        "implementation_commit_sha": "31c94f9f3d885acc6db80377de79f1d86017a4df",
+        "clean_validation_commit_sha": "31c94f9f3d885acc6db80377de79f1d86017a4df",
+        "tested_commit": "31c94f9f3d885acc6db80377de79f1d86017a4df",
+        "passed": true
       }
     },
     {
