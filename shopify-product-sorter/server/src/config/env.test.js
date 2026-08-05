@@ -137,3 +137,31 @@ test("env toSnapshot returns frozen object and process.env is unmodified", () =>
     snapshot.port = 5000;
   });
 });
+
+test("DATA-007: env runtime paths load defaults and resolve relative/absolute paths deterministically", () => {
+  resetEnvOverrides();
+  const snapshot = env.toSnapshot();
+
+  assert.ok(snapshot.sqlitePath.endsWith("app.db"));
+  assert.ok(snapshot.strategySettingsFile.endsWith("strategy-settings.json"));
+  assert.ok(snapshot.skuImageAuditPath.endsWith("sku-image-actions.jsonl"));
+  assert.ok(snapshot.salesShopifyCachePath.endsWith("sales-shopify-cache.json"));
+  assert.ok(snapshot.salesShiprocketCachePath.endsWith("sales-shiprocket-cache.json"));
+  assert.ok(snapshot.salesReconciledCachePath.endsWith("sales-reconciled-cache.json"));
+  assert.ok(snapshot.sqliteBackupDir.endsWith("backups"));
+  assert.ok(snapshot.dataDir.endsWith("data"));
+});
+
+test("DATA-007: env runtime path setters handle absolute paths, relative paths, and blank values", () => {
+  resetEnvOverrides();
+  const absPath = "/tmp/custom-sqlite.db";
+  env.sqlitePath = absPath;
+  assert.equal(env.sqlitePath, absPath);
+
+  env.sqlitePath = "server/data/custom.db";
+  assert.ok(env.sqlitePath.endsWith("custom.db"));
+
+  env.sqlitePath = "";
+  assert.ok(env.sqlitePath.endsWith("app.db"));
+  resetEnvOverrides();
+});
