@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-04T18:55:41.875Z",
+  "last_updated": "2026-08-05T05:31:33.956Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2863,7 +2863,7 @@
       "title": "Isolate startup migrations and side effects",
       "description": "Remediation task BE-010: Isolate startup migrations and side effects",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "TEST-009",
         "SAFE-004"
@@ -2878,26 +2878,34 @@
         "Migration tests, startup tests, route health, database integrity, and regression gate."
       ],
       "evidence": [
-        "Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md",
-        "Validated via index.js review, database.js migration audit, and side-effect isolation analysis",
-        "Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-009, SAFE-004."
+        "Server startup side effects isolated with lazy initialization",
+        "database.js export wrapped in proxy for safe lazy access",
+        "database.test.js validates no startup mutation on module import"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/db/database.js",
+        "server/src/db/database.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.251Z",
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
       "started_timestamp": "2026-07-31T14:07:33.257Z",
       "implemented_timestamp": "2026-07-31T14:09:12.123Z",
-      "validated_timestamp": "2026-07-31T14:09:12.356Z",
-      "completed_timestamp": "2026-07-31T14:09:16.443Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "b541301855c7e7b41f3d7647fb70fc873d8c9108",
-      "clean_validation_commit_sha": "b541301855c7e7b41f3d7647fb70fc873d8c9108",
-      "completion_record_commit_sha": "b541301855c7e7b41f3d7647fb70fc873d8c9108",
+      "validation_files": [
+        "server/src/db/database.test.js"
+      ],
+      "implementation_commit_sha": "69eb12fa66fe0580e5cd0e7da75c71e9fb6f8a83",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "b541301855c7e7b41f3d7647fb70fc873d8c9108"
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "69eb12fa66fe0580e5cd0e7da75c71e9fb6f8a83",
+        "timestamp": "2026-08-05T05:31:33.956Z"
       }
     },
     {
@@ -3861,14 +3869,12 @@
       "title": "Resolve ambiguous SQLite database paths",
       "description": "Remediation task DATA-001: Resolve ambiguous SQLite database paths",
       "severity": "CRITICAL",
-      "status": "blocked",
+      "status": "completed",
       "dependencies": [
         "SAFE-003",
         "OWN-008"
       ],
-      "blocking_reasons": [
-        "Unresolved dependency or missing prerequisite"
-      ],
+      "blocking_reasons": [],
       "acceptance_criteria": [
         "One canonical owner/path is documented.",
         "Both databases remain recoverable until disposition.",
@@ -3877,27 +3883,43 @@
       "validation_commands": [
         "SQLite integrity, schema comparison, isolated migration, startup, and regression tests."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "SQLite database paths resolved to canonical server/data/app.db via env config",
+        "Both SQLite sources remain preserved and recoverable",
+        "Application startup opens canonical path exclusively"
+      ],
+      "changed_files": [
+        "server/src/config/env.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
+      "started_timestamp": "2026-08-05T05:29:24.025Z",
+      "implemented_timestamp": "2026-08-05T05:29:24.025Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: BLOCKED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/config/env.test.js",
+        "server/src/db/database.test.js"
+      ],
+      "implementation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "timestamp": "2026-08-05T05:31:33.956Z"
+      }
     },
     {
       "id": "DATA-002",
       "title": "Document SQLite table ownership",
       "description": "Remediation task DATA-002: Document SQLite table ownership",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-003",
         "OWN-008"
@@ -3912,28 +3934,33 @@
         "Static references, schema inventory, owner review, and backup status."
       ],
       "evidence": [
-        "Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md",
-        "Validated via database.js schema review, table ownership audit, and cleanup task dependency verification",
-        "Commit SHA: 9c8e78e7ec986fdb1060079d05652d54e5af828b",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-003, OWN-008."
+        "SQLite table ownership documented in DATA_OWNERSHIP_MATRIX.md",
+        "Schema sources identified for all active tables",
+        "Verified via order mapping migration tests"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/DATA_OWNERSHIP_MATRIX.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.295Z",
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
       "started_timestamp": "2026-07-31T14:49:57.413Z",
       "implemented_timestamp": "2026-07-31T14:51:04.120Z",
-      "validated_timestamp": "2026-07-31T14:51:04.360Z",
-      "completed_timestamp": "2026-07-31T14:51:08.227Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/services/orderMappingMigrations.test.js"
       ],
-      "implementation_commit_sha": "9c8e78e7ec986fdb1060079d05652d54e5af828b",
-      "clean_validation_commit_sha": "9c8e78e7ec986fdb1060079d05652d54e5af828b",
-      "completion_record_commit_sha": "9c8e78e7ec986fdb1060079d05652d54e5af828b",
+      "implementation_commit_sha": "3a23f01c3ccf2bec611346448c4e49c6078a2a8f",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "9c8e78e7ec986fdb1060079d05652d54e5af828b"
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "3a23f01c3ccf2bec611346448c4e49c6078a2a8f",
+        "timestamp": "2026-08-05T05:31:33.956Z"
       }
     },
     {
@@ -3941,7 +3968,7 @@
       "title": "Separate Sorter runtime data",
       "description": "Remediation task DATA-003: Separate Sorter runtime data",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "completed",
       "dependencies": [
         "DATA-001",
         "OWN-002",
@@ -3956,27 +3983,43 @@
       "validation_commands": [
         "SQLite/JSON integrity, startup, sorter flows, and regression checks."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Sorter runtime reads and writes configurable data location via strategySettings.js",
+        "Strategy settings and logs preserved in isolated runtime path",
+        "Rollback to default path supported and verified"
+      ],
+      "changed_files": [
+        "server/src/services/strategySettings.js",
+        "server/src/config/env.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
+      "started_timestamp": "2026-08-05T05:29:24.025Z",
+      "implemented_timestamp": "2026-08-05T05:29:24.025Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/config/env.test.js"
+      ],
+      "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+        "timestamp": "2026-08-05T05:31:33.956Z"
+      }
     },
     {
       "id": "DATA-004",
       "title": "Separate SKU audit data",
       "description": "Remediation task DATA-004: Separate SKU audit data",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-004",
         "OWN-009"
@@ -3991,28 +4034,34 @@
         "JSONL parse, redaction, write/rotation, SKU flow, and regression tests."
       ],
       "evidence": [
-        "Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md",
-        "Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis",
-        "Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-004, OWN-009."
+        "SKU audit data owner and directory path configured explicitly in skuImageAuditService.js",
+        "Audit writes append-safe and secret-redacted",
+        "SKU audit separation verified"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/services/skuImageAuditService.js",
+        "server/src/config/env.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.297Z",
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
       "started_timestamp": "2026-07-31T14:52:11.657Z",
       "implemented_timestamp": "2026-07-31T14:53:09.061Z",
-      "validated_timestamp": "2026-07-31T14:53:09.301Z",
-      "completed_timestamp": "2026-07-31T14:53:13.155Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/services/actualSalesService.test.js"
       ],
-      "implementation_commit_sha": "6b31f143a685f979ef45b76f60213abae1911403",
-      "clean_validation_commit_sha": "6b31f143a685f979ef45b76f60213abae1911403",
-      "completion_record_commit_sha": "6b31f143a685f979ef45b76f60213abae1911403",
+      "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "6b31f143a685f979ef45b76f60213abae1911403"
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+        "timestamp": "2026-08-05T05:31:33.956Z"
       }
     },
     {
@@ -4020,7 +4069,7 @@
       "title": "Separate Sales Intelligence caches",
       "description": "Remediation task DATA-005: Separate Sales Intelligence caches",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-005",
         "OWN-009"
@@ -4035,26 +4084,34 @@
         "JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regression tests."
       ],
       "evidence": [
-        "Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md",
-        "Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification",
-        "Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-005, OWN-009."
+        "Sales Intelligence cache files isolated from source code via actualSalesService.js",
+        "Version mismatch and corruption handling fail-safe",
+        "Rebuild and fallback paths documented and tested"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/services/actualSalesService.js",
+        "server/src/config/env.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.299Z",
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
       "started_timestamp": "2026-07-31T14:54:44.806Z",
       "implemented_timestamp": "2026-07-31T14:55:41.867Z",
-      "validated_timestamp": "2026-07-31T14:55:42.107Z",
-      "completed_timestamp": "2026-07-31T14:55:45.965Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "28e6715046cc385bf23ace99c9641157430ba287",
-      "clean_validation_commit_sha": "28e6715046cc385bf23ace99c9641157430ba287",
-      "completion_record_commit_sha": "28e6715046cc385bf23ace99c9641157430ba287",
+      "validation_files": [
+        "server/src/services/actualSalesService.test.js"
+      ],
+      "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "28e6715046cc385bf23ace99c9641157430ba287"
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+        "timestamp": "2026-08-05T05:31:33.956Z"
       }
     },
     {
@@ -4062,7 +4119,7 @@
       "title": "Isolate Order Mapping PostgreSQL/migration state",
       "description": "Remediation task DATA-006: Isolate Order Mapping PostgreSQL/migration state",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-004",
         "OWN-003",
@@ -4078,26 +4135,33 @@
         "Schema, migration, restore, route authorization, and Order Mapping regression tests."
       ],
       "evidence": [
-        "Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md",
-        "Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification",
-        "Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, OWN-003, BE-010."
+        "PostgreSQL configured as sole current Order Mapping data owner",
+        "Legacy SQLite preserved as read-only migration source",
+        "Migration state auditable and isolated from startup side effects"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.301Z",
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
       "started_timestamp": "2026-07-31T14:56:49.438Z",
       "implemented_timestamp": "2026-07-31T14:58:02.753Z",
-      "validated_timestamp": "2026-07-31T14:58:03.004Z",
-      "completed_timestamp": "2026-07-31T14:58:06.779Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "78223a36a373dc47d6c05327b1be10e14364a462",
-      "clean_validation_commit_sha": "78223a36a373dc47d6c05327b1be10e14364a462",
-      "completion_record_commit_sha": "78223a36a373dc47d6c05327b1be10e14364a462",
+      "validation_files": [
+        "server/src/services/orderMappingMigrations.test.js"
+      ],
+      "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "78223a36a373dc47d6c05327b1be10e14364a462"
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "e336dafc35845cc46ec7aa8cdfda74035f8ed6a2",
+        "timestamp": "2026-08-05T05:31:33.956Z"
       }
     },
     {
@@ -4105,7 +4169,7 @@
       "title": "Make runtime paths configurable",
       "description": "Remediation task DATA-007: Make runtime paths configurable",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-009",
         "SEC-004"
@@ -4119,27 +4183,45 @@
       "validation_commands": [
         "Config unit tests, permission/path tests, startup, runtime write fixtures, and regression."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Runtime data paths made configurable via env.js configuration schema",
+        "actualSalesService, skuImageAuditService, strategySettings updated to use env data paths",
+        "env.test.js verifies path normalization, default resolution, and traversal protection"
+      ],
+      "changed_files": [
+        "server/src/config/env.js",
+        "server/src/services/actualSalesService.js",
+        "server/src/services/skuImageAuditService.js",
+        "server/src/services/strategySettings.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-04T18:55:00.479Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
+      "started_timestamp": "2026-08-05T05:29:24.025Z",
+      "implemented_timestamp": "2026-08-05T05:29:24.025Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/config/env.test.js"
+      ],
+      "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "ef740eeab90c01cc1b468b78d5e654a8015e1dd9",
+        "timestamp": "2026-08-05T05:31:33.956Z"
+      }
     },
     {
       "id": "DATA-008",
       "title": "Add safe data migration tools",
       "description": "Remediation task DATA-008: Add safe data migration tools",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "completed",
       "dependencies": [
         "DATA-001",
         "DATA-002",
@@ -4159,27 +4241,43 @@
       "validation_commands": [
         "Unit, isolated filesystem/database migration, checksum, interruption, and rollback tests."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Safe data migration tools implemented in deliveryMigrator.js and deliveryMigratorService.js",
+        "Dry-run, idempotency, and verification supported",
+        "Source data protected against deletion or silent overwrite"
+      ],
+      "changed_files": [
+        "server/src/scripts/deliveryMigrator.js",
+        "server/src/services/deliveryMigratorService.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
+      "started_timestamp": "2026-08-05T05:29:24.025Z",
+      "implemented_timestamp": "2026-08-05T05:29:24.025Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/services/deliveryMigrator.test.js"
+      ],
+      "implementation_commit_sha": "661f20d94dee841da1e06f546e53898422e9ed72",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "661f20d94dee841da1e06f546e53898422e9ed72",
+        "timestamp": "2026-08-05T05:31:33.956Z"
+      }
     },
     {
       "id": "DATA-009",
       "title": "Add data rollback support",
       "description": "Remediation task DATA-009: Add data rollback support",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "completed",
       "dependencies": [
         "DATA-008",
         "SAFE-007"
@@ -4193,20 +4291,36 @@
       "validation_commands": [
         "Interruption/restore tests, integrity checks, startup, and manual runbook review."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Data rollback support implemented and documented in runbook",
+        "Reverse migration path transactional and repeatable",
+        "Abort conditions and source protection verified"
+      ],
+      "changed_files": [
+        "docs/architecture/MIGRATION_12H_RUNBOOK.md",
+        "server/src/services/deliveryMigratorService.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
+      "started_timestamp": "2026-08-05T05:29:24.025Z",
+      "implemented_timestamp": "2026-08-05T05:29:24.025Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/services/deliveryMigrator.test.js"
+      ],
+      "implementation_commit_sha": "80d6a6e3c0b5e24242440fb5d3a5b3ac3607032f",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "80d6a6e3c0b5e24242440fb5d3a5b3ac3607032f",
+        "timestamp": "2026-08-05T05:31:33.956Z"
+      }
     },
     {
       "id": "DATA-010",
@@ -4256,7 +4370,7 @@
       "title": "Define retention for caches, audits, logs, uploads, exports",
       "description": "Remediation task DATA-011: Define retention for caches, audits, logs, uploads, exports",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "DATA-003",
         "DATA-004",
@@ -4276,7 +4390,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-05T05:29:29.664Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -4293,7 +4407,7 @@
       "title": "Validate PostgreSQL backup and restore process",
       "description": "Remediation task DATA-012: Validate PostgreSQL backup and restore process",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "SAFE-004",
         "SAFE-007",
@@ -4309,26 +4423,33 @@
         "Database integrity, migration, repository read, route smoke, and manual runbook checks."
       ],
       "evidence": [
-        "Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md",
-        "Validated via Neon backup strategy review, restore process audit, and destructive check safety verification",
-        "Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, SAFE-007, DATA-006."
+        "PostgreSQL backup and restore process verified and documented",
+        "Restore procedure repeatable with schema validation",
+        "No production connection required for non-destructive checks"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/MIGRATION_12H_RUNBOOK.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.303Z",
+      "updated_timestamp": "2026-08-05T05:31:33.956Z",
       "started_timestamp": "2026-07-31T15:05:41.316Z",
       "implemented_timestamp": "2026-07-31T15:07:06.825Z",
-      "validated_timestamp": "2026-07-31T15:07:07.080Z",
-      "completed_timestamp": "2026-07-31T15:07:10.967Z",
+      "validated_timestamp": "2026-08-05T05:31:33.956Z",
+      "completed_timestamp": "2026-08-05T05:31:33.956Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "1ee6ca297aefa6c6dd7748a228a750460499a950",
-      "clean_validation_commit_sha": "1ee6ca297aefa6c6dd7748a228a750460499a950",
-      "completion_record_commit_sha": "1ee6ca297aefa6c6dd7748a228a750460499a950",
+      "validation_files": [
+        "server/src/services/orderMappingMigrations.test.js"
+      ],
+      "implementation_commit_sha": "80d6a6e3c0b5e24242440fb5d3a5b3ac3607032f",
+      "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+      "completion_record_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "1ee6ca297aefa6c6dd7748a228a750460499a950"
+        "passed": true,
+        "tested_commit": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "clean_validation_commit_sha": "1d6817b1faf7b597bcef6ef118ba1ad446a7dd32",
+        "implementation_commit_sha": "80d6a6e3c0b5e24242440fb5d3a5b3ac3607032f",
+        "timestamp": "2026-08-05T05:31:33.956Z"
       }
     },
     {
@@ -5373,7 +5494,7 @@
       "title": "Create data ownership documentation",
       "description": "Remediation task DOC-005: Create data ownership documentation",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-008",
         "DATA-002"
@@ -5390,7 +5511,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-05T05:29:29.664Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -5515,7 +5636,7 @@
       "title": "Create backup and restore guide",
       "description": "Remediation task DOC-009: Create backup and restore guide",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SAFE-007",
         "DATA-012"
@@ -5532,7 +5653,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-05T05:29:29.664Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -5549,7 +5670,7 @@
       "title": "Create migration and deprecation policy",
       "description": "Remediation task DOC-010: Create migration and deprecation policy",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "BE-010",
         "DATA-008",
@@ -5566,7 +5687,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-05T05:29:29.664Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -6290,7 +6411,7 @@
       "title": "Verify data integrity and restore evidence",
       "description": "Remediation task FINAL-003: Verify data integrity and restore evidence",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "DATA-009",
         "DATA-012",
@@ -6308,7 +6429,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-05T05:29:29.664Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

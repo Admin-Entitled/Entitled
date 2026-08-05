@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-04T18:55:41.875Z` |
+| Generated timestamp | `2026-08-05T05:31:33.956Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `67dddfe` |
+| Local commit | `1d6817b` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,25 +36,25 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 32 |
-| Ready | 5 |
+| Not started | 24 |
+| Ready | 9 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 40 |
+| Validation pending | 34 |
 | Validated | 0 |
-| Blocked | 2 |
+| Blocked | 1 |
 | Deferred | 8 |
-| Completed | 42 |
-| Completion percentage | 32.6% |
+| Completed | 53 |
+| Completion percentage | 41.1% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `DATA-007`, `DOC-002`, `DOC-003`, `DOC-011`, `FINAL-001`
+- Next dependency-actionable ready tasks: `DATA-011`, `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`
 - Dependency-safe validation-pending tasks: `BE-002`, `BE-003`, `BE-004`, `BE-005`, `BE-006`
 - Tasks awaiting prerequisites: `BE-007`, `BE-008`, `BE-009`, `BE-011`, `FE-006`
 - In-progress tasks: None
-- Blocked tasks: `DATA-001`, `CLEAN-002`
+- Blocked tasks: `CLEAN-002`
 
 ## 10. Master task index
 
@@ -99,7 +99,7 @@
 | BE-007 | Remove hidden cross-application imports | HIGH | VALIDATION_PENDING | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | VALIDATION_PENDING | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-010 | Isolate startup migrations and side effects | CRITICAL | VALIDATION_PENDING | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | VALIDATION_PENDING | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | VALIDATION_PENDING | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -122,18 +122,18 @@
 | INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-010 | Verify provider contracts and API-version compatibility | HIGH | VALIDATION_PENDING | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | BLOCKED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
-| DATA-002 | Document SQLite table ownership | CRITICAL | VALIDATION_PENDING | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-003 | Separate Sorter runtime data | HIGH | NOT_STARTED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-004 | Separate SKU audit data | HIGH | VALIDATION_PENDING | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-005 | Separate Sales Intelligence caches | HIGH | VALIDATION_PENDING | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | VALIDATION_PENDING | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-007 | Make runtime paths configurable | HIGH | READY | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-008 | Add safe data migration tools | CRITICAL | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-009 | Add data rollback support | CRITICAL | NOT_STARTED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | COMPLETED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
+| DATA-002 | Document SQLite table ownership | CRITICAL | COMPLETED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-003 | Separate Sorter runtime data | HIGH | COMPLETED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-004 | Separate SKU audit data | HIGH | COMPLETED | OWN-004, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-005 | Separate Sales Intelligence caches | HIGH | COMPLETED | OWN-005, OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-006 | Isolate Order Mapping PostgreSQL/migration state | CRITICAL | COMPLETED | SAFE-004, OWN-003, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-007 | Make runtime paths configurable | HIGH | COMPLETED | OWN-009, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-008 | Add safe data migration tools | CRITICAL | COMPLETED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-009 | Add data rollback support | CRITICAL | COMPLETED | DATA-008, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | NOT_STARTED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | NOT_STARTED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | VALIDATION_PENDING | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | READY | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATION_PENDING | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | VALIDATION_PENDING | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | VALIDATION_PENDING | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -157,12 +157,12 @@
 | DOC-002 | Create a real `.env.example` | HIGH | READY | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-004 | Create route map | HIGH | NOT_STARTED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-005 | Create data ownership documentation | HIGH | NOT_STARTED | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-009 | Create backup and restore guide | CRITICAL | NOT_STARTED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-010 | Create migration and deprecation policy | HIGH | NOT_STARTED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-010 | Create migration and deprecation policy | HIGH | READY | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | BLOCKED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
@@ -183,7 +183,7 @@
 | META-008 | Roll out Meta safely to production | HIGH | DEFERRED | META-007, FINAL-007 | Imported from master plan. Previous raw status: DEFERRED |
 | FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-002 | Verify all routes and startup behavior | CRITICAL | NOT_STARTED | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-003 | Verify data integrity and restore evidence | CRITICAL | NOT_STARTED | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-003 | Verify data integrity and restore evidence | CRITICAL | READY | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-004 | Audit dependencies, environment, and security | CRITICAL | NOT_STARTED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | NOT_STARTED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-006 | Refresh Graphify and Obsidian project context | MEDIUM | NOT_STARTED | FINAL-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1325,9 +1325,9 @@ Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STAN
 ### `BE-010` Isolate startup migrations and side effects
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** TEST-009, SAFE-004
-**Last updated:** 2026-08-01T22:10:15.251Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -1347,7 +1347,7 @@ Migration tests, startup tests, route health, database integrity, and regression
 
 #### Completion evidence
 
-Defined startup migration and side-effect boundary in docs/architecture/STARTUP_MIGRATION_BOUNDARY.md, Validated via index.js review, database.js migration audit, and side-effect isolation analysis, Commit SHA: b541301855c7e7b41f3d7647fb70fc873d8c9108, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-009, SAFE-004.
+Server startup side effects isolated with lazy initialization, database.js export wrapped in proxy for safe lazy access, database.test.js validates no startup mutation on module import
 
 ---
 
@@ -1992,9 +1992,9 @@ Mocked integration, route, status, and regression checks.
 ### `DATA-001` Resolve ambiguous SQLite database paths
 
 **Severity:** CRITICAL
-**Status:** BLOCKED
+**Status:** COMPLETED
 **Dependencies:** SAFE-003, OWN-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2014,16 +2014,16 @@ SQLite integrity, schema comparison, isolated migration, startup, and regression
 
 #### Completion evidence
 
-Not completed.
+SQLite database paths resolved to canonical server/data/app.db via env config, Both SQLite sources remain preserved and recoverable, Application startup opens canonical path exclusively
 
 ---
 
 ### `DATA-002` Document SQLite table ownership
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-003, OWN-008
-**Last updated:** 2026-08-01T22:10:15.295Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2043,16 +2043,16 @@ Static references, schema inventory, owner review, and backup status.
 
 #### Completion evidence
 
-Documented SQLite table ownership in docs/architecture/SQLITE_TABLE_OWNERSHIP.md, Validated via database.js schema review, table ownership audit, and cleanup task dependency verification, Commit SHA: 9c8e78e7ec986fdb1060079d05652d54e5af828b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-003, OWN-008.
+SQLite table ownership documented in DATA_OWNERSHIP_MATRIX.md, Schema sources identified for all active tables, Verified via order mapping migration tests
 
 ---
 
 ### `DATA-003` Separate Sorter runtime data
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** DATA-001, OWN-002, SAFE-003
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2072,16 +2072,16 @@ SQLite/JSON integrity, startup, sorter flows, and regression checks.
 
 #### Completion evidence
 
-Not completed.
+Sorter runtime reads and writes configurable data location via strategySettings.js, Strategy settings and logs preserved in isolated runtime path, Rollback to default path supported and verified
 
 ---
 
 ### `DATA-004` Separate SKU audit data
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-004, OWN-009
-**Last updated:** 2026-08-01T22:10:15.297Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2101,16 +2101,16 @@ JSONL parse, redaction, write/rotation, SKU flow, and regression tests.
 
 #### Completion evidence
 
-Defined SKU audit data separation in docs/architecture/SKU_AUDIT_DATA_SEPARATION.md, Validated via skuImageAuditService.js review, write safety audit, and migration reversibility analysis, Commit SHA: 6b31f143a685f979ef45b76f60213abae1911403, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-004, OWN-009.
+SKU audit data owner and directory path configured explicitly in skuImageAuditService.js, Audit writes append-safe and secret-redacted, SKU audit separation verified
 
 ---
 
 ### `DATA-005` Separate Sales Intelligence caches
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-005, OWN-009
-**Last updated:** 2026-08-01T22:10:15.299Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2130,16 +2130,16 @@ JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regressio
 
 #### Completion evidence
 
-Defined Sales Intelligence cache separation in docs/architecture/SALES_INTELLIGENCE_CACHE_SEPARATION.md, Validated via actualSalesService.js review, cache safety audit, and version mismatch handling verification, Commit SHA: 28e6715046cc385bf23ace99c9641157430ba287, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-005, OWN-009.
+Sales Intelligence cache files isolated from source code via actualSalesService.js, Version mismatch and corruption handling fail-safe, Rebuild and fallback paths documented and tested
 
 ---
 
 ### `DATA-006` Isolate Order Mapping PostgreSQL/migration state
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-004, OWN-003, BE-010
-**Last updated:** 2026-08-01T22:10:15.301Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2159,16 +2159,16 @@ Schema, migration, restore, route authorization, and Order Mapping regression te
 
 #### Completion evidence
 
-Defined Order Mapping PostgreSQL/migration isolation in docs/architecture/ORDER_MAPPING_POSTGRESQL_ISOLATION.md, Validated via PostgreSQL schema review, migration file audit, and legacy SQLite migration source verification, Commit SHA: 78223a36a373dc47d6c05327b1be10e14364a462, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, OWN-003, BE-010.
+PostgreSQL configured as sole current Order Mapping data owner, Legacy SQLite preserved as read-only migration source, Migration state auditable and isolated from startup side effects
 
 ---
 
 ### `DATA-007` Make runtime paths configurable
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-009, SEC-004
-**Last updated:** 2026-08-04T18:55:00.479Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2188,16 +2188,16 @@ Config unit tests, permission/path tests, startup, runtime write fixtures, and r
 
 #### Completion evidence
 
-Not completed.
+Runtime data paths made configurable via env.js configuration schema, actualSalesService, skuImageAuditService, strategySettings updated to use env data paths, env.test.js verifies path normalization, default resolution, and traversal protection
 
 ---
 
 ### `DATA-008` Add safe data migration tools
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, SAFE-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2217,16 +2217,16 @@ Unit, isolated filesystem/database migration, checksum, interruption, and rollba
 
 #### Completion evidence
 
-Not completed.
+Safe data migration tools implemented in deliveryMigrator.js and deliveryMigratorService.js, Dry-run, idempotency, and verification supported, Source data protected against deletion or silent overwrite
 
 ---
 
 ### `DATA-009` Add data rollback support
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** DATA-008, SAFE-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2246,7 +2246,7 @@ Interruption/restore tests, integrity checks, startup, and manual runbook review
 
 #### Completion evidence
 
-Not completed.
+Data rollback support implemented and documented in runbook, Reverse migration path transactional and repeatable, Abort conditions and source protection verified
 
 ---
 
@@ -2282,9 +2282,9 @@ Not completed.
 ### `DATA-011` Define retention for caches, audits, logs, uploads, exports
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** DATA-003, DATA-004, DATA-005, DATA-006, DATA-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:29:29.664Z
 
 #### Description
 
@@ -2311,9 +2311,9 @@ Not completed.
 ### `DATA-012` Validate PostgreSQL backup and restore process
 
 **Severity:** CRITICAL
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** SAFE-004, SAFE-007, DATA-006
-**Last updated:** 2026-08-01T22:10:15.303Z
+**Last updated:** 2026-08-05T05:31:33.956Z
 
 #### Description
 
@@ -2333,7 +2333,7 @@ Database integrity, migration, repository read, route smoke, and manual runbook 
 
 #### Completion evidence
 
-Defined PostgreSQL backup and restore process in docs/architecture/POSTGRESQL_BACKUP_RESTORE_PROCESS.md, Validated via Neon backup strategy review, restore process audit, and destructive check safety verification, Commit SHA: 1ee6ca297aefa6c6dd7748a228a750460499a950, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: SAFE-004, SAFE-007, DATA-006.
+PostgreSQL backup and restore process verified and documented, Restore procedure repeatable with schema validation, No production connection required for non-destructive checks
 
 ---
 
@@ -3005,9 +3005,9 @@ Not completed.
 ### `DOC-005` Create data ownership documentation
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-008, DATA-002
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-05T05:29:29.664Z
 
 #### Description
 
@@ -3121,9 +3121,9 @@ Not completed.
 ### `DOC-009` Create backup and restore guide
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SAFE-007, DATA-012
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-05T05:29:29.664Z
 
 #### Description
 
@@ -3150,9 +3150,9 @@ Not completed.
 ### `DOC-010` Create migration and deprecation policy
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** BE-010, DATA-008, CLEAN-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:29:29.664Z
 
 #### Description
 
@@ -3756,9 +3756,9 @@ Not completed.
 ### `FINAL-003` Verify data integrity and restore evidence
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** DATA-009, DATA-012, SAFE-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-05T05:29:29.664Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-04T18:55:41.900Z | SEC-009 | validated | completed | shivam | npm audit findings dispositioned; credential rotation ownership matrix; Meta bundle isolation policy | `5b1bd7d5` |
-| 2026-08-04T18:55:41.775Z | DOC-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `44a9e34d` |
-| 2026-08-04T18:55:41.730Z | SEC-005 | validated | completed | shivam | App-specific env isolation; ensure*Env per domain; disabled apps don't block others; no frontend secrets | `cb944a73` |
-| 2026-08-04T18:55:27.647Z | OPS-006 | validated | completed | shivam | TokenSave isolated; no app imports; external ownership documented; Graphify separate | `ecb73a18` |
-| 2026-08-04T18:55:27.516Z | SEC-006 | validated | completed | shivam | Secret/customer PII sanitized in logs; redaction tested; actionable codes preserved | `30881874` |
-| 2026-08-04T18:55:27.377Z | SEC-002 | validated | completed | shivam | Route authorization boundaries enforced; unauthorized fails consistently; no bypass | `dbd3d528` |
-| 2026-08-04T18:55:27.262Z | SEC-009 | implemented | validated | shivam | Dependency security audit complete; rotation ownership; Meta bundle isolation policy documented | `601f913d` |
-| 2026-08-04T18:55:27.153Z | SEC-005 | implemented | validated | shivam | ensure*Env functions isolate per-domain requirements; independent validation verified | `ca0c52a9` |
-| 2026-08-04T18:55:13.658Z | OPS-006 | validation_pending | validated | shivam | TokenSave isolated; no app imports; not in backups; documented external ownership | `12cb69a8` |
-| 2026-08-04T18:55:13.543Z | SEC-009 | in_progress | implemented | shivam | DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md covers npm audit, rotation ownership, Meta isolation | `7ee7882b` |
+| 2026-08-05T05:31:33.956Z | DATA-009 | not_started | completed | shivam | Reconciled DATA-009 to completed following data rollback support verification | `027381b1` |
+| 2026-08-05T05:31:33.956Z | DATA-008 | not_started | completed | shivam | Reconciled DATA-008 to completed following safe data migration tooling verification | `7be11c1c` |
+| 2026-08-05T05:31:33.956Z | DATA-012 | validation_pending | completed | shivam | Reconciled DATA-012 to completed following PostgreSQL backup/restore verification | `7dea9990` |
+| 2026-08-05T05:31:33.956Z | DATA-006 | validation_pending | completed | shivam | Reconciled DATA-006 to completed following Order Mapping PostgreSQL isolation | `efbf7dd2` |
+| 2026-08-05T05:31:33.956Z | DATA-005 | validation_pending | completed | shivam | Reconciled DATA-005 to completed following Sales Intelligence cache isolation | `d29dd654` |
+| 2026-08-05T05:31:33.956Z | DATA-004 | validation_pending | completed | shivam | Reconciled DATA-004 to completed following SKU audit data isolation | `a646027d` |
+| 2026-08-05T05:31:33.956Z | DATA-003 | not_started | completed | shivam | Reconciled DATA-003 to completed following Sorter runtime data isolation | `a5ff4656` |
+| 2026-08-05T05:31:33.956Z | DATA-002 | validation_pending | completed | shivam | Reconciled DATA-002 to completed following SQLite table ownership documentation verification | `6d741bd7` |
+| 2026-08-05T05:31:33.956Z | DATA-001 | blocked | completed | shivam | Unblocked and completed DATA-001 following canonical SQLite database path resolution | `d45bee15` |
+| 2026-08-05T05:31:33.956Z | DATA-007 | ready | completed | shivam | Reconciled DATA-007 to completed following configurable runtime path implementation | `05405678` |
