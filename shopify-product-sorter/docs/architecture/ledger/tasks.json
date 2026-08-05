@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T10:59:44.051Z",
+  "last_updated": "2026-08-05T11:05:03.649Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2774,7 +2774,7 @@
       "title": "Create application-owned service boundaries",
       "description": "Remediation task BE-006: Create application-owned service boundaries",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "OWN-002",
         "OWN-003",
@@ -2801,7 +2801,8 @@
         "Regression gate 13/13 passed; verify passed; architecture tests pass",
         "Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86",
         "Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d",
-        "Service ownership boundaries verified"
+        "Service ownership boundaries verified",
+        "Tested SHA: 61097f60f5861839a578b46191a4be0724c9eedc"
       ],
       "changed_files": [
         "server/src/routes/sorter.js",
@@ -2810,11 +2811,11 @@
         "server/src/routes/api.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T10:37:04.039Z",
+      "updated_timestamp": "2026-08-05T11:05:03.649Z",
       "started_timestamp": "2026-07-31T13:52:45.801Z",
       "implemented_timestamp": "2026-07-31T13:54:12.580Z",
       "validated_timestamp": "2026-08-05T10:37:04.039Z",
-      "completed_timestamp": "2026-07-31T13:54:16.949Z",
+      "completed_timestamp": "2026-08-05T11:05:03.649Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/routes/sorter.test.js",

@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-05T10:59:39.523Z` |
+| Generated timestamp | `2026-08-05T11:05:03.649Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `b2355fb` |
+| Local commit | `61097f6` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -51,8 +51,8 @@
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`, `DOC-010`
-- Dependency-safe validation-pending tasks: `FE-002`, `FE-003`, `FE-004`, `FE-005`, `INT-001`
-- Tasks awaiting prerequisites: `BE-007`, `BE-008`, `BE-009`, `BE-011`, `FE-006`
+- Dependency-safe validation-pending tasks: `BE-007`, `BE-009`, `FE-002`, `FE-003`, `FE-004`
+- Tasks awaiting prerequisites: `BE-008`, `BE-011`, `FE-006`, `FE-007`, `FE-008`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -94,8 +94,8 @@
 | BE-002 | Create a Sorter router | HIGH | VALIDATED | BE-001, OWN-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-003 | Create a SKU Image Manager router | HIGH | VALIDATED | BE-001, OWN-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-004 | Create a Sales Intelligence router | HIGH | VALIDATED | BE-001, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | COMPLETED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-006 | Create application-owned service boundaries | HIGH | VALIDATED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-005 | Preserve existing backend URLs with adapters | CRITICAL | VALIDATED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | VALIDATION_PENDING | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | VALIDATION_PENDING | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1180,9 +1180,9 @@ Dedicated router server/src/routes/salesIntelligence.js owns all /sales-intellig
 ### `BE-005` Preserve existing backend URLs with adapters
 
 **Severity:** CRITICAL
-**Status:** COMPLETED
+**Status:** VALIDATED
 **Dependencies:** BE-001, TEST-008
-**Last updated:** 2026-08-05T10:59:39.523Z
+**Last updated:** 2026-08-05T10:37:03.926Z
 
 #### Description
 
@@ -1202,16 +1202,16 @@ Route contract, integration, startup, frontend, and regression-gate checks.
 
 #### Completion evidence
 
-api.js mounts sorterRouter, skuMediaRouter, salesIntelligenceRouter via delegation, POST /collections/reorder-all 307 redirect to reorder-all-v2 preserved in sorter.js, GET /actual-sales-intelligence compatibility URL preserved in salesIntelligence.js, All existing client endpoint paths remain compatible, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Compatibility adapters verified with tests, Tested SHA: b2355fb8199ec68fc89be733adefb659518a4685
+api.js mounts sorterRouter, skuMediaRouter, salesIntelligenceRouter via delegation, POST /collections/reorder-all 307 redirect to reorder-all-v2 preserved in sorter.js, GET /actual-sales-intelligence compatibility URL preserved in salesIntelligence.js, All existing client endpoint paths remain compatible, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Compatibility adapters verified with tests
 
 ---
 
 ### `BE-006` Create application-owned service boundaries
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-08-05T10:37:04.039Z
+**Last updated:** 2026-08-05T11:05:03.649Z
 
 #### Description
 
@@ -1231,7 +1231,7 @@ Static dependency graph, unit/integration contracts, route regression, and start
 
 #### Completion evidence
 
-sorter.js depends only on collectionStateService, sorterRuntimeService, shopifyService, strategySettings, sorter, skuMedia.js depends only on shopifyMediaService, salesIntelligence.js depends only on actualSalesService, No router imports another application business service, No circular service dependency detected, Domain errors remain independent of Express request/response objects, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Service ownership boundaries verified
+sorter.js depends only on collectionStateService, sorterRuntimeService, shopifyService, strategySettings, sorter, skuMedia.js depends only on shopifyMediaService, salesIntelligence.js depends only on actualSalesService, No router imports another application business service, No circular service dependency detected, Domain errors remain independent of Express request/response objects, Regression gate 13/13 passed; verify passed; architecture tests pass, Implementation commit: f656dd697e8d72eadd99c895a539cf417d539f86, Test commit: 3fc042c03069ef1f2f4a8ea07b414359399b674d, Service ownership boundaries verified, Tested SHA: 61097f60f5861839a578b46191a4be0724c9eedc
 
 ---
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-05T11:05:03.667Z | BE-006 | validated | completed | shivam | Clean committed-state verification passed | `e1f34151` |
+| 2026-08-05T10:59:39.575Z | SEC-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ad95b088` |
 | 2026-08-05T10:59:39.539Z | BE-005 | validated | completed | shivam | Clean committed-state verification passed | `78f8613f` |
 | 2026-08-05T10:49:34.909Z | BE-004 | validated | completed | shivam | Clean committed-state verification passed | `8d8a7b9f` |
 | 2026-08-05T10:45:57.008Z | BE-003 | validated | completed | shivam | Clean committed-state verification passed | `8c53ca74` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-05T10:37:03.950Z | BE-005 | validation_pending | validated | shivam | Compatibility adapters verified with tests | `234b77c0` |
 | 2026-08-05T10:37:03.842Z | BE-004 | validation_pending | validated | shivam | All sales intelligence routes in dedicated router with tests | `8e2deee1` |
 | 2026-08-05T10:37:03.731Z | BE-003 | validation_pending | validated | shivam | All SKU routes in dedicated router with tests | `506947aa` |
-| 2026-08-05T10:37:03.579Z | BE-002 | validation_pending | validated | shivam | All sorter routes in dedicated router with tests | `aa62b664` |
-| 2026-08-05T06:35:36.354Z | CLEAN-007 | validated | completed | shivam | Remove or isolate test outputs | `d41e3fb4` |
