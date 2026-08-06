@@ -3529,7 +3529,7 @@
       ],
       "implementation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
       "clean_validation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
-      "completion_record_commit_sha": null,
+      "completion_record_commit_sha": "51c3ba8bdb72a025ed3b4081e24212ff7c413aab",
       "validation_results": "Fresh validation 2026-08-06 at 5ea1773: api.test.js 18/18 passed. orderMappingApi.js now delegates to the shared api.js transport (private API_BASE/request removed); error normalization is consistent across sorter/skuImage/salesIntelligence/orderMapping clients; FormData uploads, multipart header handling and CSV/download routes remain correct; no cross-client imports; no circular imports."
     },
     {
@@ -3583,7 +3583,7 @@
       ],
       "implementation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
       "clean_validation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
-      "completion_record_commit_sha": null,
+      "completion_record_commit_sha": "51c3ba8bdb72a025ed3b4081e24212ff7c413aab",
       "validation_results": "Fresh validation 2026-08-06 at 5ea1773: styles.test.js 5/5 passed; gate suite Frontend Style Isolation green. Feature-root scoping verified (.dashboard / .order-mapping-* roots); shared tokens centralized in :root; focus-visible present; conflicting duplicate .diagnostic-value.text-truncate removed (stale white-space:normal/160px block superseded by nowrap/140px); !important layering overrides classified as intentional; styles.test.js wired into regression gate."
     },
     {
@@ -3689,7 +3689,7 @@
       ],
       "implementation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
       "clean_validation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
-      "completion_record_commit_sha": null,
+      "completion_record_commit_sha": "51c3ba8bdb72a025ed3b4081e24212ff7c413aab",
       "validation_results": "Fresh validation 2026-08-06 at 5ea1773: frontendRegression.test.js 14/14 and staticFallback.test.js 4/4 passed; regression gate 14/14 suites PASSED. sidebarModules.js explicitly classifies every entry (ACTIVE_FEATURE x3 / INTENTIONAL_DISABLED x4 / DEFERRED_META x1); routeConfig.js provides pure, unit-tested direct-URL and refresh-safe route resolution plus legacy /delivery-resolution redirect; unknown /api paths return 404 (not swallowed by SPA fallback); unknown frontend routes fail safely to shell; frontend test failures block the gate (gate exits non-zero on any suite failure)."
     },
     {
