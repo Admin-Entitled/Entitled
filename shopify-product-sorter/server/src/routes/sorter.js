@@ -31,6 +31,58 @@ import {
   updateRun,
 } from "../services/sorterRuntimeService.js";
 import { logError, logInfo } from "../utils/logger.js";
+import { AppError } from "../middleware/errorBoundary.js";
+import { validateRequest } from "../middleware/requestValidation.js";
+
+const generateCollectionSchema = {
+  body: {
+    collectionId: { type: "string", required: true },
+  },
+};
+
+const applyCollectionSchema = {
+  body: {
+    collectionId: { type: "string", required: true },
+    orderIds: { type: "array", required: true },
+  },
+};
+
+const rollbackCollectionSchema = {
+  body: {
+    collectionId: { type: "string", required: true },
+  },
+};
+
+const collectionProductsSchema = {
+  query: {
+    collectionId: { type: "string", required: true },
+  },
+};
+
+const syncCollectionSchema = {
+  body: {
+    collectionId: { type: "string", required: true },
+  },
+};
+
+const collectionStateSchema = {
+  query: {
+    collectionId: { type: "string", required: true },
+  },
+};
+
+const updateSettingsSchema = {
+  body: {
+    collectionId: { type: "string", required: true },
+  },
+};
+
+const updatePreferenceSchema = {
+  body: {
+    collectionId: { type: "string", required: true },
+    productId: { type: "string", required: true },
+  },
+};
 
 const router = express.Router();
 
@@ -130,15 +182,12 @@ async function syncCollectionSnapshot(collectionId) {
   return saveSnapshot(payload, salesMetrics);
 }
 
-router.post("/collections/generate", async (req, res) => {
+router.post("/collections/generate", validateRequest(generateCollectionSchema), async (req, res, next) => {
   try {
     const { collectionId, settings: inputSettings } = req.body;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId in request body" });
-    }
     const snapshot = mergeSnapshotWithPreferences(collectionId, getCollectionSnapshot(collectionId));
     if (!snapshot) {
-      return res.status(404).json({ error: "Collection snapshot not found. Sync first." });
+      throw new AppError("COLLECTION_SNAPSHOT_NOT_FOUND", "Collection snapshot not found. Sync first.", { statusCode: 404 });
     }
 
     if (inputSettings) await saveStrategySettings(collectionId, inputSettings);
@@ -161,23 +210,20 @@ router.post("/collections/generate", async (req, res) => {
     });
   } catch (error) {
     logError("Failed to generate order", error, { collectionId: req.body.collectionId });
-    res.status(500).json({ error: "Failed to generate order", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/collections/apply", async (req, res) => {
+router.post("/collections/apply", validateRequest(applyCollectionSchema), async (req, res, next) => {
   try {
     const { collectionId, orderIds: newOrderIds } = req.body;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId in request body" });
-    }
     const snapshot = mergeSnapshotWithPreferences(collectionId, getCollectionSnapshot(collectionId));
     if (!snapshot) {
-      return res.status(404).json({ error: "Collection snapshot not found. Sync first." });
+      throw new AppError("COLLECTION_SNAPSHOT_NOT_FOUND", "Collection snapshot not found. Sync first.", { statusCode: 404 });
     }
 
-    if (!Array.isArray(newOrderIds) || !newOrderIds.length) {
-      return res.status(400).json({ error: "No generated order supplied." });
+    if (newOrderIds.length === 0) {
+      throw new AppError("VALIDATION_ERROR", "No generated order supplied.", { statusCode: 400 });
     }
 
     const result = await applyGeneratedOrder(collectionId, snapshot, newOrderIds);
@@ -195,7 +241,7 @@ router.post("/collections/apply", async (req, res) => {
     });
   } catch (error) {
     logError("Failed to apply Shopify order", error, { collectionId: req.body.collectionId });
-    res.status(500).json({ error: "Failed to apply Shopify order", detail: error.message });
+    next(error);
   }
 });
 
@@ -577,20 +623,17 @@ router.post("/collections/reorder-all", async (req, res) => {
   return res.redirect(307, "/api/collections/reorder-all-v2");
 });
 
-router.post("/collections/rollback", async (req, res) => {
+router.post("/collections/rollback", validateRequest(rollbackCollectionSchema), async (req, res, next) => {
   try {
     const { collectionId } = req.body;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId in request body" });
-    }
     const backup = getLatestBackup(collectionId);
     if (!backup) {
-      return res.status(404).json({ error: "No backup available for rollback." });
+      throw new AppError("BACKUP_NOT_FOUND", "No backup available for rollback.", { statusCode: 404 });
     }
 
     const snapshot = mergeSnapshotWithPreferences(collectionId, getCollectionSnapshot(collectionId));
     if (!snapshot) {
-      return res.status(404).json({ error: "Collection snapshot not found. Sync first." });
+      throw new AppError("COLLECTION_SNAPSHOT_NOT_FOUND", "Collection snapshot not found. Sync first.", { statusCode: 404 });
     }
 
     const rollbackOrderIds = backup.order
@@ -609,11 +652,11 @@ router.post("/collections/rollback", async (req, res) => {
     });
   } catch (error) {
     logError("Rollback failed", error, { collectionId: req.body.collectionId });
-    res.status(500).json({ error: "Rollback failed", detail: error.message });
+    next(error);
   }
 });
 
-router.get("/collections/logs/actions", (req, res) => {
+router.get("/collections/logs/actions", (req, res, next) => {
   try {
     const afterId = Number(req.query.afterId || 0);
     const limit = Math.min(100, Math.max(1, Number(req.query.limit || 30)));
@@ -623,14 +666,11 @@ router.get("/collections/logs/actions", (req, res) => {
     });
   } catch (error) {
     logError("Failed load sorter action logs", error);
-    res.status(500).json({
-      error: "Failed to load action logs",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.get("/collections/logs/network", (req, res) => {
+router.get("/collections/logs/network", (req, res, next) => {
   try {
     const afterId = Number(req.query.afterId || 0);
     const limit = Math.min(100, Math.max(1, Number(req.query.limit || 30)));
@@ -640,14 +680,11 @@ router.get("/collections/logs/network", (req, res) => {
     });
   } catch (error) {
     logError("Failed load sorter network logs", error);
-    res.status(500).json({
-      error: "Failed to load network logs",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.get("/collections", async (req, res) => {
+router.get("/collections", async (req, res, next) => {
   try {
     const collections = await fetchCollections();
     const enriched = await Promise.all(collections.map(async (collection) => ({
@@ -657,16 +694,13 @@ router.get("/collections", async (req, res) => {
     res.json({ collections: enriched });
   } catch (error) {
     logError("Failed to fetch collections", error);
-    res.status(500).json({ error: "Failed to fetch collections", detail: error.message });
+    next(error);
   }
 });
 
-router.get("/collection-products", async (req, res) => {
+router.get("/collection-products", validateRequest(collectionProductsSchema), async (req, res, next) => {
   try {
     const collectionId = req.query.collectionId;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId query parameter" });
-    }
     const payload = await fetchCollectionProducts(collectionId);
     const salesMetrics = await fetchSalesMetrics(payload.products.map((product) => product.id));
     const products = payload.products.map((product) => ({
@@ -684,16 +718,13 @@ router.get("/collection-products", async (req, res) => {
   } catch (error) {
     const collectionId = req.query.collectionId;
     logError("Failed to fetch collection products", error, { collectionId });
-    res.status(500).json({ error: "Failed to fetch collection products", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/collections/sync", async (req, res) => {
+router.post("/collections/sync", validateRequest(syncCollectionSchema), async (req, res, next) => {
   try {
     const { collectionId } = req.body;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId in request body" });
-    }
     const snapshot = await syncCollectionSnapshot(collectionId);
     upsertCollectionSettings(collectionId, snapshot.collection.title, {
       selected: true,
@@ -705,16 +736,13 @@ router.post("/collections/sync", async (req, res) => {
     });
   } catch (error) {
     logError("Failed to sync collection", error, { collectionId: req.body.collectionId });
-    res.status(500).json({ error: "Failed to sync collection", detail: error.message });
+    next(error);
   }
 });
 
-router.get("/collections/state", async (req, res) => {
+router.get("/collections/state", validateRequest(collectionStateSchema), async (req, res, next) => {
   try {
     const collectionId = req.query.collectionId;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId query parameter" });
-    }
     const snapshot = mergeSnapshotWithPreferences(collectionId, getCollectionSnapshot(collectionId));
     res.json({
       snapshot,
@@ -723,16 +751,13 @@ router.get("/collections/state", async (req, res) => {
     });
   } catch (error) {
     logError("Failed to load collection state", error, { collectionId: req.query.collectionId });
-    res.status(500).json({ error: "Failed to load collection state", detail: error.message });
+    next(error);
   }
 });
 
-router.put("/collections/settings", async (req, res) => {
+router.put("/collections/settings", validateRequest(updateSettingsSchema), async (req, res, next) => {
   try {
     const { collectionId, ...settingsData } = req.body;
-    if (!collectionId) {
-      return res.status(400).json({ error: "Missing collectionId in request body" });
-    }
     const snapshot = getCollectionSnapshot(collectionId);
     const collectionTitle = snapshot?.collection?.title || settingsData.collectionTitle || "Untitled Collection";
     const hasStrategy = ["salesWeight", "inventoryWeight", "newnessWeight", "momentumWeight", "rotationWeight"].some((key) => Object.hasOwn(settingsData, key));
@@ -741,16 +766,13 @@ router.put("/collections/settings", async (req, res) => {
     res.json({ settings: { ...settings, ...strategy } });
   } catch (error) {
     logError("Failed to update settings", error, { collectionId: req.body.collectionId });
-    res.status(500).json({ error: "Failed to update settings", detail: error.message });
+    next(error);
   }
 });
 
-router.put("/collections/products/preference", (req, res) => {
+router.put("/collections/products/preference", validateRequest(updatePreferenceSchema), (req, res, next) => {
   try {
     const { collectionId, productId, allottedPosition, includeInRotation } = req.body;
-    if (!collectionId || !productId) {
-      return res.status(400).json({ error: "Missing collectionId or productId in request body" });
-    }
     upsertProductPreference(collectionId, productId, {
       allottedPosition: allottedPosition ? Number(allottedPosition) : null,
       includeInRotation: Boolean(includeInRotation),
@@ -758,9 +780,8 @@ router.put("/collections/products/preference", (req, res) => {
     res.json({ ok: true });
   } catch (error) {
     logError("Failed to update product preference", error, req.body);
-    res.status(500).json({ error: "Failed to update product preference", detail: error.message });
+    next(error);
   }
 });
-
 
 export default router;

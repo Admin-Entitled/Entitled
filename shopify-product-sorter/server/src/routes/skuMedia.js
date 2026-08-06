@@ -13,8 +13,70 @@ import {
   searchSkuImageProducts,
 } from "../services/shopifyMediaService.js";
 import { logError } from "../utils/logger.js";
+import { AppError } from "../middleware/errorBoundary.js";
+import { validateRequest } from "../middleware/requestValidation.js";
 
-const router = express.Router();
+const addSkuImageSchema = {
+  body: {
+    sku: { type: "string", required: true },
+    productId: { type: "string", required: true },
+    variantId: { type: "string", required: true },
+  },
+};
+
+const addSkuImageUploadSchema = {
+  body: {
+    sku: { type: "string", required: true },
+    productId: { type: "string", required: true },
+    variantId: { type: "string", required: true },
+  },
+};
+
+const addSkuImageUrlSchema = {
+  body: {
+    sku: { type: "string", required: true },
+    productId: { type: "string", required: true },
+    variantId: { type: "string", required: true },
+    imageUrl: { type: "string", required: true },
+  },
+};
+
+const deleteSkuImageSchema = {
+  body: {
+    productId: { type: "string", required: true },
+    mediaId: { type: "string", required: true },
+  },
+};
+
+const reorderSkuImageSchema = {
+  body: {
+    productId: { type: "string", required: true },
+    orderedMediaIds: { type: "array", required: true },
+  },
+};
+
+const bulkAddSkuImageSchema = {
+  body: {
+    items: { type: "array", required: true },
+  },
+};
+
+const bulkDeletePreviewSchema = {
+  body: {
+    items: { type: "array", required: true },
+  },
+};
+
+const bulkDeleteConfirmSchema = {
+  body: {
+    previewRows: { type: "array", required: true },
+  },
+};
+
+const router = Router();
+function Router() {
+  return express.Router();
+}
 
 const upload = multer({
   dest: path.join(os.tmpdir(), "sku-image-manager-uploads"),
@@ -58,39 +120,42 @@ async function buildUploadPayload(file) {
   };
 }
 
-router.get("/sku-images/search", async (req, res) => {
+router.get("/sku-images/search", async (req, res, next) => {
   try {
     const skuInput = req.query.sku || "";
     const result = await searchSkuImageProducts({ skuInput, loadAll: false });
     res.json(result);
   } catch (error) {
     logError("Failed to search SKU image products", error, { sku: req.query.sku });
-    res.status(500).json({ error: "Failed to search SKU image products", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/load-all", async (req, res) => {
+router.post("/sku-images/load-all", async (req, res, next) => {
   try {
     const result = await searchSkuImageProducts({ loadAll: true });
     res.json(result);
   } catch (error) {
     logError("Failed to load all SKU image products", error);
-    res.status(500).json({ error: "Failed to load all SKU image products", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/add", async (req, res) => {
+router.post("/sku-images/add", validateRequest(addSkuImageSchema), async (req, res, next) => {
   try {
     const result = await addImageToSkuProduct(req.body);
     res.json(result);
   } catch (error) {
     logError("Failed to add SKU image", error, req.body);
-    res.status(500).json({ error: "Failed to add SKU image", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/add-upload", upload.single("image"), async (req, res) => {
+router.post("/sku-images/add-upload", upload.single("image"), validateRequest(addSkuImageUploadSchema), async (req, res, next) => {
   try {
+    if (!req.file) {
+      throw new AppError("MISSING_FILE", "Image file is required", { statusCode: 400 });
+    }
     const uploadPayload = await buildUploadPayload(req.file);
     const result = await addImageToSkuProduct({
       sku: req.body.sku,
@@ -107,11 +172,11 @@ router.post("/sku-images/add-upload", upload.single("image"), async (req, res) =
       await fs.unlink(req.file.path).catch(() => {});
     }
     logError("Failed to add uploaded SKU image", error, { body: req.body, file: req.file?.originalname });
-    res.status(500).json({ error: "Failed to add uploaded SKU image", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/add-url", async (req, res) => {
+router.post("/sku-images/add-url", validateRequest(addSkuImageUrlSchema), async (req, res, next) => {
   try {
     const result = await addImageToSkuProduct({
       sku: req.body.sku,
@@ -125,39 +190,39 @@ router.post("/sku-images/add-url", async (req, res) => {
     res.json(result);
   } catch (error) {
     logError("Failed to add URL SKU image", error, req.body);
-    res.status(500).json({ error: "Failed to add URL SKU image", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/delete", async (req, res) => {
+router.post("/sku-images/delete", validateRequest(deleteSkuImageSchema), async (req, res, next) => {
   try {
     const result = await deleteImageFromSkuProduct(req.body);
     res.json(result);
   } catch (error) {
     logError("Failed to delete SKU image", error, req.body);
-    res.status(500).json({ error: "Failed to delete SKU image", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/reorder", async (req, res) => {
+router.post("/sku-images/reorder", validateRequest(reorderSkuImageSchema), async (req, res, next) => {
   try {
     const { orderedMediaIds } = req.body;
-    if (!Array.isArray(orderedMediaIds) || !orderedMediaIds.length) {
-      return res.status(400).json({ error: "orderedMediaIds must be a non-empty array" });
+    if (orderedMediaIds.length === 0) {
+      throw new AppError("VALIDATION_ERROR", "orderedMediaIds must be a non-empty array", { statusCode: 400 });
     }
     const result = await reorderSkuProductImages(req.body);
     res.json(result);
   } catch (error) {
     logError("Failed to reorder SKU images", error, req.body);
-    res.status(500).json({ error: "Failed to reorder SKU images", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/bulk-add", async (req, res) => {
+router.post("/sku-images/bulk-add", validateRequest(bulkAddSkuImageSchema), async (req, res, next) => {
   try {
     const items = normalizeSkuItems(req.body.items);
     if (!items.length) {
-      return res.status(400).json({ error: "No SKU/product items supplied for bulk add" });
+      throw new AppError("VALIDATION_ERROR", "No SKU/product items supplied for bulk add", { statusCode: 400 });
     }
     const result = await bulkAddImageToSkuProducts({
       items,
@@ -170,15 +235,23 @@ router.post("/sku-images/bulk-add", async (req, res) => {
     res.json(result);
   } catch (error) {
     logError("Failed to bulk add SKU image", error);
-    res.status(500).json({ error: "Failed to bulk add SKU image", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/bulk-add-upload", upload.single("image"), async (req, res) => {
+router.post("/sku-images/bulk-add-upload", upload.single("image"), async (req, res, next) => {
   try {
-    const items = normalizeSkuItems(JSON.parse(req.body.items || "[]"));
+    let items;
+    try {
+      items = normalizeSkuItems(JSON.parse(req.body.items || "[]"));
+    } catch (e) {
+      throw new AppError("VALIDATION_ERROR", "Items parameter is not valid JSON", { statusCode: 400 });
+    }
     if (!items.length) {
-      return res.status(400).json({ error: "No SKU/product items supplied for bulk add upload" });
+      throw new AppError("VALIDATION_ERROR", "No SKU/product items supplied for bulk add upload", { statusCode: 400 });
+    }
+    if (!req.file) {
+      throw new AppError("MISSING_FILE", "Image file is required", { statusCode: 400 });
     }
     const uploadPayload = await buildUploadPayload(req.file);
     const result = await bulkAddImageToSkuProducts({
@@ -194,15 +267,15 @@ router.post("/sku-images/bulk-add-upload", upload.single("image"), async (req, r
       await fs.unlink(req.file.path).catch(() => {});
     }
     logError("Failed to bulk add uploaded SKU image", error);
-    res.status(500).json({ error: "Failed to bulk add uploaded SKU image", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/bulk-delete-preview", async (req, res) => {
+router.post("/sku-images/bulk-delete-preview", validateRequest(bulkDeletePreviewSchema), async (req, res, next) => {
   try {
     const items = normalizeSkuItems(req.body.items);
     if (!items.length) {
-      return res.status(400).json({ error: "No SKU/product items supplied for bulk delete preview" });
+      throw new AppError("VALIDATION_ERROR", "No SKU/product items supplied for bulk delete preview", { statusCode: 400 });
     }
     const result = await previewBulkDelete({
       items,
@@ -212,21 +285,21 @@ router.post("/sku-images/bulk-delete-preview", async (req, res) => {
     res.json(result);
   } catch (error) {
     logError("Failed to preview bulk delete", error);
-    res.status(500).json({ error: "Failed to preview bulk delete", detail: error.message });
+    next(error);
   }
 });
 
-router.post("/sku-images/bulk-delete-confirm", async (req, res) => {
+router.post("/sku-images/bulk-delete-confirm", validateRequest(bulkDeleteConfirmSchema), async (req, res, next) => {
   try {
     const previewRows = Array.isArray(req.body.previewRows) ? req.body.previewRows : [];
     if (!previewRows.length) {
-      return res.status(400).json({ error: "previewRows must be a non-empty array" });
+      throw new AppError("VALIDATION_ERROR", "previewRows must be a non-empty array", { statusCode: 400 });
     }
     const result = await confirmBulkDelete({ previewRows });
     res.json(result);
   } catch (error) {
     logError("Failed to confirm bulk delete", error);
-    res.status(500).json({ error: "Failed to confirm bulk delete", detail: error.message });
+    next(error);
   }
 });
 

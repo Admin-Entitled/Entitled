@@ -8,36 +8,48 @@ import {
   refreshShiprocketSalesData,
 } from "../services/actualSalesService.js";
 import { logError } from "../utils/logger.js";
+import { AppError } from "../middleware/errorBoundary.js";
+import { validateRequest } from "../middleware/requestValidation.js";
+
+const salesRefreshSchema = {
+  query: {
+    days: { type: "string", required: false },
+  },
+  body: {
+    days: { type: "string", required: false },
+  },
+};
+
+const salesExportSchema = {
+  query: {
+    type: { type: "string", required: false },
+    days: { type: "string", required: false },
+  },
+};
 
 const router = express.Router();
 
-router.post("/sales-intelligence/refresh-shopify", async (req, res) => {
+router.post("/sales-intelligence/refresh-shopify", validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await refreshShopifySalesData({ days: req.query.days || req.body?.days });
     res.json(payload);
   } catch (error) {
     logError("Failed to refresh Shopify sales intelligence data", error, { days: req.query.days || req.body?.days });
-    res.status(500).json({
-      error: "Failed to refresh Shopify sales intelligence data",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.post("/sales-intelligence/refresh-shiprocket", async (req, res) => {
+router.post("/sales-intelligence/refresh-shiprocket", validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await refreshShiprocketSalesData({ days: req.query.days || req.body?.days });
     res.json(payload);
   } catch (error) {
     logError("Failed to refresh Shiprocket sales intelligence data", error, { days: req.query.days || req.body?.days });
-    res.status(500).json({
-      error: "Failed to refresh Shiprocket sales intelligence data",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.post("/sales-intelligence/reconcile", async (req, res) => {
+router.post("/sales-intelligence/reconcile", validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await reconcileSalesData({
       days: req.query.days || req.body?.days,
@@ -46,14 +58,11 @@ router.post("/sales-intelligence/reconcile", async (req, res) => {
     res.json(payload);
   } catch (error) {
     logError("Failed to reconcile sales intelligence data", error, { days: req.query.days || req.body?.days });
-    res.status(500).json({
-      error: "Failed to reconcile sales intelligence data",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.get("/sales-intelligence/summary", async (req, res) => {
+router.get("/sales-intelligence/summary", validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await getActualSalesSummary({
       days: req.query.days,
@@ -62,14 +71,11 @@ router.get("/sales-intelligence/summary", async (req, res) => {
     res.json(payload);
   } catch (error) {
     logError("Failed to build sales intelligence summary", error, { days: req.query.days });
-    res.status(500).json({
-      error: "Failed to build sales intelligence summary",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.get("/sales-intelligence/reconciled-orders", async (req, res) => {
+router.get("/sales-intelligence/reconciled-orders", validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await getActualSalesSummary({
       days: req.query.days,
@@ -82,10 +88,7 @@ router.get("/sales-intelligence/reconciled-orders", async (req, res) => {
     });
   } catch (error) {
     logError("Failed to load reconciled sales intelligence orders", error, { days: req.query.days });
-    res.status(500).json({
-      error: "Failed to load reconciled sales intelligence orders",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
@@ -105,7 +108,7 @@ for (const [pathSuffix, sliceKey] of [
   ["recommendations", "recommendations"],
   ["pending-risk", "pendingRisk"],
 ]) {
-  router.get(`/sales-intelligence/${pathSuffix}`, async (req, res) => {
+  router.get(`/sales-intelligence/${pathSuffix}`, validateRequest(salesRefreshSchema), async (req, res, next) => {
     try {
       const payload = await getSalesAnalyticsSlice(sliceKey, {
         days: req.query.days,
@@ -114,15 +117,12 @@ for (const [pathSuffix, sliceKey] of [
       res.json(payload);
     } catch (error) {
       logError(`Failed to load sales intelligence ${sliceKey}`, error, { days: req.query.days });
-      res.status(500).json({
-        error: `Failed to load sales intelligence ${sliceKey}`,
-        detail: error.message,
-      });
+      next(error);
     }
   });
 }
 
-router.get("/sales-intelligence/export", async (req, res) => {
+router.get("/sales-intelligence/export", validateRequest(salesExportSchema), async (req, res, next) => {
   try {
     const { filename, csv } = await getSalesExport({
       type: req.query.type,
@@ -134,14 +134,11 @@ router.get("/sales-intelligence/export", async (req, res) => {
     res.send(csv);
   } catch (error) {
     logError("Failed to export sales intelligence data", error, { type: req.query.type, days: req.query.days });
-    res.status(500).json({
-      error: "Failed to export sales intelligence data",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
-router.get("/actual-sales-intelligence", async (req, res) => {
+router.get("/actual-sales-intelligence", validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await getActualSalesSummary({
       days: req.query.days,
@@ -150,10 +147,7 @@ router.get("/actual-sales-intelligence", async (req, res) => {
     res.json(payload);
   } catch (error) {
     logError("Failed to build actual sales intelligence", error, { days: req.query.days });
-    res.status(500).json({
-      error: "Failed to build actual sales intelligence",
-      detail: error.message,
-    });
+    next(error);
   }
 });
 
