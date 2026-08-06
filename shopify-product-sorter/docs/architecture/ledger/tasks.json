@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T13:40:48.279Z",
+  "last_updated": "2026-08-06T14:32:10.707Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3388,7 +3388,7 @@
       "title": "Retain Order Mapping compatibility boundary",
       "description": "Remediation task FE-006: Retain Order Mapping compatibility boundary",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "FE-003",
         "OWN-003"
@@ -3406,18 +3406,18 @@
         "Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_COMPATIBILITY_BOUNDARY.md",
         "Validated via OrderMapping.jsx audit, API client isolation, and state independence verification",
         "Commit SHA: ebbcc688abffd6af81745b6e0231b5efa294c56e",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-003, OWN-003."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-003, OWN-003.",
+        "Clean committed-state verification passed; tested at 987d635; frontend regression 7/7; build and regression gate passed"
       ],
       "changed_files": [
-        "client/src/OrderMapping.jsx",
         "client/src/orderMappingApi.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T13:41:02.695Z",
+      "updated_timestamp": "2026-08-06T14:32:10.707Z",
       "started_timestamp": "2026-07-31T14:23:05.216Z",
       "implemented_timestamp": "2026-07-31T14:25:05.288Z",
       "validated_timestamp": "2026-08-06T13:40:48.279Z",
-      "completed_timestamp": "2026-07-31T14:25:09.759Z",
+      "completed_timestamp": "2026-08-06T14:32:10.707Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
@@ -3427,7 +3427,10 @@
       "completion_record_commit_sha": null,
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "987d63501a779340dd011f1de9ac593eb0acb07e"
+        "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
+        "clean_validation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "tested_commit": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "passed": true
       }
     },
     {
