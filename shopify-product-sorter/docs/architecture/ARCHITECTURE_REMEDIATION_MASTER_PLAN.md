@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T15:33:42.643Z` |
+| Generated timestamp | `2026-08-06T15:33:42.711Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `5ea1773` |
+| Local commit | `8dfe7b4` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,8 +36,8 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 13 |
-| Ready | 11 |
+| Not started | 12 |
+| Ready | 12 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 11 |
@@ -167,7 +167,7 @@
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | COMPLETED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | READY | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-004 | Classify dead components and disabled placeholders | LOW | NOT_STARTED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-004 | Classify dead components and disabled placeholders | LOW | READY | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | COMPLETED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | COMPLETED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-007 | Remove or isolate test outputs | LOW | COMPLETED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -3294,9 +3294,9 @@ Not completed.
 ### `CLEAN-004` Classify dead components and disabled placeholders
 
 **Severity:** LOW
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** FE-011, OWN-001
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-06T15:33:42.699Z
 
 #### Description
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T15:33:42.711Z | CLEAN-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b0ca6401` |
 | 2026-08-06T15:33:42.667Z | FE-011 | validated | completed | shivam | FE-011 acceptance criteria verified at 5ea1773; clean committed state tested | `1d2d4e00` |
 | 2026-08-06T15:33:42.404Z | FE-011 | validation_pending | validated | shivam | Fresh validation at 5ea1773: frontendRegression 14/14 + staticFallback 4/4 passed; routeConfig + classification covered; gate 14/14 | `a3372fa0` |
 | 2026-08-06T15:33:42.123Z | FE-009 | validated | completed | shivam | FE-009 acceptance criteria verified at 5ea1773; clean committed state tested | `744aedd9` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-06T14:35:26.769Z | FE-010 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `474fec76` |
 | 2026-08-06T14:35:26.471Z | FE-010 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; all three features wrapped in ErrorBoundary with feature-specific keys; sanitized error output; tests cover boundary contract | `98eebd9a` |
 | 2026-08-06T14:34:01.842Z | FE-007 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `d80871c9` |
-| 2026-08-06T14:34:01.561Z | FE-007 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; App.jsx delegates to Sorter.jsx; no shared mutable singleton | `0df27797` |
