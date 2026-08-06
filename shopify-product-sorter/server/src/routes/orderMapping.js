@@ -18,9 +18,21 @@ import {
   setManualOrderMappingShipmentStatus,
   syncOrderMappingShopify,
 } from "../services/orderMappingService.js";
+import { isOrderMappingAvailable } from "../services/orderMappingDb.js";
 import { ORDER_MAPPING_STATUSES } from "../services/orderMappingStatus.js";
 
 const router = express.Router();
+
+router.use((req, res, next) => {
+  if (!isOrderMappingAvailable()) {
+    throw orderMappingError(
+      "ORDER_MAPPING_UNAVAILABLE",
+      "Order Mapping disabled because DATABASE_URL is not configured.",
+      { statusCode: 503, details: { category: "configuration_missing" } },
+    );
+  }
+  next();
+});
 
 const upload = multer({
   dest: path.join(os.tmpdir(), "order-mapping"),

@@ -6,6 +6,7 @@ import sorterRouter from "./sorter.js";
 import express from "express";
 import { getCachedTokenStatus } from "../services/shopifyAuth.js";
 import { env } from "../config/env.js";
+import { isOrderMappingAvailable } from "../services/orderMappingDb.js";
 import { fetchShopCounts } from "../services/shopifyService.js";
 import { logError } from "../utils/logger.js";
 
@@ -44,6 +45,12 @@ router.get("/health/readiness", (req, res) => {
         shopifyConfigured: Boolean(env.shopifyStoreDomain && (env.shopifyAdminAccessToken || (env.shopifyClientId && env.shopifyClientSecret))),
         shiprocketConfigured: Boolean(env.shiprocketEmail && env.shiprocketPassword),
         sqlitePathConfigured: Boolean(env.sqlitePath),
+        orderMappingConfigured: Boolean(env.databaseUrl),
+      },
+      orderMapping: {
+        available: isOrderMappingAvailable(),
+        status: isOrderMappingAvailable() ? "ready" : "unavailable",
+        reasonCategory: isOrderMappingAvailable() ? undefined : "configuration_missing",
       },
       timestamp: new Date().toISOString(),
     });
