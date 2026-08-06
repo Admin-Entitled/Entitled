@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T17:00:22.126Z` |
+| Generated timestamp | `2026-08-06T17:01:37.441Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `9c36d18` |
+| Local commit | `31eeb3e` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -41,11 +41,11 @@
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 8 |
-| Validated | 1 |
+| Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 89 |
-| Completion percentage | 69.0% |
+| Completed | 90 |
+| Completion percentage | 69.8% |
 
 ## 4. Current execution focus
 
@@ -117,7 +117,7 @@
 | INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | VALIDATION_PENDING | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-006 | Standardize integration authentication and env ownership | CRITICAL | VALIDATED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-006 | Standardize integration authentication and env ownership | CRITICAL | COMPLETED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATION_PENDING | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1847,9 +1847,9 @@ Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_
 ### `INT-006` Standardize integration authentication and env ownership
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SEC-003, SEC-004, INT-001, INT-004
-**Last updated:** 2026-08-06T17:00:22.126Z
+**Last updated:** 2026-08-06T17:01:37.441Z
 
 #### Description
 
@@ -1869,7 +1869,7 @@ Environment matrix, secret scan, startup, auth mock, and route regression tests.
 
 #### Completion evidence
 
---evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9
+--evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, Tested SHA: 9c36d180e06d7f302d8b1923d629ef1285b9b0c9
 
 ---
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T17:01:37.473Z | INT-006 | validated | completed | shivam | Clean committed-state verification passed | `0f789e4d` |
 | 2026-08-06T17:00:22.160Z | INT-006 | implemented | validated | shivam | --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 | `757daede` |
 | 2026-08-06T17:00:22.020Z | INT-006 | in_progress | implemented | shivam | --evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 | `856f5218` |
 | 2026-08-06T17:00:21.878Z | INT-006 | ready | in_progress | shivam | Transition to in_progress | `58651e9c` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-06T16:40:35.308Z | OPS-001 | validation_pending | in_progress | shivam | Transition to in_progress | `b02245ce` |
 | 2026-08-06T16:40:25.363Z | INT-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e91a4f45` |
 | 2026-08-06T16:40:25.321Z | INT-004 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets. | `14d6ef67` |
-| 2026-08-06T16:40:25.213Z | INT-004 | implemented | validated | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass. Status mapping + terminal-status tests pass. No secrets in fixtures. | `562ddc71` |
