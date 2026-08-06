@@ -5,6 +5,7 @@ import test from "node:test";
 import { sidebarModules, getActiveModules, getDisabledModules } from "./sidebarModules.js";
 import { getOrderStatusDisplay, getStatusFilterLabel } from "./orderMappingView.js";
 import ErrorBoundary from "./ErrorBoundary.js";
+import { legacyRedirectFor, resolveRootPath } from "./routeConfig.js";
 
 const styles = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
 
@@ -134,4 +135,73 @@ test("Frontend Regression: ErrorBoundary wraps feature modules in App.jsx (FE-01
   assert.ok(appContent.includes('key="sorter"'), "Sorter must have an ErrorBoundary key");
   assert.ok(appContent.includes('key="order-mapping"'), "OrderMapping must have an ErrorBoundary key");
   assert.ok(appContent.includes('key="sku-image-manager"'), "SkuImageManager must have an ErrorBoundary key");
+});
+
+test("Frontend Regression: direct frontend URLs resolve to the correct root (FE-011)", () => {
+  assert.equal(resolveRootPath("/order-mapping"), "order-mapping");
+  assert.equal(resolveRootPath("/delivery-resolution"), "order-mapping");
+  assert.equal(resolveRootPath("/"), "app");
+  assert.equal(resolveRootPath("/sorter"), "app");
+});
+
+test("Frontend Regression: browser-refresh resolution is deterministic (FE-011)", () => {
+  // Pathname-based resolution must be stable across refreshes.
+  assert.equal(resolveRootPath("/order-mapping"), resolveRootPath("/order-mapping"));
+  assert.equal(resolveRootPath("/"), resolveRootPath("/"));
+});
+
+test("Frontend Regression: unknown routes fail safely to the app shell (FE-011)", () => {
+  assert.equal(resolveRootPath("/some/unknown/route"), "app");
+  assert.equal(resolveRootPath("/api/collections"), "app");
+  assert.equal(legacyRedirectFor("/delivery-resolution"), "/order-mapping");
+  assert.equal(legacyRedirectFor("/"), null);
+});
+
+test("Frontend Regression: placeholder modules carry explicit classifications (FE-011)", () => {
+  const validClassifications = [
+    "ACTIVE_FEATURE",
+    "INTENTIONAL_DISABLED",
+    "DEFERRED_META",
+    "COMPATIBILITY_ENTRY",
+    "REMOVE_AFTER_PROOF",
+    "UNRESOLVED",
+  ];
+  for (const mod of sidebarModules) {
+    assert.ok(validClassifications.includes(mod.classification), `${mod.id} must carry a valid classification`);
+  }
+  const active = sidebarModules.filter((m) => m.enabled);
+  for (const mod of active) {
+    assert.equal(mod.classification, "ACTIVE_FEATURE", `enabled module ${mod.id} must be ACTIVE_FEATURE`);
+  }
+  const metaAds = sidebarModules.find((m) => m.id === "meta-ads");
+  assert.equal(metaAds.classification, "DEFERRED_META", "meta-ads must remain visibly deferred");
+});
+
+test("Frontend Regression: disabled navigation cannot invoke missing code (FE-011)", () => {
+  const appContent = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
+  assert.ok(appContent.includes("disabled={!item.enabled}"), "disabled nav items must be non-interactive");
+  assert.ok(appContent.includes("item.enabled && setActiveModule"), "nav clicks must be gated by enabled");
+});
+
+test("Frontend Regression: each feature imports only its own API client (FE-008)", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  const skuContent = readFileSync(new URL("./SkuImageManager.jsx", import.meta.url), "utf8");
+  const orderMappingContent = readFileSync(new URL("./OrderMapping.jsx", import.meta.url), "utf8");
+
+  assert.match(sorterContent, /from "\.\/sorterApi"/);
+  assert.ok(!/from "\.\/(skuImageApi|salesIntelligenceApi|orderMappingApi)"/.test(sorterContent), "Sorter must not import another feature's client");
+
+  assert.match(skuContent, /from "\.\/skuImageApi"/);
+  assert.ok(!/from "\.\/(sorterApi|salesIntelligenceApi|orderMappingApi)"/.test(skuContent), "SKU Image Manager must not import another feature's client");
+
+  assert.match(orderMappingContent, /from "\.\/orderMappingApi"/);
+  assert.ok(!/from "\.\/(sorterApi|skuImageApi|salesIntelligenceApi)"/.test(orderMappingContent), "Order Mapping must not import another feature's client");
+});
+
+test("Frontend Regression: frontend suites are wired into the regression gate (FE-011)", async () => {
+  const { testSuites } = await import("../../scripts/regression-gate.mjs");
+  const files = testSuites.map((s) => s.file);
+  assert.ok(files.includes("client/src/frontendRegression.test.js"), "frontend regression suite must be in the gate");
+  assert.ok(files.includes("client/src/api.test.js"), "api isolation suite must be in the gate");
+  assert.ok(files.includes("client/src/styles.test.js"), "style isolation suite must be in the gate");
 });

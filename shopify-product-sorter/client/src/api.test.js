@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 
 import { api } from "./orderMappingApi.js";
 import { getOrderStatusDisplay, getStatusFilterLabel } from "./orderMappingView.js";
@@ -221,4 +222,86 @@ test("getStatusFilterLabel formats status labels correctly for UI navigation", (
   assert.equal(getStatusFilterLabel("ALL"), "All Statuses");
   assert.equal(getStatusFilterLabel("DELIVERED_TO_CUSTOMER"), "Delivered To Customer");
   assert.equal(getStatusFilterLabel("PENDING_TRACKING"), "Pending Tracking");
+});
+
+
+// ===== FE-008: Frontend API client isolation =====
+test("FE-008: all four domain clients delegate to the shared api.js transport", () => {
+  for (const f of ["./api.js", "./sorterApi.js", "./skuImageApi.js", "./salesIntelligenceApi.js", "./orderMappingApi.js"]) {
+    const src = readFileSync(new URL(f, import.meta.url), "utf8");
+    assert.ok(src.length > 0, `${f} must exist`);
+  }
+  const orderMappingSrc = readFileSync(new URL("./orderMappingApi.js", import.meta.url), "utf8");
+  // The Order Mapping client must reuse the shared transport, not duplicate it.
+  assert.match(orderMappingSrc, /import \{ request \} from "\.\/api\.js"/, "orderMappingApi must import the shared request transport");
+  assert.ok(!orderMappingSrc.includes('const API_BASE = "/api/order-mapping"'), "orderMappingApi must not define a private API base");
+  const sorterSrc = readFileSync(new URL("./sorterApi.js", import.meta.url), "utf8");
+  assert.match(sorterSrc, /import \{ request \} from "\.\/api\.js"/, "sorterApi must import the shared request transport");
+  const skuSrc = readFileSync(new URL("./skuImageApi.js", import.meta.url), "utf8");
+  assert.match(skuSrc, /import \{ request \} from "\.\/api\.js"/, "skuImageApi must import the shared request transport");
+  const salesSrc = readFileSync(new URL("./salesIntelligenceApi.js", import.meta.url), "utf8");
+  assert.match(salesSrc, /import \{ request \} from "\.\/api\.js"/, "salesIntelligenceApi must import the shared request transport");
+});
+
+test("FE-008: generic api.js transport is pure (no domain routes, no circular imports)", () => {
+  const src = readFileSync(new URL("./api.js", import.meta.url), "utf8");
+  // api.js must not import any domain client (no circular imports).
+  assert.ok(!src.includes("./sorterApi"), "api.js must not import sorterApi");
+  assert.ok(!src.includes("./skuImageApi"), "api.js must not import skuImageApi");
+  assert.ok(!src.includes("./orderMappingApi"), "api.js must not import orderMappingApi");
+  assert.ok(!src.includes("./salesIntelligenceApi"), "api.js must not import salesIntelligenceApi");
+  // api.js must contain no domain endpoints.
+  assert.ok(!src.includes("/collections"), "api.js must stay free of domain routes");
+  assert.ok(!src.includes("/sku-images"), "api.js must stay free of domain routes");
+  assert.ok(!src.includes("/sales-intelligence"), "api.js must stay free of domain routes");
+});
+
+test("FE-008: normalized error detail parsing is consistent across domain clients", async () => {
+  const original = global.fetch;
+  const errors = [];
+  global.fetch = async () => new Response(JSON.stringify({ detail: "Shared detail failure" }), { status: 500 });
+  try {
+    for (const call of [() => sorterApi.getCollections(), () => skuImageApi.searchSkuImages("A1"), () => api.orders({})]) {
+      try {
+        await call();
+      } catch (err) {
+        errors.push(err.message);
+      }
+    }
+  } finally {
+    global.fetch = original;
+  }
+  assert.equal(errors.length, 3, "every domain client must reject on a 500 response");
+  for (const msg of errors) {
+    assert.match(msg, /Shared detail failure/, "every domain client must surface the normalized error detail");
+  }
+});
+
+test("FE-008: orderMappingApi FormData upload keeps multipart headers browser-owned", async () => {
+  const original = global.fetch;
+  const formData = new FormData();
+  let call = {};
+  formData.append("file", new Blob(["sku image"]), "orders.csv");
+  global.fetch = async (url, options = {}) => {
+    call = { url, options };
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  };
+  try {
+    await api.previewImport(formData.get("file"), { statusField: "status" });
+  } finally {
+    global.fetch = original;
+  }
+  assert.equal(call.url, "/api/order-mapping/imports/preview");
+  assert.ok(call.options.body instanceof FormData);
+  assert.equal(call.options.headers["Content-Type"], undefined, "multipart requests must not force Content-Type");
+});
+
+test("FE-008: orderMappingApi failed request normalization matches the shared transport", async () => {
+  const original = global.fetch;
+  global.fetch = async () => new Response(JSON.stringify({ message: "Order sync failed" }), { status: 500 });
+  try {
+    await assert.rejects(() => api.syncShopify({}), /Order sync failed/);
+  } finally {
+    global.fetch = original;
+  }
 });
