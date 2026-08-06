@@ -1,12 +1,9 @@
-export class OrderMappingError extends Error {
+import { AppError } from "../middleware/errorBoundary.js";
+
+export class OrderMappingError extends AppError {
   constructor(code, message, { statusCode = 400, details = undefined, cause = undefined } = {}) {
-    super(message, cause ? { cause } : undefined);
+    super(code, message, { statusCode, details, cause });
     this.name = "OrderMappingError";
-    this.code = code;
-    this.statusCode = statusCode;
-    if (details !== undefined) {
-      this.details = details;
-    }
   }
 }
 
