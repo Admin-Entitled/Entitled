@@ -2569,7 +2569,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T10:41:48.007Z",
         "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
@@ -2632,7 +2632,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T10:45:56.985Z",
         "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
@@ -2695,7 +2695,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T10:49:34.887Z",
         "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
@@ -2761,7 +2761,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T10:59:39.520Z",
         "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
@@ -2832,7 +2832,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T11:05:03.646Z",
         "implementation_commit_sha": "f656dd697e8d72eadd99c895a539cf417d539f86",
@@ -2852,7 +2852,7 @@
       ],
       "blocking_reasons": [],
       "acceptance_criteria": [
-        "No app imports another app’s business service.",
+        "No app imports another app\u2019s business service.",
         "Shared dependencies are named and contract-tested.",
         "Legacy compatibility remains until OWN-003 is complete."
       ],
@@ -3194,7 +3194,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:18:51.041Z",
         "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
@@ -3253,7 +3253,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:22:04.151Z",
         "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
@@ -3314,7 +3314,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:25:31.216Z",
         "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
@@ -3374,7 +3374,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:28:46.545Z",
         "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
@@ -3499,7 +3499,7 @@
       ],
       "blocking_reasons": [],
       "acceptance_criteria": [
-        "No app imports another app’s client methods.",
+        "No app imports another app\u2019s client methods.",
         "Error parsing remains compatible.",
         "FormData and CSV/download behavior remain intact."
       ],
@@ -3737,7 +3737,10 @@
         "--sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass, 0 fail. node --test server/src/services/providerIntegration.test.js: 17 pass. All offline, synthetic fixtures.",
         "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-001 complete. Inventoried 4 Shopify client modules (shopifyAuth.js, shopifyService.js, shopifyMediaService.js, orderMappingShopify.js). 17 READ / 7 WRITE ops. All callers listed. authEnv by variable name only. Permanent inventory contract test (8 assertions) in tests/providerInventory.test.js. SHOPIFY_CLIENT_INVENTORY.md created. No secrets, tokens, or customer data captured. Implementation commit: f64f3c887f290e101fb7879501574d179568d979."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHOPIFY_CLIENT_INVENTORY.md",
+        "tests/providerInventory.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T16:40:14.504Z",
       "started_timestamp": "2026-08-06T16:39:52.153Z",
@@ -3745,13 +3748,18 @@
       "validated_timestamp": "2026-08-06T16:40:06.073Z",
       "completed_timestamp": "2026-08-06T16:40:14.504Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
-      "clean_validation_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
-      "completion_record_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
+      "validation_files": [
+        "tests/providerInventory.test.js"
+      ],
+      "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "completion_record_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "1791793de9c89144a78dfff5df6d17c13ab79a39"
+        "passed": true,
+        "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+        "tested_commit": "f64f3c887f290e101fb7879501574d179568d979",
+        "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979"
       }
     },
     {
@@ -3813,7 +3821,7 @@
       "acceptance_criteria": [
         "Transport is reusable without app imports.",
         "App modules own business semantics.",
-        "Each app’s provider contract remains green."
+        "Each app\u2019s provider contract remains green."
       ],
       "validation_commands": [
         "Mocked integration, service unit, route, and regression tests."
@@ -3869,7 +3877,10 @@
         "--sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass. Status mapping + terminal-status tests pass. No secrets in fixtures.",
         "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md",
+        "tests/providerInventory.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T16:40:25.296Z",
       "started_timestamp": "2026-08-06T16:40:24.943Z",
@@ -3877,13 +3888,18 @@
       "validated_timestamp": "2026-08-06T16:40:25.187Z",
       "completed_timestamp": "2026-08-06T16:40:25.296Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
-      "clean_validation_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
-      "completion_record_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
+      "validation_files": [
+        "tests/providerInventory.test.js"
+      ],
+      "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "completion_record_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "f22a5af78e06cd4888f951fe2f767510e77c1d7b"
+        "passed": true,
+        "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+        "tested_commit": "f64f3c887f290e101fb7879501574d179568d979",
+        "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979"
       }
     },
     {
@@ -4653,7 +4669,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "0d5d4a4d1aa8ecc8f5afa9029518275c367b8e4e",
@@ -4715,7 +4731,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "50f4c83384e988783e360206bfed1871695ed8d2",
@@ -4803,7 +4819,10 @@
         "--sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js OPS-001 section: 6 assertions pass. dev script uses concurrently. No package.json script references scripts/dev.mjs. Supported commands verified.",
         "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/DEV_SCRIPT_STATUS.md",
+        "tests/providerInventory.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T16:40:35.739Z",
       "started_timestamp": "2026-08-06T16:40:35.281Z",
@@ -4811,13 +4830,18 @@
       "validated_timestamp": "2026-08-06T16:40:35.526Z",
       "completed_timestamp": "2026-08-06T16:40:35.739Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
-      "clean_validation_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
-      "completion_record_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
+      "validation_files": [
+        "tests/providerInventory.test.js"
+      ],
+      "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "completion_record_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c"
+        "passed": true,
+        "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+        "tested_commit": "f64f3c887f290e101fb7879501574d179568d979",
+        "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979"
       }
     },
     {
@@ -5016,7 +5040,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "5f976b03b4bed02dc946474ec3b9e0326ff42eb4",
@@ -5129,7 +5153,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "5f976b03b4bed02dc946474ec3b9e0326ff42eb4",
@@ -5187,7 +5211,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "5f976b03b4bed02dc946474ec3b9e0326ff42eb4",
@@ -5247,7 +5271,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "855be5e50a9b7c8661f18b594f1fd45836eedd0a",
@@ -6284,7 +6308,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "6a3ac4f8945d9a70477a9491523694812fe7b881",
@@ -6410,7 +6434,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "0d5d4a4d1aa8ecc8f5afa9029518275c367b8e4e",
@@ -6470,7 +6494,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.162Z",
         "implementation_commit_sha": "0d5d4a4d1aa8ecc8f5afa9029518275c367b8e4e",
@@ -6528,7 +6552,7 @@
         "verify": {
           "passed": true,
           "exit_code": 0,
-          "output_summary": "✓ System verification completed successfully (offline mode)."
+          "output_summary": "\u2713 System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-05T06:37:20.163Z",
         "implementation_commit_sha": "0d5d4a4d1aa8ecc8f5afa9029518275c367b8e4e",
