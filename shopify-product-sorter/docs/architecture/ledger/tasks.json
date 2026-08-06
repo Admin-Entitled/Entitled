@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T14:35:26.743Z",
+  "last_updated": "2026-08-06T15:33:42.711Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3490,7 +3490,7 @@
       "title": "Separate frontend API clients",
       "description": "Remediation task FE-008: Separate frontend API clients",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -3510,36 +3510,34 @@
         "--evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed.",
         "--evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed.",
         "--evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-008."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-008.",
+        "Fresh validation at 5ea1773: api.test.js 18/18 passed; orderMappingApi delegates to shared transport; consistent error normalization; FormData/multipart/CSV intact",
+        "FE-008 acceptance criteria verified at 5ea1773; clean committed state tested"
       ],
       "changed_files": [
-        "client/src/api.js",
-        "client/src/sorterApi.js",
-        "client/src/skuImageApi.js",
-        "client/src/salesIntelligenceApi.js",
-        "client/src/Sorter.jsx",
-        "client/src/SkuImageManager.jsx",
-        "client/src/api.test.js"
+        "client/src/orderMappingApi.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.269Z",
+      "updated_timestamp": "2026-08-06T15:33:41.502Z",
       "started_timestamp": "2026-07-31T17:59:05.079Z",
       "implemented_timestamp": "2026-07-31T18:09:23.701Z",
-      "validated_timestamp": "2026-07-31T18:09:24.561Z",
-      "completed_timestamp": "2026-07-31T18:09:50.812Z",
+      "validated_timestamp": "2026-08-06T15:33:41.245Z",
+      "completed_timestamp": "2026-08-06T15:33:41.502Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "client/src/api.test.js"
+      ],
+      "implementation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
+      "clean_validation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": "Fresh validation 2026-08-06 at 5ea1773: api.test.js 18/18 passed. orderMappingApi.js now delegates to the shared api.js transport (private API_BASE/request removed); error normalization is consistent across sorter/skuImage/salesIntelligence/orderMapping clients; FormData uploads, multipart header handling and CSV/download routes remain correct; no cross-client imports; no circular imports."
     },
     {
       "id": "FE-009",
       "title": "Isolate styles and remove global leakage",
       "description": "Remediation task FE-009: Isolate styles and remove global leakage",
       "severity": "MEDIUM",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "FE-001",
         "FE-004",
@@ -3566,21 +3564,27 @@
         "PASS: scoped input/select/textarea focus-visible visibility to dashboard features; tests and build passed.",
         "PASS: removed jsdom regression test, kept core style isolation check in regression gate; build and tests passed.",
         "FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-009."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-009.",
+        "Fresh validation at 5ea1773: styles.test.js 5/5 passed; feature-root scoping + shared tokens verified; conflicting duplicate removed",
+        "FE-009 acceptance criteria verified at 5ea1773; clean committed state tested"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/styles.css"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.271Z",
+      "updated_timestamp": "2026-08-06T15:33:42.099Z",
       "started_timestamp": "2026-07-31T18:41:31.921Z",
       "implemented_timestamp": "2026-07-31T19:03:15.167Z",
-      "validated_timestamp": "2026-07-31T19:07:11.097Z",
-      "completed_timestamp": "2026-07-31T19:14:28.489Z",
+      "validated_timestamp": "2026-08-06T15:33:41.827Z",
+      "completed_timestamp": "2026-08-06T15:33:42.099Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "client/src/styles.test.js"
+      ],
+      "implementation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
+      "clean_validation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": "Fresh validation 2026-08-06 at 5ea1773: styles.test.js 5/5 passed; gate suite Frontend Style Isolation green. Feature-root scoping verified (.dashboard / .order-mapping-* roots); shared tokens centralized in :root; focus-visible present; conflicting duplicate .diagnostic-value.text-truncate removed (stale white-space:normal/160px block superseded by nowrap/140px); !important layering overrides classified as intentional; styles.test.js wired into regression gate."
     },
     {
       "id": "FE-010",
@@ -3638,7 +3642,7 @@
       "title": "Add frontend regression tests and classify placeholders",
       "description": "Remediation task FE-011: Add frontend regression tests and classify placeholders",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "FE-002",
         "FE-003",
@@ -3662,21 +3666,31 @@
       "evidence": [
         "--evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules.",
         "--evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-011."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-011.",
+        "Fresh validation at 5ea1773: frontendRegression 14/14 + staticFallback 4/4 passed; routeConfig + classification covered; gate 14/14",
+        "FE-011 acceptance criteria verified at 5ea1773; clean committed state tested"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/main.jsx",
+        "client/src/routeConfig.js",
+        "client/src/sidebarModules.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.275Z",
+      "updated_timestamp": "2026-08-06T15:33:42.642Z",
       "started_timestamp": "2026-07-31T20:38:52.540Z",
       "implemented_timestamp": "2026-07-31T20:45:39.883Z",
-      "validated_timestamp": "2026-07-31T20:45:46.223Z",
-      "completed_timestamp": "2026-07-31T20:46:15.517Z",
+      "validated_timestamp": "2026-08-06T15:33:42.369Z",
+      "completed_timestamp": "2026-08-06T15:33:42.642Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "client/src/frontendRegression.test.js",
+        "server/src/routes/staticFallback.test.js",
+        "scripts/regression-gate.mjs"
+      ],
+      "implementation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
+      "clean_validation_commit_sha": "5ea17735a1a97a87da04606ebdff204afe30c62d",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": "Fresh validation 2026-08-06 at 5ea1773: frontendRegression.test.js 14/14 and staticFallback.test.js 4/4 passed; regression gate 14/14 suites PASSED. sidebarModules.js explicitly classifies every entry (ACTIVE_FEATURE x3 / INTENTIONAL_DISABLED x4 / DEFERRED_META x1); routeConfig.js provides pure, unit-tested direct-URL and refresh-safe route resolution plus legacy /delivery-resolution redirect; unknown /api paths return 404 (not swallowed by SPA fallback); unknown frontend routes fail safely to shell; frontend test failures block the gate (gate exits non-zero on any suite failure)."
     },
     {
       "id": "INT-001",
@@ -6291,7 +6305,7 @@
       "title": "Classify dead components and disabled placeholders",
       "description": "Remediation task CLEAN-004: Classify dead components and disabled placeholders",
       "severity": "LOW",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "FE-011",
         "OWN-001"
@@ -6307,7 +6321,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T15:33:42.699Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T14:35:26.743Z` |
+| Generated timestamp | `2026-08-06T15:33:42.643Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `6649c78` |
+| Local commit | `5ea1773` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,19 +40,19 @@
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 14 |
+| Validation pending | 11 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 83 |
-| Completion percentage | 64.3% |
+| Completed | 86 |
+| Completion percentage | 66.7% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `FE-008`, `FE-009`, `INT-001`, `INT-004`, `OPS-001`
-- Tasks awaiting prerequisites: `FE-011`, `INT-002`, `INT-003`, `INT-005`, `INT-006`
+- Dependency-safe validation-pending tasks: `INT-001`, `INT-004`, `OPS-001`
+- Tasks awaiting prerequisites: `INT-002`, `INT-003`, `INT-005`, `INT-006`, `INT-007`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -108,10 +108,10 @@
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | COMPLETED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-009 | Isolate styles and remove global leakage | MEDIUM | VALIDATION_PENDING | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-008 | Separate frontend API clients | HIGH | COMPLETED | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-009 | Isolate styles and remove global leakage | MEDIUM | COMPLETED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-010 | Add feature error and loading boundaries | HIGH | COMPLETED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-011 | Add frontend regression tests and classify placeholders | HIGH | VALIDATION_PENDING | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-011 | Add frontend regression tests and classify placeholders | HIGH | COMPLETED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | VALIDATION_PENDING | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | VALIDATION_PENDING | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1586,9 +1586,9 @@ Component tests, navigation tests, stale-state checks, and regression gate.
 ### `FE-008` Separate frontend API clients
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** FE-004, FE-005, FE-006, BE-005
-**Last updated:** 2026-08-01T22:10:15.269Z
+**Last updated:** 2026-08-06T15:33:41.502Z
 
 #### Description
 
@@ -1608,16 +1608,16 @@ Unit/API mock, route, browser, and regression tests.
 
 #### Completion evidence
 
---evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-008.
+--evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence Split client/src/api.js into a shared request helper plus client/src/sorterApi.js, client/src/skuImageApi.js, and client/src/salesIntelligenceApi.js; updated Sorter.jsx, SkuImageManager.jsx, and api.test.js imports; added API mock checks for error detail parsing, FormData upload headers, and CSV export URL; npm run build passed; npm run test:regression-gate passed., --evidence FE-008 implementation and validation complete: feature API clients split, compatibility tests added, build and regression gate passed., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-008., Fresh validation at 5ea1773: api.test.js 18/18 passed; orderMappingApi delegates to shared transport; consistent error normalization; FormData/multipart/CSV intact, FE-008 acceptance criteria verified at 5ea1773; clean committed state tested
 
 ---
 
 ### `FE-009` Isolate styles and remove global leakage
 
 **Severity:** MEDIUM
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** FE-001, FE-004, FE-005, FE-006
-**Last updated:** 2026-08-01T22:10:15.271Z
+**Last updated:** 2026-08-06T15:33:42.099Z
 
 #### Description
 
@@ -1637,7 +1637,7 @@ Static CSS scan, browser screenshots, accessibility, and regression checks.
 
 #### Completion evidence
 
-Scoped form and table presentation rules to dashboard feature roots; shared CSS variables remain centralized. Files: client/src/styles.css, client/src/styles.test.js, PASS: static CSS isolation test and frontend API regression tests; Vite production build; desktop/mobile browser smoke checks for Sorter, SKU Image Manager, and Order Mapping; focusable labeled controls and no body overflow. No committed visual baseline exists, so pixel comparison is inconclusive., Review follow-up: wired client/src/styles.test.js into scripts/regression-gate.mjs and strengthened scoped selector assertions., PASS: integrated regression gate includes Frontend Style Isolation; all suites passed; client build passed; scoped diff check clean., Review follow-up: added client/src/test/regression.test.js for DOM rendering checks and wired front-end tests into regression gate and package.json test:client script., PASS: node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build; focused diff check clean., PASS: removed duplicate test:regression-gate script and kept only the existing regression gate command; node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build passed., PASS: scoped input/select/textarea focus-visible visibility to dashboard features; tests and build passed., PASS: removed jsdom regression test, kept core style isolation check in regression gate; build and tests passed., FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-009.
+Scoped form and table presentation rules to dashboard feature roots; shared CSS variables remain centralized. Files: client/src/styles.css, client/src/styles.test.js, PASS: static CSS isolation test and frontend API regression tests; Vite production build; desktop/mobile browser smoke checks for Sorter, SKU Image Manager, and Order Mapping; focusable labeled controls and no body overflow. No committed visual baseline exists, so pixel comparison is inconclusive., Review follow-up: wired client/src/styles.test.js into scripts/regression-gate.mjs and strengthened scoped selector assertions., PASS: integrated regression gate includes Frontend Style Isolation; all suites passed; client build passed; scoped diff check clean., Review follow-up: added client/src/test/regression.test.js for DOM rendering checks and wired front-end tests into regression gate and package.json test:client script., PASS: node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build; focused diff check clean., PASS: removed duplicate test:regression-gate script and kept only the existing regression gate command; node tests client/src/styles.test.js client/src/api.test.js; npm run test:client; npm run build passed., PASS: scoped input/select/textarea focus-visible visibility to dashboard features; tests and build passed., PASS: removed jsdom regression test, kept core style isolation check in regression gate; build and tests passed., FE-009 implementation validated: scoped form/table/focus-visible presentation rules to .dashboard roots; shared tokens centralized in :root; added client/src/styles.test.js with scoped selector assertions; wired into regression-gate and package.json test:client; Vite build and all test suites passed; desktop/mobile browser smoke checks passed. Note: arch:checkpoint blocked by false-positive secret scan on pre-existing .tokensave/tokensave.db binary; commit requires staging outside checkpoint., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-009., Fresh validation at 5ea1773: styles.test.js 5/5 passed; feature-root scoping + shared tokens verified; conflicting duplicate removed, FE-009 acceptance criteria verified at 5ea1773; clean committed state tested
 
 ---
 
@@ -1673,9 +1673,9 @@ Added ErrorBoundary class component wrapping each feature route in App.jsx (keye
 ### `FE-011` Add frontend regression tests and classify placeholders
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010
-**Last updated:** 2026-08-01T22:10:15.275Z
+**Last updated:** 2026-08-06T15:33:42.642Z
 
 #### Description
 
@@ -1695,7 +1695,7 @@ Unit, browser, accessibility, route, build, and regression checks.
 
 #### Completion evidence
 
---evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules., --evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-011.
+--evidence=Added frontend regression tests in client/src/frontendRegression.test.js and client/src/styles.test.js covering module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation rules., --evidence=Verified all 12 regression test suites pass cleanly via npm run test:regression-gate. Frontend regression test coverage confirmed for module classification, placeholder ownership claims, Order Mapping view status tones/labels, ErrorBoundary contract, and style isolation., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-011., Fresh validation at 5ea1773: frontendRegression 14/14 + staticFallback 4/4 passed; routeConfig + classification covered; gate 14/14, FE-011 acceptance criteria verified at 5ea1773; clean committed state tested
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T15:33:42.667Z | FE-011 | validated | completed | shivam | FE-011 acceptance criteria verified at 5ea1773; clean committed state tested | `1d2d4e00` |
+| 2026-08-06T15:33:42.404Z | FE-011 | validation_pending | validated | shivam | Fresh validation at 5ea1773: frontendRegression 14/14 + staticFallback 4/4 passed; routeConfig + classification covered; gate 14/14 | `a3372fa0` |
+| 2026-08-06T15:33:42.123Z | FE-009 | validated | completed | shivam | FE-009 acceptance criteria verified at 5ea1773; clean committed state tested | `744aedd9` |
+| 2026-08-06T15:33:41.856Z | FE-009 | validation_pending | validated | shivam | Fresh validation at 5ea1773: styles.test.js 5/5 passed; feature-root scoping + shared tokens verified; conflicting duplicate removed | `3d295997` |
+| 2026-08-06T15:33:41.528Z | FE-008 | validated | completed | shivam | FE-008 acceptance criteria verified at 5ea1773; clean committed state tested | `1e135990` |
+| 2026-08-06T15:33:41.269Z | FE-008 | validation_pending | validated | shivam | Fresh validation at 5ea1773: api.test.js 18/18 passed; orderMappingApi delegates to shared transport; consistent error normalization; FormData/multipart/CSV intact | `239c5e4a` |
 | 2026-08-06T14:35:26.769Z | FE-010 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `474fec76` |
 | 2026-08-06T14:35:26.471Z | FE-010 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; all three features wrapped in ErrorBoundary with feature-specific keys; sanitized error output; tests cover boundary contract | `98eebd9a` |
 | 2026-08-06T14:34:01.842Z | FE-007 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `d80871c9` |
 | 2026-08-06T14:34:01.561Z | FE-007 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; App.jsx delegates to Sorter.jsx; no shared mutable singleton | `0df27797` |
-| 2026-08-06T14:32:10.766Z | FE-006 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635; frontend regression 7/7; build and regression gate passed | `77ac8284` |
-| 2026-08-06T13:40:48.306Z | FE-006 | validation_pending | validated | shivam | Transition to validated | `08047a8e` |
-| 2026-08-06T13:17:18.145Z | FE-005 | validated | completed | shivam | Transition to completed | `cf390596` |
-| 2026-08-06T13:17:17.978Z | FE-004 | validated | completed | shivam | Transition to completed | `f8888d83` |
-| 2026-08-06T13:17:17.830Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b1e907de` |
-| 2026-08-06T13:17:17.830Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `11055395` |
