@@ -1,5 +1,36 @@
 import { request } from "./api.js";
 
+const PRODUCT_GID_PATTERN = /^gid:\/\/shopify\/Product\/\d+$/;
+
+/**
+ * Client-side validation for the preview-to-apply order payload.
+ *
+ * Accepts an array of string Shopify product GIDs and returns it unchanged.
+ * Rejects empty arrays, non-string or blank entries, malformed GIDs and
+ * duplicates with safe, actionable messages. Callers must NOT send the request
+ * when this throws — the preview stays visible for the operator.
+ */
+export function validateApplyOrderIds(orderIds) {
+  if (!Array.isArray(orderIds) || orderIds.length === 0) {
+    throw new Error("Preview is empty. Generate a new order before applying.");
+  }
+
+  for (const id of orderIds) {
+    if (typeof id !== "string" || id.trim() === "") {
+      throw new Error("Preview contains invalid product data. Generate a new order before applying.");
+    }
+    if (!PRODUCT_GID_PATTERN.test(id)) {
+      throw new Error("Preview contains an invalid product identifier. Generate a new order before applying.");
+    }
+  }
+
+  if (new Set(orderIds).size !== orderIds.length) {
+    throw new Error("Preview contains duplicate products. Generate a new order before applying.");
+  }
+
+  return orderIds;
+}
+
 export const api = {
   getReadiness: () => request("/health/readiness"),
   getShopifyDebug: () => request("/debug/shopify"),
@@ -34,10 +65,14 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ collectionId, settings }),
     }),
-  applyOrder: (collectionId, orderIds) =>
+  applyOrder: (collectionId, orderIds, previewVersion) =>
     request("/collections/apply", {
       method: "POST",
-      body: JSON.stringify({ collectionId, orderIds }),
+      body: JSON.stringify({
+        collectionId,
+        orderIds,
+        ...(previewVersion ? { previewVersion } : {}),
+      }),
     }),
   reorderAllCollections: () =>
     request("/collections/reorder-all-v2", {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "./sorterApi";
+import { api, validateApplyOrderIds } from "./sorterApi";
 
 const defaultFilters = {
   search: "",
@@ -19,6 +19,7 @@ const defaultFilters = {
 const emptyPreview = {
   newOrder: [],
   previewUrl: null,
+  previewVersion: null,
 };
 
 const fallbackImage =
@@ -330,6 +331,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
   });
   const [filters, setFilters] = useState(defaultFilters);
   const [preview, setPreview] = useState(emptyPreview);
+  const [previewStale, setPreviewStale] = useState(false);
   const [backup, setBackup] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
@@ -345,6 +347,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
   // state and ignore stale results after unmount (StrictMode-safe).
   const collectionsFetchedRef = useRef(false);
   const mountedRef = useRef(true);
+  // In-flight guard so a double-click can never issue concurrent apply
+  // requests to the Shopify write endpoint.
+  const applyInProgressRef = useRef(false);
 
   const products = snapshot?.products || [];
 
@@ -464,6 +469,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
       setSelectedCollectionId("");
       setSnapshot(null);
       setPreview(emptyPreview);
+      setPreviewStale(false);
       return;
     }
 
@@ -471,6 +477,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
     setLoading(true);
     setError("");
     setPreview(emptyPreview);
+    setPreviewStale(false);
 
     try {
       const response = await api.getCollectionSnapshot(collectionId);
@@ -504,6 +511,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
       if (mountedRef.current) {
         setSnapshot(response.snapshot || null);
         mergeSettingsFromResponse(response.settings);
+        // A fresh snapshot invalidates any previously generated preview.
+        setPreview(emptyPreview);
+        setPreviewStale(false);
         setMessage("Synced successfully");
       }
     } catch (err) {
@@ -537,6 +547,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
         rotationWeight: Number(settings.rotationWeight),
       });
       if (mountedRef.current) {
+        // Persisted strategy changes alter future generations; the current
+        // preview is no longer representative.
+        setPreviewStale(true);
         setMessage("Strategy saved");
       }
     } catch (err) {
@@ -567,7 +580,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
         setPreview({
           newOrder: response.newOrder || [],
           previewUrl: response.previewUrl || null,
+          previewVersion: response.previewVersion || null,
         });
+        setPreviewStale(false);
         setMessage("Generated order — preview only, nothing written to Shopify");
       }
     } catch (err) {
@@ -582,30 +597,52 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
   }, [snapshot, selectedCollectionId, settings, strategyTotal]);
 
   const handleApply = useCallback(async () => {
-    if (!preview.newOrder.length) return;
+    // Double-click protection: never issue a second apply while one is in flight.
+    if (applyInProgressRef.current) return;
+    if (!preview.newOrder.length || !preview.previewVersion || previewStale) return;
+
+    // Serialize the preview to string product IDs only and validate locally.
+    // On failure the request is not sent and the preview stays visible.
+    let orderIds;
+    try {
+      orderIds = validateApplyOrderIds(preview.newOrder.map((product) => product.id));
+    } catch (err) {
+      setError(err.message);
+      setMessage("");
+      return;
+    }
+
+    applyInProgressRef.current = true;
     setLoading(true);
     setError("");
     setMessage("");
 
     try {
-      await api.applyOrder(selectedCollectionId, preview.newOrder);
+      await api.applyOrder(selectedCollectionId, orderIds, preview.previewVersion);
       const updated = await api.getCollectionSnapshot(selectedCollectionId);
       if (mountedRef.current) {
         setSnapshot(updated.snapshot || null);
         setBackup({ createdAt: new Date().toISOString(), products: snapshot.products });
         setPreview(emptyPreview);
+        setPreviewStale(false);
         setMessage("Applied order to Shopify");
       }
     } catch (err) {
       if (mountedRef.current) {
+        // Known staleness contract failure: keep the preview visible but
+        // disable Apply until a fresh preview is generated.
+        if (err.code === "GENERATED_ORDER_STALE" || err.status === 409) {
+          setPreviewStale(true);
+        }
         setError(err.message);
       }
     } finally {
+      applyInProgressRef.current = false;
       if (mountedRef.current) {
         setLoading(false);
       }
     }
-  }, [preview.newOrder, selectedCollectionId, snapshot]);
+  }, [preview, selectedCollectionId, snapshot, previewStale]);
 
   const handleRollback = useCallback(async () => {
     if (!backup) return;
@@ -688,6 +725,8 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
       );
 
       setSnapshot({ ...snapshot, products: updatedProducts });
+      // Preference changes alter generation inputs; invalidate the preview.
+      setPreviewStale(true);
 
       try {
         await api.updateProduct(selectedCollectionId, productId, {
@@ -837,8 +876,15 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
             <button
               className="button danger"
               onClick={handleApply}
-              disabled={loading || !preview.newOrder.length}
-              title="Requires a generated preview"
+              disabled={
+                loading ||
+                applyInProgressRef.current ||
+                !preview.newOrder.length ||
+                !preview.previewVersion ||
+                previewStale ||
+                !capability?.available
+              }
+              title="Requires a fresh generated preview"
             >
               Apply Order to Shopify
             </button>
@@ -879,12 +925,14 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
               type="number"
               min="1"
               value={settings.firstPageLimit}
-              onChange={(event) =>
+              onChange={(event) => {
                 saveSettings({
                   ...settings,
                   firstPageLimit: Number(event.target.value || 40),
-                })
-              }
+                });
+                // A changed page limit alters generation inputs; invalidate the preview.
+                setPreviewStale(true);
+              }}
             />
           </label>
 
@@ -921,6 +969,11 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
           {collectionsLoading ? <span className="muted">Loading collections…</span> : null}
           {message ? <span className="success-text" role="status">{message}</span> : null}
           {error ? <span className="error-text" role="alert">{error}</span> : null}
+          {previewStale && preview.newOrder.length > 0 && !error ? (
+            <span className="error-text" role="alert">
+              Preview is outdated. Generate a new order before applying.
+            </span>
+          ) : null}
         </div>
       </section>
 
@@ -950,6 +1003,8 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
                       const value = Number(event.target.value || 0);
                       setSettings((prev) => ({ ...prev, [field.key]: value }));
                       setStrategyMessage("");
+                      // Weight changes alter generation inputs; invalidate the preview.
+                      setPreviewStale(true);
                     }}
                   />
                 </label>
@@ -975,7 +1030,14 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
               <h3>Generated Order Preview</h3>
               <p className="preview-note">Preview only — no changes are written to Shopify until you Apply.</p>
             </div>
-            <button type="button" className="button ghost compact" onClick={() => setPreview(emptyPreview)}>
+            <button
+              type="button"
+              className="button ghost compact"
+              onClick={() => {
+                setPreview(emptyPreview);
+                setPreviewStale(false);
+              }}
+            >
               Clear Preview
             </button>
           </div>

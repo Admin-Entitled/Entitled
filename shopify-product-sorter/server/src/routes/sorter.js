@@ -16,6 +16,12 @@ import {
   syncCollectionOrder,
 } from "../services/shopifyService.js";
 import { generateOrder } from "../services/sorter.js";
+import {
+  applyGeneratedOrder,
+  computePreviewVersion,
+  reorderSnapshot,
+  validateOrderIds,
+} from "../services/sorterApplyService.js";
 import { getStrategySettings, saveStrategySettings } from "../services/strategySettings.js";
 import {
   addActionLog,
@@ -45,6 +51,7 @@ const applyCollectionSchema = {
   body: {
     collectionId: { type: "string", required: true },
     orderIds: { type: "array", required: true },
+    previewVersion: { type: "string" },
   },
 };
 
@@ -103,18 +110,6 @@ function mergeSnapshotWithPreferences(collectionId, snapshot) {
   };
 }
 
-function reorderSnapshot(snapshot, orderIds) {
-  const mapped = new Map(snapshot.products.map((product) => [product.id, product]));
-  return {
-    ...snapshot,
-    syncedAt: new Date().toISOString(),
-    products: orderIds.map((productId, index) => ({
-      ...mapped.get(productId),
-      collectionPosition: index + 1,
-    })),
-  };
-}
-
 function saveSnapshot(payload, salesMetrics) {
   const snapshot = {
     collection: payload.collection,
@@ -133,20 +128,6 @@ function saveSnapshot(payload, salesMetrics) {
 
 async function settingsFor(collectionId) {
   return { ...getCollectionSettings(collectionId), ...(await getStrategySettings(collectionId)) };
-}
-
-async function applyGeneratedOrder(collectionId, snapshot, newOrderIds) {
-  const oldOrderIds = snapshot.products
-    .slice()
-    .sort((left, right) => left.collectionPosition - right.collectionPosition)
-    .map((product) => product.id);
-  const sameProducts = oldOrderIds.length === newOrderIds.length && oldOrderIds.every((productId) => newOrderIds.includes(productId));
-  if (!sameProducts) throw new Error("Generated order does not match the current collection product set.");
-  createBackup(collectionId, "apply", snapshot.products.map((product) => ({ id: product.id, title: product.title, position: product.collectionPosition })));
-  const result = await syncCollectionOrder(collectionId, newOrderIds);
-  saveCollectionSnapshot(collectionId, reorderSnapshot(snapshot, result.collection.products.map((product) => product.id)));
-  upsertCollectionSettings(collectionId, snapshot.collection.title, { lastAppliedOrder: newOrderIds });
-  return { ...result, manualSort: result.collection.collection.sortOrder };
 }
 
 function buildCollectionResult({
@@ -204,6 +185,7 @@ router.post("/collections/generate", validateRequest(generateCollectionSchema), 
     res.json({
       oldOrder,
       newOrder: order,
+      previewVersion: computePreviewVersion(collectionId, snapshot),
       affectedCount: order.filter(
         (product) => product.collectionPosition !== product.finalPosition,
       ).length,
@@ -217,17 +199,14 @@ router.post("/collections/generate", validateRequest(generateCollectionSchema), 
 
 router.post("/collections/apply", validateRequest(applyCollectionSchema), shopifyCapabilityGuard, async (req, res, next) => {
   try {
-    const { collectionId, orderIds: newOrderIds } = req.body;
+    const { collectionId, orderIds: newOrderIds, previewVersion } = req.body;
+    validateOrderIds(newOrderIds);
     const snapshot = mergeSnapshotWithPreferences(collectionId, getCollectionSnapshot(collectionId));
     if (!snapshot) {
       throw new AppError("COLLECTION_SNAPSHOT_NOT_FOUND", "Collection snapshot not found. Sync first.", { statusCode: 404 });
     }
 
-    if (newOrderIds.length === 0) {
-      throw new AppError("VALIDATION_ERROR", "No generated order supplied.", { statusCode: 400 });
-    }
-
-    const result = await applyGeneratedOrder(collectionId, snapshot, newOrderIds);
+    const result = await applyGeneratedOrder(collectionId, snapshot, newOrderIds, { previewVersion });
 
     logInfo("Apply order completed", {
       collectionId,

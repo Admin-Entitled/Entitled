@@ -52,7 +52,10 @@ export async function request(path, options = {}) {
   const payload = parsePayload(response, text);
 
   if (!response.ok) {
-    const message = payload.detail || payload.message || payload.error || response.statusText || "Request failed";
+    // Prefer the stable server `message` so known contract failures (e.g.
+    // GENERATED_ORDER_STALE) surface their operator guidance instead of the
+    // serialized counts-only `detail` payload.
+    const message = payload.message || payload.detail || payload.error || response.statusText || "Request failed";
     throw new ApiError(message, {
       status: response.status,
       statusText: response.statusText,
