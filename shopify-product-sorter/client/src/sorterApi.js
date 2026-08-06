@@ -1,6 +1,7 @@
 import { request } from "./api.js";
 
 export const api = {
+  getReadiness: () => request("/health/readiness"),
   getShopifyDebug: () => request("/debug/shopify"),
   getCollections: () => request("/collections"),
   getProducts: (collectionId) =>

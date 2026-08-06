@@ -66,6 +66,46 @@ export default function App() {
   });
   const [orderMappingLogTab, setOrderMappingLogTab] = useState("activity");
 
+  // Single canonical capability source: readiness is fetched once at startup
+  // (StrictMode-safe via ref) and drives the app header and Product Sorter.
+  const [readiness, setReadiness] = useState(null);
+  const [readinessLoading, setReadinessLoading] = useState(true);
+  const readinessFetchedRef = useRef(false);
+
+  const fetchReadiness = useCallback(async () => {
+    setReadinessLoading(true);
+    try {
+      const result = await api.getReadiness();
+      setReadiness(result);
+    } catch (err) {
+      setReadiness({
+        ok: false,
+        status: "unreachable",
+        shopify: {
+          available: false,
+          status: "unavailable",
+          reasonCategory: "configuration_missing",
+          authMode: null,
+          missingVariables: [],
+        },
+        orderMapping: { available: false, status: "unavailable" },
+        error: err.message,
+      });
+    } finally {
+      setReadinessLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (readinessFetchedRef.current) {
+      return;
+    }
+    readinessFetchedRef.current = true;
+    fetchReadiness();
+  }, [fetchReadiness]);
+
+  const shopifyCapability = readiness?.shopify ?? null;
+
   const sorterSidebarBridge = useMemo(() => {
     let currentVal = { diagnostics: {} };
     return {
@@ -226,31 +266,66 @@ function clearCurrentLogs() {
 
 
 
+  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
+
   return (
     <div className="app-shell">
+      <header className="app-header">
+        <div className="app-header-brand">
+          <h2 className="app-header-title">Product Sorter</h2>
+          <p className="app-header-subtitle">Entitled Club internal operations</p>
+        </div>
+        <div className="app-header-states">
+          <span className={`state-chip ${readiness?.status === "unreachable" ? "state-error" : "state-ok"}`}>
+            Backend: {readinessLoading ? "Checking…" : readiness?.status === "unreachable" ? "Unreachable" : "Running"}
+          </span>
+          <span className={`state-chip ${shopifyCapability?.available ? "state-ok" : "state-warn"}`}>
+            Shopify: {readinessLoading ? "Checking…" : shopifyCapability?.available ? "Connected" : "Not configured"}
+          </span>
+          <button type="button" className="button compact" onClick={fetchReadiness} disabled={readinessLoading}>
+            {readinessLoading ? "Refreshing…" : "Retry / Refresh"}
+          </button>
+        </div>
+      </header>
+      <div className="app-body">
       <aside className={`sidebar ${activeModule === "order-mapping" ? "sidebar--order-mapping" : ""}`}>
-        <div>
+        <div className="sidebar-brand">
           <p className="eyebrow">Entitled Club</p>
-          <h1>Collection Placement Manager</h1>
+          <h1>Placement Manager</h1>
         </div>
 
         <nav className="sidebar-nav">
+          <div className="nav-group-label">Core Modules</div>
           {sidebarModules.map((item) => (
             <button
-              className={`nav-item ${activeModule === item.id ? "active" : ""}`}
+              className={`nav-item ${activeModule === item.id ? "active" : ""} ${!item.enabled ? "disabled" : ""}`}
               key={item.id}
               type="button"
               disabled={!item.enabled}
               onClick={() => item.enabled && setActiveModule(item.id)}
             >
-              {item.label}
+              <span className="nav-label">{item.label}</span>
+              {!item.enabled ? <span className="nav-badge">Later</span> : null}
             </button>
           ))}
         </nav>
 
-        <div className="diagnostic-panel">
-          <h4 className="diagnostic-title">System Diagnostics</h4>
-          <div className="diagnostic-stats">
+        <div className="sidebar-footer">
+          <button
+            type="button"
+            className="diagnostics-toggle-button"
+            onClick={() => setDiagnosticsOpen((prev) => !prev)}
+            aria-expanded={diagnosticsOpen}
+          >
+            <span>System Diagnostics</span>
+            <span className="toggle-icon">{diagnosticsOpen ? "▲" : "▼"}</span>
+          </button>
+        </div>
+
+        {diagnosticsOpen ? (
+          <div className="diagnostic-panel">
+            <h4 className="diagnostic-title">System Diagnostics</h4>
+            <div className="diagnostic-stats">
             {activeModule === "sku-image-manager" ? (
               <>
                 <div className="diagnostic-item">
@@ -469,11 +544,18 @@ Clear Logs
             </div>
           </div>
         </div>
+        ) : null}
       </aside>
 
       {activeModule === "sorter" ? (
       <ErrorBoundary key="sorter">
-      <Sorter sidebarBridge={sorterSidebarBridge} />
+      <Sorter
+              sidebarBridge={sorterSidebarBridge}
+              capability={shopifyCapability}
+              readinessLoading={readinessLoading}
+              orderMapping={readiness?.orderMapping ?? null}
+              onRetryConnection={fetchReadiness}
+            />
       </ErrorBoundary>
       ) : activeModule === "order-mapping" ? (
       <ErrorBoundary key="order-mapping">
@@ -491,6 +573,7 @@ Clear Logs
       </main>
       </ErrorBoundary>
       )}
+      </div>
     </div>
   );
 }

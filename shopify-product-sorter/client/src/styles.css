@@ -81,7 +81,7 @@
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
-  border-radius: 999px;
+  border-radius: 6px;
   padding: 4px 10px;
   font-size: 11px;
   cursor: pointer;
@@ -127,10 +127,59 @@ textarea {
 
 .app-shell {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(11, 11, 12, 0.92);
+}
+
+.app-header-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-header-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.app-header-subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.app-header-states {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.app-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: hidden;
 }
 
@@ -164,10 +213,18 @@ textarea {
 }
 
 .sidebar-nav {
-  margin-top: 20px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-group-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin: 8px 0 4px 4px;
 }
 
 .nav-item {
@@ -176,22 +233,63 @@ textarea {
   color: var(--muted);
   border: 1px solid transparent;
   min-height: 36px;
-  padding: 7px 8px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 11px;
-  line-height: 1.2;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .nav-item.active,
-.nav-item:hover {
+.nav-item:hover:not(.disabled) {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.04);
   border-color: var(--border);
 }
 
+.nav-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nav-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.diagnostics-toggle-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.diagnostics-toggle-button:hover {
+  color: var(--text);
+  border-color: rgba(200, 181, 138, 0.4);
+}
+
 .dashboard {
-  padding: 28px;
+  padding: 24px;
   display: grid;
   gap: 20px;
   min-width: 0;
@@ -203,9 +301,116 @@ textarea {
 .panel {
   background: linear-gradient(180deg, rgba(23, 24, 27, 0.94), rgba(17, 18, 21, 0.94));
   border: 1px solid var(--border);
-  border-radius: 22px;
+  border-radius: 8px;
   box-shadow: var(--shadow);
   min-width: 0;
+}
+
+/* Disconnected Setup Card */
+.setup-card {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.setup-header {
+  display: flex;
+  gap: 10px;
+}
+
+.status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge.status-unavailable {
+  background: rgba(199, 104, 104, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(199, 104, 104, 0.3);
+}
+
+.status-badge.status-ready {
+  background: rgba(137, 167, 125, 0.15);
+  color: var(--success);
+  border: 1px solid rgba(137, 167, 125, 0.3);
+}
+
+.setup-subtitle {
+  color: var(--muted);
+  margin: 0;
+  font-size: 14px;
+}
+
+.setup-details {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.setup-section h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--metal);
+  margin: 0 0 10px 0;
+}
+
+.missing-vars-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.missing-var-item code {
+  background: rgba(91, 10, 25, 0.3);
+  color: #f2ece2;
+  border: 1px solid rgba(199, 104, 104, 0.4);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.auth-methods-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.auth-method-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 6px;
+}
+
+.auth-method-card h5 {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.auth-method-card pre {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 11px;
+}
+
+.setup-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .topbar {
@@ -284,12 +489,18 @@ textarea {
 
 .button {
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 6px;
   padding: 12px 16px;
   cursor: pointer;
   background: transparent;
   color: var(--text);
   min-height: 44px;
+}
+
+.button.danger {
+  background: var(--accent);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text);
 }
 
 .button.accent {
@@ -595,7 +806,7 @@ button:focus-visible,
 }
 
 @media (max-width: 1240px) {
-  .app-shell {
+  .app-body {
     grid-template-columns: 1fr;
   }
 
@@ -633,7 +844,6 @@ button:focus-visible,
 
   .sidebar-nav {
     margin-top: 16px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
 
@@ -790,7 +1000,7 @@ button:focus-visible,
   border: 1px solid var(--border);
   background: transparent;
   color: var(--muted);
-  border-radius: 999px;
+  border-radius: 6px;
   padding: 4px 10px;
   font-size: 11px;
   cursor: pointer;
@@ -1496,4 +1706,191 @@ button:focus-visible,
 .diagnostic-log-top,
 .diagnostic-log-line {
   width: 100%;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * Product Sorter operational states & app shell
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/* Connection state chips (app header, setup screen, connected dashboard) */
+.state-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+}
+
+.state-chip.state-ok {
+  color: var(--success);
+  border-color: rgba(137, 167, 125, 0.35);
+  background: rgba(137, 167, 125, 0.1);
+}
+
+.state-chip.state-warn {
+  color: var(--metal);
+  border-color: rgba(200, 181, 138, 0.35);
+  background: rgba(200, 181, 138, 0.1);
+}
+
+.state-chip.state-error {
+  color: var(--danger);
+  border-color: rgba(199, 104, 104, 0.35);
+  background: rgba(199, 104, 104, 0.1);
+}
+
+.status-chip.state-ok {
+  color: var(--success);
+  background: rgba(137, 167, 125, 0.14);
+}
+
+/* Shopify-not-configured setup state (see .setup-card defined above) */
+.setup-card h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.setup-status-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.setup-status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.setup-status-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.setup-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 8px 0 0 0;
+}
+
+.setup-instructions {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px 14px;
+}
+
+.setup-instructions summary {
+  cursor: pointer;
+  color: var(--metal);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.setup-steps {
+  margin: 10px 0 4px 18px;
+  padding: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.setup-steps code {
+  color: var(--text);
+}
+
+/* Connected layout: strategy configuration */
+.sorter-section {
+  padding: 0;
+}
+
+.section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.section-toggle:hover {
+  color: var(--metal);
+}
+
+.toggle-icon {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.strategy-body {
+  padding: 18px 22px 22px;
+}
+
+.strategy-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* Connected layout: non-mutating preview */
+.preview-panel {
+  padding: 22px;
+}
+
+.preview-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.preview-heading h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.preview-note {
+  margin: 4px 0 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.preview-item-main {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.preview-item-main strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Connected layout: table empty states */
+.table-wrapper > .empty-state {
+  margin: 20px;
 }

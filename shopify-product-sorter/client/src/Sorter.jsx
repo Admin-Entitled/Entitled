@@ -316,7 +316,7 @@ function calculateScore(product, allProducts, settings) {
   return scoreProduct(product, buildScoringContext(allProducts, settings)).baseScore.toFixed(4);
 }
 
-export default function Sorter({ sidebarBridge }) {
+export default function Sorter({ sidebarBridge, capability = null, readinessLoading = false, orderMapping = null, onRetryConnection }) {
   const [collections, setCollections] = useState([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState("");
   const [snapshot, setSnapshot] = useState(null);
@@ -328,36 +328,83 @@ export default function Sorter({ sidebarBridge }) {
     momentumWeight: 0.1,
     rotationWeight: 0.05,
   });
-  const [strategyDraft, setStrategyDraft] = useState(null);
   const [filters, setFilters] = useState(defaultFilters);
   const [preview, setPreview] = useState(emptyPreview);
-  const [activeTab, setActiveTab] = useState("table");
-  const [isStrategyEditing, setIsStrategyEditing] = useState(false);
   const [backup, setBackup] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
   const [reorderAllSummary, setReorderAllSummary] = useState(null);
+  const [collectionsLoading, setCollectionsLoading] = useState(false);
+  const [strategyOpen, setStrategyOpen] = useState(false);
+  const [strategyMessage, setStrategyMessage] = useState("");
+  const [copied, setCopied] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const initialCollectionsLoadedRef = useRef(false);
+
+  // One-shot guards: fetch readiness/collections exactly once per availability
+  // state and ignore stale results after unmount (StrictMode-safe).
+  const collectionsFetchedRef = useRef(false);
+  const mountedRef = useRef(true);
 
   const products = snapshot?.products || [];
 
+  const weightFields = [
+    { key: "salesWeight", label: "Sales" },
+    { key: "inventoryWeight", label: "Inventory" },
+    { key: "newnessWeight", label: "Newness" },
+    { key: "momentumWeight", label: "Momentum" },
+    { key: "rotationWeight", label: "Rotation" },
+  ];
+
+  const strategyTotal = () =>
+    weightFields.reduce((sum, field) => sum + Number(settings[field.key] || 0), 0);
+
   useEffect(() => {
-    async function loadCollections() {
-      try {
-        const response = await api.getCollections();
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const loadCollections = useCallback(async () => {
+    setCollectionsLoading(true);
+    setError("");
+    try {
+      const response = await api.getCollections();
+      if (mountedRef.current) {
         setCollections(response.collections || []);
-      } catch (err) {
+      }
+    } catch (err) {
+      if (mountedRef.current) {
         setError(err.message);
       }
-    }
-
-    if (!initialCollectionsLoadedRef.current) {
-      loadCollections();
-      initialCollectionsLoadedRef.current = true;
+    } finally {
+      if (mountedRef.current) {
+        setCollectionsLoading(false);
+      }
     }
   }, []);
+
+  // Request collections exactly once when Shopify becomes available. No
+  // automatic retries; retries are explicit and operator-initiated.
+  useEffect(() => {
+    if (!capability?.available) {
+      return;
+    }
+    if (collectionsFetchedRef.current) {
+      return;
+    }
+    collectionsFetchedRef.current = true;
+    loadCollections();
+  }, [capability, loadCollections]);
+
+  // While unavailable, keep the one-shot guard open so a single Retry
+  // connection (after configuration is added) fetches collections once.
+  useEffect(() => {
+    if (!capability?.available) {
+      collectionsFetchedRef.current = false;
+    }
+  }, [capability]);
 
   useEffect(() => {
     if (sidebarBridge) {
@@ -382,8 +429,6 @@ export default function Sorter({ sidebarBridge }) {
     [products],
   );
 
-  const explainabilityData = preview.newOrder;
-
   const filteredProducts = useMemo(
     () =>
       products
@@ -393,31 +438,54 @@ export default function Sorter({ sidebarBridge }) {
   );
 
   const previewTop = preview.newOrder.slice(0, settings.firstPageLimit || 40);
-  const metrics = useMemo(() => {
-    const totalInventory = products.reduce((sum, product) => sum + product.inventoryQuantity, 0);
-    const totalSold = products.reduce((sum, product) => sum + product.soldQuantity, 0);
-    const totalRevenue = products.reduce((sum, product) => sum + product.salesRevenue, 0);
-    return { totalInventory, totalSold, totalRevenue };
-  }, [products]);
+
+  function mergeSettingsFromResponse(responseSettings) {
+    if (!responseSettings) {
+      return;
+    }
+    setSettings((prev) => {
+      const next = { ...prev };
+      for (const field of weightFields) {
+        const value = Number(responseSettings[field.key]);
+        if (Number.isFinite(value) && value >= 0) {
+          next[field.key] = value;
+        }
+      }
+      const limit = Number(responseSettings.firstPageLimit);
+      if (Number.isFinite(limit) && limit >= 1) {
+        next.firstPageLimit = limit;
+      }
+      return next;
+    });
+  }
 
   const handleCollectionSelect = useCallback(async (collectionId) => {
     if (!collectionId) {
       setSelectedCollectionId("");
       setSnapshot(null);
+      setPreview(emptyPreview);
       return;
     }
 
     setSelectedCollectionId(collectionId);
     setLoading(true);
     setError("");
+    setPreview(emptyPreview);
 
     try {
       const response = await api.getCollectionSnapshot(collectionId);
-      setSnapshot(response.snapshot || null);
+      if (mountedRef.current) {
+        setSnapshot(response.snapshot || null);
+        mergeSettingsFromResponse(response.settings);
+      }
     } catch (err) {
-      setError(err.message);
+      if (mountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setLoading(false);
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
   }, []);
 
@@ -433,34 +501,85 @@ export default function Sorter({ sidebarBridge }) {
 
     try {
       const response = await api.syncCollection(selectedCollectionId);
-      setSnapshot(response.snapshot || null);
-      setMessage("Synced successfully");
+      if (mountedRef.current) {
+        setSnapshot(response.snapshot || null);
+        mergeSettingsFromResponse(response.settings);
+        setMessage("Synced successfully");
+      }
     } catch (err) {
-      setError(err.message);
+      if (mountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setLoading(false);
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
   }, [selectedCollectionId]);
 
+  const handleSaveStrategy = useCallback(async () => {
+    if (!selectedCollectionId) return;
+    const total = strategyTotal();
+    if (Math.round(total * 100) !== 100) {
+      setStrategyMessage(`Strategy weights must total 1.00 (currently ${total.toFixed(2)}).`);
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setStrategyMessage("");
+
+    try {
+      await api.updateSettings(selectedCollectionId, {
+        salesWeight: Number(settings.salesWeight),
+        inventoryWeight: Number(settings.inventoryWeight),
+        newnessWeight: Number(settings.newnessWeight),
+        momentumWeight: Number(settings.momentumWeight),
+        rotationWeight: Number(settings.rotationWeight),
+      });
+      if (mountedRef.current) {
+        setMessage("Strategy saved");
+      }
+    } catch (err) {
+      if (mountedRef.current) {
+        setError(err.message);
+      }
+    } finally {
+      if (mountedRef.current) {
+        setLoading(false);
+      }
+    }
+  }, [selectedCollectionId, settings, strategyTotal]);
+
   const handleGenerate = useCallback(async () => {
     if (!snapshot) return;
+    const total = strategyTotal();
+    if (Math.round(total * 100) !== 100) {
+      setError("Strategy weights must total 1.00 before generating an order.");
+      return;
+    }
     setLoading(true);
     setError("");
     setMessage("");
 
     try {
       const response = await api.generateOrder(selectedCollectionId, settings);
-      setPreview({
-        newOrder: response.newOrder || [],
-        previewUrl: response.previewUrl || null,
-      });
-      setMessage("Generated order");
+      if (mountedRef.current) {
+        setPreview({
+          newOrder: response.newOrder || [],
+          previewUrl: response.previewUrl || null,
+        });
+        setMessage("Generated order — preview only, nothing written to Shopify");
+      }
     } catch (err) {
-      setError(err.message);
+      if (mountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setLoading(false);
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
-  }, [snapshot, selectedCollectionId, settings]);
+  }, [snapshot, selectedCollectionId, settings, strategyTotal]);
 
   const handleApply = useCallback(async () => {
     if (!preview.newOrder.length) return;
@@ -471,14 +590,20 @@ export default function Sorter({ sidebarBridge }) {
     try {
       await api.applyOrder(selectedCollectionId, preview.newOrder);
       const updated = await api.getCollectionSnapshot(selectedCollectionId);
-      setSnapshot(updated.snapshot || null);
-      setBackup({ createdAt: new Date().toISOString(), products: snapshot.products });
-      setPreview(emptyPreview);
-      setMessage("Applied order to Shopify");
+      if (mountedRef.current) {
+        setSnapshot(updated.snapshot || null);
+        setBackup({ createdAt: new Date().toISOString(), products: snapshot.products });
+        setPreview(emptyPreview);
+        setMessage("Applied order to Shopify");
+      }
     } catch (err) {
-      setError(err.message);
+      if (mountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setLoading(false);
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
   }, [preview.newOrder, selectedCollectionId, snapshot]);
 
@@ -494,13 +619,19 @@ export default function Sorter({ sidebarBridge }) {
         backup.products.map((p) => p.id),
       );
       const updated = await api.getCollectionSnapshot(selectedCollectionId);
-      setSnapshot(updated.snapshot || null);
-      setBackup(null);
-      setMessage("Rolled back to backup");
+      if (mountedRef.current) {
+        setSnapshot(updated.snapshot || null);
+        setBackup(null);
+        setMessage("Rolled back to backup");
+      }
     } catch (err) {
-      setError(err.message);
+      if (mountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setLoading(false);
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
   }, [backup, selectedCollectionId]);
 
@@ -512,16 +643,22 @@ export default function Sorter({ sidebarBridge }) {
 
     try {
       const response = await api.reorderAllCollections();
-      setReorderAllSummary(response);
-      if (response.failures && response.failures.length > 0) {
-        setError(`Some collections failed: ${response.failures.join(", ")}`);
-      } else {
-        setMessage("All collections updated successfully");
+      if (mountedRef.current) {
+        setReorderAllSummary(response);
+        if (response.failures && response.failures.length > 0) {
+          setError(`Some collections failed: ${response.failures.join(", ")}`);
+        } else {
+          setMessage("All collections updated successfully");
+        }
       }
     } catch (err) {
-      setError(err.message);
+      if (mountedRef.current) {
+        setError(err.message);
+      }
     } finally {
-      setIsSyncingAll(false);
+      if (mountedRef.current) {
+        setIsSyncingAll(false);
+      }
     }
   }, []);
 
@@ -564,6 +701,121 @@ export default function Sorter({ sidebarBridge }) {
     [snapshot, selectedCollectionId, products],
   );
 
+  const copyVariableTemplate = useCallback(async () => {
+    const names = [
+      ...new Set([
+        ...(capability?.missingVariables || []),
+        "SHOPIFY_STORE_DOMAIN",
+        "SHOPIFY_ADMIN_ACCESS_TOKEN",
+        "SHOPIFY_CLIENT_ID",
+        "SHOPIFY_CLIENT_SECRET",
+      ]),
+    ];
+    try {
+      await navigator.clipboard.writeText(names.map((name) => `${name}=`).join("\n"));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setError("Clipboard unavailable — copy the variable names manually.");
+    }
+  }, [capability]);
+
+  if (readinessLoading || capability === null) {
+    return (
+      <main className="dashboard" aria-busy="true">
+        <div className="setup-card panel">
+          <p className="eyebrow">Initializing</p>
+          <h2>Checking Shopify capability…</h2>
+          <p className="setup-subtitle">Contacting the backend once to determine the Shopify connection state.</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (capability && !capability.available) {
+    const missingVars = capability.missingVariables || ["SHOPIFY_STORE_DOMAIN"];
+    const omReady = orderMapping?.status === "ready";
+    return (
+      <main className="dashboard">
+        <section className="setup-card panel" aria-labelledby="setup-title">
+          <div className="setup-header">
+            <span className="status-badge status-unavailable">Shopify Not Configured</span>
+          </div>
+          <h2 id="setup-title">Connect Shopify to use Product Sorter</h2>
+          <p className="setup-subtitle">
+            Product Sorter is running. Shopify access is required to load collections.
+          </p>
+
+          <div className="setup-status-grid">
+            <div className="setup-status-item">
+              <span className="setup-status-label">Backend</span>
+              <span className="state-chip state-ok">Running</span>
+            </div>
+            <div className="setup-status-item">
+              <span className="setup-status-label">Shopify</span>
+              <span className="state-chip state-warn">Not configured</span>
+            </div>
+            <div className="setup-status-item">
+              <span className="setup-status-label">Order Mapping</span>
+              <span className={`state-chip ${omReady ? "state-ok" : "state-muted"}`}>
+                {omReady ? "Ready" : "Unavailable (optional)"}
+              </span>
+            </div>
+          </div>
+
+          <div className="setup-details">
+            <div className="setup-section">
+              <h4>Missing Environment Variables</h4>
+              <ul className="missing-vars-list">
+                {missingVars.map((v) => (
+                  <li key={v} className="missing-var-item">
+                    <code>{v}</code>
+                  </li>
+                ))}
+              </ul>
+              <p className="setup-note">Variable names only — no credential values are ever sent to the browser.</p>
+            </div>
+
+            <div className="setup-section">
+              <h4>Supported Authentication Methods</h4>
+              <div className="auth-methods-grid">
+                <div className="auth-method-card">
+                  <h5>Option 1: Admin Access Token (Recommended)</h5>
+                  <pre><code>{"SHOPIFY_STORE_DOMAIN=your-store.myshopify.com\nSHOPIFY_ADMIN_ACCESS_TOKEN="}</code></pre>
+                </div>
+                <div className="auth-method-card">
+                  <h5>Option 2: Client Credentials</h5>
+                  <pre><code>{"SHOPIFY_STORE_DOMAIN=your-store.myshopify.com\nSHOPIFY_CLIENT_ID=\nSHOPIFY_CLIENT_SECRET="}</code></pre>
+                </div>
+              </div>
+              <p className="setup-note">Optional: SHOPIFY_API_VERSION (defaults to 2026-04).</p>
+            </div>
+
+            <details className="setup-instructions">
+              <summary>View setup instructions</summary>
+              <ol className="setup-steps">
+                <li>Copy <code>.env.example</code> to <code>.env</code> at the repository root (or <code>server/.env</code>).</li>
+                <li>Set <code>SHOPIFY_STORE_DOMAIN</code> to your store, e.g. <code>your-store.myshopify.com</code>.</li>
+                <li>Choose one authentication method and fill in its variables.</li>
+                <li>Restart the backend, then press <strong>Retry connection</strong>.</li>
+                <li>No secrets are stored in this browser or sent through frontend requests.</li>
+              </ol>
+            </details>
+          </div>
+
+          <div className="setup-actions">
+            <button type="button" className="button accent" onClick={onRetryConnection} disabled={readinessLoading}>
+              {readinessLoading ? "Checking…" : "Retry connection"}
+            </button>
+            <button type="button" className="button ghost" onClick={copyVariableTemplate}>
+              {copied ? "Copied ✓" : "Copy variable-name template"}
+            </button>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="dashboard" aria-busy={loading || undefined}>
       <section className="topbar panel">
@@ -579,13 +831,14 @@ export default function Sorter({ sidebarBridge }) {
             <button className="button accent" onClick={handleGenerate} disabled={loading || !snapshot}>
               Generate Today&apos;s Order
             </button>
-            <button type="button" className="button metal" onClick={handleReorderAllLive} disabled={isSyncingAll}>
+            <button type="button" className="button metal" onClick={handleReorderAllLive} disabled={isSyncingAll || !collections.length}>
               Update All Collections
             </button>
             <button
-              className="button metal"
+              className="button danger"
               onClick={handleApply}
               disabled={loading || !preview.newOrder.length}
+              title="Requires a generated preview"
             >
               Apply Order to Shopify
             </button>
@@ -661,59 +914,151 @@ export default function Sorter({ sidebarBridge }) {
         </div>
 
         <div className="status-row">
+          <span className="status-chip state-ok">Shopify Connected</span>
           <span className="status-chip">{snapshot?.collection?.sortOrder || "Not synced"}</span>
           {snapshot?.syncedAt ? <span className="muted">Last sync: {formatDate(snapshot.syncedAt)}</span> : null}
           {backup?.createdAt ? <span className="muted">Backup: {formatDate(backup.createdAt)}</span> : null}
+          {collectionsLoading ? <span className="muted">Loading collections…</span> : null}
           {message ? <span className="success-text" role="status">{message}</span> : null}
           {error ? <span className="error-text" role="alert">{error}</span> : null}
         </div>
       </section>
 
-      <section className="table-wrapper panel">
-        <table className="product-table">
-          <thead>
-            <tr>
-              <th>Position</th>
-              <th>Product</th>
-              <th>Vendor</th>
-              <th>Status</th>
-              <th>Stock</th>
-              <th>Sold</th>
-              <th>Revenue</th>
-              <th>Allocation</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts.map((product) => (
-              <tr key={product.id}>
-                <td>{product.collectionPosition}</td>
-                <td>
-                  <img
-                    src={product.image || fallbackImage}
-                    alt=""
-                    style={{ width: 40, height: 40, objectFit: "cover" }}
+      <section className="panel sorter-section">
+        <button
+          type="button"
+          className="section-toggle"
+          onClick={() => setStrategyOpen((prev) => !prev)}
+          aria-expanded={strategyOpen}
+        >
+          <span>Strategy Configuration</span>
+          <span className="toggle-icon">{strategyOpen ? "▲" : "▼"}</span>
+        </button>
+        {strategyOpen ? (
+          <div className="strategy-body">
+            <div className="weights-grid">
+              {weightFields.map((field) => (
+                <label key={field.key}>
+                  {field.label}
+                  <input
+                    type="number"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={settings[field.key] ?? 0}
+                    onChange={(event) => {
+                      const value = Number(event.target.value || 0);
+                      setSettings((prev) => ({ ...prev, [field.key]: value }));
+                      setStrategyMessage("");
+                    }}
                   />
-                  {product.title}
-                </td>
-                <td>{product.vendor}</td>
-                <td>{product.status}</td>
-                <td>{product.inventoryQuantity}</td>
-                <td>{product.soldQuantity}</td>
-                <td>{formatMoney(product.salesRevenue || 0)}</td>
-                <td>
-                  <select
-                    value={getAllocationState(product)}
-                    onChange={(event) => updateProductAllocation(product.id, event.target.value)}
-                  >
-                    <option value="pinned">Pinned</option>
-                    <option value="eligible">Eligible</option>
-                    <option value="hidden">Hidden</option>
-                  </select>
-                </td>
+                </label>
+              ))}
+            </div>
+            <div className="strategy-footer">
+              <span className={Math.round(strategyTotal() * 100) === 100 ? "muted" : "error-text"}>
+                Total: {strategyTotal().toFixed(2)} (must equal 1.00)
+              </span>
+              {strategyMessage ? <span className="error-text" role="alert">{strategyMessage}</span> : null}
+              <button type="button" className="button compact" onClick={handleSaveStrategy} disabled={loading}>
+                Save Strategy
+              </button>
+            </div>
+          </div>
+        ) : null}
+      </section>
+
+      {preview.newOrder.length > 0 ? (
+        <section className="panel preview-panel" aria-label="Generated order preview">
+          <div className="preview-heading">
+            <div>
+              <h3>Generated Order Preview</h3>
+              <p className="preview-note">Preview only — no changes are written to Shopify until you Apply.</p>
+            </div>
+            <button type="button" className="button ghost compact" onClick={() => setPreview(emptyPreview)}>
+              Clear Preview
+            </button>
+          </div>
+          <div className="preview-list">
+            {previewTop.map((product, index) => {
+              const newPosition = product.finalPosition ?? index + 1;
+              const moved = product.collectionPosition !== newPosition;
+              return (
+                <div className="preview-item" key={product.id}>
+                  <span className="preview-rank">{index + 1}</span>
+                  <div className="preview-item-main">
+                    <strong>{product.title}</strong>
+                    <div className="preview-movement-row">
+                      <span className="position-tag">Current: {product.collectionPosition}</span>
+                      <span className="position-tag arrow">→</span>
+                      <span className="position-tag new">New: {newPosition}</span>
+                      {moved ? (
+                        <span className={`movement-tag ${product.collectionPosition > newPosition ? "up" : "down"}`}>
+                          {product.collectionPosition > newPosition ? "↑" : "↓"} {Math.abs(product.collectionPosition - newPosition)}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="table-wrapper panel">
+        {!snapshot ? (
+          <div className="empty-state">
+            Select a collection and sync live data to load its products.
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="empty-state">No products match the current filters.</div>
+        ) : (
+          <table className="product-table">
+            <thead>
+              <tr>
+                <th>Position</th>
+                <th>Product</th>
+                <th>Vendor</th>
+                <th>Status</th>
+                <th>Stock</th>
+                <th>Sold</th>
+                <th>Revenue</th>
+                <th>Allocation</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredProducts.map((product) => (
+                <tr key={product.id}>
+                  <td>{product.collectionPosition}</td>
+                  <td>
+                    <img
+                      src={product.image || fallbackImage}
+                      alt=""
+                      style={{ width: 40, height: 40, objectFit: "cover" }}
+                    />
+                    {product.title}
+                  </td>
+                  <td>{product.vendor}</td>
+                  <td>{product.status}</td>
+                  <td>{product.inventoryQuantity}</td>
+                  <td>{product.soldQuantity}</td>
+                  <td>{formatMoney(product.salesRevenue || 0)}</td>
+                  <td>
+                    <select
+                      value={getAllocationState(product)}
+                      onChange={(event) => updateProductAllocation(product.id, event.target.value)}
+                    >
+                      <option value="pinned">Pinned</option>
+                      <option value="eligible">Eligible</option>
+                      <option value="hidden">Hidden</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </section>
     </main>
   );
