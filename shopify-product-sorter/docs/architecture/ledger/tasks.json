@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T11:22:00.386Z",
+  "last_updated": "2026-08-06T12:18:51.044Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3149,7 +3149,7 @@
       "title": "Extract navigation ownership",
       "description": "Remediation task FE-002: Extract navigation ownership",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "FE-001",
         "OWN-007"
@@ -3167,17 +3167,22 @@
         "Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md",
         "Validated via sidebar module audit, active state derivation review, and disabled label safety check",
         "Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007.",
+        "Tested SHA: eb903e86c13dc4710942af9579ed1113d94d83f6"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/sidebarModules.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.257Z",
+      "updated_timestamp": "2026-08-06T12:18:51.044Z",
       "started_timestamp": "2026-07-31T14:14:14.150Z",
       "implemented_timestamp": "2026-07-31T14:15:23.966Z",
-      "validated_timestamp": "2026-07-31T14:15:24.215Z",
-      "completed_timestamp": "2026-07-31T14:15:28.266Z",
+      "validated_timestamp": "2026-08-06T12:14:23.403Z",
+      "completed_timestamp": "2026-08-06T12:18:51.044Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
+      "validation_files": [
+        "client/src/frontendRegression.test.js"
+      ],
       "implementation_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
       "clean_validation_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
       "completion_record_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
@@ -3191,7 +3196,7 @@
       "title": "Introduce explicit routing while preserving URLs",
       "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "TEST-008",
         "FE-001"
@@ -3211,15 +3216,19 @@
         "Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94",
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/main.jsx"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.259Z",
+      "updated_timestamp": "2026-08-06T12:14:26.028Z",
       "started_timestamp": "2026-07-31T14:16:57.530Z",
       "implemented_timestamp": "2026-07-31T14:18:42.851Z",
-      "validated_timestamp": "2026-07-31T14:18:43.104Z",
+      "validated_timestamp": "2026-08-06T12:14:26.028Z",
       "completed_timestamp": "2026-07-31T14:18:47.081Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
+      "validation_files": [
+        "client/src/frontendRegression.test.js"
+      ],
       "implementation_commit_sha": "754db5d20d17a7da805828bdd73748c5d9b6da94",
       "clean_validation_commit_sha": "754db5d20d17a7da805828bdd73748c5d9b6da94",
       "completion_record_commit_sha": "754db5d20d17a7da805828bdd73748c5d9b6da94",
@@ -3233,7 +3242,7 @@
       "title": "Extract the Sorter feature",
       "description": "Remediation task FE-004: Extract the Sorter feature",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "FE-001",
         "OWN-002",
@@ -3260,19 +3269,21 @@
         "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.261Z",
+      "updated_timestamp": "2026-08-06T12:14:26.174Z",
       "started_timestamp": "2026-07-31T16:25:58.935Z",
       "implemented_timestamp": "2026-07-31T17:36:19.578Z",
-      "validated_timestamp": "2026-07-31T17:36:39.147Z",
+      "validated_timestamp": "2026-08-06T12:14:26.174Z",
       "completed_timestamp": "2026-07-31T17:38:08.224Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "beda37806619f919a99aa09ea9b4c39ec31b5820",
-      "clean_validation_commit_sha": "beda37806619f919a99aa09ea9b4c39ec31b5820",
-      "completion_record_commit_sha": "beda37806619f919a99aa09ea9b4c39ec31b5820",
+      "validation_files": [
+        "client/src/frontendRegression.test.js"
+      ],
+      "implementation_commit_sha": "eb903e8c71bfa283626fa5b9bcf78c2e6f47738c",
+      "clean_validation_commit_sha": "eb903e8c71bfa283626fa5b9bcf78c2e6f47738c",
+      "completion_record_commit_sha": "eb903e8c71bfa283626fa5b9bcf78c2e6f47738c",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "beda37806619f919a99aa09ea9b4c39ec31b5820"
+        "tested_commit": "eb903e8c71bfa283626fa5b9bcf78c2e6f47738c"
       }
     },
     {
@@ -3280,7 +3291,7 @@
       "title": "Extract the SKU Image Manager feature",
       "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "validated",
       "dependencies": [
         "FE-001",
         "OWN-004",
@@ -3305,13 +3316,15 @@
         "client/src/sidebarModules.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.263Z",
+      "updated_timestamp": "2026-08-06T12:14:26.290Z",
       "started_timestamp": "2026-07-31T14:19:54.570Z",
       "implemented_timestamp": "2026-07-31T14:22:03.541Z",
-      "validated_timestamp": "2026-07-31T14:22:03.806Z",
+      "validated_timestamp": "2026-08-06T12:14:26.290Z",
       "completed_timestamp": "2026-07-31T14:22:08.317Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
+      "validation_files": [
+        "client/src/frontendRegression.test.js"
+      ],
       "implementation_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
       "clean_validation_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
       "completion_record_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
