@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T14:34:01.817Z` |
+| Generated timestamp | `2026-08-06T14:35:26.743Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `76f3ab7` |
+| Local commit | `b674f69` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,18 +40,18 @@
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 15 |
+| Validation pending | 14 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 82 |
-| Completion percentage | 63.6% |
+| Completed | 83 |
+| Completion percentage | 64.3% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `FE-008`, `FE-009`, `FE-010`, `INT-001`, `INT-004`
+- Dependency-safe validation-pending tasks: `FE-008`, `FE-009`, `INT-001`, `INT-004`, `OPS-001`
 - Tasks awaiting prerequisites: `FE-011`, `INT-002`, `INT-003`, `INT-005`, `INT-006`
 - In-progress tasks: None
 - Blocked tasks: None
@@ -110,7 +110,7 @@
 | FE-007 | Separate application state | HIGH | COMPLETED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | VALIDATION_PENDING | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-010 | Add feature error and loading boundaries | HIGH | VALIDATION_PENDING | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-010 | Add feature error and loading boundaries | HIGH | COMPLETED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | VALIDATION_PENDING | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | VALIDATION_PENDING | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | VALIDATION_PENDING | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1644,9 +1644,9 @@ Scoped form and table presentation rules to dashboard feature roots; shared CSS 
 ### `FE-010` Add feature error and loading boundaries
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** FE-003, FE-007
-**Last updated:** 2026-08-01T22:10:15.273Z
+**Last updated:** 2026-08-06T14:35:26.743Z
 
 #### Description
 
@@ -1666,7 +1666,7 @@ Browser failure injection, accessibility, route, and regression tests.
 
 #### Completion evidence
 
-Added ErrorBoundary class component wrapping each feature route in App.jsx (keyed per route to reset on switch); added aria-busy to Sorter loading state. Files: client/src/ErrorBoundary.jsx (new), client/src/App.jsx, client/src/Sorter.jsx. Regression gate 10/10 passed, Vite build passed., PASS: regression gate 10/10 suites all passed; Vite production build passed; git diff --check clean. ErrorBoundary isolates feature render crashes from sidebar/navigation. Sorter has aria-busy during loading. OrderMapping and SkuImageManager already had accessible loading states., FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-010.
+Added ErrorBoundary class component wrapping each feature route in App.jsx (keyed per route to reset on switch); added aria-busy to Sorter loading state. Files: client/src/ErrorBoundary.jsx (new), client/src/App.jsx, client/src/Sorter.jsx. Regression gate 10/10 passed, Vite build passed., PASS: regression gate 10/10 suites all passed; Vite production build passed; git diff --check clean. ErrorBoundary isolates feature render crashes from sidebar/navigation. Sorter has aria-busy during loading. OrderMapping and SkuImageManager already had accessible loading states., FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-010., Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; all three features wrapped in ErrorBoundary with feature-specific keys; sanitized error output; tests cover boundary contract, Clean committed-state verification passed; tested at 987d635
 
 ---
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T14:35:26.769Z | FE-010 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `474fec76` |
+| 2026-08-06T14:35:26.471Z | FE-010 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; all three features wrapped in ErrorBoundary with feature-specific keys; sanitized error output; tests cover boundary contract | `98eebd9a` |
 | 2026-08-06T14:34:01.842Z | FE-007 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `d80871c9` |
 | 2026-08-06T14:34:01.561Z | FE-007 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; App.jsx delegates to Sorter.jsx; no shared mutable singleton | `0df27797` |
 | 2026-08-06T14:32:10.766Z | FE-006 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635; frontend regression 7/7; build and regression gate passed | `77ac8284` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-06T13:17:17.978Z | FE-004 | validated | completed | shivam | Transition to completed | `f8888d83` |
 | 2026-08-06T13:17:17.830Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b1e907de` |
 | 2026-08-06T13:17:17.830Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `11055395` |
-| 2026-08-06T13:17:17.779Z | FE-003 | validated | completed | shivam | Transition to completed | `4d1fe4fe` |
-| 2026-08-06T13:17:13.260Z | FE-002 | validated | completed | shivam | Transition to completed | `2b1e00af` |

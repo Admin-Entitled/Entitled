@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T14:34:01.817Z",
+  "last_updated": "2026-08-06T14:35:26.743Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3587,7 +3587,7 @@
       "title": "Add feature error and loading boundaries",
       "description": "Remediation task FE-010: Add feature error and loading boundaries",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "FE-003",
         "FE-007"
@@ -3605,21 +3605,33 @@
         "Added ErrorBoundary class component wrapping each feature route in App.jsx (keyed per route to reset on switch); added aria-busy to Sorter loading state. Files: client/src/ErrorBoundary.jsx (new), client/src/App.jsx, client/src/Sorter.jsx. Regression gate 10/10 passed, Vite build passed.",
         "PASS: regression gate 10/10 suites all passed; Vite production build passed; git diff --check clean. ErrorBoundary isolates feature render crashes from sidebar/navigation. Sorter has aria-busy during loading. OrderMapping and SkuImageManager already had accessible loading states.",
         "FE-010 implementation validated: ErrorBoundary wraps Sorter, OrderMapping, SkuImageManager routes (keyed per route); Sorter has aria-busy during loading; regression gate and build passed.",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-010."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-010.",
+        "Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; all three features wrapped in ErrorBoundary with feature-specific keys; sanitized error output; tests cover boundary contract",
+        "Clean committed-state verification passed; tested at 987d635"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "client/src/App.jsx"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.273Z",
+      "updated_timestamp": "2026-08-06T14:35:26.743Z",
       "started_timestamp": "2026-07-31T19:18:12.900Z",
       "implemented_timestamp": "2026-07-31T19:28:35.703Z",
-      "validated_timestamp": "2026-07-31T19:28:36.327Z",
-      "completed_timestamp": "2026-07-31T19:28:36.923Z",
+      "validated_timestamp": "2026-08-06T14:35:26.441Z",
+      "completed_timestamp": "2026-08-06T14:35:26.743Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
+      "validation_files": [
+        "client/src/frontendRegression.test.js"
+      ],
+      "implementation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+      "clean_validation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
       "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "implementation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "clean_validation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "tested_commit": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "passed": true
+      }
     },
     {
       "id": "FE-011",
