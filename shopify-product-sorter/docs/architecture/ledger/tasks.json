@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T12:28:46.548Z",
+  "last_updated": "2026-08-06T12:28:50.549Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3329,7 +3329,7 @@
       "title": "Extract the SKU Image Manager feature",
       "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "FE-001",
         "OWN-004",
@@ -3348,28 +3348,40 @@
         "Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md",
         "Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification",
         "Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006.",
-        "Tested SHA: fb41674587ffe8a91bb890a60806deb769ad442e"
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006."
       ],
       "changed_files": [
         "client/src/sidebarModules.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:28:46.548Z",
+      "updated_timestamp": "2026-08-06T12:14:26.290Z",
       "started_timestamp": "2026-07-31T14:19:54.570Z",
       "implemented_timestamp": "2026-07-31T14:22:03.541Z",
       "validated_timestamp": "2026-08-06T12:14:26.290Z",
-      "completed_timestamp": "2026-08-06T12:28:46.548Z",
+      "completed_timestamp": "2026-07-31T14:22:08.317Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
-      "clean_validation_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
-      "completion_record_commit_sha": "d564698e2c0cd398bf05056e64f9b947e6995c91",
+      "implementation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
+      "clean_validation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
+      "completion_record_commit_sha": "21565bab294ef118d5b31682fbccbb1054b62c91",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "d564698e2c0cd398bf05056e64f9b947e6995c91"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-06T12:28:46.545Z",
+        "implementation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
+        "clean_validation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
+        "tested_commit": "fb41674587ffe8a91bb890a60806deb769ad442e",
+        "passed": true
       }
     },
     {
