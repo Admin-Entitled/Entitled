@@ -50,7 +50,7 @@ test("GET /api/collections returns valid response or graceful error without cras
   const server = app.listen(0);
   try {
     const res = await request(server, "/api/collections");
-    assert.ok(res.status === 200 || res.status === 500);
+    assert.ok(res.status === 200 || res.status === 500 || res.status === 503);
     const data = JSON.parse(res.body);
     assert.ok(data);
   } finally {
@@ -62,7 +62,7 @@ test("GET /api/sales-intelligence/summary returns valid response or graceful err
   const server = app.listen(0);
   try {
     const res = await request(server, "/api/sales-intelligence/summary");
-    assert.ok(res.status === 200 || res.status === 500);
+    assert.ok(res.status === 200 || res.status === 500 || res.status === 503);
     const data = JSON.parse(res.body);
     assert.ok(data);
   } finally {
@@ -74,7 +74,7 @@ test("GET /api/sku-images/search returns valid response or graceful error withou
   const server = app.listen(0);
   try {
     const res = await request(server, "/api/sku-images/search");
-    assert.ok(res.status === 200 || res.status === 500);
+    assert.ok(res.status === 200 || res.status === 500 || res.status === 503);
     const data = JSON.parse(res.body);
     assert.ok(data);
   } finally {

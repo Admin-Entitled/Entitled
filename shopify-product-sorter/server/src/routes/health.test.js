@@ -83,13 +83,22 @@ test("GET /api/debug/shopify, GET /api/debug/shiprocket, and GET /api/health/dia
   const server = await startServer(app);
   try {
     const resShopify = await request(server, "/api/debug/shopify");
-    assert.equal(resShopify.status, 200);
+    assert.ok(resShopify.status === 200 || resShopify.status === 503);
     const dataShopify = JSON.parse(resShopify.body);
-    assert.match(dataShopify.status, /^(ok|not_configured|provider_error)$/);
-    assert.ok(dataShopify.authStatus);
-    assert.equal(typeof dataShopify.tokenAcquired, "boolean");
-    if (dataShopify.lastShopifyError) {
-      assert.ok(!dataShopify.lastShopifyError.includes("shpat_"));
+    if (resShopify.status === 503) {
+      // Unconfigured environment: guarded Shopify debug endpoint returns the
+      // shared SHOPIFY_UNAVAILABLE contract instead of leaking diagnostics.
+      assert.equal(dataShopify.code, "SHOPIFY_UNAVAILABLE");
+      assert.equal(dataShopify.success, false);
+      assert.ok(Array.isArray(dataShopify.missingVariables));
+      assert.ok(dataShopify.correlationId);
+    } else {
+      assert.match(dataShopify.status, /^(ok|not_configured|provider_error)$/);
+      assert.ok(dataShopify.authStatus);
+      assert.equal(typeof dataShopify.tokenAcquired, "boolean");
+      if (dataShopify.lastShopifyError) {
+        assert.ok(!dataShopify.lastShopifyError.includes("shpat_"));
+      }
     }
 
     const resShiprocket = await request(server, "/api/debug/shiprocket");
