@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T16:40:35.739Z` |
+| Generated timestamp | `2026-08-06T17:00:22.126Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `a1946f9` |
+| Local commit | `9c36d18` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -37,11 +37,11 @@
 | --- | ---: |
 | Total tasks | 129 |
 | Not started | 11 |
-| Ready | 13 |
+| Ready | 12 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 8 |
-| Validated | 0 |
+| Validated | 1 |
 | Blocked | 0 |
 | Deferred | 8 |
 | Completed | 89 |
@@ -50,7 +50,7 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `INT-006`, `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`
+- Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
 - Dependency-safe validation-pending tasks: `INT-002`, `INT-005`, `OPS-002`
 - Tasks awaiting prerequisites: `INT-003`, `INT-007`, `INT-008`, `INT-009`, `INT-010`
 - In-progress tasks: None
@@ -117,7 +117,7 @@
 | INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | VALIDATION_PENDING | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-006 | Standardize integration authentication and env ownership | CRITICAL | READY | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-006 | Standardize integration authentication and env ownership | CRITICAL | VALIDATED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATION_PENDING | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1847,9 +1847,9 @@ Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_
 ### `INT-006` Standardize integration authentication and env ownership
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** VALIDATED
 **Dependencies:** SEC-003, SEC-004, INT-001, INT-004
-**Last updated:** 2026-08-06T16:40:25.352Z
+**Last updated:** 2026-08-06T17:00:22.126Z
 
 #### Description
 
@@ -1869,7 +1869,7 @@ Environment matrix, secret scan, startup, auth mock, and route regression tests.
 
 #### Completion evidence
 
-Not completed.
+--evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9
 
 ---
 
@@ -3931,6 +3931,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T17:00:22.160Z | INT-006 | implemented | validated | shivam | --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 | `757daede` |
+| 2026-08-06T17:00:22.020Z | INT-006 | in_progress | implemented | shivam | --evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 | `856f5218` |
+| 2026-08-06T17:00:21.878Z | INT-006 | ready | in_progress | shivam | Transition to in_progress | `58651e9c` |
 | 2026-08-06T16:40:35.764Z | OPS-001 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass. | `f82a7498` |
 | 2026-08-06T16:40:35.550Z | OPS-001 | implemented | validated | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js OPS-001 section: 6 assertions pass. dev script uses concurrently. No package.json script references scripts/dev.mjs. Supported commands verified. | `5ba4866a` |
 | 2026-08-06T16:40:35.433Z | OPS-001 | in_progress | implemented | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --notes Disposition: RETIRE. scripts/dev.mjs not referenced by any package.json script. Replacement: npm run dev (concurrently). DEV_SCRIPT_STATUS.md created. Permanent startup contract tests added. | `28526336` |
@@ -3938,6 +3941,3 @@ Not completed.
 | 2026-08-06T16:40:25.363Z | INT-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e91a4f45` |
 | 2026-08-06T16:40:25.321Z | INT-004 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets. | `14d6ef67` |
 | 2026-08-06T16:40:25.213Z | INT-004 | implemented | validated | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass. Status mapping + terminal-status tests pass. No secrets in fixtures. | `562ddc71` |
-| 2026-08-06T16:40:25.096Z | INT-004 | in_progress | implemented | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --notes Inventoried 3 Shiprocket modules. 11 READ / 0 WRITE ops. Status-mapper owner: orderMappingStatus.js. All 9 ownership domains explicit. | `56509182` |
-| 2026-08-06T16:40:24.969Z | INT-004 | validation_pending | in_progress | shivam | Transition to in_progress | `4e9b7a0f` |
-| 2026-08-06T16:40:14.530Z | INT-001 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-001 complete. Inventoried 4 Shopify client modules (shopifyAuth.js, shopifyService.js, shopifyMediaService.js, orderMappingShopify.js). 17 READ / 7 WRITE ops. All callers listed. authEnv by variable name only. Permanent inventory contract test (8 assertions) in tests/providerInventory.test.js. SHOPIFY_CLIENT_INVENTORY.md created. No secrets, tokens, or customer data captured. Implementation commit: f64f3c887f290e101fb7879501574d179568d979. | `8aa4bd19` |
