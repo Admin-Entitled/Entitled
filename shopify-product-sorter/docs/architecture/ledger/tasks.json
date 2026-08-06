@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T12:28:50.549Z",
+  "last_updated": "2026-08-06T13:17:18.118Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3149,7 +3149,7 @@
       "title": "Extract navigation ownership",
       "description": "Remediation task FE-002: Extract navigation ownership",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "FE-001",
         "OWN-007"
@@ -3170,19 +3170,19 @@
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007."
       ],
       "changed_files": [
-        "client/src/sidebarModules.js"
+        "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:14:23.403Z",
+      "updated_timestamp": "2026-08-06T13:17:13.233Z",
       "started_timestamp": "2026-07-31T14:14:14.150Z",
       "implemented_timestamp": "2026-07-31T14:15:23.966Z",
       "validated_timestamp": "2026-08-06T12:14:23.403Z",
-      "completed_timestamp": "2026-07-31T14:15:28.266Z",
+      "completed_timestamp": "2026-08-06T13:17:13.233Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+      "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
       "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
       "completion_record_commit_sha": "f2a5f15c8023c89139cc565f5d48d61b3ce02755",
       "validation_results": {
@@ -3197,7 +3197,7 @@
           "output_summary": "✓ System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:18:51.041Z",
-        "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
         "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
         "tested_commit": "eb903e86c13dc4710942af9579ed1113d94d83f6",
         "passed": true
@@ -3208,7 +3208,7 @@
       "title": "Introduce explicit routing while preserving URLs",
       "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "TEST-008",
         "FE-001"
@@ -3229,20 +3229,20 @@
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001."
       ],
       "changed_files": [
-        "client/src/main.jsx"
+        "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:14:26.028Z",
+      "updated_timestamp": "2026-08-06T13:17:17.748Z",
       "started_timestamp": "2026-07-31T14:16:57.530Z",
       "implemented_timestamp": "2026-07-31T14:18:42.851Z",
       "validated_timestamp": "2026-08-06T12:14:26.028Z",
-      "completed_timestamp": "2026-07-31T14:18:47.081Z",
+      "completed_timestamp": "2026-08-06T13:17:17.748Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "e4045b32cb9f397c28c19793160404cfbc2c52bf",
-      "clean_validation_commit_sha": "e4045b32cb9f397c28c19793160404cfbc2c52bf",
+      "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
+      "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
       "completion_record_commit_sha": "bbd2896c03131f459f3e255cf7c851edb3a262c1",
       "validation_results": {
         "regression_gate": {
@@ -3256,9 +3256,9 @@
           "output_summary": "✓ System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:22:04.151Z",
-        "implementation_commit_sha": "e4045b32cb9f397c28c19793160404cfbc2c52bf",
-        "clean_validation_commit_sha": "e4045b32cb9f397c28c19793160404cfbc2c52bf",
-        "tested_commit": "e4045b32cb9f397c28c19793160404cfbc2c52bf",
+        "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
+        "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "tested_commit": "eb903e86c13dc4710942af9579ed1113d94d83f6",
         "passed": true
       }
     },
@@ -3267,7 +3267,7 @@
       "title": "Extract the Sorter feature",
       "description": "Remediation task FE-004: Extract the Sorter feature",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "FE-001",
         "OWN-002",
@@ -3290,21 +3290,20 @@
         "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004."
       ],
       "changed_files": [
-        "client/src/Sorter.jsx",
         "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:14:26.174Z",
+      "updated_timestamp": "2026-08-06T13:17:17.946Z",
       "started_timestamp": "2026-07-31T16:25:58.935Z",
       "implemented_timestamp": "2026-07-31T17:36:19.578Z",
       "validated_timestamp": "2026-08-06T12:14:26.174Z",
-      "completed_timestamp": "2026-07-31T17:38:08.224Z",
+      "completed_timestamp": "2026-08-06T13:17:17.946Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "a2c2c295de5c0edb2a6f7a048d9305b239140a17",
-      "clean_validation_commit_sha": "a2c2c295de5c0edb2a6f7a048d9305b239140a17",
+      "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+      "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
       "completion_record_commit_sha": "123efabca0347e57ae8d5dd10245829b1e3f76ef",
       "validation_results": {
         "regression_gate": {
@@ -3318,9 +3317,9 @@
           "output_summary": "✓ System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:25:31.216Z",
-        "implementation_commit_sha": "a2c2c295de5c0edb2a6f7a048d9305b239140a17",
-        "clean_validation_commit_sha": "a2c2c295de5c0edb2a6f7a048d9305b239140a17",
-        "tested_commit": "a2c2c295de5c0edb2a6f7a048d9305b239140a17",
+        "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "tested_commit": "eb903e86c13dc4710942af9579ed1113d94d83f6",
         "passed": true
       }
     },
@@ -3329,7 +3328,7 @@
       "title": "Extract the SKU Image Manager feature",
       "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "FE-001",
         "OWN-004",
@@ -3351,20 +3350,20 @@
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006."
       ],
       "changed_files": [
-        "client/src/sidebarModules.js"
+        "client/src/SkuImageManager.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:14:26.290Z",
+      "updated_timestamp": "2026-08-06T13:17:18.118Z",
       "started_timestamp": "2026-07-31T14:19:54.570Z",
       "implemented_timestamp": "2026-07-31T14:22:03.541Z",
       "validated_timestamp": "2026-08-06T12:14:26.290Z",
-      "completed_timestamp": "2026-07-31T14:22:08.317Z",
+      "completed_timestamp": "2026-08-06T13:17:18.118Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
-      "clean_validation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
+      "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
+      "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
       "completion_record_commit_sha": "21565bab294ef118d5b31682fbccbb1054b62c91",
       "validation_results": {
         "regression_gate": {
@@ -3378,9 +3377,9 @@
           "output_summary": "✓ System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T12:28:46.545Z",
-        "implementation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
-        "clean_validation_commit_sha": "fb41674587ffe8a91bb890a60806deb769ad442e",
-        "tested_commit": "fb41674587ffe8a91bb890a60806deb769ad442e",
+        "implementation_commit_sha": "bce7336ed41aaa8740647bc30eb19d326284c21b",
+        "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "tested_commit": "eb903e86c13dc4710942af9579ed1113d94d83f6",
         "passed": true
       }
     },
@@ -5736,7 +5735,7 @@
       "title": "Update README to current architecture",
       "description": "Remediation task DOC-001: Update README to current architecture",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "BE-005",
@@ -5754,7 +5753,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T13:17:17.814Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -5843,7 +5842,7 @@
       "title": "Create route map",
       "description": "Remediation task DOC-004: Create route map",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-007",
         "BE-005",
@@ -5861,7 +5860,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T13:17:17.814Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

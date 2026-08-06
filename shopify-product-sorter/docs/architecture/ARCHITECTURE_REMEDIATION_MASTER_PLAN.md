@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T12:28:50.549Z` |
+| Generated timestamp | `2026-08-06T13:17:18.118Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `aac0870` |
+| Local commit | `4da0808` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 15 |
-| Ready | 9 |
+| Not started | 13 |
+| Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 17 |
-| Validated | 4 |
+| Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 76 |
-| Completion percentage | 58.9% |
+| Completed | 80 |
+| Completion percentage | 62.0% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`, `DOC-010`
-- Dependency-safe validation-pending tasks: `INT-001`, `INT-004`, `OPS-001`
-- Tasks awaiting prerequisites: `FE-006`, `FE-007`, `FE-008`, `FE-009`, `FE-010`
+- Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
+- Dependency-safe validation-pending tasks: `FE-006`, `INT-001`, `INT-004`, `OPS-001`
+- Tasks awaiting prerequisites: `FE-007`, `FE-008`, `FE-009`, `FE-010`, `FE-011`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -102,10 +102,10 @@
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | COMPLETED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-002 | Extract navigation ownership | HIGH | VALIDATED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-004 | Extract the Sorter feature | HIGH | VALIDATED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-005 | Extract the SKU Image Manager feature | HIGH | VALIDATED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATION_PENDING | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -153,10 +153,10 @@
 | SEC-007 | Review CORS and CSRF protections | HIGH | COMPLETED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | COMPLETED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | COMPLETED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-001 | Update README to current architecture | MEDIUM | NOT_STARTED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-001 | Update README to current architecture | MEDIUM | READY | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-002 | Create a real `.env.example` | HIGH | READY | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-004 | Create route map | HIGH | NOT_STARTED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-004 | Create route map | HIGH | READY | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1412,9 +1412,9 @@ Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDA
 ### `FE-002` Extract navigation ownership
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-007
-**Last updated:** 2026-08-06T12:14:23.403Z
+**Last updated:** 2026-08-06T13:17:13.233Z
 
 #### Description
 
@@ -1441,9 +1441,9 @@ Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_
 ### `FE-003` Introduce explicit routing while preserving URLs
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-008, FE-001
-**Last updated:** 2026-08-06T12:14:26.028Z
+**Last updated:** 2026-08-06T13:17:17.748Z
 
 #### Description
 
@@ -1470,9 +1470,9 @@ Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md,
 ### `FE-004` Extract the Sorter feature
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-08-06T12:14:26.174Z
+**Last updated:** 2026-08-06T13:17:17.946Z
 
 #### Description
 
@@ -1499,9 +1499,9 @@ Unit, browser, API mock, route, build, and full regression checks.
 ### `FE-005` Extract the SKU Image Manager feature
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-004, TEST-006
-**Last updated:** 2026-08-06T12:14:26.290Z
+**Last updated:** 2026-08-06T13:17:18.118Z
 
 #### Description
 
@@ -2889,9 +2889,9 @@ DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md documents 144 production and 128 dev d
 ### `DOC-001` Update README to current architecture
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-001, BE-005, FE-003
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-06T13:17:17.814Z
 
 #### Description
 
@@ -2976,9 +2976,9 @@ Not completed.
 ### `DOC-004` Create route map
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-007, BE-005, FE-003
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-06T13:17:17.814Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T13:17:18.145Z | FE-005 | validated | completed | shivam | Transition to completed | `cf390596` |
+| 2026-08-06T13:17:17.978Z | FE-004 | validated | completed | shivam | Transition to completed | `f8888d83` |
+| 2026-08-06T13:17:17.830Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b1e907de` |
+| 2026-08-06T13:17:17.830Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `11055395` |
+| 2026-08-06T13:17:17.779Z | FE-003 | validated | completed | shivam | Transition to completed | `4d1fe4fe` |
+| 2026-08-06T13:17:13.260Z | FE-002 | validated | completed | shivam | Transition to completed | `2b1e00af` |
 | 2026-08-06T12:28:46.566Z | FE-005 | validated | completed | shivam | Clean committed-state verification passed | `996c4b06` |
 | 2026-08-06T12:25:31.238Z | FE-004 | validated | completed | shivam | Clean committed-state verification passed | `c94e810e` |
 | 2026-08-06T12:22:04.212Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e055c683` |
 | 2026-08-06T12:22:04.212Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f04e50c6` |
-| 2026-08-06T12:22:04.173Z | FE-003 | validated | completed | shivam | Clean committed-state verification passed | `71e5afa7` |
-| 2026-08-06T12:18:51.063Z | FE-002 | validated | completed | shivam | Clean committed-state verification passed | `8c2fa7a7` |
-| 2026-08-06T12:14:26.316Z | FE-005 | validation_pending | validated | shivam | Transition to validated | `d5b1f616` |
-| 2026-08-06T12:14:26.200Z | FE-004 | validation_pending | validated | shivam | Transition to validated | `1b22ce0d` |
-| 2026-08-06T12:14:26.056Z | FE-003 | validation_pending | validated | shivam | Transition to validated | `1fe46dca` |
-| 2026-08-06T12:14:23.435Z | FE-002 | validation_pending | validated | shivam | Transition to validated | `bf7649fc` |
