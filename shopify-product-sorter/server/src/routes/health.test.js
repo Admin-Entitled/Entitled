@@ -4,6 +4,7 @@ import test from "node:test";
 import app from "../app.js";
 import { env } from "../config/env.js";
 import { redactSecrets } from "../utils/sanitize.js";
+import { errorNormalizer, AppError } from "../middleware/errorBoundary.js";
 
 function startServer(app) {
   return new Promise((resolve, reject) => {
@@ -109,6 +110,166 @@ test("GET /api/debug/shopify, GET /api/debug/shiprocket, and GET /api/health/dia
     assert.ok(dataDiag.shopify);
     assert.ok(dataDiag.shiprocket);
     assert.ok(Buffer.byteLength(resDiag.body) < 8192);
+  } finally {
+    server.close();
+  }
+});
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { logInfo } from "../utils/logger.js";
+
+const __filenameTest = fileURLToPath(import.meta.url);
+const __dirnameTest = path.dirname(__filenameTest);
+
+test("BE-007: Prohibited imports and circular dependency checks", () => {
+  const routesDir = path.resolve(__dirnameTest, "./");
+
+  // Statically check sorter.js imports
+  const sorterContent = fs.readFileSync(path.join(routesDir, "sorter.js"), "utf8");
+  assert.ok(!sorterContent.includes("skuImageAuditService"));
+  assert.ok(!sorterContent.includes("shopifyMediaService"));
+  assert.ok(!sorterContent.includes("actualSalesService"));
+  assert.ok(!sorterContent.includes("orderMappingService"));
+
+  // Statically check skuMedia.js imports
+  const skuMediaContent = fs.readFileSync(path.join(routesDir, "skuMedia.js"), "utf8");
+  assert.ok(!skuMediaContent.includes("actualSalesService"));
+  assert.ok(!skuMediaContent.includes("orderMappingService"));
+  assert.ok(!skuMediaContent.includes("sorterRuntimeService"));
+
+  // Statically check salesIntelligence.js imports
+  const salesIntContent = fs.readFileSync(path.join(routesDir, "salesIntelligence.js"), "utf8");
+  assert.ok(!salesIntContent.includes("skuImageAuditService"));
+  assert.ok(!salesIntContent.includes("shopifyMediaService"));
+  assert.ok(!salesIntContent.includes("orderMappingService"));
+});
+
+test("BE-009: Logger-failure tolerance and field checks", () => {
+  const originalLog = console.log;
+  let loggedData = null;
+  console.log = (str) => {
+    loggedData = JSON.parse(str);
+  };
+
+  try {
+    // 1. Structured fields exist
+    logInfo("Test message", { key: "value", user: { email: "test@example.com" } });
+    assert.equal(loggedData.level, "info");
+    assert.equal(loggedData.message, "Test message");
+    assert.equal(loggedData.key, "value");
+    assert.equal(loggedData.user.email, "[REDACTED]");
+
+    // 2. Secret and PII Redaction
+    logInfo("Token test shpat_123456789abcde");
+    assert.equal(loggedData.message, "Token test [REDACTED_SHOPIFY_TOKEN]");
+
+    // 3. Logger-failure tolerance (circular ref)
+    const circularObj = {};
+    circularObj.self = circularObj;
+    logInfo("Circular test", circularObj);
+    assert.equal(loggedData.message, "[Logger Error] Failed to serialize log payload");
+  } finally {
+    console.log = originalLog;
+  }
+});
+
+test("SEC-007: CORS allowed, denied, preflight, credentials policies", async () => {
+  const server = await startServer(app);
+  try {
+    // Allowed origin
+    const resAllowed = await request(server, "/api/health", {
+      headers: { Origin: env.clientOrigin },
+    });
+    assert.equal(resAllowed.headers["access-control-allow-origin"], env.clientOrigin);
+    assert.equal(resAllowed.headers["access-control-allow-credentials"], "true");
+
+    // Denied origin
+    const resDenied = await request(server, "/api/health", {
+      headers: { Origin: "http://malicious.com" },
+    });
+    assert.notEqual(resDenied.headers["access-control-allow-origin"], "http://malicious.com");
+
+    // Preflight (OPTIONS)
+    const resPreflight = await request(server, "/api/health", {
+      method: "OPTIONS",
+      headers: {
+        Origin: env.clientOrigin,
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "Content-Type,Authorization",
+      },
+    });
+    assert.equal(resPreflight.status, 204);
+    assert.equal(resPreflight.headers["access-control-allow-origin"], env.clientOrigin);
+  } finally {
+    server.close();
+  }
+});
+
+test("SEC-007: CSRF decision check (state-changing stateless requests)", async () => {
+  const server = await startServer(app);
+  try {
+    const res = await request(server, "/api/collections/apply", {
+      method: "POST",
+      headers: {
+        Origin: "http://attacker.com",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ collectionId: "123", orderIds: [] }),
+    });
+    assert.ok(res.status === 401 || res.status === 400);
+  } finally {
+    server.close();
+  }
+});
+
+test("SEC-008 & BE-008: Request validation and error mapping boundaries", async () => {
+  const server = await startServer(app);
+  try {
+    // 1. Missing required field (body.collectionId)
+    const res1 = await request(server, "/api/collections/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderIds: [] }),
+    });
+    assert.equal(res1.status, 400);
+    const data1 = JSON.parse(res1.body);
+    assert.equal(data1.code, "VALIDATION_ERROR");
+    assert.ok(Array.isArray(data1.details));
+    assert.ok(data1.details.some(d => d.path === "body.collectionId"));
+
+    // 2. Wrong type (body.orderIds is not array)
+    const res2 = await request(server, "/api/collections/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ collectionId: "123", orderIds: "not-an-array" }),
+    });
+    assert.equal(res2.status, 400);
+    const data2 = JSON.parse(res2.body);
+    assert.ok(data2.details.some(d => d.path === "body.orderIds"));
+
+    // 3. No secrets leakage in error (tested directly via errorNormalizer)
+    const mockReq = { headers: {} };
+    let responseBody = null;
+    let responseStatus = null;
+    const mockRes = {
+      status(s) {
+        responseStatus = s;
+        return this;
+      },
+      json(data) {
+        responseBody = data;
+        return this;
+      }
+    };
+    const mockNext = () => {};
+
+    const rawError = new AppError("PROVIDER_ERROR", "Connection failed for shpat_testtoken123", { statusCode: 400 });
+    errorNormalizer(rawError, mockReq, mockRes, mockNext);
+    assert.equal(responseStatus, 400);
+    assert.ok(!responseBody.error.includes("shpat_testtoken123"));
+    assert.ok(responseBody.error.includes("[REDACTED_SHOPIFY_TOKEN]"));
   } finally {
     server.close();
   }
