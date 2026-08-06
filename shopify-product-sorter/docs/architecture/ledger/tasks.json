@@ -3738,8 +3738,7 @@
         "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-001 complete. Inventoried 4 Shopify client modules (shopifyAuth.js, shopifyService.js, shopifyMediaService.js, orderMappingShopify.js). 17 READ / 7 WRITE ops. All callers listed. authEnv by variable name only. Permanent inventory contract test (8 assertions) in tests/providerInventory.test.js. SHOPIFY_CLIENT_INVENTORY.md created. No secrets, tokens, or customer data captured. Implementation commit: f64f3c887f290e101fb7879501574d179568d979."
       ],
       "changed_files": [
-        "docs/architecture/SHOPIFY_CLIENT_INVENTORY.md",
-        "tests/providerInventory.test.js"
+        "docs/architecture/SHOPIFY_CLIENT_INVENTORY.md"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T16:40:14.504Z",
@@ -3752,14 +3751,14 @@
         "tests/providerInventory.test.js"
       ],
       "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-      "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-      "completion_record_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "clean_validation_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90",
+      "completion_record_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90",
       "validation_results": {
         "overallStatus": "PASSED",
         "passed": true,
         "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-        "tested_commit": "f64f3c887f290e101fb7879501574d179568d979",
-        "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979"
+        "tested_commit": "a1946f99c174fb39aa425ada8677201b1b993c90",
+        "clean_validation_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90"
       }
     },
     {
@@ -3878,8 +3877,7 @@
         "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets."
       ],
       "changed_files": [
-        "docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md",
-        "tests/providerInventory.test.js"
+        "docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T16:40:25.296Z",
@@ -3892,14 +3890,14 @@
         "tests/providerInventory.test.js"
       ],
       "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-      "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-      "completion_record_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "clean_validation_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90",
+      "completion_record_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90",
       "validation_results": {
         "overallStatus": "PASSED",
         "passed": true,
         "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-        "tested_commit": "f64f3c887f290e101fb7879501574d179568d979",
-        "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979"
+        "tested_commit": "a1946f99c174fb39aa425ada8677201b1b993c90",
+        "clean_validation_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90"
       }
     },
     {
@@ -4820,8 +4818,7 @@
         "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass."
       ],
       "changed_files": [
-        "docs/architecture/DEV_SCRIPT_STATUS.md",
-        "tests/providerInventory.test.js"
+        "docs/architecture/DEV_SCRIPT_STATUS.md"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T16:40:35.739Z",
@@ -4834,14 +4831,14 @@
         "tests/providerInventory.test.js"
       ],
       "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-      "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-      "completion_record_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
+      "clean_validation_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90",
+      "completion_record_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90",
       "validation_results": {
         "overallStatus": "PASSED",
         "passed": true,
         "implementation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979",
-        "tested_commit": "f64f3c887f290e101fb7879501574d179568d979",
-        "clean_validation_commit_sha": "f64f3c887f290e101fb7879501574d179568d979"
+        "tested_commit": "a1946f99c174fb39aa425ada8677201b1b993c90",
+        "clean_validation_commit_sha": "a1946f99c174fb39aa425ada8677201b1b993c90"
       }
     },
     {
