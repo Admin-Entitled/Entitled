@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T17:08:44.196Z",
+  "last_updated": "2026-08-06T17:22:42.823Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3766,7 +3766,7 @@
       "title": "Define shared Shopify transport",
       "description": "Remediation task INT-002: Define shared Shopify transport",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "INT-001",
         "TEST-003"
@@ -3781,26 +3781,40 @@
         "Mocked integration, route, Shopify contract, redaction, and existing-app regression tests."
       ],
       "evidence": [
-        "Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md",
-        "Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check",
-        "Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-001, TEST-003."
+        "--implementation-sha 785379516e834f11a1c6fbf16f2a23d7cc1a8ab5 --validation-sha dce0a23d7e3b1f494d28caf572dce850844b4f0e --changed-files docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md --validation-files tests/integrationContracts.test.js --notes Task INT-002 validated with branch-native evidence on ops/architecture-ledger-hardening."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-01T22:10:15.279Z",
       "started_timestamp": "2026-07-31T14:29:24.865Z",
       "implemented_timestamp": "2026-07-31T14:30:54.291Z",
       "validated_timestamp": "2026-07-31T14:30:54.579Z",
-      "completed_timestamp": "2026-07-31T14:30:58.869Z",
+      "completed_timestamp": "2026-08-06T17:22:40.444Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "d862883fad6107036dbee361ff05e114e78c6d7c",
-      "clean_validation_commit_sha": "d862883fad6107036dbee361ff05e114e78c6d7c",
+      "validation_files": [
+        "tests/integrationContracts.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
       "completion_record_commit_sha": "d862883fad6107036dbee361ff05e114e78c6d7c",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "d862883fad6107036dbee361ff05e114e78c6d7c"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status: PASSED"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "System verification completed successfully"
+        },
+        "timestamp": "2026-08-06T17:22:38.050Z",
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "passed": true
       }
     },
     {
@@ -3905,7 +3919,7 @@
       "title": "Define shared Shiprocket transport",
       "description": "Remediation task INT-005: Define shared Shiprocket transport",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "INT-004"
       ],
@@ -3919,26 +3933,40 @@
         "Mocked provider tests, timeout/429/401 cases, logs, and regression gate."
       ],
       "evidence": [
-        "Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md",
-        "Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification",
-        "Commit SHA: 1e845b181d0044a42a4c780968efa1165be41371",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-004."
+        "--implementation-sha 785379516e834f11a1c6fbf16f2a23d7cc1a8ab5 --validation-sha dce0a23d7e3b1f494d28caf572dce850844b4f0e --changed-files docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md --validation-files tests/integrationContracts.test.js --notes Task INT-005 validated with branch-native evidence on ops/architecture-ledger-hardening."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-01T22:10:15.285Z",
       "started_timestamp": "2026-07-31T14:45:23.303Z",
       "implemented_timestamp": "2026-07-31T14:46:04.784Z",
       "validated_timestamp": "2026-07-31T14:46:05.022Z",
-      "completed_timestamp": "2026-07-31T14:46:08.864Z",
+      "completed_timestamp": "2026-08-06T17:22:40.445Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "1e845b181d0044a42a4c780968efa1165be41371",
-      "clean_validation_commit_sha": "1e845b181d0044a42a4c780968efa1165be41371",
+      "validation_files": [
+        "tests/integrationContracts.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
       "completion_record_commit_sha": "1e845b181d0044a42a4c780968efa1165be41371",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "1e845b181d0044a42a4c780968efa1165be41371"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status: PASSED"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "System verification completed successfully"
+        },
+        "timestamp": "2026-08-06T17:22:38.050Z",
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "passed": true
       }
     },
     {
@@ -4871,7 +4899,7 @@
       "title": "Standardize startup commands",
       "description": "Remediation task OPS-002: Standardize startup commands",
       "severity": "MEDIUM",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OPS-001",
         "BE-010"
@@ -4886,26 +4914,41 @@
         "Static script checks, dry-run help, test gate, and documentation review."
       ],
       "evidence": [
-        "--evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js",
-        "--evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution",
-        "Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OPS-001, BE-010."
+        "--implementation-sha 785379516e834f11a1c6fbf16f2a23d7cc1a8ab5 --validation-sha dce0a23d7e3b1f494d28caf572dce850844b4f0e --changed-files docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md --validation-files tests/integrationContracts.test.js,server/src/scripts/startupCommands.test.js --notes Task OPS-002 validated with branch-native evidence on ops/architecture-ledger-hardening."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-01T22:10:15.307Z",
       "started_timestamp": "2026-07-31T15:18:48.305Z",
       "implemented_timestamp": "2026-07-31T15:21:12.981Z",
       "validated_timestamp": "2026-07-31T15:21:19.750Z",
-      "completed_timestamp": "2026-07-31T15:21:45.218Z",
+      "completed_timestamp": "2026-08-06T17:22:40.445Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a",
-      "clean_validation_commit_sha": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a",
+      "validation_files": [
+        "tests/integrationContracts.test.js",
+        "server/src/scripts/startupCommands.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
       "completion_record_commit_sha": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "d9339c6d7c0d6396234f721952d0a9a1aabb6e2a"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status: PASSED"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "System verification completed successfully"
+        },
+        "timestamp": "2026-08-06T17:22:38.050Z",
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "passed": true
       }
     },
     {
@@ -6060,7 +6103,7 @@
       "title": "Create local development guide",
       "description": "Remediation task DOC-007: Create local development guide",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OPS-002",
         "SEC-005"
@@ -6077,7 +6120,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-06T17:22:42.810Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -6094,7 +6137,7 @@
       "title": "Create production startup guide",
       "description": "Remediation task DOC-008: Create production startup guide",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OPS-002",
         "OPS-003",
@@ -6112,7 +6155,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T17:22:42.810Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -6968,7 +7011,7 @@
       "title": "Verify all routes and startup behavior",
       "description": "Remediation task FINAL-002: Verify all routes and startup behavior",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "BE-005",
         "FE-003",
@@ -6987,7 +7030,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T17:22:42.810Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

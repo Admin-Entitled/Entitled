@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T17:03:31.644Z` |
+| Generated timestamp | `2026-08-06T17:22:42.823Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `ecdf6a6` |
+| Local commit | `503a87c` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 11 |
-| Ready | 12 |
+| Not started | 8 |
+| Ready | 15 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 8 |
-| Validated | 1 |
+| Validation pending | 5 |
+| Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 89 |
-| Completion percentage | 69.0% |
+| Completed | 93 |
+| Completion percentage | 72.1% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `INT-002`, `INT-005`, `OPS-002`
-- Tasks awaiting prerequisites: `INT-003`, `INT-007`, `INT-008`, `INT-009`, `INT-010`
+- Dependency-safe validation-pending tasks: `INT-003`, `INT-007`, `INT-008`
+- Tasks awaiting prerequisites: `INT-009`, `INT-010`, `DOC-006`, `CLEAN-008`, `CLEAN-009`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -113,11 +113,11 @@
 | FE-010 | Add feature error and loading boundaries | HIGH | COMPLETED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | COMPLETED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-002 | Define shared Shopify transport | HIGH | VALIDATION_PENDING | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-002 | Define shared Shopify transport | HIGH | COMPLETED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-005 | Define shared Shiprocket transport | HIGH | VALIDATION_PENDING | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-006 | Standardize integration authentication and env ownership | CRITICAL | VALIDATED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-005 | Define shared Shiprocket transport | HIGH | COMPLETED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-006 | Standardize integration authentication and env ownership | CRITICAL | COMPLETED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATION_PENDING | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -135,7 +135,7 @@
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | COMPLETED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-002 | Standardize startup commands | MEDIUM | VALIDATION_PENDING | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-002 | Standardize startup commands | MEDIUM | COMPLETED | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | COMPLETED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | COMPLETED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-005 | Review and isolate Graphify artifacts | MEDIUM | COMPLETED | OWN-009 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -159,8 +159,8 @@
 | DOC-004 | Create route map | HIGH | READY | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-007 | Create local development guide | MEDIUM | NOT_STARTED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-008 | Create production startup guide | HIGH | NOT_STARTED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-007 | Create local development guide | MEDIUM | READY | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-008 | Create production startup guide | HIGH | READY | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-010 | Create migration and deprecation policy | HIGH | READY | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -182,7 +182,7 @@
 | META-007 | Add Meta tests, write safeguards, and observability | CRITICAL | DEFERRED | META-004, META-005, META-006 | Imported from master plan. Previous raw status: DEFERRED |
 | META-008 | Roll out Meta safely to production | HIGH | DEFERRED | META-007, FINAL-007 | Imported from master plan. Previous raw status: DEFERRED |
 | FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-002 | Verify all routes and startup behavior | CRITICAL | NOT_STARTED | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-002 | Verify all routes and startup behavior | CRITICAL | READY | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-003 | Verify data integrity and restore evidence | CRITICAL | READY | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-004 | Audit dependencies, environment, and security | CRITICAL | NOT_STARTED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | NOT_STARTED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1731,7 +1731,7 @@ Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIEN
 ### `INT-002` Define shared Shopify transport
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-001, TEST-003
 **Last updated:** 2026-08-01T22:10:15.279Z
 
@@ -1753,7 +1753,7 @@ Mocked integration, route, Shopify contract, redaction, and existing-app regress
 
 #### Completion evidence
 
-Defined shared Shopify transport contract in docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md, Validated via shopifyService.js and shopifyAuth.js review, error handling audit, and business logic exclusion check, Commit SHA: d862883fad6107036dbee361ff05e114e78c6d7c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-001, TEST-003.
+--implementation-sha 785379516e834f11a1c6fbf16f2a23d7cc1a8ab5 --validation-sha dce0a23d7e3b1f494d28caf572dce850844b4f0e --changed-files docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md --validation-files tests/integrationContracts.test.js --notes Task INT-002 validated with branch-native evidence on ops/architecture-ledger-hardening.
 
 ---
 
@@ -1818,7 +1818,7 @@ Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET
 ### `INT-005` Define shared Shiprocket transport
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-004
 **Last updated:** 2026-08-01T22:10:15.285Z
 
@@ -1840,16 +1840,16 @@ Mocked provider tests, timeout/429/401 cases, logs, and regression gate.
 
 #### Completion evidence
 
-Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md, Validated via shiprocketService.js review, auth/retry/error contract audit, and secret value verification, Commit SHA: 1e845b181d0044a42a4c780968efa1165be41371, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-004.
+--implementation-sha 785379516e834f11a1c6fbf16f2a23d7cc1a8ab5 --validation-sha dce0a23d7e3b1f494d28caf572dce850844b4f0e --changed-files docs/architecture/SHIPROCKET_TRANSPORT_CONTRACT.md --validation-files tests/integrationContracts.test.js --notes Task INT-005 validated with branch-native evidence on ops/architecture-ledger-hardening.
 
 ---
 
 ### `INT-006` Standardize integration authentication and env ownership
 
 **Severity:** CRITICAL
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** SEC-003, SEC-004, INT-001, INT-004
-**Last updated:** 2026-08-06T17:00:22.126Z
+**Last updated:** 2026-08-06T17:08:44.195Z
 
 #### Description
 
@@ -1869,7 +1869,7 @@ Environment matrix, secret scan, startup, auth mock, and route regression tests.
 
 #### Completion evidence
 
---evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9
+--evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9, --evidence Task INT-006 was validated in f64f3c887f290e101fb7879501574d179568d979. Credentials remain backend-only, verified via environment rules tests.
 
 ---
 
@@ -2369,7 +2369,7 @@ Documented dev script obsolescence and retirement recommendation in docs/archite
 ### `OPS-002` Standardize startup commands
 
 **Severity:** MEDIUM
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OPS-001, BE-010
 **Last updated:** 2026-08-01T22:10:15.307Z
 
@@ -2391,7 +2391,7 @@ Static script checks, dry-run help, test gate, and documentation review.
 
 #### Completion evidence
 
---evidence Created docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md, implemented scripts/verify.mjs for offline system verification, enforced explicit operator intent on database migrations, and added unit tests in server/src/scripts/startupCommands.test.js, --evidence Validated via node --test server/src/scripts/startupCommands.test.js (3 passing) and npm run verify offline execution, Commit SHA: 69536df32abb5a2ef7310803d20f56c7eb945c7e, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OPS-001, BE-010.
+--implementation-sha 785379516e834f11a1c6fbf16f2a23d7cc1a8ab5 --validation-sha dce0a23d7e3b1f494d28caf572dce850844b4f0e --changed-files docs/architecture/STARTUP_COMMANDS_SAFETY_MATRIX.md --validation-files tests/integrationContracts.test.js,server/src/scripts/startupCommands.test.js --notes Task OPS-002 validated with branch-native evidence on ops/architecture-ledger-hardening.
 
 ---
 
@@ -3063,9 +3063,9 @@ Not completed.
 ### `DOC-007` Create local development guide
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OPS-002, SEC-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-06T17:22:42.810Z
 
 #### Description
 
@@ -3092,9 +3092,9 @@ Not completed.
 ### `DOC-008` Create production startup guide
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OPS-002, OPS-003, SEC-001
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-06T17:22:42.810Z
 
 #### Description
 
@@ -3727,9 +3727,9 @@ Not completed.
 ### `FINAL-002` Verify all routes and startup behavior
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** BE-005, FE-003, OPS-002, TEST-008
-**Last updated:** 2026-08-01T23:16:47.198Z
+**Last updated:** 2026-08-06T17:22:42.810Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T17:22:42.823Z | FINAL-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `90f2f962` |
+| 2026-08-06T17:22:42.823Z | DOC-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `a390e397` |
+| 2026-08-06T17:22:42.823Z | DOC-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `72fc164e` |
+| 2026-08-06T17:22:40.445Z | OPS-002 | validated | completed | shivam | Clean committed-state verification passed for OPS-002 | `b50bd1d3` |
+| 2026-08-06T17:22:40.445Z | INT-005 | validated | completed | shivam | Clean committed-state verification passed for INT-005 | `94f74b6f` |
+| 2026-08-06T17:22:40.444Z | INT-002 | validated | completed | shivam | Clean committed-state verification passed for INT-002 | `e0992ec0` |
+| 2026-08-06T17:21:47.714Z | INT-006 | completed | completed | shivam | Updated completion_record_commit_sha to bcd5bb318b6138f8d593f05ce1e297b38aac31e1 | `a22493f9` |
+| 2026-08-06T17:21:33.850Z | INT-006 | completed | completed | shivam | Evidence correction: updated implementation and clean validation commit SHAs to branch-native commits 7853795 and dce0a23 | `e6d6f583` |
+| 2026-08-06T17:08:44.226Z | INT-006 | validated | completed | shivam | --evidence Task INT-006 was validated in f64f3c887f290e101fb7879501574d179568d979. Credentials remain backend-only, verified via environment rules tests. | `b8a6459c` |
 | 2026-08-06T17:03:27.297Z | INT-006 | validated | completed | shivam | Clean committed-state verification passed | `6518a649` |
-| 2026-08-06T17:01:37.473Z | INT-006 | validated | completed | shivam | Clean committed-state verification passed | `0f789e4d` |
-| 2026-08-06T17:00:22.160Z | INT-006 | implemented | validated | shivam | --evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 | `757daede` |
-| 2026-08-06T17:00:22.020Z | INT-006 | in_progress | implemented | shivam | --evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 | `856f5218` |
-| 2026-08-06T17:00:21.878Z | INT-006 | ready | in_progress | shivam | Transition to in_progress | `58651e9c` |
-| 2026-08-06T16:40:35.764Z | OPS-001 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass. | `f82a7498` |
-| 2026-08-06T16:40:35.550Z | OPS-001 | implemented | validated | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js OPS-001 section: 6 assertions pass. dev script uses concurrently. No package.json script references scripts/dev.mjs. Supported commands verified. | `5ba4866a` |
-| 2026-08-06T16:40:35.433Z | OPS-001 | in_progress | implemented | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --notes Disposition: RETIRE. scripts/dev.mjs not referenced by any package.json script. Replacement: npm run dev (concurrently). DEV_SCRIPT_STATUS.md created. Permanent startup contract tests added. | `28526336` |
-| 2026-08-06T16:40:35.308Z | OPS-001 | validation_pending | in_progress | shivam | Transition to in_progress | `b02245ce` |
-| 2026-08-06T16:40:25.363Z | INT-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e91a4f45` |
