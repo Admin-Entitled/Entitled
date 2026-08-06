@@ -89,3 +89,21 @@ test("Frontend Regression: Style Isolation & Scoped CSS Rules", () => {
   assert.match(styles, /\.dashboard table\s*\{/);
   assert.match(styles, /\.dashboard th,\s*\n\.dashboard td\s*\{/);
 });
+
+test("Frontend Regression: Sorter, SKU Image Manager, and Order Mapping boundaries", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  const skuContent = readFileSync(new URL("./SkuImageManager.jsx", import.meta.url), "utf8");
+  const orderMappingContent = readFileSync(new URL("./OrderMapping.jsx", import.meta.url), "utf8");
+
+  // Verify that Sorter does not import SkuImageManager or OrderMapping
+  assert.ok(!sorterContent.includes("SkuImageManager"));
+  assert.ok(!sorterContent.includes("OrderMapping"));
+
+  // Verify that SkuImageManager does not import Sorter or OrderMapping
+  assert.ok(!skuContent.includes("Sorter"));
+  assert.ok(!skuContent.includes("OrderMapping"));
+
+  // Verify that OrderMapping does not import Sorter or SkuImageManager
+  assert.ok(!orderMappingContent.includes("Sorter"));
+  assert.ok(!orderMappingContent.includes("SkuImageManager"));
+});
