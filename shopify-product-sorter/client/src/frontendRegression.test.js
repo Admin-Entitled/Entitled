@@ -107,3 +107,31 @@ test("Frontend Regression: Sorter, SKU Image Manager, and Order Mapping boundari
   assert.ok(!orderMappingContent.includes("Sorter"));
   assert.ok(!orderMappingContent.includes("SkuImageManager"));
 });
+
+test("Frontend Regression: App.jsx delegates rendering to extracted components (FE-007)", () => {
+  const appContent = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
+
+  // App.jsx must not contain inline Sorter dashboard handlers
+  assert.ok(!appContent.includes("handleSync"), "App.jsx must not contain handleSync — Sorter logic should be in Sorter.jsx");
+  assert.ok(!appContent.includes("handleGenerate"), "App.jsx must not contain handleGenerate");
+  assert.ok(!appContent.includes("handleApply"), "App.jsx must not contain handleApply");
+  assert.ok(!appContent.includes("handleRollback"), "App.jsx must not contain handleRollback");
+
+  // App.jsx must render the extracted Sorter component
+  assert.ok(appContent.includes("<Sorter"), "App.jsx must render <Sorter />");
+  assert.ok(appContent.includes("<OrderMapping"), "App.jsx must render <OrderMapping />");
+  assert.ok(appContent.includes("<SkuImageManager"), "App.jsx must render <SkuImageManager />");
+});
+
+test("Frontend Regression: ErrorBoundary wraps feature modules in App.jsx (FE-010)", () => {
+  const appContent = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
+
+  // ErrorBoundary must be imported and used
+  assert.ok(appContent.includes("import ErrorBoundary"), "App.jsx must import ErrorBoundary");
+  assert.ok(appContent.includes("<ErrorBoundary"), "App.jsx must use <ErrorBoundary>");
+
+  // All three feature keys should be wrapped
+  assert.ok(appContent.includes('key="sorter"'), "Sorter must have an ErrorBoundary key");
+  assert.ok(appContent.includes('key="order-mapping"'), "OrderMapping must have an ErrorBoundary key");
+  assert.ok(appContent.includes('key="sku-image-manager"'), "SkuImageManager must have an ErrorBoundary key");
+});
