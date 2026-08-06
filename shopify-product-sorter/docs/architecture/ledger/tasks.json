@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T11:14:38.824Z",
+  "last_updated": "2026-08-06T11:22:00.386Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2846,7 +2846,7 @@
       "title": "Remove hidden cross-application imports",
       "description": "Remediation task BE-007: Remove hidden cross-application imports",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "BE-006"
       ],
@@ -2863,23 +2863,29 @@
         "Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_IMPORT_MATRIX.md",
         "Validated via static import scan; no cross-domain business logic imports found; all shared dependencies have contract tests",
         "Commit SHA: c2beccc557ad69a49bf64cd1938ceab2b422edc1",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-006."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-006.",
+        "Revalidate BE-007",
+        "Complete BE-007"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/routes/sorter.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.247Z",
+      "updated_timestamp": "2026-08-06T11:21:56.116Z",
       "started_timestamp": "2026-07-31T13:55:30.454Z",
       "implemented_timestamp": "2026-07-31T13:56:45.292Z",
-      "validated_timestamp": "2026-07-31T13:56:45.546Z",
-      "completed_timestamp": "2026-07-31T13:56:49.858Z",
+      "validated_timestamp": "2026-08-06T11:21:56.001Z",
+      "completed_timestamp": "2026-08-06T11:21:56.116Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "c2beccc557ad69a49bf64cd1938ceab2b422edc1",
-      "clean_validation_commit_sha": "c2beccc557ad69a49bf64cd1938ceab2b422edc1",
-      "completion_record_commit_sha": "c2beccc557ad69a49bf64cd1938ceab2b422edc1",
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "c2beccc557ad69a49bf64cd1938ceab2b422edc1"
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
       }
     },
     {
@@ -2887,7 +2893,7 @@
       "title": "Standardize validation and error normalization",
       "description": "Remediation task BE-008: Standardize validation and error normalization",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "BE-001",
         "SEC-006"
@@ -2901,27 +2907,41 @@
       "validation_commands": [
         "Unit, route negative tests, security review, and regression gate."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Start BE-008",
+        "Implement BE-008",
+        "Validate BE-008",
+        "Complete BE-008"
+      ],
+      "changed_files": [
+        "server/src/middleware/errorBoundary.js",
+        "server/src/services/orderMappingError.js",
+        "server/src/app.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T11:14:38.811Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-06T11:21:37.175Z",
+      "started_timestamp": "2026-08-06T11:21:36.790Z",
+      "implemented_timestamp": "2026-08-06T11:21:36.934Z",
+      "validated_timestamp": "2026-08-06T11:21:37.054Z",
+      "completed_timestamp": "2026-08-06T11:21:37.175Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
+      }
     },
     {
       "id": "BE-009",
       "title": "Standardize structured logging",
       "description": "Remediation task BE-009: Standardize structured logging",
       "severity": "MEDIUM",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-006",
         "BE-006"
@@ -2939,23 +2959,29 @@
         "Defined structured logging standard in docs/architecture/STRUCTURED_LOGGING_STANDARD.md",
         "Validated via logger.js review, log consumer audit, and redaction rule verification",
         "Commit SHA: de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-006."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-006.",
+        "Revalidate BE-009",
+        "Complete BE-009"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/utils/logger.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.249Z",
+      "updated_timestamp": "2026-08-06T11:21:59.582Z",
       "started_timestamp": "2026-07-31T13:58:58.625Z",
       "implemented_timestamp": "2026-07-31T14:00:18.759Z",
-      "validated_timestamp": "2026-07-31T14:00:19.030Z",
-      "completed_timestamp": "2026-07-31T14:00:23.009Z",
+      "validated_timestamp": "2026-08-06T11:21:59.452Z",
+      "completed_timestamp": "2026-08-06T11:21:59.582Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
-      "clean_validation_commit_sha": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
-      "completion_record_commit_sha": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99",
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "de400fb687c88de9cc2adb1d40f2bdfe0b8e9f99"
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
       }
     },
     {
@@ -3014,7 +3040,7 @@
       "title": "Resolve duplicate collection reorder handlers",
       "description": "Remediation task BE-011: Resolve duplicate collection reorder handlers",
       "severity": "CRITICAL",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "TEST-003",
         "BE-002",
@@ -3033,26 +3059,29 @@
         "--evidence Removed duplicate router.post('/collections/reorder-all') handler from server/src/routes/sorter.js. Preserved 307 redirect to /api/collections/reorder-all-v2.",
         "--evidence All 9 regression gate suites passed and added app unit test confirming POST /api/collections/reorder-all 307 redirect.",
         "Commit SHA: cde861527ee8a6ab1efe5008bf41f6067e5e82cd",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-003, BE-002, BE-005."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-003, BE-002, BE-005.",
+        "Revalidate BE-011",
+        "Complete BE-011"
       ],
       "changed_files": [
-        "server/src/routes/sorter.js",
-        "server/src/app.test.js"
+        "server/src/routes/sorter.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.253Z",
+      "updated_timestamp": "2026-08-06T11:21:59.853Z",
       "started_timestamp": "2026-07-31T16:20:40.928Z",
       "implemented_timestamp": "2026-07-31T16:20:51.623Z",
-      "validated_timestamp": "2026-07-31T16:21:02.937Z",
-      "completed_timestamp": "2026-07-31T16:21:37.721Z",
+      "validated_timestamp": "2026-08-06T11:21:59.720Z",
+      "completed_timestamp": "2026-08-06T11:21:59.853Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "cde861527ee8a6ab1efe5008bf41f6067e5e82cd",
-      "clean_validation_commit_sha": "cde861527ee8a6ab1efe5008bf41f6067e5e82cd",
-      "completion_record_commit_sha": "5a4c30bd386fb100f1e1f3c9fa3731f8b91a0feb",
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "cde861527ee8a6ab1efe5008bf41f6067e5e82cd"
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
       }
     },
     {
@@ -4702,7 +4731,7 @@
       "title": "Standardize health checks",
       "description": "Remediation task OPS-003: Standardize health checks",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "BE-005",
         "OWN-006"
@@ -4721,26 +4750,29 @@
         "--passed-tests health.test.js",
         "--evidence Standardized liveness (/api/health and /api/health/liveness without Shopify creds), readiness (/api/health/readiness checking DB & config state), and provider diagnostics (/api/debug/shopify, /api/debug/shiprocket, /api/health/diagnostics with secret redaction) with 100% test pass rate.",
         "Commit SHA: b2b4e56b1f528ad7d0a5501d8e3eab8ee2021640",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-005, OWN-006."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: BE-005, OWN-006.",
+        "Revalidate OPS-003",
+        "Complete OPS-003"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/routes/health.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.309Z",
+      "updated_timestamp": "2026-08-06T11:22:00.134Z",
       "started_timestamp": "2026-07-31T20:57:57.628Z",
       "implemented_timestamp": "2026-07-31T21:01:18.281Z",
-      "validated_timestamp": "2026-07-31T21:01:26.058Z",
-      "completed_timestamp": "2026-07-31T21:02:02.096Z",
+      "validated_timestamp": "2026-08-06T11:22:00.022Z",
+      "completed_timestamp": "2026-08-06T11:22:00.134Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
-        "server/src/mocks/integrationMocks.js",
-        "server/src/services/providerIntegration.test.js"
+        "server/src/routes/health.test.js"
       ],
-      "implementation_commit_sha": "85e50fbfc6cfa43b33157aa2d760724464e18bf7",
-      "clean_validation_commit_sha": "85e50fbfc6cfa43b33157aa2d760724464e18bf7",
-      "completion_record_commit_sha": "85e50fbfc6cfa43b33157aa2d760724464e18bf7",
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "85e50fbfc6cfa43b33157aa2d760724464e18bf7"
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
       }
     },
     {
@@ -4748,7 +4780,7 @@
       "title": "Standardize diagnostics and safe observability",
       "description": "Remediation task OPS-004: Standardize diagnostics and safe observability",
       "severity": "MEDIUM",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-006",
         "BE-009",
@@ -4770,23 +4802,29 @@
         "Commit SHA: ed3dbac7e924a9dec82294ba12d6bb6b595dabae",
         "--evidence Committed-state verification passed node --test server/src/routes/health.test.js server/src/routes/diagnostics.test.js server/src/utils/sanitize.test.js and npm run verify. The full clean-worktree regression gate could not run three pre-existing untracked suite files absent from HEAD: shopifyMediaService.test.js, actualSalesService.test.js, and orderMappingMigrations.test.js; the same gate passed 13/13 in the preserved working tree.",
         "Commit SHA: 7f56184ee70a1336fa468131972f6dc69b49ea96",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-009, SEC-006."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-006, BE-009, SEC-006.",
+        "Revalidate OPS-004",
+        "Complete OPS-004"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/routes/health.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.311Z",
+      "updated_timestamp": "2026-08-06T11:22:00.386Z",
       "started_timestamp": "2026-07-31T21:50:49.376Z",
       "implemented_timestamp": "2026-07-31T21:58:23.663Z",
-      "validated_timestamp": "2026-07-31T21:58:24.353Z",
-      "completed_timestamp": "2026-07-31T22:07:59.812Z",
+      "validated_timestamp": "2026-08-06T11:22:00.269Z",
+      "completed_timestamp": "2026-08-06T11:22:00.386Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "7f56184ee70a1336fa468131972f6dc69b49ea96",
-      "clean_validation_commit_sha": "7f56184ee70a1336fa468131972f6dc69b49ea96",
-      "completion_record_commit_sha": "7f56184ee70a1336fa468131972f6dc69b49ea96",
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "7f56184ee70a1336fa468131972f6dc69b49ea96"
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
       }
     },
     {
@@ -5469,7 +5507,7 @@
       "title": "Review CORS and CSRF protections",
       "description": "Remediation task SEC-007: Review CORS and CSRF protections",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "SEC-001",
         "BE-005"
@@ -5483,27 +5521,39 @@
       "validation_commands": [
         "Middleware integration, browser security, preflight, negative write, and regression tests."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Start SEC-007",
+        "Implement SEC-007",
+        "Validate SEC-007",
+        "Complete SEC-007"
+      ],
+      "changed_files": [
+        "server/src/app.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T11:16:29.917Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-06T11:21:49.387Z",
+      "started_timestamp": "2026-08-06T11:21:49.027Z",
+      "implemented_timestamp": "2026-08-06T11:21:49.160Z",
+      "validated_timestamp": "2026-08-06T11:21:49.276Z",
+      "completed_timestamp": "2026-08-06T11:21:49.387Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
+      }
     },
     {
       "id": "SEC-008",
       "title": "Sanitize API errors and validate input",
       "description": "Remediation task SEC-008: Sanitize API errors and validate input",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "completed",
       "dependencies": [
         "BE-008",
         "SEC-006"
@@ -5517,20 +5567,35 @@
       "validation_commands": [
         "Negative route tests, fuzz/boundary cases, security review, and regression."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Start SEC-008",
+        "Implement SEC-008",
+        "Validate SEC-008",
+        "Complete SEC-008"
+      ],
+      "changed_files": [
+        "server/src/routes/sorter.js",
+        "server/src/routes/skuMedia.js",
+        "server/src/routes/salesIntelligence.js",
+        "server/src/middleware/requestValidation.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-06T11:21:52.929Z",
+      "started_timestamp": "2026-08-06T11:21:52.419Z",
+      "implemented_timestamp": "2026-08-06T11:21:52.544Z",
+      "validated_timestamp": "2026-08-06T11:21:52.812Z",
+      "completed_timestamp": "2026-08-06T11:21:52.929Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/routes/health.test.js"
+      ],
+      "implementation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "clean_validation_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "completion_record_commit_sha": "b42f38990d7830fcffbd7f8847da270ff08c8b77",
+      "validation_results": {
+        "overallStatus": "PASSED",
+        "tested_commit": "b42f38990d7830fcffbd7f8847da270ff08c8b77"
+      }
     },
     {
       "id": "SEC-009",
@@ -6090,7 +6155,7 @@
       "title": "Resolve duplicate route handlers",
       "description": "Remediation task CLEAN-003: Resolve duplicate route handlers",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "BE-011",
         "TEST-003"
@@ -6107,7 +6172,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T11:21:59.911Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
