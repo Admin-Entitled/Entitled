@@ -3968,7 +3968,7 @@
         "--evidence Task INT-006 was validated in f64f3c887f290e101fb7879501574d179568d979. Credentials remain backend-only, verified via environment rules tests."
       ],
       "changed_files": [
-        "server/src/config/env.js"
+        "docs/architecture/INTEGRATION_ENV_OWNERSHIP_MATRIX.md"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-06T17:08:44.195Z",
@@ -3978,10 +3978,11 @@
       "completed_timestamp": "2026-08-06T17:08:44.195Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
+        "tests/integrationContracts.test.js",
         "server/src/services/providerIntegration.test.js"
       ],
-      "implementation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
-      "clean_validation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
       "completion_record_commit_sha": "db571b97561294563869c1332b7297c1add58787",
       "validation_results": {
         "regression_gate": {
@@ -3995,9 +3996,9 @@
           "output_summary": "✓ System verification completed successfully (offline mode)."
         },
         "timestamp": "2026-08-06T17:03:27.251Z",
-        "implementation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
-        "clean_validation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
-        "tested_commit": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
         "passed": true
       }
     },
