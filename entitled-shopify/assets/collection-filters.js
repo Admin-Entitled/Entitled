@@ -178,6 +178,59 @@
     });
   });
 
+  var FILTER_QUERY_PREFIX = 'ec_filter_';
+  var FILTER_KEYS = ['size', 'availability', 'brand', 'color', 'type'];
+
+  function matchesVariantAvailability(product, selections, normalizeSize) {
+    var availability = selections.availability || [];
+
+    if (!availability.length) {
+      return true;
+    }
+
+    function optionIndex(names) {
+      return (product.options_with_values || []).findIndex(function (option) {
+        return names.indexOf(String(option && option.name || '').trim().toLowerCase()) !== -1;
+      });
+    }
+
+    function optionValue(variant, index) {
+      return variant['option' + (index + 1)] || (variant.options || [])[index] || '';
+    }
+
+    function normalize(value) {
+      return String(value || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    }
+
+    function selected(values, value, normalizer) {
+      var normalizeValue = normalizer || normalize;
+      var normalized = normalizeValue(value);
+      return values.some(function (item) { return normalizeValue(item) === normalized; });
+    }
+
+    var sizeIndex = optionIndex(['size']);
+    var colorIndex = optionIndex(['color', 'colour']);
+    var sizes = selections.size || [];
+    var colors = selections.color || [];
+    var variants = product.variants && product.variants.length ? product.variants : [{ available: !!product.available }];
+    var matchingVariants = variants.filter(function (variant) {
+      if (sizes.length && (sizeIndex === -1 || !selected(sizes, optionValue(variant, sizeIndex), normalizeSize))) {
+        return false;
+      }
+      if (colors.length && colorIndex !== -1 && !selected(colors, optionValue(variant, colorIndex))) {
+        return false;
+      }
+      return true;
+    });
+
+    if (!matchingVariants.length) {
+      return false;
+    }
+
+    var status = matchingVariants.some(function (variant) { return !!variant.available; }) ? 'available' : 'out_of_stock';
+    return availability.some(function (value) { return normalize(value) === status || normalize(value) === status + '_now'; });
+  }
+
   function initCollectionFilters() {
     initProductCardMedia(document);
 
@@ -212,6 +265,7 @@
     var activeFiltersHost = filters.querySelector('[data-active-filters]');
     var productMarkupById = {};
     var renderProductsPromise = null;
+    var applyGeneration = 0;
 
     if (productList) {
       Array.prototype.forEach.call(productList.querySelectorAll('[data-collection-product]'), function (card) {
@@ -381,6 +435,8 @@
 
     function getSelections(excludeGroupKey) {
       var selections = {
+        size: [],
+        availability: [],
         brand: [],
         color: [],
         type: []
@@ -400,6 +456,57 @@
       });
 
       return selections;
+    }
+
+    function readSelectionsFromUrl() {
+      var params = new URL(window.location.href).searchParams;
+      var selections = {};
+
+      FILTER_KEYS.forEach(function (key) {
+        selections[key] = params.getAll(FILTER_QUERY_PREFIX + key);
+      });
+
+      return selections;
+    }
+
+    function restoreSelectionsFromUrl(force) {
+      var params = new URL(window.location.href).searchParams;
+      var hasFilterState = FILTER_KEYS.some(function (key) {
+        return params.has(FILTER_QUERY_PREFIX + key);
+      });
+
+      if (!force && !hasFilterState) {
+        return false;
+      }
+
+      var selections = readSelectionsFromUrl();
+
+      Array.prototype.forEach.call(getInputs(), function (input) {
+        var key = input.getAttribute('data-filter-group-key');
+        var value = input.getAttribute('data-filter-value');
+        input.checked = !!(selections[key] && selections[key].some(function (selectedValue) {
+          return key === 'size' ? normalizeSizeValue(selectedValue) === normalizeSizeValue(value) : selectedValue === value;
+        }));
+      });
+
+      return true;
+    }
+
+    function writeSelectionsToUrl() {
+      var url = new URL(window.location.href);
+      var selections = getSelections();
+
+      FILTER_KEYS.forEach(function (key) {
+        url.searchParams.delete(FILTER_QUERY_PREFIX + key);
+        selections[key].forEach(function (value) {
+          url.searchParams.append(FILTER_QUERY_PREFIX + key, value);
+        });
+      });
+      url.searchParams.delete('page');
+
+      if (url.toString() !== window.location.href) {
+        history.pushState({}, '', url.toString());
+      }
     }
 
     function renderActiveFilters() {
@@ -444,27 +551,16 @@
         var input = option.querySelector('[data-filter-value]');
         var selections = getSelections(groupKey);
         var count = filterData.products.filter(function (product) {
-          return matchesSelections(product, selections);
-        }).filter(function (product) {
-          if (groupKey === 'brand') {
-            return product.vendor === value;
-          }
+          var candidateSelections = Object.assign({}, selections);
+          candidateSelections[groupKey] = [value];
 
-          if (groupKey === 'type') {
-            return product.type === value;
-          }
-
-          if (groupKey === 'color') {
-            return product.color === value;
-          }
-
-          if (groupKey === 'size') {
+          if (groupKey === 'size' && !candidateSelections.availability.length) {
             return product.sizes.some(function (size) {
               return normalizeSizeValue(size) === normalizeSizeValue(value);
             });
           }
 
-          return true;
+          return matchesSelections(product, candidateSelections);
         }).length;
 
         option.setAttribute('data-filter-option-count', String(count));
@@ -582,6 +678,8 @@
         price: Number(product.price || 0),
         featured_image: featuredImage,
         available: !!product.available,
+        variants: product.variants || [],
+        options_with_values: product.options_with_values || [],
         html: product.html || productMarkupById[String(product.id)] || ''
       };
     }
@@ -606,12 +704,22 @@
     function buildGroups(products) {
       var counts = {
         size: {},
+        availability: {
+          'Available now': 0,
+          'Out of stock': 0
+        },
         brand: {},
         color: {},
         type: {}
       };
 
       products.forEach(function (product) {
+        if (product.available) {
+          counts.availability['Available now'] += 1;
+        } else {
+          counts.availability['Out of stock'] += 1;
+        }
+
         product.sizes.forEach(function (size) {
           var existing = Object.keys(counts.size).find(function (value) {
             return normalizeSizeValue(value) === normalizeSizeValue(size);
@@ -636,6 +744,7 @@
 
       return [
         { key: 'size', label: 'Size', expanded: true, values: counts.size },
+        { key: 'availability', label: 'Availability', expanded: true, values: counts.availability },
         { key: 'brand', label: 'Brand', expanded: true, values: counts.brand },
         { key: 'color', label: 'Color', expanded: false, values: counts.color },
         { key: 'type', label: 'Type', expanded: false, values: counts.type }
@@ -681,7 +790,8 @@
       return (
         (!selections.brand.length || selections.brand.indexOf(product.vendor) !== -1) &&
         (!selections.type.length || selections.type.indexOf(product.type) !== -1) &&
-        (!selections.color.length || selections.color.indexOf(product.color) !== -1)
+        (!selections.color.length || selections.color.indexOf(product.color) !== -1) &&
+        matchesVariantAvailability(product, selections, normalizeSizeValue)
       );
     }
 
@@ -806,17 +916,24 @@
       }
     }
 
-    function applyFilters() {
+    function applyFilters(options) {
       if (!filterData) {
         return Promise.resolve();
       }
 
+      options = options || {};
+      if (options.writeHistory !== false) {
+        writeSelectionsToUrl();
+      }
+
+      var generation = ++applyGeneration;
       var selections = getSelections();
       var hasFilters = Object.keys(selections).some(function (key) {
         return selections[key].length > 0;
       });
 
       if (!hasFilters) {
+        setProductListLoading(false);
         restoreOriginalProducts();
         updateAvailableOptions();
         updateSelectedCount();
@@ -828,6 +945,10 @@
       }
 
       return ensureRenderableProducts().then(function () {
+        if (generation !== applyGeneration) {
+          return;
+        }
+
         var filteredProducts = filterData.products.filter(function (product) {
           return matchesSelections(product, selections);
         });
@@ -850,12 +971,16 @@
           setDrawer(false);
         }
       }).finally(function () {
-        setProductListLoading(false);
+        if (generation === applyGeneration) {
+          setProductListLoading(false);
+        }
       });
     }
 
     function clearFilters() {
       var hadSize = !!filters.querySelector('input[data-filter-group-key="size"]:checked');
+      applyGeneration += 1;
+      setProductListLoading(false);
       Array.prototype.forEach.call(getInputs(), function (input) {
         input.checked = false;
       });
@@ -864,6 +989,7 @@
         search.value = '';
       }
 
+      writeSelectionsToUrl();
       restoreOriginalProducts();
       updateSelectedCount();
       updateAvailableOptions();
@@ -946,10 +1072,19 @@
       };
 
       renderGroups(filterData.groups);
+      var restoredFromUrl = restoreSelectionsFromUrl();
       updateAvailableOptions();
       updateSelectedCount();
       document.dispatchEvent(new CustomEvent('entitled:size-filter-ready'));
-      ensureRenderableProducts();
+      if (restoredFromUrl) {
+        dispatchSizeFilterChange();
+      }
+
+      if (Object.keys(getSelections()).some(function (key) { return getSelections()[key].length > 0; })) {
+        applyFilters({ writeHistory: false });
+      } else {
+        ensureRenderableProducts();
+      }
     }
 
     function fetchFilterDataPage(pageNumber) {
@@ -1145,6 +1280,14 @@
     if (clearButton) {
       clearButton.addEventListener('click', clearFilters);
     }
+
+    window.addEventListener('popstate', function () {
+      restoreSelectionsFromUrl(true);
+      updateSelectedCount();
+      updateAvailableOptions();
+      dispatchSizeFilterChange();
+      applyFilters({ writeHistory: false });
+    });
 
     window.addEventListener('resize', queueStickyOffset);
     window.addEventListener('scroll', queueStickyOffset, { passive: true });

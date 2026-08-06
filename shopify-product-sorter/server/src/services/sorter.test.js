@@ -220,3 +220,107 @@ test("collection move builder preserves target order and rejects mismatched memb
   assert.deepEqual(applyMoves(current, buildCollectionMoves(current, desired)), desired);
   assert.throws(() => buildCollectionMoves(current, ["a", "b", "c", "x"]), /exactly once/);
 });
+
+test("empty inputs and edge case product arrays return cleanly", () => {
+  assert.deepEqual(generateOrder([], DEFAULT_STRATEGY), []);
+
+  const single = [baseProduct("p1")];
+  const orderedSingle = generateOrder(single, DEFAULT_STRATEGY);
+  assert.equal(orderedSingle.length, 1);
+  assert.equal(orderedSingle[0].id, "p1");
+  assert.equal(orderedSingle[0].finalPosition, 1);
+});
+
+test("strategy weights dynamically shift ranking priorities", () => {
+  const products = [
+    baseProduct("high-sales", {
+      soldQuantity: 100,
+      sales: { units7: 50, units30: 100, units90: 200, previous23: 10 },
+      createdAt: daysAgo(40),
+      publishedAt: daysAgo(40),
+    }),
+    baseProduct("high-inventory", {
+      soldQuantity: 0,
+      sales: { units7: 0, units30: 0, units90: 0, previous23: 0 },
+      createdAt: daysAgo(40),
+      publishedAt: daysAgo(40),
+      variants: [
+        { id: "inv-1", inventoryQuantity: 50, availableForSale: true, selectedOptions: [{ name: "Size", value: "S" }] },
+        { id: "inv-2", inventoryQuantity: 50, availableForSale: true, selectedOptions: [{ name: "Size", value: "M" }] },
+      ],
+    }),
+  ];
+
+  const salesDominant = generateOrder(products, {
+    salesWeight: 1.0,
+    inventoryWeight: 0,
+    newnessWeight: 0,
+    momentumWeight: 0,
+    rotationWeight: 0,
+  });
+  assert.equal(salesDominant[0].id, "high-sales");
+
+  const inventoryDominant = generateOrder(products, {
+    salesWeight: 0,
+    inventoryWeight: 1.0,
+    newnessWeight: 0,
+    momentumWeight: 0,
+    rotationWeight: 0,
+  });
+  assert.equal(inventoryDominant[0].id, "high-inventory");
+});
+
+test("pinned and hidden products respect explicit configuration", () => {
+  const products = [
+    baseProduct("unpinned-1", { soldQuantity: 90, sales: { units7: 30 } }),
+    baseProduct("unpinned-2", { soldQuantity: 80, sales: { units7: 25 } }),
+    baseProduct("pinned-to-1", { allottedPosition: 1, soldQuantity: 5 }),
+    baseProduct("pinned-to-3", { allottedPosition: 3, soldQuantity: 2 }),
+    baseProduct("hidden-product", { includeInRotation: false, soldQuantity: 100 }),
+  ];
+
+  const ordered = generateOrder(products, {
+    ...DEFAULT_STRATEGY,
+    firstPageLimit: 10,
+  });
+
+  assert.equal(ordered[0].id, "pinned-to-1");
+  assert.equal(ordered[0].primaryReason, "Pinned");
+  assert.equal(ordered[1].id, "pinned-to-3");
+  assert.equal(ordered[1].primaryReason, "Pinned");
+
+  // Products with includeInRotation: false are excluded from candidate rotation
+  const hiddenItem = ordered.find((p) => p.id === "hidden-product");
+  assert.equal(hiddenItem, undefined);
+});
+
+test("tie behavior falls back deterministically to previousRank and id sorting", () => {
+  const p1 = baseProduct("item-a", { collectionPosition: 10 });
+  const p2 = baseProduct("item-b", { collectionPosition: 2 });
+
+  const products = [p1, p2];
+  const ordered = generateOrder(products, {
+    salesWeight: 1.0,
+    inventoryWeight: 0,
+    newnessWeight: 0,
+    momentumWeight: 0,
+    rotationWeight: 0,
+    currentDate: "2026-07-22T00:00:00.000Z",
+    collectionId: "test-tie",
+  });
+
+  assert.equal(ordered[0].id, "item-b");
+  assert.equal(ordered[1].id, "item-a");
+});
+
+test("score explanations (primaryReason) are correctly assigned for all products", () => {
+  const products = [
+    baseProduct("pinned-p", { allottedPosition: 1 }),
+    baseProduct("high-sales-p", { soldQuantity: 100, sales: { units7: 50, units30: 100, units90: 200 } }),
+    baseProduct("new-p", { createdAt: daysAgo(3), publishedAt: daysAgo(3) }),
+  ];
+
+  const ordered = generateOrder(products, DEFAULT_STRATEGY);
+  assert.ok(ordered.every((p) => typeof p.primaryReason === "string" && p.primaryReason.length > 0));
+  assert.equal(ordered.find((p) => p.id === "pinned-p").primaryReason, "Pinned");
+});

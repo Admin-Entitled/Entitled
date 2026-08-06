@@ -39,8 +39,10 @@
       $(this).click(function(){
         $("#sort_by li").removeClass("active");
          $(this).parent().addClass("active");
-          Shopify.queryParams.sort_by = $(this).attr('name');
-          location.search = jQuery.param(Shopify.queryParams);
+          var params = new URLSearchParams(window.location.search);
+          params.set('sort_by', $(this).attr('name'));
+          params.delete('page');
+          location.search = params.toString();
       });
   });
 

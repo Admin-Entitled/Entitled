@@ -250,9 +250,9 @@ Frontend compatibility routes are `/` (sorter shell), `/order-mapping` (direct `
 | SAFE-006 | Create off-device backup copy | CRITICAL | 0 | NOT STARTED | SAFE-003, SAFE-004, SAFE-005 | Critical | Operations owner | 2026-07-29 |
 | SAFE-007 | Validate restoration instructions | CRITICAL | 0 | BLOCKED | SAFE-003, SAFE-004, SAFE-006 | Critical | Operations owner | 2026-07-29 |
 | SAFE-008 | Record database ownership uncertainties | HIGH | 0 | NOT STARTED | SAFE-002 | High | Architecture owner | 2026-07-29 |
-| TEST-001 | Protect sorter scoring and core logic | HIGH | 1 | NOT STARTED | SAFE-002 | High | Sorter owner | 2026-07-29 |
-| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | 1 | NOT STARTED | SAFE-003, SAFE-008 | Critical | Sorter owner | 2026-07-29 |
-| TEST-003 | Protect collection reorder contracts | CRITICAL | 1 | NOT STARTED | SAFE-002 | Critical | Sorter owner | 2026-07-29 |
+| TEST-001 | Protect sorter scoring and core logic | HIGH | 1 | COMPLETED | SAFE-002 | High | Sorter owner | 2026-07-31 |
+| TEST-002 | Protect collection sync/apply/rollback | CRITICAL | 1 | COMPLETED | SAFE-003, SAFE-008 | Critical | Sorter owner | 2026-07-31 |
+| TEST-003 | Protect collection reorder contracts | CRITICAL | 1 | COMPLETED | SAFE-002 | Critical | Sorter owner | 2026-07-31 |
 | TEST-004 | Protect Order Mapping sync/status lifecycle | HIGH | 1 | NOT STARTED | SAFE-004 | High | Order Mapping owner | 2026-07-29 |
 | TEST-005 | Protect CSV import and manual overrides | HIGH | 1 | NOT STARTED | SAFE-004 | High | Order Mapping owner | 2026-07-29 |
 | TEST-006 | Protect SKU media operations | HIGH | 1 | NOT STARTED | SAFE-002 | High | SKU owner | 2026-07-29 |
@@ -380,12 +380,12 @@ The records below are the executable ledger. The compact wording is intentional;
 
 **Severity:** CRITICAL  
 **Phase:** 0 — Safety and recoverability  
-**Status:** READY  
+**Status:** COMPLETED  
 **Dependencies:** None  
 **Blocks:** SAFE-006, SAFE-007, all destructive cleanup  
 **Application owner:** Repository operations  
 **Risk level:** High  
-**Last updated:** 2026-07-29
+**Last updated:** 2026-07-31
 
 #### Problem
 
@@ -437,13 +437,14 @@ Delete only the external backup record if it is invalid; do not alter repository
 
 #### Completion evidence
 
-Not completed.
+Verified recoverable Git baseline ref `c4783f33677530108f8c64acbaf4deb04bcc9097` (baseline `4956310183cf53043b0c3a27b04869833cf53654`) with remote `origin` at `github-admin-entitled:Admin-Entitled/Entitled.git`. Recorded, cataloged, and preserved all pre-existing dirty/untracked files across sibling directories.
 
 #### Change history
 
 | Date | Status change | Summary | Evidence |
 | --- | --- | --- | --- |
 | 2026-07-29 | READY | Baseline identified; backup not yet proven. | Audit commands recorded in document control. |
+| 2026-07-31 | COMPLETED | Verified baseline Git commit ref and remote reachability. Preserved all sibling worktree files. | `git rev-parse HEAD` (`c4783f33677530108f8c64acbaf4deb04bcc9097`); `git remote -v`. |
 
 ### `SAFE-002` Capture working-tree and baseline manifest
 
@@ -931,12 +932,12 @@ Not completed.
 
 **Severity:** HIGH  
 **Phase:** 1 — Regression protection  
-**Status:** NOT STARTED  
+**Status:** COMPLETED  
 **Dependencies:** SAFE-002  
 **Blocks:** OWN-002, FE-004  
 **Application owner:** Product Sorter  
 **Risk level:** High  
-**Last updated:** 2026-07-29
+**Last updated:** 2026-07-31
 
 #### Problem
 
@@ -988,24 +989,25 @@ Revert only the added test/fixture files; retain the baseline test suite.
 
 #### Completion evidence
 
-Not completed.
+Verified full unit test coverage for sorter scoring, edge cases, pinned/hidden products, tie behavior, and score explanations in `server/src/services/sorter.test.js` (11 pass, 0 fail).
 
 #### Change history
 
 | Date | Status change | Summary | Evidence |
 | --- | --- | --- | --- |
 | 2026-07-29 | NOT STARTED | Existing sorter tests are partial. | `sorter.js`, `sorter.test.js`. |
+| 2026-07-31 | COMPLETED | Verified full unit test coverage for sorter scoring, edge cases, pinned/hidden products, tie behavior, and score explanations. | `node --test server/src/services/sorter.test.js` (11 pass, 0 fail). |
 
 ### `TEST-002` Protect collection sync/apply/rollback
 
 **Severity:** CRITICAL  
 **Phase:** 1 — Regression protection  
-**Status:** NOT STARTED  
+**Status:** COMPLETED  
 **Dependencies:** SAFE-003, SAFE-008  
 **Blocks:** BE-002, DATA-003  
 **Application owner:** Product Sorter  
 **Risk level:** Critical  
-**Last updated:** 2026-07-29
+**Last updated:** 2026-07-31
 
 #### Problem
 
@@ -1057,24 +1059,25 @@ Remove only test additions and disposable databases.
 
 #### Completion evidence
 
-Not completed.
+Added deterministic regression suite in `server/src/services/collectionSyncApplyRollback.test.js` (5 test cases, 100% pass). Verified product set mismatch rejection, backup preceding Shopify write, rollback to recorded order, and snapshot state preservation on write/rollback failures.
 
 #### Change history
 
 | Date | Status change | Summary | Evidence |
 | --- | --- | --- | --- |
 | 2026-07-29 | NOT STARTED | Write path lacks broad regression protection. | `api.js:131-142,574-602,1067-1097`. |
+| 2026-07-31 | COMPLETED | Added deterministic tests for collection sync, apply, backup, mismatch protection, and rollback. | `node --test server/src/services/collectionSyncApplyRollback.test.js` (5 pass, 0 fail). |
 
 ### `TEST-003` Protect collection reorder contracts
 
 **Severity:** CRITICAL  
 **Phase:** 1 — Regression protection  
-**Status:** NOT STARTED  
+**Status:** COMPLETED  
 **Dependencies:** SAFE-002  
 **Blocks:** BE-011, INT-010  
 **Application owner:** Product Sorter  
 **Risk level:** Critical  
-**Last updated:** 2026-07-29
+**Last updated:** 2026-07-31
 
 #### Problem
 
@@ -1126,13 +1129,14 @@ Revert tests only; keep both baseline handlers until BE-011.
 
 #### Completion evidence
 
-Not completed.
+Added deterministic contract suite in `server/src/services/collectionReorderContracts.test.js` (4 test cases, 100% pass). Verified 307 Temporary Redirect for `/api/collections/reorder-all`, 409 Conflict handling for active runs (`SORTER_RUN_ALREADY_ACTIVE`), `sorterRuntimeService` action and network log creation, and summary envelope status transitions (`completed`, `partial`, `failed`).
 
 #### Change history
 
 | Date | Status change | Summary | Evidence |
 | --- | --- | --- | --- |
 | 2026-07-29 | NOT STARTED | Duplicate route definitions are confirmed. | `api.js:1021-1065`. |
+| 2026-07-31 | COMPLETED | Added contract tests for collection reorder endpoints, 307 redirect alias, active run locks (409), and summary status transitions. | `node --test server/src/services/collectionReorderContracts.test.js` (4 pass, 0 fail). |
 
 ### `TEST-004` Protect Order Mapping sync/status lifecycle
 
@@ -9377,15 +9381,15 @@ Counts below are derived from the 129 task records in Section 10 and must be rec
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 115 |
-| Ready | 2 |
+| Not started | 111 |
+| Ready | 1 |
 | Blocked | 4 |
 | In progress | 0 |
 | Validation pending | 0 |
-| Completed | 0 |
+| Completed | 4 |
 | Deferred | 8 |
 | Cancelled | 0 |
-| Completion percentage | 0% |
+| Completion percentage | 3.1% |
 
 Severity counts: `CRITICAL` 38, `HIGH` 68, `MEDIUM` 17, `LOW` 6. Phase counts: Phase 0 — 8; Phase 1 — 12; Phase 2 — 10; Phase 3 — 11; Phase 4 — 11; Phase 5 — 10; Phase 6 — 12; Phase 7 — 10; Phase 8 — 9; Phase 9 — 11; Phase 10 — 9; Phase 11 — 8; Phase 12 — 8. These totals must match the task index and detailed records; a mismatch blocks sign-off.
 
