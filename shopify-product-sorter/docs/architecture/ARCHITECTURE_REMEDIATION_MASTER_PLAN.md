@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T13:17:18.118Z` |
+| Generated timestamp | `2026-08-06T13:40:48.279Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `4ecf13d` |
+| Local commit | `987d635` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,8 +40,8 @@
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 17 |
-| Validated | 0 |
+| Validation pending | 16 |
+| Validated | 1 |
 | Blocked | 0 |
 | Deferred | 8 |
 | Completed | 80 |
@@ -51,7 +51,7 @@
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `FE-006`, `INT-001`, `INT-004`, `OPS-001`
+- Dependency-safe validation-pending tasks: `INT-001`, `INT-004`, `OPS-001`
 - Tasks awaiting prerequisites: `FE-007`, `FE-008`, `FE-009`, `FE-010`, `FE-011`
 - In-progress tasks: None
 - Blocked tasks: None
@@ -106,7 +106,7 @@
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATION_PENDING | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | VALIDATION_PENDING | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1528,9 +1528,9 @@ Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MAN
 ### `FE-006` Retain Order Mapping compatibility boundary
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** VALIDATED
 **Dependencies:** FE-003, OWN-003
-**Last updated:** 2026-08-01T22:10:15.265Z
+**Last updated:** 2026-08-06T13:41:02.695Z
 
 #### Description
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T13:40:48.306Z | FE-006 | validation_pending | validated | shivam | Transition to validated | `08047a8e` |
 | 2026-08-06T13:17:18.145Z | FE-005 | validated | completed | shivam | Transition to completed | `cf390596` |
 | 2026-08-06T13:17:17.978Z | FE-004 | validated | completed | shivam | Transition to completed | `f8888d83` |
 | 2026-08-06T13:17:17.830Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b1e907de` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-06T12:28:46.566Z | FE-005 | validated | completed | shivam | Clean committed-state verification passed | `996c4b06` |
 | 2026-08-06T12:25:31.238Z | FE-004 | validated | completed | shivam | Clean committed-state verification passed | `c94e810e` |
 | 2026-08-06T12:22:04.212Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e055c683` |
-| 2026-08-06T12:22:04.212Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f04e50c6` |
