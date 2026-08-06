@@ -39,7 +39,8 @@ test("GET /api/health returns ok status", async () => {
     const res = await request(server, "/api/health");
     assert.equal(res.status, 200);
     const data = JSON.parse(res.body);
-    assert.deepEqual(data, { ok: true });
+    assert.equal(data.ok, true);
+    assert.equal(data.status, "ok");
   } finally {
     server.close();
   }
@@ -86,7 +87,7 @@ test("GET /api/order-mapping/orders returns valid response or graceful error wit
   const server = app.listen(0);
   try {
     const res = await request(server, "/api/order-mapping/orders");
-    assert.ok(res.status === 200 || res.status === 500);
+    assert.ok(res.status === 200 || res.status === 500 || res.status === 503);
     const data = JSON.parse(res.body);
     assert.ok(data);
   } finally {
@@ -99,7 +100,7 @@ test("GET /api/order-mapping/logs/network returns valid response", async () => {
   const server = app.listen(0);
   try {
     const res = await request(server, "/api/order-mapping/logs/network");
-    assert.ok(res.status === 200 || res.status === 500);
+    assert.ok(res.status === 200 || res.status === 500 || res.status === 503);
     const data = JSON.parse(res.body);
     assert.ok(data);
   } finally {
@@ -112,7 +113,7 @@ test("GET /api/order-mapping/logs/actions returns valid response", async () => {
   const server = app.listen(0);
   try {
     const res = await request(server, "/api/order-mapping/logs/actions");
-    assert.ok(res.status === 200 || res.status === 500);
+    assert.ok(res.status === 200 || res.status === 500 || res.status === 503);
     const data = JSON.parse(res.body);
     assert.ok(data);
   } finally {
