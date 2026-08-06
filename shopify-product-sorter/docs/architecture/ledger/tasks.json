@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T17:01:37.441Z",
+  "last_updated": "2026-08-06T17:01:41.805Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3946,7 +3946,7 @@
       "title": "Standardize integration authentication and env ownership",
       "description": "Remediation task INT-006: Standardize integration authentication and env ownership",
       "severity": "CRITICAL",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "SEC-003",
         "SEC-004",
@@ -3963,27 +3963,42 @@
         "Environment matrix, secret scan, startup, auth mock, and route regression tests."
       ],
       "evidence": [
-        "--evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
-        "--evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
-        "Tested SHA: 9c36d180e06d7f302d8b1923d629ef1285b9b0c9"
+        "--evidence Verified environment validation in env.js, credentials remain backend-only, secrets redacted via sanitize.js, verified via providerIntegration.test.js --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 --changed-files server/src/config/env.js",
+        "--evidence Verified validation schemas in env.js and providerIntegration.test.js passing --commit-sha 9c36d180e06d7f302d8b1923d629ef1285b9b0c9 --validation-files server/src/services/providerIntegration.test.js"
       ],
       "changed_files": [
         "server/src/config/env.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T17:01:37.441Z",
-      "started_timestamp": "2026-08-06T17:00:21.841Z",
-      "implemented_timestamp": "2026-08-06T17:00:21.993Z",
-      "validated_timestamp": "2026-08-06T17:00:22.126Z",
-      "completed_timestamp": "2026-08-06T17:01:37.441Z",
+      "updated_timestamp": "2026-08-06T16:58:13.259Z",
+      "started_timestamp": "2026-08-06T16:58:12.984Z",
+      "implemented_timestamp": "2026-08-06T16:58:13.122Z",
+      "validated_timestamp": "2026-08-06T16:58:13.259Z",
+      "completed_timestamp": null,
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "server/src/services/providerIntegration.test.js"
       ],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "implementation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+      "clean_validation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+      "completion_record_commit_sha": "c051c738e074ab93f67cd4f62074838c7ad90250",
+      "validation_results": {
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    14 / 14 | Suites Failed:    0 / 14"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-06T17:01:37.437Z",
+        "implementation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+        "clean_validation_commit_sha": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+        "tested_commit": "9c36d180e06d7f302d8b1923d629ef1285b9b0c9",
+        "passed": true
+      }
     },
     {
       "id": "INT-007",
