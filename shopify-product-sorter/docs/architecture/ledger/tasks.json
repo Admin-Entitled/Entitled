@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T12:18:51.044Z",
+  "last_updated": "2026-08-06T12:18:55.042Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3149,7 +3149,7 @@
       "title": "Extract navigation ownership",
       "description": "Remediation task FE-002: Extract navigation ownership",
       "severity": "HIGH",
-      "status": "completed",
+      "status": "validated",
       "dependencies": [
         "FE-001",
         "OWN-007"
@@ -3167,28 +3167,40 @@
         "Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md",
         "Validated via sidebar module audit, active state derivation review, and disabled label safety check",
         "Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007.",
-        "Tested SHA: eb903e86c13dc4710942af9579ed1113d94d83f6"
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007."
       ],
       "changed_files": [
         "client/src/sidebarModules.js"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:18:51.044Z",
+      "updated_timestamp": "2026-08-06T12:14:23.403Z",
       "started_timestamp": "2026-07-31T14:14:14.150Z",
       "implemented_timestamp": "2026-07-31T14:15:23.966Z",
       "validated_timestamp": "2026-08-06T12:14:23.403Z",
-      "completed_timestamp": "2026-08-06T12:18:51.044Z",
+      "completed_timestamp": "2026-07-31T14:15:28.266Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
-      "clean_validation_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
-      "completion_record_commit_sha": "57a1713e33e398fe34b299f188d67a69da994874",
+      "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+      "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+      "completion_record_commit_sha": "f2a5f15c8023c89139cc565f5d48d61b3ce02755",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "57a1713e33e398fe34b299f188d67a69da994874"
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "Overall Status:   PASSED | Suites Passed:    13 / 13 | Suites Failed:    0 / 13"
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0,
+          "output_summary": "✓ System verification completed successfully (offline mode)."
+        },
+        "timestamp": "2026-08-06T12:18:51.041Z",
+        "implementation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "clean_validation_commit_sha": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "tested_commit": "eb903e86c13dc4710942af9579ed1113d94d83f6",
+        "passed": true
       }
     },
     {
