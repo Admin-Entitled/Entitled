@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { api } from "./orderMappingApi.js";
 import { getOrderStatusDisplay, getStatusFilterLabel } from "./orderMappingView.js";
 import { api as sorterApi } from "./sorterApi.js";
+import * as sorterApiModule from "./sorterApi.js";
 import { api as skuImageApi } from "./skuImageApi.js";
 import { api as salesIntelligenceApi } from "./salesIntelligenceApi.js";
 
@@ -304,4 +305,119 @@ test("FE-008: orderMappingApi failed request normalization matches the shared tr
   } finally {
     global.fetch = original;
   }
+});
+
+// ===== Product Sorter preview-to-apply contract =====
+// The helper is read through the namespace so this suite still loads (and the
+// remaining tests still run) before the helper exists in the implementation.
+function applyOrderIdsHelper() {
+  return sorterApiModule.validateApplyOrderIds;
+}
+
+test("Sorter apply: serializes a generated preview to string product IDs only", async () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  const original = global.fetch;
+  let callCount = 0;
+  let captured = null;
+
+  global.fetch = async (url, options = {}) => {
+    callCount += 1;
+    captured = { url, options };
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  };
+
+  try {
+    const preview = [
+      { id: "gid://shopify/Product/101", title: "Alpha", collectionPosition: 1 },
+      { id: "gid://shopify/Product/102", title: "Beta", collectionPosition: 2 },
+    ];
+    const orderIds = validateApplyOrderIds(preview.map((product) => product.id));
+    await sorterApi.applyOrder("gid://shopify/Collection/9", orderIds, "preview-version-abc");
+  } finally {
+    global.fetch = original;
+  }
+
+  assert.equal(callCount, 1, "one Apply click must send exactly one request");
+  assert.equal(captured.url, "/api/collections/apply");
+  assert.equal(captured.options.method, "POST");
+  const body = JSON.parse(captured.options.body);
+  assert.equal(body.collectionId, "gid://shopify/Collection/9");
+  assert.deepEqual(body.orderIds, ["gid://shopify/Product/101", "gid://shopify/Product/102"]);
+  assert.equal(body.previewVersion, "preview-version-abc");
+  for (const id of body.orderIds) {
+    assert.equal(typeof id, "string", "every outgoing orderIds entry must be a string");
+  }
+  assert.ok(
+    !body.orderIds.some((entry) => typeof entry === "object"),
+    "no product objects may be sent inside orderIds",
+  );
+});
+
+test("Sorter apply: previewVersion is omitted when absent (rollback path)", async () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  const original = global.fetch;
+  let captured = null;
+  global.fetch = async (url, options = {}) => {
+    captured = { url, options };
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  };
+
+  try {
+    const orderIds = validateApplyOrderIds(["gid://shopify/Product/7"]);
+    await sorterApi.applyOrder("gid://shopify/Collection/9", orderIds);
+  } finally {
+    global.fetch = original;
+  }
+
+  const body = JSON.parse(captured.options.body);
+  assert.deepEqual(body.orderIds, ["gid://shopify/Product/7"]);
+  assert.ok(!("previewVersion" in body), "rollback-style applies must not carry a previewVersion");
+});
+
+test("Sorter apply: validateApplyOrderIds returns strings only and preserves preview order", () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  const orderIds = ["gid://shopify/Product/7", "gid://shopify/Product/8"];
+  assert.deepEqual(validateApplyOrderIds(orderIds), orderIds);
+});
+
+test("Sorter apply: validateApplyOrderIds rejects an empty preview", () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  assert.throws(() => validateApplyOrderIds([]), /Preview is empty/);
+  assert.throws(() => validateApplyOrderIds(null), /Preview is empty/);
+  assert.throws(() => validateApplyOrderIds(undefined), /Preview is empty/);
+});
+
+test("Sorter apply: validateApplyOrderIds rejects non-string product identifiers", () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  assert.throws(() => validateApplyOrderIds(["gid://shopify/Product/1", 123]), /invalid product data/);
+  assert.throws(() => validateApplyOrderIds(["gid://shopify/Product/1", ""]), /invalid product data/);
+  assert.throws(() => validateApplyOrderIds(["gid://shopify/Product/1", "   "]), /invalid product data/);
+});
+
+test("Sorter apply: validateApplyOrderIds rejects malformed product GIDs", () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  assert.throws(() => validateApplyOrderIds(["prod_1"]), /invalid product identifier/);
+  assert.throws(() => validateApplyOrderIds(["gid://shopify/Collection/1"]), /invalid product identifier/);
+});
+
+test("Sorter apply: validateApplyOrderIds rejects duplicate product IDs", () => {
+  const validateApplyOrderIds = applyOrderIdsHelper();
+  assert.equal(typeof validateApplyOrderIds, "function", "validateApplyOrderIds helper must exist");
+
+  assert.throws(
+    () => validateApplyOrderIds(["gid://shopify/Product/1", "gid://shopify/Product/1"]),
+    /duplicate/,
+  );
 });

@@ -205,3 +205,84 @@ test("Frontend Regression: frontend suites are wired into the regression gate (F
   assert.ok(files.includes("client/src/api.test.js"), "api isolation suite must be in the gate");
   assert.ok(files.includes("client/src/styles.test.js"), "style isolation suite must be in the gate");
 });
+
+// ===== Product Sorter preview-to-apply contract (source-level) =====
+test("Frontend Regression: Apply serializes string IDs only, never preview objects", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  const applySection = sorterContent.slice(
+    sorterContent.indexOf("const handleApply"),
+    sorterContent.indexOf("const handleRollback"),
+  );
+  assert.ok(applySection.length > 0, "handleApply body must exist");
+  assert.doesNotMatch(
+    applySection,
+    /api\.applyOrder\([^)]*preview\.newOrder\s*\)/,
+    "Apply must never send the preview objects directly",
+  );
+  assert.match(
+    applySection,
+    /preview\.newOrder\.map\(\(product\) => product\.id\)/,
+    "Apply must serialize preview.newOrder to product IDs",
+  );
+  assert.match(
+    applySection,
+    /api\.applyOrder\(selectedCollectionId, orderIds/,
+    "Apply must send the serialized orderIds array",
+  );
+});
+
+test("Frontend Regression: double-click cannot send concurrent apply requests", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  const applySection = sorterContent.slice(
+    sorterContent.indexOf("const handleApply"),
+    sorterContent.indexOf("const handleRollback"),
+  );
+  assert.match(
+    applySection,
+    /applyInProgressRef/,
+    "handleApply must guard against concurrent apply requests",
+  );
+});
+
+test("Frontend Regression: Apply stays disabled without a fresh preview", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  const buttonSection = sorterContent.slice(sorterContent.indexOf("onClick={handleApply}"));
+  assert.ok(buttonSection.length > 0, "Apply button must exist");
+  assert.match(buttonSection, /!preview\.newOrder\.length/, "disabled when no preview exists");
+  assert.match(buttonSection, /!preview\.previewVersion/, "disabled when previewVersion is absent");
+  assert.match(buttonSection, /previewStale/, "disabled when the preview is stale");
+  assert.match(buttonSection, /loading/, "disabled while an apply is running");
+});
+
+test("Frontend Regression: generated preview stores the server previewVersion", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  const generateSection = sorterContent.slice(
+    sorterContent.indexOf("const handleGenerate"),
+    sorterContent.indexOf("const handleApply"),
+  );
+  assert.match(
+    generateSection,
+    /previewVersion:\s*response\.previewVersion/,
+    "generate must store the server-owned preview version",
+  );
+});
+
+test("Frontend Regression: preview is invalidated when inputs change", () => {
+  const sorterContent = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+
+  const syncSection = sorterContent.slice(
+    sorterContent.indexOf("const handleSync"),
+    sorterContent.indexOf("const handleSaveStrategy"),
+  );
+  assert.match(syncSection, /setPreview\(emptyPreview\)/, "sync must clear the stale preview");
+
+  assert.ok(
+    sorterContent.includes("setPreviewStale(true)"),
+    "strategy / preference / allocation changes must mark the preview stale",
+  );
+  assert.match(
+    sorterContent,
+    /Preview is outdated\. Generate a new order before applying\./,
+    "a stale preview must surface the operator guidance message",
+  );
+});

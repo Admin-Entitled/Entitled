@@ -30,6 +30,16 @@ function request(server, path, options = {}) {
   });
 }
 
+function assertValidationRejected(res, field) {
+  assert.equal(res.status, 400);
+  const data = JSON.parse(res.body);
+  assert.equal(data.code, "VALIDATION_ERROR");
+  assert.ok(
+    JSON.stringify(data.details).includes(field),
+    `validation payload must mention '${field}'`,
+  );
+}
+
 test("Sorter router: GET /api/collections returns collections envelope", async () => {
   const server = await startServer(app);
   try {
@@ -46,9 +56,7 @@ test("Sorter router: GET /api/collection-products requires collectionId", async 
   const server = await startServer(app);
   try {
     const res = await request(server, "/api/collection-products");
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
@@ -61,9 +69,7 @@ test("Sorter router: POST /api/collections/sync requires collectionId", async ()
       method: "POST",
       body: JSON.stringify({}),
     });
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
@@ -73,9 +79,7 @@ test("Sorter router: GET /api/collections/state requires collectionId", async ()
   const server = await startServer(app);
   try {
     const res = await request(server, "/api/collections/state");
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
@@ -88,9 +92,7 @@ test("Sorter router: PUT /api/collections/settings requires collectionId", async
       method: "PUT",
       body: JSON.stringify({}),
     });
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
@@ -103,9 +105,14 @@ test("Sorter router: PUT /api/collections/products/preference requires collectio
       method: "PUT",
       body: JSON.stringify({}),
     });
-    assert.equal(res.status, 400);
     const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId") || data.error.includes("productId"));
+    assert.equal(res.status, 400);
+    assert.equal(data.code, "VALIDATION_ERROR");
+    assert.ok(
+      JSON.stringify(data.details).includes("collectionId") ||
+        JSON.stringify(data.details).includes("productId"),
+      "validation payload must mention collectionId or productId",
+    );
   } finally {
     server.close();
   }
@@ -118,9 +125,7 @@ test("Sorter router: POST /api/collections/generate requires collectionId", asyn
       method: "POST",
       body: JSON.stringify({}),
     });
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
@@ -133,9 +138,46 @@ test("Sorter router: POST /api/collections/apply requires collectionId", async (
       method: "POST",
       body: JSON.stringify({}),
     });
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
+  } finally {
+    server.close();
+  }
+});
+
+test("Sorter router: POST /api/collections/apply requires orderIds", async () => {
+  const server = await startServer(app);
+  try {
+    const res = await request(server, "/api/collections/apply", {
+      method: "POST",
+      body: JSON.stringify({ collectionId: "gid://shopify/Collection/test" }),
+    });
+    assertValidationRejected(res, "orderIds");
+  } finally {
+    server.close();
+  }
+});
+
+test("Sorter router: POST /api/collections/apply rejects non-array orderIds", async () => {
+  const server = await startServer(app);
+  try {
+    const res = await request(server, "/api/collections/apply", {
+      method: "POST",
+      body: JSON.stringify({ collectionId: "gid://shopify/Collection/test", orderIds: "gid://shopify/Product/1" }),
+    });
+    assertValidationRejected(res, "orderIds");
+  } finally {
+    server.close();
+  }
+});
+
+test("Sorter router: POST /api/collections/apply rejects non-string collectionId", async () => {
+  const server = await startServer(app);
+  try {
+    const res = await request(server, "/api/collections/apply", {
+      method: "POST",
+      body: JSON.stringify({ collectionId: 42, orderIds: [] }),
+    });
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
@@ -148,9 +190,7 @@ test("Sorter router: POST /api/collections/rollback requires collectionId", asyn
       method: "POST",
       body: JSON.stringify({}),
     });
-    assert.equal(res.status, 400);
-    const data = JSON.parse(res.body);
-    assert.ok(data.error.includes("collectionId"));
+    assertValidationRejected(res, "collectionId");
   } finally {
     server.close();
   }
