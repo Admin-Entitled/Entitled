@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T15:33:42.711Z` |
+| Generated timestamp | `2026-08-06T16:40:35.739Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `8dfe7b4` |
+| Local commit | `f64f3c8` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 12 |
-| Ready | 12 |
+| Not started | 11 |
+| Ready | 13 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 11 |
+| Validation pending | 8 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 86 |
-| Completion percentage | 66.7% |
+| Completed | 89 |
+| Completion percentage | 69.0% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `INT-001`, `INT-004`, `OPS-001`
-- Tasks awaiting prerequisites: `INT-002`, `INT-003`, `INT-005`, `INT-006`, `INT-007`
+- Next dependency-actionable ready tasks: `INT-006`, `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`
+- Dependency-safe validation-pending tasks: `INT-002`, `INT-005`, `OPS-002`
+- Tasks awaiting prerequisites: `INT-003`, `INT-007`, `INT-008`, `INT-009`, `INT-010`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -112,12 +112,12 @@
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | COMPLETED | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-010 | Add feature error and loading boundaries | HIGH | COMPLETED | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | COMPLETED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-001 | Inventory and contract Shopify clients | HIGH | VALIDATION_PENDING | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | VALIDATION_PENDING | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-004 | Inventory and contract Shiprocket clients | HIGH | VALIDATION_PENDING | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | VALIDATION_PENDING | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-006 | Standardize integration authentication and env ownership | CRITICAL | NOT_STARTED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-006 | Standardize integration authentication and env ownership | CRITICAL | READY | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATION_PENDING | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -134,7 +134,7 @@
 | DATA-010 | Correct ignore rules and generated-file tracking | HIGH | COMPLETED | DATA-001, DATA-002, DATA-003, DATA-004, DATA-005, DATA-006, DATA-007, OPS-005, OPS-006, OPS-007, OPS-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-011 | Define retention for caches, audits, logs, uploads, exports | MEDIUM | COMPLETED | DATA-003, DATA-004, DATA-005, DATA-006, DATA-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-012 | Validate PostgreSQL backup and restore process | CRITICAL | COMPLETED | SAFE-004, SAFE-007, DATA-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | VALIDATION_PENDING | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| OPS-001 | Fix or retire obsolete `scripts/dev.mjs` | MEDIUM | COMPLETED | TEST-010, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-002 | Standardize startup commands | MEDIUM | VALIDATION_PENDING | OPS-001, BE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-003 | Standardize health checks | HIGH | COMPLETED | BE-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | OPS-004 | Standardize diagnostics and safe observability | MEDIUM | COMPLETED | OWN-006, BE-009, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1702,9 +1702,9 @@ Unit, browser, accessibility, route, build, and regression checks.
 ### `INT-001` Inventory and contract Shopify clients
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-010
-**Last updated:** 2026-08-01T22:10:15.277Z
+**Last updated:** 2026-08-06T16:40:14.504Z
 
 #### Description
 
@@ -1724,7 +1724,7 @@ Static search, contract review, mocked request fixtures, and owner sign-off.
 
 #### Completion evidence
 
-Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md, Validated via static search of all Shopify imports, read/write operation audit, and secret value review, Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010.
+Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md, Validated via static search of all Shopify imports, read/write operation audit, and secret value review, Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010., --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --notes Inventoried 4 Shopify modules. 17 READ / 7 WRITE ops. Permanent contract test in tests/providerInventory.test.js (8 assertions). No secrets captured., --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass, 0 fail. node --test server/src/services/providerIntegration.test.js: 17 pass. All offline, synthetic fixtures., --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-001 complete. Inventoried 4 Shopify client modules (shopifyAuth.js, shopifyService.js, shopifyMediaService.js, orderMappingShopify.js). 17 READ / 7 WRITE ops. All callers listed. authEnv by variable name only. Permanent inventory contract test (8 assertions) in tests/providerInventory.test.js. SHOPIFY_CLIENT_INVENTORY.md created. No secrets, tokens, or customer data captured. Implementation commit: f64f3c887f290e101fb7879501574d179568d979.
 
 ---
 
@@ -1789,9 +1789,9 @@ Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_L
 ### `INT-004` Inventory and contract Shiprocket clients
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** OWN-010, TEST-004
-**Last updated:** 2026-08-01T22:10:15.283Z
+**Last updated:** 2026-08-06T16:40:25.296Z
 
 #### Description
 
@@ -1811,7 +1811,7 @@ Static search, synthetic provider fixtures, status tests, and owner review.
 
 #### Completion evidence
 
-Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md, Validated via static search of all Shiprocket imports, status mapping audit, and secret value review, Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010, TEST-004.
+Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md, Validated via static search of all Shiprocket imports, status mapping audit, and secret value review, Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010, TEST-004., --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --notes Inventoried 3 Shiprocket modules. 11 READ / 0 WRITE ops. Status-mapper owner: orderMappingStatus.js. All 9 ownership domains explicit., --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass. Status mapping + terminal-status tests pass. No secrets in fixtures., --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets.
 
 ---
 
@@ -1847,9 +1847,9 @@ Defined Shiprocket transport contract in docs/architecture/SHIPROCKET_TRANSPORT_
 ### `INT-006` Standardize integration authentication and env ownership
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SEC-003, SEC-004, INT-001, INT-004
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-06T16:40:25.352Z
 
 #### Description
 
@@ -2340,9 +2340,9 @@ PostgreSQL backup and restore process verified and documented, Restore procedure
 ### `OPS-001` Fix or retire obsolete `scripts/dev.mjs`
 
 **Severity:** MEDIUM
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** TEST-010, OWN-001
-**Last updated:** 2026-08-01T22:10:15.305Z
+**Last updated:** 2026-08-06T16:40:35.739Z
 
 #### Description
 
@@ -2362,7 +2362,7 @@ Static script check, dry-run/process tests, documentation review, and no server 
 
 #### Completion evidence
 
-Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs, Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-010, OWN-001.
+Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md, Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs, Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-010, OWN-001., --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --notes Disposition: RETIRE. scripts/dev.mjs not referenced by any package.json script. Replacement: npm run dev (concurrently). DEV_SCRIPT_STATUS.md created. Permanent startup contract tests added., --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js OPS-001 section: 6 assertions pass. dev script uses concurrently. No package.json script references scripts/dev.mjs. Supported commands verified., --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass.
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-06T15:33:42.711Z | CLEAN-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `b0ca6401` |
-| 2026-08-06T15:33:42.667Z | FE-011 | validated | completed | shivam | FE-011 acceptance criteria verified at 5ea1773; clean committed state tested | `1d2d4e00` |
-| 2026-08-06T15:33:42.404Z | FE-011 | validation_pending | validated | shivam | Fresh validation at 5ea1773: frontendRegression 14/14 + staticFallback 4/4 passed; routeConfig + classification covered; gate 14/14 | `a3372fa0` |
-| 2026-08-06T15:33:42.123Z | FE-009 | validated | completed | shivam | FE-009 acceptance criteria verified at 5ea1773; clean committed state tested | `744aedd9` |
-| 2026-08-06T15:33:41.856Z | FE-009 | validation_pending | validated | shivam | Fresh validation at 5ea1773: styles.test.js 5/5 passed; feature-root scoping + shared tokens verified; conflicting duplicate removed | `3d295997` |
-| 2026-08-06T15:33:41.528Z | FE-008 | validated | completed | shivam | FE-008 acceptance criteria verified at 5ea1773; clean committed state tested | `1e135990` |
-| 2026-08-06T15:33:41.269Z | FE-008 | validation_pending | validated | shivam | Fresh validation at 5ea1773: api.test.js 18/18 passed; orderMappingApi delegates to shared transport; consistent error normalization; FormData/multipart/CSV intact | `239c5e4a` |
-| 2026-08-06T14:35:26.769Z | FE-010 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `474fec76` |
-| 2026-08-06T14:35:26.471Z | FE-010 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; all three features wrapped in ErrorBoundary with feature-specific keys; sanitized error output; tests cover boundary contract | `98eebd9a` |
-| 2026-08-06T14:34:01.842Z | FE-007 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `d80871c9` |
+| 2026-08-06T16:40:35.764Z | OPS-001 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass. | `f82a7498` |
+| 2026-08-06T16:40:35.550Z | OPS-001 | implemented | validated | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js OPS-001 section: 6 assertions pass. dev script uses concurrently. No package.json script references scripts/dev.mjs. Supported commands verified. | `5ba4866a` |
+| 2026-08-06T16:40:35.433Z | OPS-001 | in_progress | implemented | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --notes Disposition: RETIRE. scripts/dev.mjs not referenced by any package.json script. Replacement: npm run dev (concurrently). DEV_SCRIPT_STATUS.md created. Permanent startup contract tests added. | `28526336` |
+| 2026-08-06T16:40:35.308Z | OPS-001 | validation_pending | in_progress | shivam | Transition to in_progress | `b02245ce` |
+| 2026-08-06T16:40:25.363Z | INT-006 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e91a4f45` |
+| 2026-08-06T16:40:25.321Z | INT-004 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets. | `14d6ef67` |
+| 2026-08-06T16:40:25.213Z | INT-004 | implemented | validated | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass. Status mapping + terminal-status tests pass. No secrets in fixtures. | `562ddc71` |
+| 2026-08-06T16:40:25.096Z | INT-004 | in_progress | implemented | shivam | --sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --notes Inventoried 3 Shiprocket modules. 11 READ / 0 WRITE ops. Status-mapper owner: orderMappingStatus.js. All 9 ownership domains explicit. | `56509182` |
+| 2026-08-06T16:40:24.969Z | INT-004 | validation_pending | in_progress | shivam | Transition to in_progress | `4e9b7a0f` |
+| 2026-08-06T16:40:14.530Z | INT-001 | validated | completed | shivam | --implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-001 complete. Inventoried 4 Shopify client modules (shopifyAuth.js, shopifyService.js, shopifyMediaService.js, orderMappingShopify.js). 17 READ / 7 WRITE ops. All callers listed. authEnv by variable name only. Permanent inventory contract test (8 assertions) in tests/providerInventory.test.js. SHOPIFY_CLIENT_INVENTORY.md created. No secrets, tokens, or customer data captured. Implementation commit: f64f3c887f290e101fb7879501574d179568d979. | `8aa4bd19` |

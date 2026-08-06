@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T15:33:42.711Z",
+  "last_updated": "2026-08-06T16:40:35.739Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3715,7 +3715,7 @@
       "title": "Inventory and contract Shopify clients",
       "description": "Remediation task INT-001: Inventory and contract Shopify clients",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-010"
       ],
@@ -3732,15 +3732,18 @@
         "Defined Shopify client inventory and contract in docs/architecture/SHOPIFY_CLIENT_INVENTORY.md",
         "Validated via static search of all Shopify imports, read/write operation audit, and secret value review",
         "Commit SHA: 1791793de9c89144a78dfff5df6d17c13ab79a39",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010.",
+        "--sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --notes Inventoried 4 Shopify modules. 17 READ / 7 WRITE ops. Permanent contract test in tests/providerInventory.test.js (8 assertions). No secrets captured.",
+        "--sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass, 0 fail. node --test server/src/services/providerIntegration.test.js: 17 pass. All offline, synthetic fixtures.",
+        "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHOPIFY_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-001 complete. Inventoried 4 Shopify client modules (shopifyAuth.js, shopifyService.js, shopifyMediaService.js, orderMappingShopify.js). 17 READ / 7 WRITE ops. All callers listed. authEnv by variable name only. Permanent inventory contract test (8 assertions) in tests/providerInventory.test.js. SHOPIFY_CLIENT_INVENTORY.md created. No secrets, tokens, or customer data captured. Implementation commit: f64f3c887f290e101fb7879501574d179568d979."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.277Z",
-      "started_timestamp": "2026-07-31T14:26:40.365Z",
-      "implemented_timestamp": "2026-07-31T14:28:03.323Z",
-      "validated_timestamp": "2026-07-31T14:28:03.574Z",
-      "completed_timestamp": "2026-07-31T14:28:07.542Z",
+      "updated_timestamp": "2026-08-06T16:40:14.504Z",
+      "started_timestamp": "2026-08-06T16:39:52.153Z",
+      "implemented_timestamp": "2026-08-06T16:39:59.746Z",
+      "validated_timestamp": "2026-08-06T16:40:06.073Z",
+      "completed_timestamp": "2026-08-06T16:40:14.504Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": "1791793de9c89144a78dfff5df6d17c13ab79a39",
@@ -3843,7 +3846,7 @@
       "title": "Inventory and contract Shiprocket clients",
       "description": "Remediation task INT-004: Inventory and contract Shiprocket clients",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "OWN-010",
         "TEST-004"
@@ -3861,15 +3864,18 @@
         "Defined Shiprocket client inventory and contract in docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md",
         "Validated via static search of all Shiprocket imports, status mapping audit, and secret value review",
         "Commit SHA: f22a5af78e06cd4888f951fe2f767510e77c1d7b",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010, TEST-004."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: OWN-010, TEST-004.",
+        "--sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --notes Inventoried 3 Shiprocket modules. 11 READ / 0 WRITE ops. Status-mapper owner: orderMappingStatus.js. All 9 ownership domains explicit.",
+        "--sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js: 23 pass. Status mapping + terminal-status tests pass. No secrets in fixtures.",
+        "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/SHIPROCKET_CLIENT_INVENTORY.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes INT-004 complete. Inventoried 3 Shiprocket modules. All ownership domains assigned. Status mapper owner: orderMappingStatus.js. No secrets."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.283Z",
-      "started_timestamp": "2026-07-31T14:42:11.147Z",
-      "implemented_timestamp": "2026-07-31T14:44:00.068Z",
-      "validated_timestamp": "2026-07-31T14:44:00.315Z",
-      "completed_timestamp": "2026-07-31T14:44:04.636Z",
+      "updated_timestamp": "2026-08-06T16:40:25.296Z",
+      "started_timestamp": "2026-08-06T16:40:24.943Z",
+      "implemented_timestamp": "2026-08-06T16:40:25.071Z",
+      "validated_timestamp": "2026-08-06T16:40:25.187Z",
+      "completed_timestamp": "2026-08-06T16:40:25.296Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": "f22a5af78e06cd4888f951fe2f767510e77c1d7b",
@@ -3926,7 +3932,7 @@
       "title": "Standardize integration authentication and env ownership",
       "description": "Remediation task INT-006: Standardize integration authentication and env ownership",
       "severity": "CRITICAL",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "SEC-003",
         "SEC-004",
@@ -3945,7 +3951,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-06T16:40:25.352Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -4774,7 +4780,7 @@
       "title": "Fix or retire obsolete `scripts/dev.mjs`",
       "description": "Remediation task OPS-001: Fix or retire obsolete `scripts/dev.mjs`",
       "severity": "MEDIUM",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "TEST-010",
         "OWN-001"
@@ -4792,15 +4798,18 @@
         "Documented dev script obsolescence and retirement recommendation in docs/architecture/DEV_SCRIPT_STATUS.md",
         "Validated via static script check, package.json audit, and confirmation that no documented command invokes dev.mjs",
         "Commit SHA: ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-010, OWN-001."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-010, OWN-001.",
+        "--sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --notes Disposition: RETIRE. scripts/dev.mjs not referenced by any package.json script. Replacement: npm run dev (concurrently). DEV_SCRIPT_STATUS.md created. Permanent startup contract tests added.",
+        "--sha f64f3c887f290e101fb7879501574d179568d979 --validation-files tests/providerInventory.test.js --status PASSED --notes node --test tests/providerInventory.test.js OPS-001 section: 6 assertions pass. dev script uses concurrently. No package.json script references scripts/dev.mjs. Supported commands verified.",
+        "--implementation-sha f64f3c887f290e101fb7879501574d179568d979 --validation-sha f64f3c887f290e101fb7879501574d179568d979 --changed-files docs/architecture/DEV_SCRIPT_STATUS.md,tests/providerInventory.test.js --validation-files tests/providerInventory.test.js --notes OPS-001 complete. Disposition: RETIRE. scripts/dev.mjs is not referenced by any npm script. Replacement: npm run dev. DEV_SCRIPT_STATUS.md documents retirement. Permanent startup contract tests pass."
       ],
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.305Z",
-      "started_timestamp": "2026-07-31T15:08:24.194Z",
-      "implemented_timestamp": "2026-07-31T15:11:05.703Z",
-      "validated_timestamp": "2026-07-31T15:11:05.958Z",
-      "completed_timestamp": "2026-07-31T15:11:09.845Z",
+      "updated_timestamp": "2026-08-06T16:40:35.739Z",
+      "started_timestamp": "2026-08-06T16:40:35.281Z",
+      "implemented_timestamp": "2026-08-06T16:40:35.406Z",
+      "validated_timestamp": "2026-08-06T16:40:35.526Z",
+      "completed_timestamp": "2026-08-06T16:40:35.739Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [],
       "implementation_commit_sha": "ca40abbec669ae7d1a6a7e225d07afbb376eea9c",
