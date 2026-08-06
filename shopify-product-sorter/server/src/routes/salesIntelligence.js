@@ -9,6 +9,7 @@ import {
 } from "../services/actualSalesService.js";
 import { logError } from "../utils/logger.js";
 import { AppError } from "../middleware/errorBoundary.js";
+import { shopifyCapabilityGuard } from "../middleware/shopifyCapability.js";
 import { validateRequest } from "../middleware/requestValidation.js";
 
 const salesRefreshSchema = {
@@ -29,7 +30,7 @@ const salesExportSchema = {
 
 const router = express.Router();
 
-router.post("/sales-intelligence/refresh-shopify", validateRequest(salesRefreshSchema), async (req, res, next) => {
+router.post("/sales-intelligence/refresh-shopify", shopifyCapabilityGuard, validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await refreshShopifySalesData({ days: req.query.days || req.body?.days });
     res.json(payload);
@@ -49,7 +50,7 @@ router.post("/sales-intelligence/refresh-shiprocket", validateRequest(salesRefre
   }
 });
 
-router.post("/sales-intelligence/reconcile", validateRequest(salesRefreshSchema), async (req, res, next) => {
+router.post("/sales-intelligence/reconcile", shopifyCapabilityGuard, validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await reconcileSalesData({
       days: req.query.days || req.body?.days,
@@ -62,7 +63,7 @@ router.post("/sales-intelligence/reconcile", validateRequest(salesRefreshSchema)
   }
 });
 
-router.get("/sales-intelligence/summary", validateRequest(salesRefreshSchema), async (req, res, next) => {
+router.get("/sales-intelligence/summary", shopifyCapabilityGuard, validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await getActualSalesSummary({
       days: req.query.days,
@@ -75,7 +76,7 @@ router.get("/sales-intelligence/summary", validateRequest(salesRefreshSchema), a
   }
 });
 
-router.get("/sales-intelligence/reconciled-orders", validateRequest(salesRefreshSchema), async (req, res, next) => {
+router.get("/sales-intelligence/reconciled-orders", shopifyCapabilityGuard, validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await getActualSalesSummary({
       days: req.query.days,
@@ -108,7 +109,7 @@ for (const [pathSuffix, sliceKey] of [
   ["recommendations", "recommendations"],
   ["pending-risk", "pendingRisk"],
 ]) {
-  router.get(`/sales-intelligence/${pathSuffix}`, validateRequest(salesRefreshSchema), async (req, res, next) => {
+  router.get(`/sales-intelligence/${pathSuffix}`, shopifyCapabilityGuard, validateRequest(salesRefreshSchema), async (req, res, next) => {
     try {
       const payload = await getSalesAnalyticsSlice(sliceKey, {
         days: req.query.days,
@@ -122,7 +123,7 @@ for (const [pathSuffix, sliceKey] of [
   });
 }
 
-router.get("/sales-intelligence/export", validateRequest(salesExportSchema), async (req, res, next) => {
+router.get("/sales-intelligence/export", shopifyCapabilityGuard, validateRequest(salesExportSchema), async (req, res, next) => {
   try {
     const { filename, csv } = await getSalesExport({
       type: req.query.type,
@@ -138,7 +139,7 @@ router.get("/sales-intelligence/export", validateRequest(salesExportSchema), asy
   }
 });
 
-router.get("/actual-sales-intelligence", validateRequest(salesRefreshSchema), async (req, res, next) => {
+router.get("/actual-sales-intelligence", shopifyCapabilityGuard, validateRequest(salesRefreshSchema), async (req, res, next) => {
   try {
     const payload = await getActualSalesSummary({
       days: req.query.days,

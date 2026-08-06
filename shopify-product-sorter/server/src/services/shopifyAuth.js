@@ -1,5 +1,5 @@
-import { env, ensureShopifyEnv } from "../config/env.js";
-import { logError, logInfo } from "../utils/logger.js";
+import { env, ensureShopifyEnv, getShopifyCapability } from "../config/env.js";
+import { logError, logInfo, logWarn } from "../utils/logger.js";
 
 const EXPIRY_SKEW_MS = 60_000;
 
@@ -135,8 +135,11 @@ export async function getShopifyAuthHeaders() {
 }
 
 export async function primeShopifyAuthCache() {
-  if (!env.shopifyStoreDomain || !env.shopifyClientId || !env.shopifyClientSecret) {
-    logInfo("Skipping Shopify auth cache priming due to incomplete credentials.");
+  const capability = getShopifyCapability();
+  if (!capability.available) {
+    logWarn("Shopify is not configured; skipping auth cache priming", {
+      missingVariables: capability.missingVariables,
+    });
     return;
   }
 

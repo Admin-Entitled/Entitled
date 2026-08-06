@@ -14,6 +14,7 @@ import {
 } from "../services/shopifyMediaService.js";
 import { logError } from "../utils/logger.js";
 import { AppError } from "../middleware/errorBoundary.js";
+import { shopifyCapabilityGuard } from "../middleware/shopifyCapability.js";
 import { validateRequest } from "../middleware/requestValidation.js";
 
 const addSkuImageSchema = {
@@ -120,7 +121,7 @@ async function buildUploadPayload(file) {
   };
 }
 
-router.get("/sku-images/search", async (req, res, next) => {
+router.get("/sku-images/search", shopifyCapabilityGuard, async (req, res, next) => {
   try {
     const skuInput = req.query.sku || "";
     const result = await searchSkuImageProducts({ skuInput, loadAll: false });
@@ -131,7 +132,7 @@ router.get("/sku-images/search", async (req, res, next) => {
   }
 });
 
-router.post("/sku-images/load-all", async (req, res, next) => {
+router.post("/sku-images/load-all", shopifyCapabilityGuard, async (req, res, next) => {
   try {
     const result = await searchSkuImageProducts({ loadAll: true });
     res.json(result);
@@ -141,7 +142,7 @@ router.post("/sku-images/load-all", async (req, res, next) => {
   }
 });
 
-router.post("/sku-images/add", validateRequest(addSkuImageSchema), async (req, res, next) => {
+router.post("/sku-images/add", shopifyCapabilityGuard, validateRequest(addSkuImageSchema), async (req, res, next) => {
   try {
     const result = await addImageToSkuProduct(req.body);
     res.json(result);
@@ -151,7 +152,7 @@ router.post("/sku-images/add", validateRequest(addSkuImageSchema), async (req, r
   }
 });
 
-router.post("/sku-images/add-upload", upload.single("image"), validateRequest(addSkuImageUploadSchema), async (req, res, next) => {
+router.post("/sku-images/add-upload", shopifyCapabilityGuard, upload.single("image"), validateRequest(addSkuImageUploadSchema), async (req, res, next) => {
   try {
     if (!req.file) {
       throw new AppError("MISSING_FILE", "Image file is required", { statusCode: 400 });
@@ -176,7 +177,7 @@ router.post("/sku-images/add-upload", upload.single("image"), validateRequest(ad
   }
 });
 
-router.post("/sku-images/add-url", validateRequest(addSkuImageUrlSchema), async (req, res, next) => {
+router.post("/sku-images/add-url", shopifyCapabilityGuard, validateRequest(addSkuImageUrlSchema), async (req, res, next) => {
   try {
     const result = await addImageToSkuProduct({
       sku: req.body.sku,
@@ -194,7 +195,7 @@ router.post("/sku-images/add-url", validateRequest(addSkuImageUrlSchema), async 
   }
 });
 
-router.post("/sku-images/delete", validateRequest(deleteSkuImageSchema), async (req, res, next) => {
+router.post("/sku-images/delete", shopifyCapabilityGuard, validateRequest(deleteSkuImageSchema), async (req, res, next) => {
   try {
     const result = await deleteImageFromSkuProduct(req.body);
     res.json(result);
@@ -204,7 +205,7 @@ router.post("/sku-images/delete", validateRequest(deleteSkuImageSchema), async (
   }
 });
 
-router.post("/sku-images/reorder", validateRequest(reorderSkuImageSchema), async (req, res, next) => {
+router.post("/sku-images/reorder", shopifyCapabilityGuard, validateRequest(reorderSkuImageSchema), async (req, res, next) => {
   try {
     const { orderedMediaIds } = req.body;
     if (orderedMediaIds.length === 0) {
@@ -218,7 +219,7 @@ router.post("/sku-images/reorder", validateRequest(reorderSkuImageSchema), async
   }
 });
 
-router.post("/sku-images/bulk-add", validateRequest(bulkAddSkuImageSchema), async (req, res, next) => {
+router.post("/sku-images/bulk-add", shopifyCapabilityGuard, validateRequest(bulkAddSkuImageSchema), async (req, res, next) => {
   try {
     const items = normalizeSkuItems(req.body.items);
     if (!items.length) {
@@ -239,7 +240,7 @@ router.post("/sku-images/bulk-add", validateRequest(bulkAddSkuImageSchema), asyn
   }
 });
 
-router.post("/sku-images/bulk-add-upload", upload.single("image"), async (req, res, next) => {
+router.post("/sku-images/bulk-add-upload", shopifyCapabilityGuard, upload.single("image"), async (req, res, next) => {
   try {
     let items;
     try {
@@ -271,7 +272,7 @@ router.post("/sku-images/bulk-add-upload", upload.single("image"), async (req, r
   }
 });
 
-router.post("/sku-images/bulk-delete-preview", validateRequest(bulkDeletePreviewSchema), async (req, res, next) => {
+router.post("/sku-images/bulk-delete-preview", shopifyCapabilityGuard, validateRequest(bulkDeletePreviewSchema), async (req, res, next) => {
   try {
     const items = normalizeSkuItems(req.body.items);
     if (!items.length) {
@@ -289,7 +290,7 @@ router.post("/sku-images/bulk-delete-preview", validateRequest(bulkDeletePreview
   }
 });
 
-router.post("/sku-images/bulk-delete-confirm", validateRequest(bulkDeleteConfirmSchema), async (req, res, next) => {
+router.post("/sku-images/bulk-delete-confirm", shopifyCapabilityGuard, validateRequest(bulkDeleteConfirmSchema), async (req, res, next) => {
   try {
     const previewRows = Array.isArray(req.body.previewRows) ? req.body.previewRows : [];
     if (!previewRows.length) {

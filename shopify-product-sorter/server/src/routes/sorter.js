@@ -32,6 +32,7 @@ import {
 } from "../services/sorterRuntimeService.js";
 import { logError, logInfo } from "../utils/logger.js";
 import { AppError } from "../middleware/errorBoundary.js";
+import { shopifyCapabilityGuard } from "../middleware/shopifyCapability.js";
 import { validateRequest } from "../middleware/requestValidation.js";
 
 const generateCollectionSchema = {
@@ -214,7 +215,7 @@ router.post("/collections/generate", validateRequest(generateCollectionSchema), 
   }
 });
 
-router.post("/collections/apply", validateRequest(applyCollectionSchema), async (req, res, next) => {
+router.post("/collections/apply", validateRequest(applyCollectionSchema), shopifyCapabilityGuard, async (req, res, next) => {
   try {
     const { collectionId, orderIds: newOrderIds } = req.body;
     const snapshot = mergeSnapshotWithPreferences(collectionId, getCollectionSnapshot(collectionId));
@@ -245,7 +246,7 @@ router.post("/collections/apply", validateRequest(applyCollectionSchema), async 
   }
 });
 
-router.post("/collections/reorder-all-v2", async (req, res) => {
+router.post("/collections/reorder-all-v2", shopifyCapabilityGuard, async (req, res) => {
   recoverStaleRuns("reorder-all");
   const activeRun = getActiveRun("reorder-all");
 
@@ -623,7 +624,7 @@ router.post("/collections/reorder-all", async (req, res) => {
   return res.redirect(307, "/api/collections/reorder-all-v2");
 });
 
-router.post("/collections/rollback", validateRequest(rollbackCollectionSchema), async (req, res, next) => {
+router.post("/collections/rollback", shopifyCapabilityGuard, validateRequest(rollbackCollectionSchema), async (req, res, next) => {
   try {
     const { collectionId } = req.body;
     const backup = getLatestBackup(collectionId);
@@ -684,7 +685,7 @@ router.get("/collections/logs/network", (req, res, next) => {
   }
 });
 
-router.get("/collections", async (req, res, next) => {
+router.get("/collections", shopifyCapabilityGuard, async (req, res, next) => {
   try {
     const collections = await fetchCollections();
     const enriched = await Promise.all(collections.map(async (collection) => ({
@@ -698,7 +699,7 @@ router.get("/collections", async (req, res, next) => {
   }
 });
 
-router.get("/collection-products", validateRequest(collectionProductsSchema), async (req, res, next) => {
+router.get("/collection-products", shopifyCapabilityGuard, validateRequest(collectionProductsSchema), async (req, res, next) => {
   try {
     const collectionId = req.query.collectionId;
     const payload = await fetchCollectionProducts(collectionId);
@@ -722,7 +723,7 @@ router.get("/collection-products", validateRequest(collectionProductsSchema), as
   }
 });
 
-router.post("/collections/sync", validateRequest(syncCollectionSchema), async (req, res, next) => {
+router.post("/collections/sync", shopifyCapabilityGuard, validateRequest(syncCollectionSchema), async (req, res, next) => {
   try {
     const { collectionId } = req.body;
     const snapshot = await syncCollectionSnapshot(collectionId);

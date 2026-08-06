@@ -3,6 +3,8 @@ import path from "node:path";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
 
+let pool = null;
+
 export function isOrderMappingAvailable() {
   return Boolean(env.databaseUrl);
 }

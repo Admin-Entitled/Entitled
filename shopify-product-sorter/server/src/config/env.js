@@ -245,14 +245,65 @@ export const env = {
   },
 };
 
-export function ensureShopifyEnv(customEnv = process.env) {
-  const missing = [];
-  if (!parseString(customEnv.SHOPIFY_STORE_DOMAIN)) missing.push("SHOPIFY_STORE_DOMAIN");
-  if (!parseString(customEnv.SHOPIFY_CLIENT_ID)) missing.push("SHOPIFY_CLIENT_ID");
-  if (!parseString(customEnv.SHOPIFY_CLIENT_SECRET)) missing.push("SHOPIFY_CLIENT_SECRET");
+export function getShopifyCapability(customEnv = process.env) {
+  // Fall back to the env getters so runtime overrides (used by tests and
+  // route middleware) are always reflected. Only variable *names* are ever
+  // exposed by this helper; never values.
+  const domain = parseString(customEnv.SHOPIFY_STORE_DOMAIN) || env.shopifyStoreDomain;
+  const adminToken = parseString(customEnv.SHOPIFY_ADMIN_ACCESS_TOKEN) || env.shopifyAdminAccessToken;
+  const clientId = parseString(customEnv.SHOPIFY_CLIENT_ID) || env.shopifyClientId;
+  const clientSecret = parseString(customEnv.SHOPIFY_CLIENT_SECRET) || env.shopifyClientSecret;
 
-  if (missing.length > 0) {
-    throw new EnvValidationError(`Missing required environment variable(s): ${missing.join(", ")}`, missing);
+  const missingVariables = [];
+  if (!domain) missingVariables.push("SHOPIFY_STORE_DOMAIN");
+
+  const hasStaticToken = Boolean(domain && adminToken);
+  const hasClientCredentials = Boolean(domain && clientId && clientSecret);
+
+  if (hasStaticToken) {
+    return {
+      available: true,
+      status: "available",
+      reasonCategory: null,
+      authMode: "static_access_token",
+      missingVariables: [],
+    };
+  }
+
+  if (hasClientCredentials) {
+    return {
+      available: true,
+      status: "available",
+      reasonCategory: null,
+      authMode: "client_credentials",
+      missingVariables: [],
+    };
+  }
+
+  // Unavailable: report exactly which variable names are missing for each
+  // supported authentication mode so operators can fix the configuration.
+  if (domain) {
+    if (!adminToken) missingVariables.push("SHOPIFY_ADMIN_ACCESS_TOKEN");
+    if (!clientId) missingVariables.push("SHOPIFY_CLIENT_ID");
+    if (!clientSecret) missingVariables.push("SHOPIFY_CLIENT_SECRET");
+  }
+
+  return {
+    available: false,
+    status: "unavailable",
+    reasonCategory: "configuration_missing",
+    authMode: null,
+    missingVariables,
+  };
+}
+
+export function ensureShopifyEnv(customEnv = process.env) {
+  const capability = getShopifyCapability(customEnv);
+  if (!capability.available) {
+    throw new EnvValidationError(
+      `Missing required Shopify environment variable(s): ${capability.missingVariables.join(", ")}`,
+      capability.missingVariables,
+    );
   }
 }
 

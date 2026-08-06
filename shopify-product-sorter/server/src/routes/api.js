@@ -5,10 +5,11 @@ import skuMediaRouter from "./skuMedia.js";
 import sorterRouter from "./sorter.js";
 import express from "express";
 import { getCachedTokenStatus } from "../services/shopifyAuth.js";
-import { env } from "../config/env.js";
+import { env, getShopifyCapability } from "../config/env.js";
 import { isOrderMappingAvailable } from "../services/orderMappingDb.js";
 import { fetchShopCounts } from "../services/shopifyService.js";
 import { logError } from "../utils/logger.js";
+import { shopifyCapabilityGuard } from "../middleware/shopifyCapability.js";
 
 const router = express.Router();
 const MAX_DIAGNOSTIC_DETAIL_LENGTH = 500;
@@ -36,16 +37,25 @@ router.get("/health/readiness", (req, res) => {
     const missingTables = requiredTables.filter((tbl) => !checkTableStmt.get(tbl));
     const isReady = missingTables.length === 0;
 
+    const shopifyCap = getShopifyCapability();
+
     res.status(isReady ? 200 : 503).json({
       ok: isReady,
       status: isReady ? "ready" : "degraded",
       db: "connected",
       missingTables: missingTables.length > 0 ? missingTables : undefined,
       config: {
-        shopifyConfigured: Boolean(env.shopifyStoreDomain && (env.shopifyAdminAccessToken || (env.shopifyClientId && env.shopifyClientSecret))),
+        shopifyConfigured: shopifyCap.available,
         shiprocketConfigured: Boolean(env.shiprocketEmail && env.shiprocketPassword),
         sqlitePathConfigured: Boolean(env.sqlitePath),
         orderMappingConfigured: Boolean(env.databaseUrl),
+      },
+      shopify: {
+        available: shopifyCap.available,
+        status: shopifyCap.status,
+        reasonCategory: shopifyCap.reasonCategory,
+        authMode: shopifyCap.authMode,
+        missingVariables: shopifyCap.missingVariables,
       },
       orderMapping: {
         available: isOrderMappingAvailable(),
@@ -66,7 +76,7 @@ router.get("/health/readiness", (req, res) => {
   }
 });
 
-router.get("/debug/shopify", async (req, res) => {
+router.get("/debug/shopify", shopifyCapabilityGuard, async (req, res) => {
   try {
     const tokenStatus = getCachedTokenStatus();
     const configured = Boolean(env.shopifyStoreDomain && (env.shopifyAdminAccessToken || (env.shopifyClientId && env.shopifyClientSecret)));

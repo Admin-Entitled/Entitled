@@ -1,5 +1,5 @@
 import app from "./app.js";
-import { env, envLoadReport } from "./config/env.js";
+import { env, envLoadReport, getShopifyCapability } from "./config/env.js";
 import { runOrderMappingMigrations } from "./services/orderMappingMigrations.js";
 import { getCachedTokenStatus, primeShopifyAuthCache } from "./services/shopifyAuth.js";
 import { warnIfMissingSkuImageScopes } from "./services/shopifyMediaService.js";
@@ -16,19 +16,20 @@ async function startServer() {
 
   await runOrderMappingMigrations();
 
+  const shopifyCapability = getShopifyCapability();
   await primeShopifyAuthCache().catch(() => {});
 
   const tokenStatus = getCachedTokenStatus();
   const authStatus = tokenStatus.isFresh ? "authenticated" : "not_authenticated";
 
   let collectionsCount = 0;
-  if (env.shopifyStoreDomain && env.shopifyClientId && env.shopifyClientSecret) {
+  if (shopifyCapability.available) {
     try {
       const counts = await fetchShopCounts();
       collectionsCount = counts.collectionsCount;
       await warnIfMissingSkuImageScopes();
     } catch (err) {
-      // If Shopify fetching fails, collectionsCount remains 0
+      // Configured provider failure: server stays up and reports the error at request time
     }
   }
 

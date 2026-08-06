@@ -17,3 +17,4 @@ blob-report/
 coverage/
 *.lcov
 docs/architecture/ledger/snapshots/
+!.env.example
