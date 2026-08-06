@@ -55,10 +55,6 @@
   overflow-wrap: anywhere;
 }
 
-.diagnostic-value.text-truncate {
-  white-space: normal;
-  max-width: 160px;
-}
 
 .diagnostic-logs-header {
   flex-wrap: wrap;
