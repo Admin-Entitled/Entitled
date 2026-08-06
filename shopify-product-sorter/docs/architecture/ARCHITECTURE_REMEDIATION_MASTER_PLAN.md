@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T12:25:31.219Z` |
+| Generated timestamp | `2026-08-06T12:28:46.548Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `a2c2c29` |
+| Local commit | `fb41674` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -104,8 +104,8 @@
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | VALIDATED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-005 | Extract the SKU Image Manager feature | HIGH | VALIDATED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-004 | Extract the Sorter feature | HIGH | VALIDATED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATION_PENDING | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1470,9 +1470,9 @@ Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md,
 ### `FE-004` Extract the Sorter feature
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATED
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-08-06T12:25:31.219Z
+**Last updated:** 2026-08-06T12:14:26.174Z
 
 #### Description
 
@@ -1492,16 +1492,16 @@ Unit, browser, API mock, route, build, and full regression checks.
 
 #### Completion evidence
 
---evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820, Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004., Tested SHA: a2c2c295de5c0edb2a6f7a048d9305b239140a17
+--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820, Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004.
 
 ---
 
 ### `FE-005` Extract the SKU Image Manager feature
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-004, TEST-006
-**Last updated:** 2026-08-06T12:14:26.290Z
+**Last updated:** 2026-08-06T12:28:46.548Z
 
 #### Description
 
@@ -1521,7 +1521,7 @@ Component/unit, browser media flows with mocks, accessibility, and regression ch
 
 #### Completion evidence
 
-Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md, Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification, Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006.
+Defined SKU Image Manager extraction boundary in docs/architecture/SKU_IMAGE_MANAGER_EXTRACTION_BOUNDARY.md, Validated via SkuImageManager.jsx import audit, shell bridge review, and state ownership verification, Commit SHA: d564698e2c0cd398bf05056e64f9b947e6995c91, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-004, TEST-006., Tested SHA: fb41674587ffe8a91bb890a60806deb769ad442e
 
 ---
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T12:28:46.566Z | FE-005 | validated | completed | shivam | Clean committed-state verification passed | `996c4b06` |
 | 2026-08-06T12:25:31.238Z | FE-004 | validated | completed | shivam | Clean committed-state verification passed | `c94e810e` |
 | 2026-08-06T12:22:04.212Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e055c683` |
 | 2026-08-06T12:22:04.212Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f04e50c6` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-06T12:14:26.200Z | FE-004 | validation_pending | validated | shivam | Transition to validated | `1b22ce0d` |
 | 2026-08-06T12:14:26.056Z | FE-003 | validation_pending | validated | shivam | Transition to validated | `1fe46dca` |
 | 2026-08-06T12:14:23.435Z | FE-002 | validation_pending | validated | shivam | Transition to validated | `bf7649fc` |
-| 2026-08-06T11:22:00.411Z | OPS-004 | validated | completed | shivam | Complete OPS-004 | `f305e093` |
