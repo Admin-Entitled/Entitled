@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T12:22:08.093Z",
+  "last_updated": "2026-08-06T12:25:31.219Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3267,7 +3267,7 @@
       "title": "Extract the Sorter feature",
       "description": "Remediation task FE-004: Extract the Sorter feature",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "FE-001",
         "OWN-002",
@@ -3287,18 +3287,19 @@
         "--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable.",
         "--evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests.",
         "Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820",
-        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004."
+        "Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004.",
+        "Tested SHA: a2c2c295de5c0edb2a6f7a048d9305b239140a17"
       ],
       "changed_files": [
         "client/src/Sorter.jsx",
         "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:14:26.174Z",
+      "updated_timestamp": "2026-08-06T12:25:31.219Z",
       "started_timestamp": "2026-07-31T16:25:58.935Z",
       "implemented_timestamp": "2026-07-31T17:36:19.578Z",
       "validated_timestamp": "2026-08-06T12:14:26.174Z",
-      "completed_timestamp": "2026-07-31T17:38:08.224Z",
+      "completed_timestamp": "2026-08-06T12:25:31.219Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"

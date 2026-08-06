@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T12:22:04.154Z` |
+| Generated timestamp | `2026-08-06T12:25:31.219Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `e4045b3` |
+| Local commit | `a2c2c29` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -51,8 +51,8 @@
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`, `DOC-010`
-- Dependency-safe validation-pending tasks: `FE-006`, `INT-001`, `INT-004`, `OPS-001`
-- Tasks awaiting prerequisites: `FE-007`, `FE-008`, `FE-009`, `FE-010`, `FE-011`
+- Dependency-safe validation-pending tasks: `INT-001`, `INT-004`, `OPS-001`
+- Tasks awaiting prerequisites: `FE-006`, `FE-007`, `FE-008`, `FE-009`, `FE-010`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -103,8 +103,8 @@
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | COMPLETED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-002 | Extract navigation ownership | HIGH | VALIDATED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-004 | Extract the Sorter feature | HIGH | VALIDATED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | VALIDATED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATION_PENDING | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-007 | Separate application state | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1441,9 +1441,9 @@ Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_
 ### `FE-003` Introduce explicit routing while preserving URLs
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATED
 **Dependencies:** TEST-008, FE-001
-**Last updated:** 2026-08-06T12:22:04.154Z
+**Last updated:** 2026-08-06T12:14:26.028Z
 
 #### Description
 
@@ -1463,16 +1463,16 @@ Browser, route, static fallback, build, and regression checks.
 
 #### Completion evidence
 
-Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix, Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001., Tested SHA: e4045b32cb9f397c28c19793160404cfbc2c52bf
+Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix, Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001.
 
 ---
 
 ### `FE-004` Extract the Sorter feature
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** FE-001, OWN-002, TEST-001, TEST-002
-**Last updated:** 2026-08-06T12:14:26.174Z
+**Last updated:** 2026-08-06T12:25:31.219Z
 
 #### Description
 
@@ -1492,7 +1492,7 @@ Unit, browser, API mock, route, build, and full regression checks.
 
 #### Completion evidence
 
---evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820, Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004.
+--evidence Sorter.jsx extracted from App.jsx. App.jsx imports and renders <Sorter sidebarBridge>. Vite build passes (34 modules). Regression gate 9/9 suites passed (24 tests). Sorter feature independently importable., --evidence npm run build: 34 modules transformed, built in 1.07s. npm run test:regression-gate: 9/9 suites, 24/24 tests passed. client/src/Sorter.jsx: 720 lines, independently importable. App.jsx: imports Sorter, renders <Sorter sidebarBridge={sorterSidebarBridge}>. Shared shell has no sorter-specific mutation logic. Existing actions and diagnostics pass regression tests., Commit SHA: beda37806619f919a99aa09ea9b4c39ec31b5820, Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for FE-004., Tested SHA: a2c2c295de5c0edb2a6f7a048d9305b239140a17
 
 ---
 
@@ -3931,6 +3931,9 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T12:25:31.238Z | FE-004 | validated | completed | shivam | Clean committed-state verification passed | `c94e810e` |
+| 2026-08-06T12:22:04.212Z | DOC-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e055c683` |
+| 2026-08-06T12:22:04.212Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `f04e50c6` |
 | 2026-08-06T12:22:04.173Z | FE-003 | validated | completed | shivam | Clean committed-state verification passed | `71e5afa7` |
 | 2026-08-06T12:18:51.063Z | FE-002 | validated | completed | shivam | Clean committed-state verification passed | `8c2fa7a7` |
 | 2026-08-06T12:14:26.316Z | FE-005 | validation_pending | validated | shivam | Transition to validated | `d5b1f616` |
@@ -3938,6 +3941,3 @@ Not completed.
 | 2026-08-06T12:14:26.056Z | FE-003 | validation_pending | validated | shivam | Transition to validated | `1fe46dca` |
 | 2026-08-06T12:14:23.435Z | FE-002 | validation_pending | validated | shivam | Transition to validated | `bf7649fc` |
 | 2026-08-06T11:22:00.411Z | OPS-004 | validated | completed | shivam | Complete OPS-004 | `f305e093` |
-| 2026-08-06T11:22:00.293Z | OPS-004 | validation_pending | validated | shivam | Revalidate OPS-004 | `54cb491b` |
-| 2026-08-06T11:22:00.158Z | OPS-003 | validated | completed | shivam | Complete OPS-003 | `4a7404ab` |
-| 2026-08-06T11:22:00.046Z | OPS-003 | validation_pending | validated | shivam | Revalidate OPS-003 | `c4319e8f` |
