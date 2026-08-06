@@ -13,7 +13,7 @@
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-06T14:35:26.743Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `b674f69` |
+| Local commit | `6649c78` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
