@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-05T11:16:29.930Z` |
+| Generated timestamp | `2026-08-06T11:14:38.824Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `5aef241` |
+| Local commit | `11666ae` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,8 +36,8 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 18 |
-| Ready | 9 |
+| Not started | 17 |
+| Ready | 10 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 26 |
@@ -50,9 +50,9 @@
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `SEC-007`, `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`
+- Next dependency-actionable ready tasks: `BE-008`, `SEC-007`, `DOC-002`, `DOC-003`, `DOC-005`
 - Dependency-safe validation-pending tasks: `BE-007`, `BE-009`, `BE-011`, `FE-002`, `FE-003`
-- Tasks awaiting prerequisites: `BE-008`, `FE-006`, `FE-007`, `FE-008`, `FE-009`
+- Tasks awaiting prerequisites: `FE-006`, `FE-007`, `FE-008`, `FE-009`, `FE-010`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -97,7 +97,7 @@
 | BE-005 | Preserve existing backend URLs with adapters | CRITICAL | COMPLETED | BE-001, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-006 | Create application-owned service boundaries | HIGH | COMPLETED | OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-007 | Remove hidden cross-application imports | HIGH | VALIDATION_PENDING | BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| BE-008 | Standardize validation and error normalization | HIGH | NOT_STARTED | BE-001, SEC-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| BE-008 | Standardize validation and error normalization | HIGH | READY | BE-001, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-009 | Standardize structured logging | MEDIUM | VALIDATION_PENDING | OWN-006, BE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | VALIDATION_PENDING | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1267,9 +1267,9 @@ Defined cross-application import matrix in docs/architecture/CROSS_APPLICATION_I
 ### `BE-008` Standardize validation and error normalization
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
-**Dependencies:** BE-001, SEC-008
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Status:** READY
+**Dependencies:** BE-001, SEC-006
+**Last updated:** 2026-08-06T11:14:38.811Z
 
 #### Description
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T11:14:38.824Z | BE-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `776a2667` |
 | 2026-08-05T11:05:03.667Z | BE-006 | validated | completed | shivam | Clean committed-state verification passed | `e1f34151` |
 | 2026-08-05T10:59:39.575Z | SEC-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `ad95b088` |
 | 2026-08-05T10:59:39.539Z | BE-005 | validated | completed | shivam | Clean committed-state verification passed | `78f8613f` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-05T10:37:04.064Z | BE-006 | validation_pending | validated | shivam | Service ownership boundaries verified | `acb860b7` |
 | 2026-08-05T10:37:03.950Z | BE-005 | validation_pending | validated | shivam | Compatibility adapters verified with tests | `234b77c0` |
 | 2026-08-05T10:37:03.842Z | BE-004 | validation_pending | validated | shivam | All sales intelligence routes in dedicated router with tests | `8e2deee1` |
-| 2026-08-05T10:37:03.731Z | BE-003 | validation_pending | validated | shivam | All SKU routes in dedicated router with tests | `506947aa` |

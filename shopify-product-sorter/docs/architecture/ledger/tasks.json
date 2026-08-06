@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-05T11:16:29.930Z",
+  "last_updated": "2026-08-06T11:14:38.824Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -2887,10 +2887,10 @@
       "title": "Standardize validation and error normalization",
       "description": "Remediation task BE-008: Standardize validation and error normalization",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "BE-001",
-        "SEC-008"
+        "SEC-006"
       ],
       "blocking_reasons": [],
       "acceptance_criteria": [
@@ -2904,7 +2904,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-06T11:14:38.811Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
