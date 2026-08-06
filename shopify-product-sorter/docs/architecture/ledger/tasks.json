@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T14:32:10.707Z",
+  "last_updated": "2026-08-06T14:34:01.817Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3438,7 +3438,7 @@
       "title": "Separate application state",
       "description": "Remediation task FE-007: Separate application state",
       "severity": "HIGH",
-      "status": "validation_pending",
+      "status": "completed",
       "dependencies": [
         "FE-004",
         "FE-005",
@@ -3457,27 +3457,32 @@
         "--evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed.",
         "--evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced.",
         "Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-004, FE-005, FE-006."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-004, FE-005, FE-006.",
+        "Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; App.jsx delegates to Sorter.jsx; no shared mutable singleton",
+        "Clean committed-state verification passed; tested at 987d635"
       ],
       "changed_files": [
         "client/src/App.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T22:10:15.267Z",
+      "updated_timestamp": "2026-08-06T14:34:01.817Z",
       "started_timestamp": "2026-07-31T17:42:13.129Z",
       "implemented_timestamp": "2026-07-31T17:54:28.784Z",
-      "validated_timestamp": "2026-07-31T17:54:43.568Z",
-      "completed_timestamp": "2026-07-31T17:55:35.849Z",
+      "validated_timestamp": "2026-08-06T14:34:01.535Z",
+      "completed_timestamp": "2026-08-06T14:34:01.817Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "7fed269d4dddac965b9e38ba4e299aa346bb9493",
-      "clean_validation_commit_sha": "7fed269d4dddac965b9e38ba4e299aa346bb9493",
-      "completion_record_commit_sha": "7fed269d4dddac965b9e38ba4e299aa346bb9493",
+      "implementation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+      "clean_validation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+      "completion_record_commit_sha": null,
       "validation_results": {
         "overallStatus": "PASSED",
-        "tested_commit": "7fed269d4dddac965b9e38ba4e299aa346bb9493"
+        "implementation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "clean_validation_commit_sha": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "tested_commit": "987d63501a779340dd011f1de9ac593eb0acb07e",
+        "passed": true
       }
     },
     {

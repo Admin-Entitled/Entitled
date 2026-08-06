@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T14:32:10.707Z` |
+| Generated timestamp | `2026-08-06T14:34:01.817Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `88dcb9e` |
+| Local commit | `76f3ab7` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -40,19 +40,19 @@
 | Ready | 11 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 16 |
+| Validation pending | 15 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 81 |
-| Completion percentage | 62.8% |
+| Completed | 82 |
+| Completion percentage | 63.6% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `FE-007`, `FE-008`, `FE-009`, `INT-001`, `INT-004`
-- Tasks awaiting prerequisites: `FE-010`, `FE-011`, `INT-002`, `INT-003`, `INT-005`
+- Dependency-safe validation-pending tasks: `FE-008`, `FE-009`, `FE-010`, `INT-001`, `INT-004`
+- Tasks awaiting prerequisites: `FE-011`, `INT-002`, `INT-003`, `INT-005`, `INT-006`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -107,7 +107,7 @@
 | FE-004 | Extract the Sorter feature | HIGH | COMPLETED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | COMPLETED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | COMPLETED | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-007 | Separate application state | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-007 | Separate application state | HIGH | COMPLETED | FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-008 | Separate frontend API clients | HIGH | VALIDATION_PENDING | FE-004, FE-005, FE-006, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-009 | Isolate styles and remove global leakage | MEDIUM | VALIDATION_PENDING | FE-001, FE-004, FE-005, FE-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-010 | Add feature error and loading boundaries | HIGH | VALIDATION_PENDING | FE-003, FE-007 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1557,9 +1557,9 @@ Defined Order Mapping compatibility boundary in docs/architecture/ORDER_MAPPING_
 ### `FE-007` Separate application state
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** FE-004, FE-005, FE-006
-**Last updated:** 2026-08-01T22:10:15.267Z
+**Last updated:** 2026-08-06T14:34:01.817Z
 
 #### Description
 
@@ -1579,7 +1579,7 @@ Component tests, navigation tests, stale-state checks, and regression gate.
 
 #### Completion evidence
 
---evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed., --evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced., Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-004, FE-005, FE-006.
+--evidence App.jsx rewritten: 1217 -> 366 lines. All orphaned sorter state, handlers, effects, and derived variables removed. Sidebar reads sorter diagnostics from sorterSidebarBridge ref. No shared mutable singleton introduced. Vite build passes (34 modules). Regression gate 9/9 passed., --evidence npm run build: 34 modules, 1.10s. npm run test:regression-gate: 9/9 suites passed. App.jsx reduced from 1217 to 366 lines. All sorter-specific state, handlers, effects, and derived variables removed. Switching modules does not mutate unrelated state. Diagnostics events have explicit producer/consumer contracts via sidebarBridge refs. No shared mutable singleton introduced., Commit SHA: 7fed269d4dddac965b9e38ba4e299aa346bb9493, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-004, FE-005, FE-006., Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; App.jsx delegates to Sorter.jsx; no shared mutable singleton, Clean committed-state verification passed; tested at 987d635
 
 ---
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T14:34:01.842Z | FE-007 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635 | `d80871c9` |
+| 2026-08-06T14:34:01.561Z | FE-007 | validation_pending | validated | shivam | Fresh validation: frontendRegression.test.js 7/7 passed at 987d635; App.jsx delegates to Sorter.jsx; no shared mutable singleton | `0df27797` |
 | 2026-08-06T14:32:10.766Z | FE-006 | validated | completed | shivam | Clean committed-state verification passed; tested at 987d635; frontend regression 7/7; build and regression gate passed | `77ac8284` |
 | 2026-08-06T13:40:48.306Z | FE-006 | validation_pending | validated | shivam | Transition to validated | `08047a8e` |
 | 2026-08-06T13:17:18.145Z | FE-005 | validated | completed | shivam | Transition to completed | `cf390596` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-06T13:17:17.830Z | DOC-001 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `11055395` |
 | 2026-08-06T13:17:17.779Z | FE-003 | validated | completed | shivam | Transition to completed | `4d1fe4fe` |
 | 2026-08-06T13:17:13.260Z | FE-002 | validated | completed | shivam | Transition to completed | `2b1e00af` |
-| 2026-08-06T12:28:46.566Z | FE-005 | validated | completed | shivam | Clean committed-state verification passed | `996c4b06` |
-| 2026-08-06T12:25:31.238Z | FE-004 | validated | completed | shivam | Clean committed-state verification passed | `c94e810e` |
