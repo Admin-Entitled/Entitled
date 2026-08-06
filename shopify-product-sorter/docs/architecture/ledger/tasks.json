@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-06T12:18:55.042Z",
+  "last_updated": "2026-08-06T12:22:04.212Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3208,7 +3208,7 @@
       "title": "Introduce explicit routing while preserving URLs",
       "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
       "severity": "HIGH",
-      "status": "validated",
+      "status": "completed",
       "dependencies": [
         "TEST-008",
         "FE-001"
@@ -3226,17 +3226,18 @@
         "Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md",
         "Validated via main.jsx routing review, server fallback audit, and URL preservation matrix",
         "Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94",
-        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001."
+        "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001.",
+        "Tested SHA: e4045b32cb9f397c28c19793160404cfbc2c52bf"
       ],
       "changed_files": [
         "client/src/main.jsx"
       ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T12:14:26.028Z",
+      "updated_timestamp": "2026-08-06T12:22:04.154Z",
       "started_timestamp": "2026-07-31T14:16:57.530Z",
       "implemented_timestamp": "2026-07-31T14:18:42.851Z",
       "validated_timestamp": "2026-08-06T12:14:26.028Z",
-      "completed_timestamp": "2026-07-31T14:18:47.081Z",
+      "completed_timestamp": "2026-08-06T12:22:04.154Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
       "validation_files": [
         "client/src/frontendRegression.test.js"
@@ -5697,7 +5698,7 @@
       "title": "Update README to current architecture",
       "description": "Remediation task DOC-001: Update README to current architecture",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-001",
         "BE-005",
@@ -5715,7 +5716,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T12:22:04.200Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -5804,7 +5805,7 @@
       "title": "Create route map",
       "description": "Remediation task DOC-004: Create route map",
       "severity": "HIGH",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-007",
         "BE-005",
@@ -5822,7 +5823,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-01T23:16:47.198Z",
+      "updated_timestamp": "2026-08-06T12:22:04.200Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,

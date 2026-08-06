@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T12:18:51.044Z` |
+| Generated timestamp | `2026-08-06T12:22:04.154Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `eb903e8` |
+| Local commit | `e4045b3` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -51,8 +51,8 @@
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-002`, `DOC-003`, `DOC-005`, `DOC-009`, `DOC-010`
-- Dependency-safe validation-pending tasks: `INT-001`, `INT-004`, `OPS-001`
-- Tasks awaiting prerequisites: `FE-006`, `FE-007`, `FE-008`, `FE-009`, `FE-010`
+- Dependency-safe validation-pending tasks: `FE-006`, `INT-001`, `INT-004`, `OPS-001`
+- Tasks awaiting prerequisites: `FE-007`, `FE-008`, `FE-009`, `FE-010`, `FE-011`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -102,8 +102,8 @@
 | BE-010 | Isolate startup migrations and side effects | CRITICAL | COMPLETED | TEST-009, SAFE-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | BE-011 | Resolve duplicate collection reorder handlers | CRITICAL | COMPLETED | TEST-003, BE-002, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-001 | Extract the application shell | HIGH | COMPLETED | TEST-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-002 | Extract navigation ownership | HIGH | COMPLETED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FE-003 | Introduce explicit routing while preserving URLs | HIGH | VALIDATED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-002 | Extract navigation ownership | HIGH | VALIDATED | FE-001, OWN-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FE-003 | Introduce explicit routing while preserving URLs | HIGH | COMPLETED | TEST-008, FE-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-004 | Extract the Sorter feature | HIGH | VALIDATED | FE-001, OWN-002, TEST-001, TEST-002 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-005 | Extract the SKU Image Manager feature | HIGH | VALIDATED | FE-001, OWN-004, TEST-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | FE-006 | Retain Order Mapping compatibility boundary | HIGH | VALIDATION_PENDING | FE-003, OWN-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1412,9 +1412,9 @@ Defined application shell boundary in docs/architecture/APPLICATION_SHELL_BOUNDA
 ### `FE-002` Extract navigation ownership
 
 **Severity:** HIGH
-**Status:** COMPLETED
+**Status:** VALIDATED
 **Dependencies:** FE-001, OWN-007
-**Last updated:** 2026-08-06T12:18:51.044Z
+**Last updated:** 2026-08-06T12:14:23.403Z
 
 #### Description
 
@@ -1434,16 +1434,16 @@ Browser navigation, accessibility, route, and regression tests.
 
 #### Completion evidence
 
-Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check, Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007., Tested SHA: eb903e86c13dc4710942af9579ed1113d94d83f6
+Defined navigation ownership boundary in docs/architecture/NAVIGATION_OWNERSHIP_BOUNDARY.md, Validated via sidebar module audit, active state derivation review, and disabled label safety check, Commit SHA: 57a1713e33e398fe34b299f188d67a69da994874, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: FE-001, OWN-007.
 
 ---
 
 ### `FE-003` Introduce explicit routing while preserving URLs
 
 **Severity:** HIGH
-**Status:** VALIDATED
+**Status:** COMPLETED
 **Dependencies:** TEST-008, FE-001
-**Last updated:** 2026-08-06T12:14:26.028Z
+**Last updated:** 2026-08-06T12:22:04.154Z
 
 #### Description
 
@@ -1463,7 +1463,7 @@ Browser, route, static fallback, build, and regression checks.
 
 #### Completion evidence
 
-Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix, Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001.
+Defined client routing boundary in docs/architecture/CLIENT_ROUTING_BOUNDARY.md, Validated via main.jsx routing review, server fallback audit, and URL preservation matrix, Commit SHA: 754db5d20d17a7da805828bdd73748c5d9b6da94, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: TEST-008, FE-001., Tested SHA: e4045b32cb9f397c28c19793160404cfbc2c52bf
 
 ---
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-06T12:22:04.173Z | FE-003 | validated | completed | shivam | Clean committed-state verification passed | `71e5afa7` |
 | 2026-08-06T12:18:51.063Z | FE-002 | validated | completed | shivam | Clean committed-state verification passed | `8c2fa7a7` |
 | 2026-08-06T12:14:26.316Z | FE-005 | validation_pending | validated | shivam | Transition to validated | `d5b1f616` |
 | 2026-08-06T12:14:26.200Z | FE-004 | validation_pending | validated | shivam | Transition to validated | `1b22ce0d` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-06T11:22:00.293Z | OPS-004 | validation_pending | validated | shivam | Revalidate OPS-004 | `54cb491b` |
 | 2026-08-06T11:22:00.158Z | OPS-003 | validated | completed | shivam | Complete OPS-003 | `4a7404ab` |
 | 2026-08-06T11:22:00.046Z | OPS-003 | validation_pending | validated | shivam | Revalidate OPS-003 | `c4319e8f` |
-| 2026-08-06T11:21:59.921Z | CLEAN-003 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `21451d82` |
