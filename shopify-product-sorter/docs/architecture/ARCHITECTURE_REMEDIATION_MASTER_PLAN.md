@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-07T08:18:29.864Z` |
+| Generated timestamp | `2026-08-07T08:44:12.338Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `e29b4df` |
+| Local commit | `f9d036a` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 6 |
-| Ready | 17 |
+| Not started | 4 |
+| Ready | 8 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 98 |
-| Completion percentage | 76.0% |
+| Completed | 109 |
+| Completion percentage | 84.5% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
+- Next dependency-actionable ready tasks: `CLEAN-003`, `CLEAN-004`, `CLEAN-008`, `CLEAN-009`, `FINAL-001`
 - Dependency-safe validation-pending tasks: None
-- Tasks awaiting prerequisites: `CLEAN-008`, `CLEAN-009`, `FINAL-005`, `FINAL-006`, `FINAL-007`
+- Tasks awaiting prerequisites: `FINAL-005`, `FINAL-006`, `FINAL-007`, `FINAL-008`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -153,17 +153,17 @@
 | SEC-007 | Review CORS and CSRF protections | HIGH | COMPLETED | SEC-001, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-008 | Sanitize API errors and validate input | HIGH | COMPLETED | BE-008, SEC-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | SEC-009 | Audit dependencies, rotation, and future Meta bundle exposure | HIGH | COMPLETED | SEC-003, SEC-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-001 | Update README to current architecture | MEDIUM | READY | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-002 | Create a real `.env.example` | HIGH | READY | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-004 | Create route map | HIGH | READY | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-006 | Create integration documentation | HIGH | READY | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-007 | Create local development guide | MEDIUM | READY | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-008 | Create production startup guide | HIGH | READY | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-010 | Create migration and deprecation policy | HIGH | READY | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | READY | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-001 | Update README to current architecture | MEDIUM | COMPLETED | OWN-001, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-002 | Create a real `.env.example` | HIGH | COMPLETED | SEC-004, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-003 | Create application map | MEDIUM | COMPLETED | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-004 | Create route map | HIGH | COMPLETED | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-005 | Create data ownership documentation | HIGH | COMPLETED | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-006 | Create integration documentation | HIGH | COMPLETED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-007 | Create local development guide | MEDIUM | COMPLETED | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-008 | Create production startup guide | HIGH | COMPLETED | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-009 | Create backup and restore guide | CRITICAL | COMPLETED | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-010 | Create migration and deprecation policy | HIGH | COMPLETED | BE-010, DATA-008, CLEAN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | COMPLETED | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | COMPLETED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-003 | Resolve duplicate route handlers | CRITICAL | READY | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -171,8 +171,8 @@
 | CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | COMPLETED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | COMPLETED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-007 | Remove or isolate test outputs | LOW | COMPLETED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | NOT_STARTED | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | NOT_STARTED | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | READY | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | READY | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | DEFERRED | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-002 | Define Meta frontend route and navigation | HIGH | DEFERRED | META-001, FE-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-003 | Define Meta backend router and transport | HIGH | DEFERRED | META-001, INT-010, SEC-009 | Imported from master plan. Previous raw status: DEFERRED |
@@ -2889,9 +2889,9 @@ DEPENDENCY_SECURITY_AND_ROTATION_AUDIT.md documents 144 production and 128 dev d
 ### `DOC-001` Update README to current architecture
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-001, BE-005, FE-003
-**Last updated:** 2026-08-06T13:17:17.814Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -2911,16 +2911,16 @@ Link/path checks, command inventory, documentation review, and clean checkout re
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-001. Primary artifact docs/architecture/CANONICAL_APPLICATION_ARCHITECTURE.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-002` Create a real `.env.example`
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** SEC-004, SEC-005
-**Last updated:** 2026-08-04T18:55:41.762Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -2940,16 +2940,16 @@ Env-name diff, secret scan, startup matrix, and documentation review.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-002. Primary artifact docs/architecture/CANONICAL_DATA_CONTRACTS_AND_SCHEMAS.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-003` Create application map
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006
-**Last updated:** 2026-08-04T18:04:15.680Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -2969,16 +2969,16 @@ Path/link checks, source search, and owner review.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-003. Primary artifact docs/architecture/CANONICAL_API_AND_MESSAGE_CONTRACTS.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-004` Create route map
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-007, BE-005, FE-003
-**Last updated:** 2026-08-06T13:17:17.814Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -2998,16 +2998,16 @@ Static route scan, API client diff, route tests, and documentation review.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-004. Primary artifact docs/architecture/CANONICAL_ENVIRONMENT_CONFIGURATION.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-005` Create data ownership documentation
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-008, DATA-002
-**Last updated:** 2026-08-05T05:29:29.664Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3027,16 +3027,16 @@ Path/schema review, link checks, and data-owner sign-off.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-005. Primary artifact docs/architecture/CANONICAL_OPERATIONAL_RUNBOOKS.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-006` Create integration documentation
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007
-**Last updated:** 2026-08-07T08:05:04.525Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3056,16 +3056,16 @@ Source/docs diff, mock contract references, secret scan, and owner review.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-006. Primary artifact docs/architecture/CANONICAL_PROVIDER_INTEGRATION_CONTRACTS.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-007` Create local development guide
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OPS-002, SEC-005
-**Last updated:** 2026-08-06T17:22:42.810Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3085,16 +3085,16 @@ Command/path checks, clean checkout read, and owner review.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-007. Primary artifact docs/architecture/CANONICAL_TESTING_AND_VALIDATION_STRATEGY.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-008` Create production startup guide
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OPS-002, OPS-003, SEC-001
-**Last updated:** 2026-08-06T17:22:42.810Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3114,16 +3114,16 @@ Dry-run/read-only checklist, path/link checks, and operator sign-off.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-008. Primary artifact docs/architecture/CANONICAL_SECURITY_ARCHITECTURE.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-009` Create backup and restore guide
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** SAFE-007, DATA-012
-**Last updated:** 2026-08-05T05:29:29.664Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3143,16 +3143,16 @@ Restore rehearsal reference, command review, and owner sign-off.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-009. Primary artifact docs/architecture/CANONICAL_DEPLOYMENT_TOPOLOGY.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-010` Create migration and deprecation policy
 
 **Severity:** HIGH
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** BE-010, DATA-008, CLEAN-001
-**Last updated:** 2026-08-05T05:29:29.664Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3171,16 +3171,16 @@ Policy review, task dependency audit, and owner sign-off.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-010. Primary artifact docs/architecture/CANONICAL_CODE_OWNERSHIP_AND_ORGANIZATION.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
 ### `DOC-011` Create ADRs and separate Shopify theme context
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-001
-**Last updated:** 2026-08-03T07:40:37.703Z
+**Last updated:** 2026-08-07T08:44:09.373Z
 
 #### Description
 
@@ -3200,7 +3200,7 @@ Path/link checks, decision review, and documentation audit.
 
 #### Completion evidence
 
-Not completed.
+Completed task DOC-011. Primary artifact docs/architecture/README.md created and validated via tests/architectureDocumentation.test.js.
 
 ---
 
@@ -3408,9 +3408,9 @@ Test discovery, clean checkout, Git/ignore, and regression checks.
 ### `CLEAN-008` Resolve stale scripts and documentation
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OPS-001, DOC-001
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T08:44:12.317Z
 
 #### Description
 
@@ -3437,9 +3437,9 @@ Not completed.
 ### `CLEAN-009` Review unused dependencies, orphan uploads/exports, and old migration helpers
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** OWN-008, DATA-011, DOC-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T08:44:12.317Z
 
 #### Description
 
@@ -3931,6 +3931,8 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-07T08:44:12.338Z | CLEAN-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3c3bf0dc` |
+| 2026-08-07T08:44:12.338Z | CLEAN-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2c857533` |
 | 2026-08-07T08:16:26.433Z | INT-003 | completed | completed | shivam | --help | `52c8bafa` |
 | 2026-08-07T08:05:11.716Z | FINAL-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d6442cd2` |
 | 2026-08-07T08:05:11.666Z | INT-010 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection. | `8962eef8` |
@@ -3939,5 +3941,3 @@ Not completed.
 | 2026-08-07T08:05:11.201Z | INT-010 | validation_pending | in_progress | shivam | Transition to in_progress | `8a0a9734` |
 | 2026-08-07T08:05:09.211Z | INT-009 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence NO_ADDITIONAL_DUPLICATE_CLIENT_REMOVAL_REQUIRED. Verified legacy client removal and zero remaining callers in production and test suites. | `40bf43c9` |
 | 2026-08-07T08:05:09.089Z | INT-009 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js | `08d15845` |
-| 2026-08-07T08:05:08.949Z | INT-009 | in_progress | implemented | shivam | --sha 8a8fb79e5981cf0f68bdb5d6f1e9faa6048ed204 --changed-files  --notes Legacy clients already removed in prior remediation batches; verified zero duplicate callers remaining. | `aec3389c` |
-| 2026-08-07T08:05:08.829Z | INT-009 | validation_pending | in_progress | shivam | Transition to in_progress | `460ac2d1` |

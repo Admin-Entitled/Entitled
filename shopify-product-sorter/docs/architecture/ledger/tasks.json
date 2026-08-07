@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-07T08:18:29.864Z",
+  "last_updated": "2026-08-07T08:44:12.338Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -5945,7 +5945,7 @@
       "title": "Update README to current architecture",
       "description": "Remediation task DOC-001: Update README to current architecture",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-001",
         "BE-005",
@@ -5960,27 +5960,42 @@
       "validation_commands": [
         "Link/path checks, command inventory, documentation review, and clean checkout read."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-001. Primary artifact docs/architecture/CANONICAL_APPLICATION_ARCHITECTURE.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_APPLICATION_ARCHITECTURE.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T13:17:17.814Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-002",
       "title": "Create a real `.env.example`",
       "description": "Remediation task DOC-002: Create a real `.env.example`",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "SEC-004",
         "SEC-005"
@@ -5994,27 +6009,42 @@
       "validation_commands": [
         "Env-name diff, secret scan, startup matrix, and documentation review."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-002. Primary artifact docs/architecture/CANONICAL_DATA_CONTRACTS_AND_SCHEMAS.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_DATA_CONTRACTS_AND_SCHEMAS.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-04T18:55:41.762Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-003",
       "title": "Create application map",
       "description": "Remediation task DOC-003: Create application map",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-001",
         "OWN-002",
@@ -6032,27 +6062,42 @@
       "validation_commands": [
         "Path/link checks, source search, and owner review."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-003. Primary artifact docs/architecture/CANONICAL_API_AND_MESSAGE_CONTRACTS.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_API_AND_MESSAGE_CONTRACTS.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-04T18:04:15.680Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-004",
       "title": "Create route map",
       "description": "Remediation task DOC-004: Create route map",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-007",
         "BE-005",
@@ -6067,27 +6112,42 @@
       "validation_commands": [
         "Static route scan, API client diff, route tests, and documentation review."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-004. Primary artifact docs/architecture/CANONICAL_ENVIRONMENT_CONFIGURATION.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_ENVIRONMENT_CONFIGURATION.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T13:17:17.814Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-005",
       "title": "Create data ownership documentation",
       "description": "Remediation task DOC-005: Create data ownership documentation",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-008",
         "DATA-002"
@@ -6101,27 +6161,42 @@
       "validation_commands": [
         "Path/schema review, link checks, and data-owner sign-off."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-005. Primary artifact docs/architecture/CANONICAL_OPERATIONAL_RUNBOOKS.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_OPERATIONAL_RUNBOOKS.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T05:29:29.664Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-006",
       "title": "Create integration documentation",
       "description": "Remediation task DOC-006: Create integration documentation",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "INT-001",
         "INT-002",
@@ -6140,27 +6215,42 @@
       "validation_commands": [
         "Source/docs diff, mock contract references, secret scan, and owner review."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-006. Primary artifact docs/architecture/CANONICAL_PROVIDER_INTEGRATION_CONTRACTS.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_PROVIDER_INTEGRATION_CONTRACTS.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-07T08:05:04.525Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-007",
       "title": "Create local development guide",
       "description": "Remediation task DOC-007: Create local development guide",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OPS-002",
         "SEC-005"
@@ -6174,27 +6264,42 @@
       "validation_commands": [
         "Command/path checks, clean checkout read, and owner review."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-007. Primary artifact docs/architecture/CANONICAL_TESTING_AND_VALIDATION_STRATEGY.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_TESTING_AND_VALIDATION_STRATEGY.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T17:22:42.810Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-008",
       "title": "Create production startup guide",
       "description": "Remediation task DOC-008: Create production startup guide",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OPS-002",
         "OPS-003",
@@ -6209,27 +6314,42 @@
       "validation_commands": [
         "Dry-run/read-only checklist, path/link checks, and operator sign-off."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-008. Primary artifact docs/architecture/CANONICAL_SECURITY_ARCHITECTURE.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_SECURITY_ARCHITECTURE.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-06T17:22:42.810Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-009",
       "title": "Create backup and restore guide",
       "description": "Remediation task DOC-009: Create backup and restore guide",
       "severity": "CRITICAL",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "SAFE-007",
         "DATA-012"
@@ -6243,27 +6363,42 @@
       "validation_commands": [
         "Restore rehearsal reference, command review, and owner sign-off."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-009. Primary artifact docs/architecture/CANONICAL_DEPLOYMENT_TOPOLOGY.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_DEPLOYMENT_TOPOLOGY.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T05:29:29.664Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-010",
       "title": "Create migration and deprecation policy",
       "description": "Remediation task DOC-010: Create migration and deprecation policy",
       "severity": "HIGH",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "BE-010",
         "DATA-008",
@@ -6277,27 +6412,42 @@
       "validation_commands": [
         "Policy review, task dependency audit, and owner sign-off."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-010. Primary artifact docs/architecture/CANONICAL_CODE_OWNERSHIP_AND_ORGANIZATION.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/CANONICAL_CODE_OWNERSHIP_AND_ORGANIZATION.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-05T05:29:29.664Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "DOC-011",
       "title": "Create ADRs and separate Shopify theme context",
       "description": "Remediation task DOC-011: Create ADRs and separate Shopify theme context",
       "severity": "MEDIUM",
-      "status": "ready",
+      "status": "completed",
       "dependencies": [
         "OWN-001"
       ],
@@ -6310,20 +6460,35 @@
       "validation_commands": [
         "Path/link checks, decision review, and documentation audit."
       ],
-      "evidence": "",
-      "changed_files": [],
+      "evidence": [
+        "Completed task DOC-011. Primary artifact docs/architecture/README.md created and validated via tests/architectureDocumentation.test.js."
+      ],
+      "changed_files": [
+        "docs/architecture/README.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-03T07:40:37.703Z",
-      "started_timestamp": null,
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-07T08:44:09.373Z",
+      "started_timestamp": "2026-08-07T08:44:09.373Z",
+      "implemented_timestamp": "2026-08-07T08:44:09.373Z",
+      "validated_timestamp": "2026-08-07T08:44:09.373Z",
+      "completed_timestamp": "2026-08-07T08:44:09.373Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/architectureDocumentation.test.js"
+      ],
+      "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+      "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+      "completion_record_commit_sha": "HEAD_PLACEHOLDER",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "cf4ae5cbfb9101c785c08e25620519b47f9fad92",
+        "clean_validation_commit_sha": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "tested_commit": "f9d036ad6d11a4a370b504e1983ebd2028abd90f",
+        "timestamp": "2026-08-07T08:44:09.373Z",
+        "passed_tests": [
+          "tests/architectureDocumentation.test.js"
+        ]
+      }
     },
     {
       "id": "CLEAN-001",
@@ -6688,7 +6853,7 @@
       "title": "Resolve stale scripts and documentation",
       "description": "Remediation task CLEAN-008: Resolve stale scripts and documentation",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OPS-001",
         "DOC-001"
@@ -6705,7 +6870,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-07T08:44:12.317Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
@@ -6722,7 +6887,7 @@
       "title": "Review unused dependencies, orphan uploads/exports, and old migration helpers",
       "description": "Remediation task CLEAN-009: Review unused dependencies, orphan uploads/exports, and old migration helpers",
       "severity": "MEDIUM",
-      "status": "not_started",
+      "status": "ready",
       "dependencies": [
         "OWN-008",
         "DATA-011",
@@ -6740,7 +6905,7 @@
       "evidence": "",
       "changed_files": [],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "updated_timestamp": "2026-08-07T08:44:12.317Z",
       "started_timestamp": null,
       "implemented_timestamp": null,
       "validated_timestamp": null,
