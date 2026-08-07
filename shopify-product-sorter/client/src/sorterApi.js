@@ -50,6 +50,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ collectionId }),
     }),
+  syncAllCollections: () =>
+    request("/collections/sync-all", {
+      method: "POST",
+      body: JSON.stringify({}),
+    }),
   updateSettings: (collectionId, body) =>
     request("/collections/settings", {
       method: "PUT",

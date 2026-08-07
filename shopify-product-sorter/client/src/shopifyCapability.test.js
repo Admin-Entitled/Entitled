@@ -155,7 +155,10 @@ test("Sorter: collections are requested exactly once and only when Shopify is av
 });
 
 test("Sorter: write actions are guarded", () => {
-  assert.ok(sorterSource.includes("disabled={loading || !preview.newOrder.length}"), "Apply must be disabled without a generated order");
+  // Apply disabled conditions — multi-line attribute, check each guard individually
+  assert.ok(sorterSource.includes("!preview.newOrder.length"), "Apply must be disabled without a generated order");
+  assert.ok(sorterSource.includes("!preview.previewVersion"), "Apply must check previewVersion");
+  assert.ok(sorterSource.includes("previewStale"), "Apply must check for stale preview");
   assert.ok(sorterSource.includes("disabled={isSyncingAll || !collections.length}"), "Update All must be disabled without collections");
   assert.ok(sorterSource.includes("Preview only — no changes are written to Shopify until you Apply."));
   assert.ok(sorterSource.includes("button danger"));

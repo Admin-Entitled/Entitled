@@ -263,6 +263,7 @@ test("Shopify-dependent routes return 503 SHOPIFY_UNAVAILABLE with zero Shopify 
     { path: "/api/sku-images/search?sku=A1", method: "GET" },
     { path: "/api/sales-intelligence/summary", method: "GET" },
     { path: "/api/collections/sync", method: "POST", body: JSON.stringify({ collectionId: "collection-mock-1" }) },
+    { path: "/api/collections/sync-all", method: "POST", body: JSON.stringify({}) },
     { path: "/api/collections/apply", method: "POST", body: JSON.stringify({ collectionId: "collection-mock-1", orderIds: ["product-1"] }) },
     { path: "/api/collections/reorder-all-v2", method: "POST", body: JSON.stringify({}) },
     { path: "/api/collections/rollback", method: "POST", body: JSON.stringify({ collectionId: "collection-mock-1" }) },

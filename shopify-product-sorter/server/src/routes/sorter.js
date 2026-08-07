@@ -73,6 +73,11 @@ const syncCollectionSchema = {
   },
 };
 
+// Global sync has no required body fields
+const syncAllCollectionsSchema = {
+  body: {},
+};
+
 const collectionStateSchema = {
   query: {
     collectionId: { type: "string", required: true },
@@ -716,6 +721,98 @@ router.post("/collections/sync", shopifyCapabilityGuard, validateRequest(syncCol
     });
   } catch (error) {
     logError("Failed to sync collection", error, { collectionId: req.body.collectionId });
+    next(error);
+  }
+});
+
+/**
+ * POST /collections/sync-all
+ *
+ * Global synchronization: fetches ALL Shopify collections and synchronizes
+ * the product data required by Product Sorter for each one.
+ *
+ * Does NOT reorder, apply, or write anything to Shopify.
+ * selectedCollection is irrelevant to this operation.
+ *
+ * Returns:
+ *   { ok, totalCollections, synced, failed, results: [{ collectionId, collectionTitle, status, error? }] }
+ */
+router.post("/collections/sync-all", shopifyCapabilityGuard, async (req, res, next) => {
+  try {
+    const collections = await fetchCollections();
+    const totalCollections = collections.length;
+
+    // Collect all product IDs across all collections for a single sales-metrics fetch
+    const payloadById = new Map();
+    const fetchErrors = [];
+
+    for (const collection of collections) {
+      try {
+        const payload = await fetchCollectionProducts(collection.id);
+        payloadById.set(collection.id, payload);
+      } catch (err) {
+        fetchErrors.push({
+          collectionId: collection.id,
+          collectionTitle: collection.title,
+          status: "failed",
+          error: err.message,
+        });
+        logError("sync-all: failed to fetch collection products", err, { collectionId: collection.id });
+      }
+    }
+
+    // One bulk sales-metrics call for all successfully fetched product IDs
+    const allProductIds = [
+      ...new Set(
+        [...payloadById.values()].flatMap((payload) => payload.products.map((p) => p.id)),
+      ),
+    ];
+    const allSales = allProductIds.length ? await fetchSalesMetrics(allProductIds) : {};
+
+    const successResults = [];
+    const snapshotErrors = [];
+
+    for (const [collectionId, payload] of payloadById) {
+      try {
+        const snapshot = saveSnapshot(payload, allSales);
+        upsertCollectionSettings(collectionId, snapshot.collection.title, {});
+        successResults.push({
+          collectionId,
+          collectionTitle: snapshot.collection.title,
+          status: "synced",
+          productCount: snapshot.products.length,
+        });
+      } catch (err) {
+        snapshotErrors.push({
+          collectionId,
+          collectionTitle: payload.collection?.title ?? collectionId,
+          status: "failed",
+          error: err.message,
+        });
+        logError("sync-all: failed to save snapshot", err, { collectionId });
+      }
+    }
+
+    const allFailures = [...fetchErrors, ...snapshotErrors];
+    const synced = successResults.length;
+    const failed = allFailures.length;
+    const ok = failed === 0;
+
+    logInfo("sync-all completed", { totalCollections, synced, failed });
+
+    return res.json({
+      ok,
+      totalCollections,
+      synced,
+      failed,
+      results: [
+        ...successResults,
+        ...allFailures,
+      ],
+      syncedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    logError("sync-all: top-level failure", error);
     next(error);
   }
 });

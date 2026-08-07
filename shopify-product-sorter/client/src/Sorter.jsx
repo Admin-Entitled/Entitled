@@ -336,6 +336,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
   const [loading, setLoading] = useState(false);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
   const [reorderAllSummary, setReorderAllSummary] = useState(null);
+  // Global sync state: null = never synced, object = last sync result
+  const [globalSyncStatus, setGlobalSyncStatus] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [collectionsLoading, setCollectionsLoading] = useState(false);
   const [strategyOpen, setStrategyOpen] = useState(false);
   const [strategyMessage, setStrategyMessage] = useState("");
@@ -500,21 +503,54 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
     setSettings(newSettings);
   }, []);
 
+  /**
+   * Global sync handler: synchronizes ALL Shopify collections and their
+   * product data regardless of which collection is currently selected.
+   *
+   * After sync completes, if a collection was previously selected its snapshot
+   * is refreshed from the cache so the view stays current.
+   */
   const handleSync = useCallback(async () => {
-    if (!selectedCollectionId) return;
-    setLoading(true);
+    setIsSyncing(true);
     setError("");
     setMessage("");
 
     try {
-      const response = await api.syncCollection(selectedCollectionId);
+      const response = await api.syncAllCollections();
+      if (!mountedRef.current) return;
+
+      setGlobalSyncStatus(response);
+
+      // Also refresh the collections list so any new collections appear
+      await loadCollections();
+
+      // Refresh the selected collection's snapshot if one is selected
+      if (selectedCollectionId && mountedRef.current) {
+        try {
+          const stateResponse = await api.getCollectionSnapshot(selectedCollectionId);
+          if (mountedRef.current) {
+            setSnapshot(stateResponse.snapshot || null);
+            mergeSettingsFromResponse(stateResponse.settings);
+            setPreview(emptyPreview);
+            setPreviewStale(false);
+          }
+        } catch {
+          // snapshot refresh failure is non-fatal; the global sync succeeded
+        }
+      }
+
       if (mountedRef.current) {
-        setSnapshot(response.snapshot || null);
-        mergeSettingsFromResponse(response.settings);
-        // A fresh snapshot invalidates any previously generated preview.
-        setPreview(emptyPreview);
-        setPreviewStale(false);
-        setMessage("Synced successfully");
+        if (!response.ok) {
+          setError(
+            `${response.failed} collection${response.failed === 1 ? "" : "s"} failed to sync. ` +
+            response.results
+              .filter((r) => r.status === "failed")
+              .map((r) => r.collectionTitle || r.collectionId)
+              .join(", "),
+          );
+        } else {
+          setMessage(`${response.synced} collection${response.synced === 1 ? "" : "s"} synced`);
+        }
       }
     } catch (err) {
       if (mountedRef.current) {
@@ -522,10 +558,10 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
       }
     } finally {
       if (mountedRef.current) {
-        setLoading(false);
+        setIsSyncing(false);
       }
     }
-  }, [selectedCollectionId]);
+  }, [selectedCollectionId, loadCollections]);
 
   const handleSaveStrategy = useCallback(async () => {
     if (!selectedCollectionId) return;
@@ -864,8 +900,8 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
             <h2>Manual collection control with daily smart rotation</h2>
           </div>
           <div className="action-row">
-            <button className="button ghost" onClick={handleSync} disabled={loading}>
-              Sync Live Data
+            <button className="button ghost" onClick={handleSync} disabled={isSyncing}>
+              {isSyncing ? `Syncing…` : "Sync Live Data"}
             </button>
             <button className="button accent" onClick={handleGenerate} disabled={loading || !snapshot}>
               Generate Today&apos;s Order
@@ -963,8 +999,18 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
 
         <div className="status-row">
           <span className="status-chip state-ok">Shopify Connected</span>
-          <span className="status-chip">{snapshot?.collection?.sortOrder || "Not synced"}</span>
-          {snapshot?.syncedAt ? <span className="muted">Last sync: {formatDate(snapshot.syncedAt)}</span> : null}
+          <span className="status-chip">
+            {isSyncing
+              ? "SYNCING…"
+              : globalSyncStatus
+                ? globalSyncStatus.ok
+                  ? `${globalSyncStatus.synced} COLLECTION${globalSyncStatus.synced === 1 ? "" : "S"} SYNCED`
+                  : `${globalSyncStatus.synced} / ${globalSyncStatus.totalCollections} SYNCED — ${globalSyncStatus.failed} FAILED`
+                : "NOT SYNCED"}
+          </span>
+          {globalSyncStatus?.syncedAt && !isSyncing ? (
+            <span className="muted">Synced: {formatDate(globalSyncStatus.syncedAt)}</span>
+          ) : null}
           {backup?.createdAt ? <span className="muted">Backup: {formatDate(backup.createdAt)}</span> : null}
           {collectionsLoading ? <span className="muted">Loading collections…</span> : null}
           {message ? <span className="success-text" role="status">{message}</span> : null}
@@ -1071,7 +1117,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
       <section className="table-wrapper panel">
         {!snapshot ? (
           <div className="empty-state">
-            Select a collection and sync live data to load its products.
+            {globalSyncStatus
+              ? "Select a collection to view its products."
+              : "Sync live Shopify data, then select a collection to view its products."}
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="empty-state">No products match the current filters.</div>
