@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-07T08:05:11.716Z` |
+| Generated timestamp | `2026-08-07T08:18:29.864Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `43b761a` |
+| Local commit | `e29b4df` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -1762,7 +1762,7 @@ Mocked integration, route, Shopify contract, redaction, and existing-app regress
 **Severity:** HIGH
 **Status:** COMPLETED
 **Dependencies:** INT-002, OWN-002, OWN-003, OWN-004, OWN-005
-**Last updated:** 2026-08-07T08:05:01.717Z
+**Last updated:** 2026-08-07T08:16:26.406Z
 
 #### Description
 
@@ -1782,7 +1782,7 @@ Mocked integration, service unit, route, and regression tests.
 
 #### Completion evidence
 
-Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis, Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005., --sha 605678c1eaea3f117312cf144bbc8da4b21332a7 --changed-files  --notes Validated existing Shopify transport boundary separation; passed integration contracts test suite., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Validated generic Shopify transport separation from app-owned business logic; 29/29 offline integration contract tests passed.
+Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis, Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005., --sha 605678c1eaea3f117312cf144bbc8da4b21332a7 --changed-files  --notes Validated existing Shopify transport boundary separation; passed integration contracts test suite., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Validated generic Shopify transport separation from app-owned business logic; 29/29 offline integration contract tests passed., --help
 
 ---
 
@@ -3931,6 +3931,7 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-07T08:16:26.433Z | INT-003 | completed | completed | shivam | --help | `52c8bafa` |
 | 2026-08-07T08:05:11.716Z | FINAL-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d6442cd2` |
 | 2026-08-07T08:05:11.666Z | INT-010 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection. | `8962eef8` |
 | 2026-08-07T08:05:11.549Z | INT-010 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/config/env.js,server/src/services/shopifyService.js,server/src/services/orderMappingStatus.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js | `853b33b2` |
@@ -3940,4 +3941,3 @@ Not completed.
 | 2026-08-07T08:05:09.089Z | INT-009 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js | `08d15845` |
 | 2026-08-07T08:05:08.949Z | INT-009 | in_progress | implemented | shivam | --sha 8a8fb79e5981cf0f68bdb5d6f1e9faa6048ed204 --changed-files  --notes Legacy clients already removed in prior remediation batches; verified zero duplicate callers remaining. | `aec3389c` |
 | 2026-08-07T08:05:08.829Z | INT-009 | validation_pending | in_progress | shivam | Transition to in_progress | `460ac2d1` |
-| 2026-08-07T08:05:06.902Z | INT-008 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified network-free deterministic synthetic fixtures for Shopify GraphQL and Shiprocket REST APIs. Zero customer PII or real credentials. | `6767d03c` |

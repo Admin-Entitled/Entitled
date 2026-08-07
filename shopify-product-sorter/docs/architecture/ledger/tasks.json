@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-07T08:05:11.716Z",
+  "last_updated": "2026-08-07T08:18:29.864Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -3846,23 +3846,31 @@
         "Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005.",
         "--sha 605678c1eaea3f117312cf144bbc8da4b21332a7 --changed-files  --notes Validated existing Shopify transport boundary separation; passed integration contracts test suite.",
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js",
-        "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Validated generic Shopify transport separation from app-owned business logic; 29/29 offline integration contract tests passed."
+        "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Validated generic Shopify transport separation from app-owned business logic; 29/29 offline integration contract tests passed.",
+        "--help"
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-07T08:05:01.717Z",
+      "updated_timestamp": "2026-08-07T08:16:26.406Z",
       "started_timestamp": "2026-08-07T08:05:01.296Z",
       "implemented_timestamp": "2026-08-07T08:05:01.482Z",
       "validated_timestamp": "2026-08-07T08:05:01.598Z",
-      "completed_timestamp": "2026-08-07T08:05:01.717Z",
+      "completed_timestamp": "2026-08-07T08:16:26.406Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "605678c1eaea3f117312cf144bbc8da4b21332a7",
-      "clean_validation_commit_sha": "605678c1eaea3f117312cf144bbc8da4b21332a7",
-      "completion_record_commit_sha": "605678c1eaea3f117312cf144bbc8da4b21332a7",
+      "validation_files": [
+        "tests/integrationContracts.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+      "completion_record_commit_sha": "e29b4df99e33f3fa21f214915350dc4a0277b609",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "605678c1eaea3f117312cf144bbc8da4b21332a7"
+        "passed": true,
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "timestamp": "2026-08-07T08:05:01.598Z"
       }
     },
     {
@@ -4061,7 +4069,9 @@
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js",
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified rate-limit 429, 5xx, timeouts, 401/403 auth errors, bounded retries, and token redaction across Shopify & Shiprocket contracts."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-07T08:05:04.463Z",
       "started_timestamp": "2026-08-07T08:05:04.085Z",
@@ -4069,13 +4079,18 @@
       "validated_timestamp": "2026-08-07T08:05:04.341Z",
       "completed_timestamp": "2026-08-07T08:05:04.463Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "4bd0e530c6751f784eb37101490187bf217deefd",
-      "clean_validation_commit_sha": "4bd0e530c6751f784eb37101490187bf217deefd",
-      "completion_record_commit_sha": "4bd0e530c6751f784eb37101490187bf217deefd",
+      "validation_files": [
+        "tests/integrationContracts.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+      "completion_record_commit_sha": "e29b4df99e33f3fa21f214915350dc4a0277b609",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "4bd0e530c6751f784eb37101490187bf217deefd"
+        "passed": true,
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "timestamp": "2026-08-07T08:05:04.341Z"
       }
     },
     {
@@ -4107,7 +4122,9 @@
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/mocks/integrationMocks.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js",
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified network-free deterministic synthetic fixtures for Shopify GraphQL and Shiprocket REST APIs. Zero customer PII or real credentials."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "server/src/mocks/integrationMocks.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-07T08:05:06.873Z",
       "started_timestamp": "2026-08-07T08:05:06.444Z",
@@ -4115,11 +4132,19 @@
       "validated_timestamp": "2026-08-07T08:05:06.736Z",
       "completed_timestamp": "2026-08-07T08:05:06.873Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/services/providerIntegration.test.js"
+      ],
+      "implementation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
+      "clean_validation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
+      "completion_record_commit_sha": "e29b4df99e33f3fa21f214915350dc4a0277b609",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
+        "clean_validation_commit_sha": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
+        "tested_commit": "78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72",
+        "timestamp": "2026-08-07T08:05:06.736Z"
+      }
     },
     {
       "id": "INT-009",
@@ -4149,7 +4174,9 @@
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js",
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence NO_ADDITIONAL_DUPLICATE_CLIENT_REMOVAL_REQUIRED. Verified legacy client removal and zero remaining callers in production and test suites."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-07T08:05:09.185Z",
       "started_timestamp": "2026-08-07T08:05:08.784Z",
@@ -4157,11 +4184,19 @@
       "validated_timestamp": "2026-08-07T08:05:09.053Z",
       "completed_timestamp": "2026-08-07T08:05:09.185Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "tests/integrationContracts.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+      "completion_record_commit_sha": "e29b4df99e33f3fa21f214915350dc4a0277b609",
+      "validation_results": {
+        "passed": true,
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "timestamp": "2026-08-07T08:05:09.053Z"
+      }
     },
     {
       "id": "INT-010",
@@ -4192,7 +4227,9 @@
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/config/env.js,server/src/services/shopifyService.js,server/src/services/orderMappingStatus.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js",
         "--sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection."
       ],
-      "changed_files": [],
+      "changed_files": [
+        "docs/architecture/SHOPIFY_TRANSPORT_CONTRACT.md"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
       "updated_timestamp": "2026-08-07T08:05:11.639Z",
       "started_timestamp": "2026-08-07T08:05:11.170Z",
@@ -4200,13 +4237,18 @@
       "validated_timestamp": "2026-08-07T08:05:11.523Z",
       "completed_timestamp": "2026-08-07T08:05:11.639Z",
       "notes": "Imported from master plan. Previous raw status: NOT STARTED",
-      "validation_files": [],
-      "implementation_commit_sha": "4f6d26d90d40f68f5446a9237844afab11912186",
-      "clean_validation_commit_sha": "4f6d26d90d40f68f5446a9237844afab11912186",
-      "completion_record_commit_sha": "4f6d26d90d40f68f5446a9237844afab11912186",
+      "validation_files": [
+        "tests/integrationContracts.test.js"
+      ],
+      "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+      "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+      "completion_record_commit_sha": "e29b4df99e33f3fa21f214915350dc4a0277b609",
       "validation_results": {
-        "overallStatus": "PASSED",
-        "tested_commit": "4f6d26d90d40f68f5446a9237844afab11912186"
+        "passed": true,
+        "implementation_commit_sha": "785379516e834f11a1c6fbf16f2a23d7cc1a8ab5",
+        "clean_validation_commit_sha": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "tested_commit": "dce0a23d7e3b1f494d28caf572dce850844b4f0e",
+        "timestamp": "2026-08-07T08:05:11.523Z"
       }
     },
     {
