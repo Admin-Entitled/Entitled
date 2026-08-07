@@ -13,7 +13,7 @@
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-07T08:44:25.059Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `fd684f6` |
+| Local commit | `57f5e9d` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -3931,8 +3931,6 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-07T08:44:12.338Z | CLEAN-009 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `3c3bf0dc` |
-| 2026-08-07T08:44:12.338Z | CLEAN-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `2c857533` |
 | 2026-08-07T08:16:26.433Z | INT-003 | completed | completed | shivam | --help | `52c8bafa` |
 | 2026-08-07T08:05:11.716Z | FINAL-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d6442cd2` |
 | 2026-08-07T08:05:11.666Z | INT-010 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection. | `8962eef8` |
@@ -3941,3 +3939,5 @@ Not completed.
 | 2026-08-07T08:05:11.201Z | INT-010 | validation_pending | in_progress | shivam | Transition to in_progress | `8a0a9734` |
 | 2026-08-07T08:05:09.211Z | INT-009 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence NO_ADDITIONAL_DUPLICATE_CLIENT_REMOVAL_REQUIRED. Verified legacy client removal and zero remaining callers in production and test suites. | `40bf43c9` |
 | 2026-08-07T08:05:09.089Z | INT-009 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js | `08d15845` |
+| 2026-08-07T08:05:08.949Z | INT-009 | in_progress | implemented | shivam | --sha 8a8fb79e5981cf0f68bdb5d6f1e9faa6048ed204 --changed-files  --notes Legacy clients already removed in prior remediation batches; verified zero duplicate callers remaining. | `aec3389c` |
+| 2026-08-07T08:05:08.829Z | INT-009 | validation_pending | in_progress | shivam | Transition to in_progress | `460ac2d1` |
