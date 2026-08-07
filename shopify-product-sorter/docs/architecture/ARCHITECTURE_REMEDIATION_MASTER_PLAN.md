@@ -13,7 +13,7 @@
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-07T08:44:25.059Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `59e94f3` |
+| Local commit | `eee6ed1` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-07T08:16:26.433Z | INT-003 | completed | completed | shivam | --help | `52c8bafa` |
-| 2026-08-07T08:05:11.716Z | FINAL-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d6442cd2` |
-| 2026-08-07T08:05:11.666Z | INT-010 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection. | `8962eef8` |
-| 2026-08-07T08:05:11.549Z | INT-010 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/config/env.js,server/src/services/shopifyService.js,server/src/services/orderMappingStatus.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js | `853b33b2` |
-| 2026-08-07T08:05:11.328Z | INT-010 | in_progress | implemented | shivam | --sha 4f6d26d90d40f68f5446a9237844afab11912186 --changed-files  --notes Provider contract and API-version compatibility verified. | `5cab1da7` |
-| 2026-08-07T08:05:11.201Z | INT-010 | validation_pending | in_progress | shivam | Transition to in_progress | `8a0a9734` |
-| 2026-08-07T08:05:09.211Z | INT-009 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence NO_ADDITIONAL_DUPLICATE_CLIENT_REMOVAL_REQUIRED. Verified legacy client removal and zero remaining callers in production and test suites. | `40bf43c9` |
-| 2026-08-07T08:05:09.089Z | INT-009 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js | `08d15845` |
-| 2026-08-07T08:05:08.949Z | INT-009 | in_progress | implemented | shivam | --sha 8a8fb79e5981cf0f68bdb5d6f1e9faa6048ed204 --changed-files  --notes Legacy clients already removed in prior remediation batches; verified zero duplicate callers remaining. | `aec3389c` |
-| 2026-08-07T08:05:08.829Z | INT-009 | validation_pending | in_progress | shivam | Transition to in_progress | `460ac2d1` |
+| 2026-08-07T08:47:02.738Z | DOC-011 | in_progress | completed | shivam | Completed task DOC-011. Primary artifact created and validated. | `4caa3298` |
+| 2026-08-07T08:47:02.738Z | DOC-011 | not_started | in_progress | shivam | Started task DOC-011 for documentation closure. | `e0fb89c3` |
+| 2026-08-07T08:47:02.738Z | DOC-010 | in_progress | completed | shivam | Completed task DOC-010. Primary artifact created and validated. | `6d59247b` |
+| 2026-08-07T08:47:02.738Z | DOC-010 | not_started | in_progress | shivam | Started task DOC-010 for documentation closure. | `df0cfc2d` |
+| 2026-08-07T08:47:02.738Z | DOC-009 | in_progress | completed | shivam | Completed task DOC-009. Primary artifact created and validated. | `2718af04` |
+| 2026-08-07T08:47:02.738Z | DOC-009 | not_started | in_progress | shivam | Started task DOC-009 for documentation closure. | `f6ec311e` |
+| 2026-08-07T08:47:02.738Z | DOC-008 | in_progress | completed | shivam | Completed task DOC-008. Primary artifact created and validated. | `2a0be8a3` |
+| 2026-08-07T08:47:02.738Z | DOC-008 | not_started | in_progress | shivam | Started task DOC-008 for documentation closure. | `b93df9dc` |
+| 2026-08-07T08:47:02.738Z | DOC-007 | in_progress | completed | shivam | Completed task DOC-007. Primary artifact created and validated. | `905fa220` |
+| 2026-08-07T08:47:02.738Z | DOC-007 | not_started | in_progress | shivam | Started task DOC-007 for documentation closure. | `ecf43062` |
