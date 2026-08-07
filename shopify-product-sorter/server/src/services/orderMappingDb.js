@@ -3,10 +3,14 @@ import path from "node:path";
 import { Pool } from "pg";
 import { env } from "../config/env.js";
 
-let pool;
+let pool = null;
+
+export function isOrderMappingAvailable() {
+  return Boolean(env.databaseUrl);
+}
 
 function createPool() {
-  if (!env.databaseUrl) {
+  if (!isOrderMappingAvailable()) {
     throw new Error("Missing DATABASE_URL for Order Mapping");
   }
 

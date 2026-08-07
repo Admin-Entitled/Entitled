@@ -1,6 +1,44 @@
 const API_BASE = "/api";
 
-async function request(path, options = {}) {
+/**
+ * Typed API error compatible with existing `error.message` usage.
+ *
+ * Carries the structured metadata returned by the backend without exposing
+ * raw stacks or provider payloads:
+ * - HTTP status / statusText
+ * - backend error code (e.g. SHOPIFY_UNAVAILABLE, VALIDATION_ERROR)
+ * - error category (e.g. configuration_missing)
+ * - safe message
+ * - missingVariables (names only, never values)
+ * - correlationId
+ * - safe details when present
+ */
+export class ApiError extends Error {
+  constructor(message, { status, statusText, code, category, missingVariables, correlationId, details } = {}) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.statusText = statusText;
+    this.code = code;
+    this.category = category;
+    this.missingVariables = Array.isArray(missingVariables) ? missingVariables : [];
+    this.correlationId = correlationId;
+    this.details = details;
+  }
+}
+
+function parsePayload(response, text) {
+  if (!text) {
+    return {};
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    return {};
+  }
+}
+
+export async function request(path, options = {}) {
   const isFormData = options.body instanceof FormData;
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
@@ -10,134 +48,24 @@ async function request(path, options = {}) {
     },
   });
 
-  const payload = await response.json().catch(() => ({}));
+  const text = await response.text().catch(() => "");
+  const payload = parsePayload(response, text);
 
   if (!response.ok) {
-    throw new Error(payload.detail || payload.message || payload.error || "Request failed");
+    // Prefer the stable server `message` so known contract failures (e.g.
+    // GENERATED_ORDER_STALE) surface their operator guidance instead of the
+    // serialized counts-only `detail` payload.
+    const message = payload.message || payload.detail || payload.error || response.statusText || "Request failed";
+    throw new ApiError(message, {
+      status: response.status,
+      statusText: response.statusText,
+      code: payload.code || (response.status === 503 ? "SERVICE_UNAVAILABLE" : "REQUEST_FAILED"),
+      category: payload.category ?? null,
+      missingVariables: payload.missingVariables || [],
+      correlationId: payload.correlationId,
+      details: payload.details,
+    });
   }
 
   return payload;
 }
-
-export const api = {
-  getActualSalesIntelligence: (days = 30) =>
-    request(`/actual-sales-intelligence?days=${encodeURIComponent(days)}`),
-  getSalesIntelligenceSummary: (days = 30, refresh = false) =>
-    request(
-      `/sales-intelligence/summary?days=${encodeURIComponent(days)}${refresh ? "&refresh=1" : ""}`,
-    ),
-  refreshSalesIntelligenceShopify: (days = 30) =>
-    request(`/sales-intelligence/refresh-shopify?days=${encodeURIComponent(days)}`, {
-      method: "POST",
-      body: JSON.stringify({}),
-    }),
-  refreshSalesIntelligenceShiprocket: (days = 30) =>
-    request(`/sales-intelligence/refresh-shiprocket?days=${encodeURIComponent(days)}`, {
-      method: "POST",
-      body: JSON.stringify({}),
-    }),
-  reconcileSalesIntelligence: (days = 30, refresh = false) =>
-    request(`/sales-intelligence/reconcile?days=${encodeURIComponent(days)}`, {
-      method: "POST",
-      body: JSON.stringify({ refresh }),
-    }),
-  salesIntelligenceExportUrl: (type, days = 30) =>
-    `/api/sales-intelligence/export?type=${encodeURIComponent(type)}&days=${encodeURIComponent(days)}`,
-  getShopifyDebug: () => request("/debug/shopify"),
-  getCollections: () => request("/collections"),
-  getProducts: (collectionId) =>
-    request(`/collection-products?collectionId=${encodeURIComponent(collectionId)}`),
-  getState: (collectionId) =>
-    request(`/collections/state?collectionId=${encodeURIComponent(collectionId)}`),
-  getActionLogs: ({ afterId = 0, limit = 30 } = {}) =>
-    request(`/collections/logs/actions?afterId=${afterId}&limit=${limit}`),
-  getNetworkLogs: ({ afterId = 0, limit = 30 } = {}) =>
-    request(`/collections/logs/network?afterId=${afterId}&limit=${limit}`),
-  syncCollection: (collectionId) =>
-    request("/collections/sync", {
-      method: "POST",
-      body: JSON.stringify({ collectionId }),
-    }),
-  updateSettings: (collectionId, body) =>
-    request("/collections/settings", {
-      method: "PUT",
-      body: JSON.stringify({ collectionId, ...body }),
-    }),
-  updateProduct: (collectionId, productId, body) =>
-    request("/collections/products/preference", {
-      method: "PUT",
-      body: JSON.stringify({ collectionId, productId, ...body }),
-    }),
-  generateOrder: (collectionId, settings) =>
-    request("/collections/generate", {
-      method: "POST",
-      body: JSON.stringify({ collectionId, settings }),
-    }),
-  applyOrder: (collectionId, orderIds) =>
-    request("/collections/apply", {
-      method: "POST",
-      body: JSON.stringify({ collectionId, orderIds }),
-    }),
-  reorderAllCollections: () =>
-    request("/collections/reorder-all-v2", {
-      method: "POST",
-      body: JSON.stringify({}),
-    }),
-  rollback: (collectionId) =>
-    request("/collections/rollback", {
-      method: "POST",
-      body: JSON.stringify({ collectionId }),
-    }),
-  searchSkuImages: (sku) =>
-    request(`/sku-images/search?sku=${encodeURIComponent(sku)}`),
-  loadAllSkuImages: () =>
-    request("/sku-images/load-all", {
-      method: "POST",
-      body: JSON.stringify({}),
-    }),
-  addSkuImageUpload: (formData) =>
-    request("/sku-images/add-upload", {
-      method: "POST",
-      body: formData,
-    }),
-  addSkuImageUrl: (body) =>
-    request("/sku-images/add-url", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  addSkuImage: (body) =>
-    request("/sku-images/add", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  deleteSkuImage: (body) =>
-    request("/sku-images/delete", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  reorderSkuImages: (body) =>
-    request("/sku-images/reorder", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  bulkAddSkuImages: (body) =>
-    request("/sku-images/bulk-add", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  bulkAddSkuImagesUpload: (formData) =>
-    request("/sku-images/bulk-add-upload", {
-      method: "POST",
-      body: formData,
-    }),
-  bulkDeletePreview: (body) =>
-    request("/sku-images/bulk-delete-preview", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-  bulkDeleteConfirm: (body) =>
-    request("/sku-images/bulk-delete-confirm", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-};

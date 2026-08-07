@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
- "scripts": {
- "dev": "node --watch src/index.js",
- "start": "node src/index.js",
- "migrate:order-mapping": "node src/scripts/migrateOrderMapping.js",
- "migrate:order-mapping-legacy": "node src/scripts/migrateOrderMappingLegacy.js",
- "test:order-mapping": "node --test src/services/deliveryRepository.test.js src/services/orderMapping.test.js ../client/src/api.test.js"
- },
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "migrate:order-mapping": "node src/scripts/migrateOrderMapping.js",
+    "migrate:order-mapping-legacy": "node src/scripts/migrateOrderMappingLegacy.js",
+    "test:order-mapping": "node --test src/services/orderMapping.test.js ../client/src/api.test.js",
+    "delivery-migrator": "node src/scripts/deliveryMigrator.js",
+    "test:delivery-migrator": "node --test src/services/deliveryMigrator.test.js"
+  },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "better-sqlite3": "^11.8.1",

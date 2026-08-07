@@ -57,6 +57,49 @@ npm run dev
 npm run verify
 ```
 
+### Local Shopify Setup
+
+Product Sorter runs without Shopify configured: the app starts normally, the
+backend stays healthy, and the UI shows a **Connect Shopify** setup state
+instead of an empty dashboard. No Shopify requests are made until Shopify is
+configured.
+
+To connect a local store:
+
+1. Copy the template and edit it:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Choose **one** authentication mode and fill it in.
+
+   **Option 1 — Static Admin API token** (simplest):
+
+   ```
+   SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+   SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_...
+   ```
+
+   **Option 2 — Client credentials**:
+
+   ```
+   SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+   SHOPIFY_CLIENT_ID=...
+   SHOPIFY_CLIENT_SECRET=...
+   ```
+
+   `SHOPIFY_API_VERSION` is optional and defaults to the app's supported
+   version.
+
+3. Restart the dev servers, then press **Retry connection** in the Product
+   Sorter header. The app loads collections only when Shopify is available;
+   it never retries automatically.
+
+> Never commit `.env`. It is git-ignored; only `.env.example` is tracked.
+> Secret values are never sent to the browser or written to logs.
+
+
 ## Shopify Admin API Scopes Needed
 
 - `read_products`

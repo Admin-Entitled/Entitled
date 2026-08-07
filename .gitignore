@@ -12,3 +12,11 @@ important-credentials.txt
 **/node_modules/
 **/__pycache__/
 **/*.pyc
+
+# External tool caches and artifacts
+.tokensave/
+graphify-out/
+**/graphify-out/
+**/test-results/
+**/playwright-report/
+**/coverage/

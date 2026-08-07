@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { orderMappingError } from "./orderMappingError.js";
 import { normalizeOrderMappingIdentifier } from "./orderMappingMatcher.js";
 import { normalizeOrderMappingStatus } from "./orderMappingStatus.js";
 
@@ -47,7 +48,10 @@ function parseCsv(text) {
   }
 
   if (quoted) {
-    throw new Error("Malformed CSV: unmatched quote");
+    throw orderMappingError(
+      "ORDER_MAPPING_CSV_MALFORMED",
+      "CSV is malformed",
+    );
   }
 
   if (cell || rows.at(-1).length) {
@@ -84,16 +88,20 @@ export function orderMappingCsvColumns(text) {
 
 export function parseOrderMappingCsv(text, mapping = {}) {
   if (!text.trim()) {
-    throw new Error("CSV is empty");
+    throw orderMappingError("ORDER_MAPPING_CSV_EMPTY", "CSV is empty");
   }
 
   const [headers, ...rows] = parseCsv(text);
   const detectedMap = detectMap(headers, mapping);
 
   if (detectedMap.status < 0 || (detectedMap.shopifyOrderId < 0 && detectedMap.orderNumber < 0 && detectedMap.awb < 0)) {
-    throw new Error("CSV is missing required Order Mapping columns");
+    throw orderMappingError(
+      "ORDER_MAPPING_CSV_REQUIRED_COLUMNS",
+      "CSV is missing required Order Mapping columns",
+    );
   }
 
+  const seenRowHashes = new Set();
   const normalizedRows = rows.map((values, index) => {
     const row = {
       rowNumber: index + 2,
@@ -107,10 +115,22 @@ export function parseOrderMappingCsv(text, mapping = {}) {
       remarks: detectedMap.remarks < 0 ? "" : values[detectedMap.remarks] || "",
     };
 
-    row.normalizedStatus = normalizeOrderMappingStatus(
-      row.rawStatus,
-      row.rawStatus ? "SHIPMENT_EXCEPTION" : "UNKNOWN",
-    );
+    if (!row.rawStatus) {
+      throw orderMappingError(
+        "ORDER_MAPPING_CSV_MISSING_FIELD",
+        "CSV row is missing a required field",
+        { details: { rowNumber: row.rowNumber, field: "status" } },
+      );
+    }
+
+    row.normalizedStatus = normalizeOrderMappingStatus(row.rawStatus, null);
+    if (!row.normalizedStatus) {
+      throw orderMappingError(
+        "ORDER_MAPPING_INVALID_STATUS",
+        "CSV row contains an invalid status",
+        { details: { rowNumber: row.rowNumber } },
+      );
+    }
     row.rowHash = crypto
       .createHash("sha256")
       .update(
@@ -124,6 +144,15 @@ export function parseOrderMappingCsv(text, mapping = {}) {
         ]),
       )
       .digest("hex");
+
+    if (seenRowHashes.has(row.rowHash)) {
+      throw orderMappingError(
+        "ORDER_MAPPING_CSV_DUPLICATE_ROW",
+        "CSV contains a duplicate or conflicting row",
+        { statusCode: 409, details: { rowNumber: row.rowNumber } },
+      );
+    }
+    seenRowHashes.add(row.rowHash);
 
     return row;
   });

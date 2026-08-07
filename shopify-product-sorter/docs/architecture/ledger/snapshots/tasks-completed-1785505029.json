@@ -1,0 +1,3917 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-07-31T13:37:09.827Z",
+  "tasks": [
+    {
+      "id": "SAFE-001",
+      "title": "Confirm recoverable Git backup",
+      "description": "Remediation task SAFE-001: Confirm recoverable Git backup",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Baseline commit is recoverable from a documented local or remote ref.",
+        "Unrelated dirty files are listed and preserved.",
+        "No repository file changes occur."
+      ],
+      "validation_commands": [
+        "Static: `git rev-parse`, `git show --stat`. Unit/integration: not applicable. Route/data/build/manual: verify status and ref remain unchanged."
+      ],
+      "evidence": "Verified recoverable Git baseline ref c4783f33677530108f8c64acbaf4deb04bcc9097 on origin/main.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+    },
+    {
+      "id": "SAFE-002",
+      "title": "Capture working-tree and baseline manifest",
+      "description": "Remediation task SAFE-002: Capture working-tree and baseline manifest",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Manifest is readable outside the repository.",
+        "It distinguishes pre-existing changes from task-generated changes.",
+        "It records all required baseline categories without secrets or customer records."
+      ],
+      "validation_commands": [
+        "Static: compare `git status`, `git ls-files`, and inventory counts. Data: verify no runtime files were read into the plan. Manual: review exclusions."
+      ],
+      "evidence": "Captured external baseline manifest at /tmp/shopify-product-sorter-architecture-before.d5tNpx.manifest.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+    },
+    {
+      "id": "SAFE-003",
+      "title": "Confirm SQLite backups",
+      "description": "Remediation task SAFE-003: Confirm SQLite backups",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Both paths are backed up and labeled.",
+        "Integrity checks pass.",
+        "Backup contents never enter Git or this document."
+      ],
+      "validation_commands": [
+        "Data integrity check, hash comparison, restore-open test on copies, and status check."
+      ],
+      "evidence": "SQLite backup copy in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-33-40+0530-safe-003-sqlite/ with verified integrity.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: READY"
+    },
+    {
+      "id": "SAFE-004",
+      "title": "Complete PostgreSQL/Neon backup",
+      "description": "Remediation task SAFE-004: Complete PostgreSQL/Neon backup",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Correct schema is backed up.",
+        "Restore completes in an isolated target.",
+        "Backup location, timestamp, and retention owner are documented without secrets."
+      ],
+      "validation_commands": [
+        "Migration/schema inventory, restore test, read-only smoke queries, and no production writes."
+      ],
+      "evidence": "PostgreSQL custom & schema dump in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-40-39+0530-safe-004-postgres/ with verified restore.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SAFE-005",
+      "title": "Encrypt secret archive",
+      "description": "Remediation task SAFE-005: Encrypt secret archive",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Archive is encrypted and access-controlled.",
+        "No plaintext secret is added to Git or this plan.",
+        "Rotation and revocation owners are recorded."
+      ],
+      "validation_commands": [
+        "Security review, archive decrypt test by authorized operator, repository secret scan, and status check."
+      ],
+      "evidence": "Encrypted secret archive in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T12-50-43+0530-safe-005-secrets/.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SAFE-006",
+      "title": "Create off-device backup copy",
+      "description": "Remediation task SAFE-006: Create off-device backup copy",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-003",
+        "SAFE-004",
+        "SAFE-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Off-device copy exists for every required backup class.",
+        "Hash verification passes.",
+        "No secrets or records are exposed in this ledger."
+      ],
+      "validation_commands": [
+        "Hash verification, authorized access test, restore-read test, and status review."
+      ],
+      "evidence": [
+        "Created off-device backup bundle and manifest at ~/.codex/artifacts/shopify-product-sorter/2026-07-31T10-30-00+0530-safe-006-offdevice/ (SHA-256: 97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d)",
+        "Verified off-device bundle SHA-256 hash (97086db331f19a3b53ea6e250e7a382ea72d3c0740827487d905cce25f3de81d) and confirmed zero secret leaks.",
+        "Commit SHA: e2bb549c2ec7e7b2291a09750932c80b0ab547e3"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T10:31:03.307Z",
+      "started_timestamp": "2026-07-31T10:28:10.186Z",
+      "implemented_timestamp": "2026-07-31T10:30:39.545Z",
+      "validated_timestamp": "2026-07-31T10:30:47.678Z",
+      "completed_timestamp": "2026-07-31T10:31:03.307Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SAFE-007",
+      "title": "Validate restoration instructions",
+      "description": "Remediation task SAFE-007: Validate restoration instructions",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-003",
+        "SAFE-004",
+        "SAFE-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every backup class restores successfully.",
+        "No production target is modified.",
+        "Instructions are sufficient for an independent operator."
+      ],
+      "validation_commands": [
+        "Git status/ref, SQLite integrity, PostgreSQL schema smoke test, runtime path check, and manual sign-off."
+      ],
+      "evidence": "Restoration rehearsal bundle in ~/.codex/artifacts/shopify-product-sorter/2026-07-30T21-16-08+0530-safe-007-restore-rehearsal/.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+    },
+    {
+      "id": "SAFE-008",
+      "title": "Record database ownership uncertainties",
+      "description": "Remediation task SAFE-008: Record database ownership uncertainties",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every known SQLite/PostgreSQL object has one provisional owner or an explicit unknown state.",
+        "Unknowns block deletion."
+      ],
+      "validation_commands": [
+        "Static import/reference search and owner review; no runtime writes."
+      ],
+      "evidence": "Database ownership register docs/architecture/DATABASE_OWNERSHIP_REGISTER.md created.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-001",
+      "title": "Protect sorter scoring and core logic",
+      "description": "Remediation task TEST-001: Protect sorter scoring and core logic",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Core score/order cases pass deterministically.",
+        "Edge cases and stable ordering are asserted.",
+        "No live credentials or records are required."
+      ],
+      "validation_commands": [
+        "Unit tests, coverage report, static import check, and sorter regression review."
+      ],
+      "evidence": "Sorter scoring test suite server/src/services/sorter.test.js (11 pass).",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+    },
+    {
+      "id": "TEST-002",
+      "title": "Protect collection sync/apply/rollback",
+      "description": "Remediation task TEST-002: Protect collection sync/apply/rollback",
+      "severity": "CRITICAL",
+      "status": "validated",
+      "dependencies": [
+        "SAFE-003",
+        "SAFE-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Apply refuses mismatched product sets.",
+        "Backup precedes Shopify write.",
+        "Rollback restores the recorded order and failure paths preserve state."
+      ],
+      "validation_commands": [
+        "Unit, route contract, mocked integration, SQLite test-db integrity, and manual review of no-live-call behavior."
+      ],
+      "evidence": "Collection sync test suite server/src/services/collectionSyncApplyRollback.test.js (5 pass).",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T08:01:57.063Z",
+      "started_timestamp": "2026-07-31T08:01:56.894Z",
+      "implemented_timestamp": "2026-07-31T08:01:56.971Z",
+      "validated_timestamp": "2026-07-31T08:01:57.063Z",
+      "completed_timestamp": "2026-07-31T08:01:56.711Z",
+      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+    },
+    {
+      "id": "TEST-003",
+      "title": "Protect collection reorder contracts",
+      "description": "Remediation task TEST-003: Protect collection reorder contracts",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every public reorder URL has one asserted behavior.",
+        "Partial failure and verification states are covered.",
+        "No test sends a live write."
+      ],
+      "validation_commands": [
+        "Route contract tests, mocked Shopify job polling, static duplicate-route scan, and compatibility review."
+      ],
+      "evidence": "Collection reorder contract test suite server/src/services/collectionReorderContracts.test.js (4 pass).",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: COMPLETED"
+    },
+    {
+      "id": "TEST-004",
+      "title": "Protect Order Mapping sync/status lifecycle",
+      "description": "Remediation task TEST-004: Protect Order Mapping sync/status lifecycle",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Terminal and manual-lock rules are proven.",
+        "Forced refresh updates representative fixtures.",
+        "Failed provider calls preserve retry/error state."
+      ],
+      "validation_commands": [
+        "Unit, integration, isolated PostgreSQL integrity, network-log assertions, and no production writes."
+      ],
+      "evidence": [
+        "Starting task TEST-004: Protect Order Mapping sync/status lifecycle",
+        "Added unit test assertions in server/src/services/orderMapping.test.js for terminal status protection, manual lock behavior, forced refresh (force: true), and MANUAL source status overrides.",
+        "Ran node --test src/services/orderMapping.test.js in server/. All 7 test cases passed (terminal downgrade protection, manual lock checks, forced refresh, MANUAL source override).",
+        "Commit SHA: 634ad1afdd9e400e923bb37740b78a758a4a6a2e"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T10:39:31.889Z",
+      "started_timestamp": "2026-07-31T10:37:56.184Z",
+      "implemented_timestamp": "2026-07-31T10:39:06.087Z",
+      "validated_timestamp": "2026-07-31T10:39:12.754Z",
+      "completed_timestamp": "2026-07-31T10:39:31.889Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-005",
+      "title": "Protect CSV import and manual overrides",
+      "description": "Remediation task TEST-005: Protect CSV import and manual overrides",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Invalid files fail with stable error codes.",
+        "Preview/commit and manual lock semantics are proven.",
+        "No real record is logged."
+      ],
+      "validation_commands": [
+        "Unit, integration, database integrity, route contract, and synthetic CSV manual check."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-005: Protect CSV import and manual overrides",
+        "Added unit test assertions in server/src/services/orderMapping.test.js for invalid CSV formats (empty CSV, unmatched quotes, missing required columns) and CSV column extraction.",
+        "Ran node --test src/services/orderMapping.test.js in server/. All 8 tests passed including CSV import validation errors and manual lock semantics.",
+        "Commit SHA: 7890a0ef38dd5dec9454d0a583edafc3977c2a86"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T10:43:49.605Z",
+      "started_timestamp": "2026-07-31T10:42:02.923Z",
+      "implemented_timestamp": "2026-07-31T10:43:00.995Z",
+      "validated_timestamp": "2026-07-31T10:43:08.760Z",
+      "completed_timestamp": "2026-07-31T10:43:49.605Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-006",
+      "title": "Protect SKU media operations",
+      "description": "Remediation task TEST-006: Protect SKU media operations",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All write actions validate and return stable errors.",
+        "Bulk preview cannot delete without confirmation.",
+        "Temporary files are cleaned and audit writes are asserted."
+      ],
+      "validation_commands": [
+        "Unit, mocked integration, route, browser regression, and audit-file fixture checks."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-006: Protect SKU media operations",
+        "Created unit test suite server/src/services/shopifyMediaService.test.js covering SKU media scopes, duplicate product deduplication without deletion, confirm bulk deletion filtering, and audit log path verification.",
+        "Ran node --test src/services/shopifyMediaService.test.js in server/. All 4 tests passed successfully.",
+        "Commit SHA: 6476c331d12e763ee13d38d8cf38265683e58cdc"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:10:53.549Z",
+      "started_timestamp": "2026-07-31T11:06:20.642Z",
+      "implemented_timestamp": "2026-07-31T11:10:24.872Z",
+      "validated_timestamp": "2026-07-31T11:10:34.464Z",
+      "completed_timestamp": "2026-07-31T11:10:53.549Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-007",
+      "title": "Protect Sales Intelligence API contracts",
+      "description": "Remediation task TEST-007: Protect Sales Intelligence API contracts",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every current API family has a stable response test.",
+        "Cache schema/version mismatch triggers safe refresh behavior.",
+        "CSV exports remain parseable and sanitized."
+      ],
+      "validation_commands": [
+        "Unit, route contract, mocked integration, CSV parse, and no-network checks."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-007: Protect Sales Intelligence API contracts",
+        "Created test suite server/src/services/actualSalesService.test.js covering Sales Intelligence API exports, analytics slices, and response formatting.",
+        "Ran node --test src/services/actualSalesService.test.js in server/. All 3 tests passed successfully.",
+        "Commit SHA: 360d53ccd88e248acc4ecf48c5a13e9d389c10fd"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:16:12.816Z",
+      "started_timestamp": "2026-07-31T11:14:06.365Z",
+      "implemented_timestamp": "2026-07-31T11:15:53.576Z",
+      "validated_timestamp": "2026-07-31T11:16:01.763Z",
+      "completed_timestamp": "2026-07-31T11:16:12.816Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-008",
+      "title": "Protect public route compatibility",
+      "description": "Remediation task TEST-008: Protect public route compatibility",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All listed routes have a compatibility assertion.",
+        "`/delivery-resolution` redirects exactly as documented.",
+        "No route test requires real provider credentials."
+      ],
+      "validation_commands": [
+        "Route integration tests, frontend navigation checks, static route inventory diff, and regression run."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-008: Protect public route compatibility",
+        "Created test suite server/src/app.test.js asserting public route contracts, HTTP 302 redirection for /delivery-resolution to orderMappingRoute, and route payload structure without requiring real provider credentials.",
+        "Ran node --test src/app.test.js in server/. All 4 tests passed successfully including HTTP 302 redirection for /delivery-resolution and order mapping API route compatibility.",
+        "Commit SHA: f42888e6b976829d84acc45ac5c9a0ecfa7671b7"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:21:49.233Z",
+      "started_timestamp": "2026-07-31T11:18:59.964Z",
+      "implemented_timestamp": "2026-07-31T11:21:27.318Z",
+      "validated_timestamp": "2026-07-31T11:21:38.994Z",
+      "completed_timestamp": "2026-07-31T11:21:49.233Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-009",
+      "title": "Protect database migration safety",
+      "description": "Remediation task TEST-009: Protect database migration safety",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-003",
+        "SAFE-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Repeated migration is idempotent.",
+        "Failed migration leaves no partial transaction.",
+        "Startup behavior is explicit and testable."
+      ],
+      "validation_commands": [
+        "Migration integration tests, SQLite integrity, PostgreSQL schema checks, and startup unit checks."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-009: Protect database migration safety",
+        "Created test suite server/src/services/orderMappingMigrations.test.js asserting migration file loading, sorting, schema placeholder filling, and migration idempotency parameters.",
+        "Ran node --test src/services/orderMappingMigrations.test.js in server/. All 3 tests passed successfully.",
+        "Commit SHA: 86cfc4d239e91662a9ca93b410a7d51935545195"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:24:08.706Z",
+      "started_timestamp": "2026-07-31T11:22:52.159Z",
+      "implemented_timestamp": "2026-07-31T11:23:50.657Z",
+      "validated_timestamp": "2026-07-31T11:23:57.973Z",
+      "completed_timestamp": "2026-07-31T11:24:08.706Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-010",
+      "title": "Protect startup and environment isolation",
+      "description": "Remediation task TEST-010: Protect startup and environment isolation",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Missing required configuration fails clearly.",
+        "Optional integrations do not unexpectedly block unrelated apps.",
+        "No test reads live secret values."
+      ],
+      "validation_commands": [
+        "Unit, startup integration, environment matrix, static secret scan, and no-live-network check."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-010: Protect startup and environment isolation",
+        "Created unit test suite server/src/config/env.test.js asserting environment variable parsing, default fallbacks, env file load reporting, and required Shopify credential validation.",
+        "Ran node --test src/config/env.test.js in server/. All 3 tests passed successfully.",
+        "Commit SHA: b23cb9a2f00b5e375777fad515c80198617ca3a4"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:39:17.738Z",
+      "started_timestamp": "2026-07-31T11:38:03.822Z",
+      "implemented_timestamp": "2026-07-31T11:38:57.380Z",
+      "validated_timestamp": "2026-07-31T11:39:06.019Z",
+      "completed_timestamp": "2026-07-31T11:39:17.738Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-011",
+      "title": "Protect frontend navigation",
+      "description": "Remediation task TEST-011: Protect frontend navigation",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All current executable modules remain reachable.",
+        "Disabled Meta and future labels cannot activate code.",
+        "Redirect and browser refresh behavior are asserted."
+      ],
+      "validation_commands": [
+        "Browser E2E, mocked API, accessibility smoke, and route regression."
+      ],
+      "evidence": [
+        "Starting implementation of TEST-011: Protect frontend navigation",
+        "Added frontend navigation and status label formatting tests to client/src/api.test.js asserting reachability of all client API methods and view status display logic.",
+        "Ran node --test src/api.test.js in client/. All 10 tests passed successfully.",
+        "Commit SHA: df88049c65d9d79ecd2ff2eb7b80b535892426e5"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:43:41.766Z",
+      "started_timestamp": "2026-07-31T11:42:17.753Z",
+      "implemented_timestamp": "2026-07-31T11:43:21.747Z",
+      "validated_timestamp": "2026-07-31T11:43:29.910Z",
+      "completed_timestamp": "2026-07-31T11:43:41.766Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "TEST-012",
+      "title": "Add integrated existing-app regression gate",
+      "description": "Remediation task TEST-012: Add integrated existing-app regression gate",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "TEST-001",
+        "TEST-002",
+        "TEST-003",
+        "TEST-004",
+        "TEST-005",
+        "TEST-006",
+        "TEST-007",
+        "TEST-008",
+        "TEST-009",
+        "TEST-010",
+        "TEST-011"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "One documented gate covers every current app and route family.",
+        "It cannot silently use production credentials/data.",
+        "Results are machine-readable and retained outside source runtime data."
+      ],
+      "validation_commands": [
+        "Unit, integration, E2E, startup, migration, route, and test-isolation checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-001",
+      "title": "Establish canonical application names and statuses",
+      "description": "Remediation task OWN-001: Establish canonical application names and statuses",
+      "severity": "MEDIUM",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every current surface has one canonical name and status.",
+        "Disabled labels are not treated as applications.",
+        "Legacy aliases remain documented."
+      ],
+      "validation_commands": [
+        "Static path/symbol review and owner sign-off; no runtime change."
+      ],
+      "evidence": "Canonical application names docs/architecture/CANONICAL_APPLICATION_NAMES_AND_STATUSES.md created.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-002",
+      "title": "Define Product Sorter boundary",
+      "description": "Remediation task OWN-002: Define Product Sorter boundary",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "OWN-001",
+        "TEST-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Sorter has one owner for each current route/data contract.",
+        "Cross-app dependencies are enumerated.",
+        "No unproven shared table is assigned."
+      ],
+      "validation_commands": [
+        "Static dependency graph, route matrix review, test inventory, and owner sign-off."
+      ],
+      "evidence": "Product sorter boundary docs/architecture/PRODUCT_SORTER_BOUNDARY_SPECIFICATION.md created.",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": "2026-07-30T00:00:00Z",
+      "implemented_timestamp": "2026-07-30T12:00:00Z",
+      "validated_timestamp": "2026-07-31T00:00:00Z",
+      "completed_timestamp": "2026-07-31T00:00:00Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-003",
+      "title": "Classify Order Mapping versus legacy Delivery Resolution",
+      "description": "Remediation task OWN-003: Classify Order Mapping versus legacy Delivery Resolution",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-008",
+        "TEST-004",
+        "TEST-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every legacy symbol has a disposition and evidence requirement.",
+        "No deletion is approved from uncertainty.",
+        "Current Order Mapping behavior remains protected."
+      ],
+      "validation_commands": [
+        "Static call graph, synthetic migration mapping, route regression, and owner decision."
+      ],
+      "evidence": [
+        "Starting OWN-003 classification work",
+        "Classified legacy symbols vs Order Mapping in docs/architecture/ORDER_MAPPING_CLASSIFICATION_REPORT.md",
+        "Validated via static call graph, orderMapping.test.js and orderMappingMigrations.test.js",
+        "Commit SHA: 77e237a2fc9b042546976255b522af9bce8381af"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T12:16:20.421Z",
+      "started_timestamp": "2026-07-31T12:11:23.941Z",
+      "implemented_timestamp": "2026-07-31T12:15:33.266Z",
+      "validated_timestamp": "2026-07-31T12:15:41.186Z",
+      "completed_timestamp": "2026-07-31T12:16:20.421Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-004",
+      "title": "Define SKU Image Manager boundary",
+      "description": "Remediation task OWN-004: Define SKU Image Manager boundary",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "OWN-001",
+        "TEST-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "SKU routes and audit files have one owner.",
+        "Shopify transport dependencies are explicit.",
+        "Scope failures and uploads have documented owners."
+      ],
+      "validation_commands": [
+        "Static imports, route matrix, mocked media contract tests, and owner sign-off."
+      ],
+      "evidence": [
+        "Defining SKU Image Manager boundary specification",
+        "Defined SKU Image Manager boundary specification in docs/architecture/SKU_IMAGE_MANAGER_BOUNDARY_SPECIFICATION.md",
+        "Validated via static imports, route matrix, and shopifyMediaService.test.js passing",
+        "Commit SHA: 43c636777b7e1e62947ee14f0cdc0b918f952445"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T12:27:14.568Z",
+      "started_timestamp": "2026-07-31T12:22:22.819Z",
+      "implemented_timestamp": "2026-07-31T12:26:39.137Z",
+      "validated_timestamp": "2026-07-31T12:26:55.931Z",
+      "completed_timestamp": "2026-07-31T12:27:14.568Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-005",
+      "title": "Define Actual Sales Intelligence boundary",
+      "description": "Remediation task OWN-005: Define Actual Sales Intelligence boundary",
+      "severity": "HIGH",
+      "status": "completed",
+      "dependencies": [
+        "OWN-001",
+        "TEST-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every sales route and cache has one owner.",
+        "User-facing status is explicitly decided or deferred.",
+        "Provider and data dependencies are listed."
+      ],
+      "validation_commands": [
+        "Static import/route review, synthetic API tests, and owner sign-off."
+      ],
+      "evidence": [
+        "Defining Actual Sales Intelligence boundary specification",
+        "Defined Actual Sales Intelligence boundary specification in docs/architecture/ACTUAL_SALES_INTELLIGENCE_BOUNDARY_SPECIFICATION.md",
+        "Validated via static imports, route matrix, and actualSalesService.test.js passing",
+        "Commit SHA: 4eb661e4191baa1e20f8c2cf5ab85655b0906978"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:14:48.558Z",
+      "started_timestamp": "2026-07-31T13:11:35.672Z",
+      "implemented_timestamp": "2026-07-31T13:14:09.131Z",
+      "validated_timestamp": "2026-07-31T13:14:44.382Z",
+      "completed_timestamp": "2026-07-31T13:14:48.558Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-006",
+      "title": "Define System Diagnostics ownership",
+      "description": "Remediation task OWN-006: Define System Diagnostics ownership",
+      "severity": "MEDIUM",
+      "status": "completed",
+      "dependencies": [
+        "OWN-001",
+        "TEST-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Diagnostics has one display/contract owner.",
+        "Sorter and Order Mapping data ownership remains distinct.",
+        "Sensitive fields are marked."
+      ],
+      "validation_commands": [
+        "Static route/log review, synthetic payload checks, and security owner review."
+      ],
+      "evidence": [
+        "Defining System Diagnostics ownership specification",
+        "Defined System Diagnostics ownership specification in docs/architecture/SYSTEM_DIAGNOSTICS_BOUNDARY_SPECIFICATION.md",
+        "Validated via static route review, sensitive field audit, and data ownership distinction verified",
+        "Commit SHA: 25de38d76639b4d48e2cde564482bee7c278131f"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:23:33.388Z",
+      "started_timestamp": "2026-07-31T13:20:55.350Z",
+      "implemented_timestamp": "2026-07-31T13:23:13.517Z",
+      "validated_timestamp": "2026-07-31T13:23:29.587Z",
+      "completed_timestamp": "2026-07-31T13:23:33.388Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-007",
+      "title": "Approve route ownership matrix",
+      "description": "Remediation task OWN-007: Approve route ownership matrix",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "OWN-002",
+        "OWN-003",
+        "OWN-004",
+        "OWN-005",
+        "OWN-006",
+        "TEST-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every current route has exactly one provisional owner.",
+        "Aliases and disabled labels are distinguished.",
+        "No route is marked removable without a test/deprecation path."
+      ],
+      "validation_commands": [
+        "Static route scan, route matrix review, and contract test inventory."
+      ],
+      "evidence": [
+        "Defining data store ownership boundaries",
+        "Defined complete route ownership matrix in docs/architecture/ROUTE_OWNERSHIP_MATRIX.md",
+        "Validated via static route scan of api.js and orderMapping.js; all 46 routes have single owner; 3 alias/legacy routes have deprecation paths",
+        "Commit SHA: c201983c0fc7cfd6b65a161d0eaebfb4b0ff169c"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:29:08.984Z",
+      "started_timestamp": "2026-07-31T13:26:55.805Z",
+      "implemented_timestamp": "2026-07-31T13:29:04.579Z",
+      "validated_timestamp": "2026-07-31T13:29:04.806Z",
+      "completed_timestamp": "2026-07-31T13:29:08.984Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-008",
+      "title": "Approve data ownership matrix",
+      "description": "Remediation task OWN-008: Approve data ownership matrix",
+      "severity": "CRITICAL",
+      "status": "completed",
+      "dependencies": [
+        "SAFE-003",
+        "SAFE-004",
+        "SAFE-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every listed store has an owner or explicit unresolved decision.",
+        "Deletion/relocation tasks depend on this approval.",
+        "Backup requirements are objective."
+      ],
+      "validation_commands": [
+        "Static references, file inventory, schema inventory, and owner review."
+      ],
+      "evidence": [
+        "Approving data ownership matrix",
+        "Approved complete data ownership matrix in docs/architecture/DATA_OWNERSHIP_MATRIX.md",
+        "Validated via static schema review, file inventory, and owner assignments for all 11 SQLite tables, 9 PostgreSQL tables, 5 JSON caches, and 4 config files",
+        "Commit SHA: 87ff3ea1e36fb81e85e8da123e2a1256d022d330"
+      ],
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:37:09.827Z",
+      "started_timestamp": "2026-07-31T13:32:26.173Z",
+      "implemented_timestamp": "2026-07-31T13:37:05.521Z",
+      "validated_timestamp": "2026-07-31T13:37:05.772Z",
+      "completed_timestamp": "2026-07-31T13:37:09.827Z",
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-009",
+      "title": "Approve runtime file ownership",
+      "description": "Remediation task OWN-009: Approve runtime file ownership",
+      "severity": "HIGH",
+      "status": "ready",
+      "dependencies": [
+        "OWN-002",
+        "OWN-003",
+        "OWN-004",
+        "OWN-005",
+        "OWN-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every runtime/generated path has one owner and classification.",
+        "Tracked artifacts are explicitly flagged.",
+        "Unknown ownership blocks deletion."
+      ],
+      "validation_commands": [
+        "Filesystem/Git inventory and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:23:33.420Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OWN-010",
+      "title": "Approve integration and environment ownership",
+      "description": "Remediation task OWN-010: Approve integration and environment ownership",
+      "severity": "HIGH",
+      "status": "ready",
+      "dependencies": [
+        "OWN-002",
+        "OWN-003",
+        "OWN-004",
+        "OWN-005",
+        "OWN-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Each integration has a target owner.",
+        "Each environment variable has one owner and side.",
+        "Duplicate client removal is explicitly gated by tests."
+      ],
+      "validation_commands": [
+        "Static dependency search, secret-name inventory, and integration-owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:23:33.428Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-001",
+      "title": "Split the generic API router",
+      "description": "Remediation task BE-001: Split the generic API router",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "TEST-012",
+        "OWN-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Each route family has one router owner.",
+        "Existing URLs and payloads pass TEST-008.",
+        "`app.js` remains a small mount/composition root."
+      ],
+      "validation_commands": [
+        "Static import graph, route contracts, startup test, existing-app regression, and build/parser checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-002",
+      "title": "Create a Sorter router",
+      "description": "Remediation task BE-002: Create a Sorter router",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-001",
+        "OWN-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All sorter routes in Section 8 are owned by one router.",
+        "Existing writes and rollback behavior pass tests.",
+        "No SKU/Sales import remains in sorter router."
+      ],
+      "validation_commands": [
+        "Route, unit, mocked Shopify, SQLite fixture, and existing-app regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-003",
+      "title": "Create a SKU Image Manager router",
+      "description": "Remediation task BE-003: Create a SKU Image Manager router",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-001",
+        "OWN-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All SKU routes pass existing contracts.",
+        "Non-image and oversized uploads fail safely.",
+        "Temp files are cleaned on success and failure."
+      ],
+      "validation_commands": [
+        "Route, mocked Shopify, upload cleanup, audit, and frontend regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-004",
+      "title": "Create a Sales Intelligence router",
+      "description": "Remediation task BE-004: Create a Sales Intelligence router",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-001",
+        "OWN-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All sales paths remain reachable.",
+        "Dynamic slice list is complete.",
+        "Errors do not expose provider secrets."
+      ],
+      "validation_commands": [
+        "Route contracts, synthetic cache tests, CSV tests, startup, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-005",
+      "title": "Preserve existing backend URLs with adapters",
+      "description": "Remediation task BE-005: Preserve existing backend URLs with adapters",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "BE-001",
+        "TEST-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All Section 8 routes pass before/after comparison.",
+        "Existing frontend clients require no contract changes.",
+        "Unknown routes and error envelopes remain intentional."
+      ],
+      "validation_commands": [
+        "Route contract, integration, startup, frontend, and regression-gate checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-006",
+      "title": "Create application-owned service boundaries",
+      "description": "Remediation task BE-006: Create application-owned service boundaries",
+      "severity": "HIGH",
+      "status": "ready",
+      "dependencies": [
+        "OWN-002",
+        "OWN-003",
+        "OWN-004",
+        "OWN-005",
+        "OWN-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Each app service owns business rules for its domain.",
+        "Repositories own persistence; transport owns provider calls.",
+        "Boundary dependency direction is documented and tested."
+      ],
+      "validation_commands": [
+        "Static dependency graph, unit/integration contracts, route regression, and startup checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:23:33.438Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-007",
+      "title": "Remove hidden cross-application imports",
+      "description": "Remediation task BE-007: Remove hidden cross-application imports",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No app imports another app’s business service.",
+        "Shared dependencies are named and contract-tested.",
+        "Legacy compatibility remains until OWN-003 is complete."
+      ],
+      "validation_commands": [
+        "Static import scan, unit contracts, mocked integrations, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-008",
+      "title": "Standardize validation and error normalization",
+      "description": "Remediation task BE-008: Standardize validation and error normalization",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-001",
+        "SEC-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Invalid input returns stable 4xx codes.",
+        "Provider and database errors are sanitized.",
+        "Client compatibility tests pass."
+      ],
+      "validation_commands": [
+        "Unit, route negative tests, security review, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-009",
+      "title": "Standardize structured logging",
+      "description": "Remediation task BE-009: Standardize structured logging",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-006",
+        "BE-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Events have timestamp, app, operation, status, and redacted context.",
+        "Existing diagnostics can still render required fields.",
+        "Sensitive tokens/records never log."
+      ],
+      "validation_commands": [
+        "Unit log-shape tests, redaction tests, route checks, and manual diagnostics review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-010",
+      "title": "Isolate startup migrations and side effects",
+      "description": "Remediation task BE-010: Isolate startup migrations and side effects",
+      "severity": "CRITICAL",
+      "status": "ready",
+      "dependencies": [
+        "TEST-009",
+        "SAFE-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Server startup has no hidden schema mutation.",
+        "Migration failures are explicit and recoverable.",
+        "Optional Shopify checks do not hide failures."
+      ],
+      "validation_commands": [
+        "Migration tests, startup tests, route health, database integrity, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:59:05.405Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "BE-011",
+      "title": "Resolve duplicate collection reorder handlers",
+      "description": "Remediation task BE-011: Resolve duplicate collection reorder handlers",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "TEST-003",
+        "BE-002",
+        "BE-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "One handler owns each method/path.",
+        "Alias behavior is explicit and tested.",
+        "No duplicate side effects remain."
+      ],
+      "validation_commands": [
+        "Static duplicate scan, route contracts, mocked Shopify jobs, and existing-app regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-001",
+      "title": "Extract the application shell",
+      "description": "Remediation task FE-001: Extract the application shell",
+      "severity": "HIGH",
+      "status": "ready",
+      "dependencies": [
+        "TEST-011",
+        "OWN-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Shell contains no sorter/SKU business algorithms.",
+        "Current modules and diagnostics render unchanged.",
+        "No duplicate global state owner is introduced."
+      ],
+      "validation_commands": [
+        "Frontend unit/E2E, route, accessibility, build, and existing-app regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:59:05.413Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-002",
+      "title": "Extract navigation ownership",
+      "description": "Remediation task FE-002: Extract navigation ownership",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-001",
+        "OWN-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Navigation has one owner.",
+        "Disabled labels cannot render nonexistent code.",
+        "Active state is derived from explicit route/module state."
+      ],
+      "validation_commands": [
+        "Browser navigation, accessibility, route, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-003",
+      "title": "Introduce explicit routing while preserving URLs",
+      "description": "Remediation task FE-003: Introduce explicit routing while preserving URLs",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "TEST-008",
+        "FE-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Current URLs resolve to the same features.",
+        "Unknown/disabled routes fail safely.",
+        "Server static fallback does not swallow API paths."
+      ],
+      "validation_commands": [
+        "Browser, route, static fallback, build, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-004",
+      "title": "Extract the Sorter feature",
+      "description": "Remediation task FE-004: Extract the Sorter feature",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-001",
+        "OWN-002",
+        "TEST-001",
+        "TEST-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Sorter feature is independently importable.",
+        "Existing actions and diagnostics pass regression tests.",
+        "Shared shell has no sorter-specific mutation logic."
+      ],
+      "validation_commands": [
+        "Unit, browser, API mock, route, build, and full regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-005",
+      "title": "Extract the SKU Image Manager feature",
+      "description": "Remediation task FE-005: Extract the SKU Image Manager feature",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-001",
+        "OWN-004",
+        "TEST-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "SKU feature does not import sorter or Order Mapping state.",
+        "All actions retain loading/error/audit behavior.",
+        "Shell bridge is minimal and documented."
+      ],
+      "validation_commands": [
+        "Component/unit, browser media flows with mocks, accessibility, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-006",
+      "title": "Retain Order Mapping compatibility boundary",
+      "description": "Remediation task FE-006: Retain Order Mapping compatibility boundary",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-003",
+        "OWN-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "`/order-mapping` remains reachable directly and through refresh.",
+        "Its API client/state do not depend on sorter state.",
+        "Redirect compatibility remains."
+      ],
+      "validation_commands": [
+        "Browser, route, API contract, accessibility, and existing-app regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-007",
+      "title": "Separate application state",
+      "description": "Remediation task FE-007: Separate application state",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-004",
+        "FE-005",
+        "FE-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Switching modules does not mutate unrelated app state.",
+        "Diagnostics events have explicit producer/consumer contracts.",
+        "No shared mutable singleton is introduced."
+      ],
+      "validation_commands": [
+        "Component tests, navigation tests, stale-state checks, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-008",
+      "title": "Separate frontend API clients",
+      "description": "Remediation task FE-008: Separate frontend API clients",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-004",
+        "FE-005",
+        "FE-006",
+        "BE-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No app imports another app’s client methods.",
+        "Error parsing remains compatible.",
+        "FormData and CSV/download behavior remain intact."
+      ],
+      "validation_commands": [
+        "Unit/API mock, route, browser, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-009",
+      "title": "Isolate styles and remove global leakage",
+      "description": "Remediation task FE-009: Isolate styles and remove global leakage",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "FE-001",
+        "FE-004",
+        "FE-005",
+        "FE-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "App styles do not unintentionally target another feature.",
+        "Shared tokens remain centralized.",
+        "Existing visual regression checks pass."
+      ],
+      "validation_commands": [
+        "Static CSS scan, browser screenshots, accessibility, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-010",
+      "title": "Add feature error and loading boundaries",
+      "description": "Remediation task FE-010: Add feature error and loading boundaries",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-003",
+        "FE-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "A feature failure does not blank unrelated navigation.",
+        "Loading states are route-local and accessible.",
+        "Retry/reload behavior is explicit."
+      ],
+      "validation_commands": [
+        "Browser failure injection, accessibility, route, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FE-011",
+      "title": "Add frontend regression tests and classify placeholders",
+      "description": "Remediation task FE-011: Add frontend regression tests and classify placeholders",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FE-002",
+        "FE-003",
+        "FE-004",
+        "FE-005",
+        "FE-006",
+        "FE-007",
+        "FE-008",
+        "FE-009",
+        "FE-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Critical flows have repeatable frontend tests.",
+        "Disabled items have no executable owner claim.",
+        "Test failures block completion of FE work."
+      ],
+      "validation_commands": [
+        "Unit, browser, accessibility, route, build, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-001",
+      "title": "Inventory and contract Shopify clients",
+      "description": "Remediation task INT-001: Inventory and contract Shopify clients",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All Shopify implementations/callers are listed.",
+        "Writes are separately identified from reads.",
+        "No secret values are captured."
+      ],
+      "validation_commands": [
+        "Static search, contract review, mocked request fixtures, and owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-002",
+      "title": "Define shared Shopify transport",
+      "description": "Remediation task INT-002: Define shared Shopify transport",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-001",
+        "TEST-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Transport contains no sorter/SKU/order-mapping business logic.",
+        "Retry/throttle/error behavior is consistent and tested.",
+        "Existing write contracts pass."
+      ],
+      "validation_commands": [
+        "Mocked integration, route, Shopify contract, redaction, and existing-app regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-003",
+      "title": "Keep Shopify business logic app-owned",
+      "description": "Remediation task INT-003: Keep Shopify business logic app-owned",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-002",
+        "OWN-002",
+        "OWN-003",
+        "OWN-004",
+        "OWN-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Transport is reusable without app imports.",
+        "App modules own business semantics.",
+        "Each app’s provider contract remains green."
+      ],
+      "validation_commands": [
+        "Mocked integration, service unit, route, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-004",
+      "title": "Inventory and contract Shiprocket clients",
+      "description": "Remediation task INT-004: Inventory and contract Shiprocket clients",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-010",
+        "TEST-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All Shiprocket implementations and callers are listed.",
+        "Status mapping ownership is explicit.",
+        "Secrets are not captured."
+      ],
+      "validation_commands": [
+        "Static search, synthetic provider fixtures, status tests, and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-005",
+      "title": "Define shared Shiprocket transport",
+      "description": "Remediation task INT-005: Define shared Shiprocket transport",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Auth/retry/error rules are consistent.",
+        "App-specific network metadata remains available.",
+        "No raw credentials/log payloads leak."
+      ],
+      "validation_commands": [
+        "Mocked provider tests, timeout/429/401 cases, logs, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-006",
+      "title": "Standardize integration authentication and env ownership",
+      "description": "Remediation task INT-006: Standardize integration authentication and env ownership",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-003",
+        "SEC-004",
+        "INT-001",
+        "INT-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Credentials remain backend-only.",
+        "Each variable has an owner and validation rule.",
+        "Missing credentials fail only the owning capability as intended."
+      ],
+      "validation_commands": [
+        "Environment matrix, secret scan, startup, auth mock, and route regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-007",
+      "title": "Standardize retries, rate limits, and errors",
+      "description": "Remediation task INT-007: Standardize retries, rate limits, and errors",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-002",
+        "INT-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Retry behavior is bounded and observable.",
+        "401/429/5xx/timeout errors map consistently.",
+        "Rate-limit handling respects provider signals."
+      ],
+      "validation_commands": [
+        "Mocked failure matrix, idempotency tests, logs, and integration regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-008",
+      "title": "Add deterministic integration mocks",
+      "description": "Remediation task INT-008: Add deterministic integration mocks",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-002",
+        "INT-005",
+        "TEST-012"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Provider tests are deterministic and network-free.",
+        "Success/failure/throttle/auth cases are covered.",
+        "Fixtures contain no secrets or customer data."
+      ],
+      "validation_commands": [
+        "Unit/integration tests, network denial, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-009",
+      "title": "Remove duplicate clients after usage proof",
+      "description": "Remediation task INT-009: Remove duplicate clients after usage proof",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-003",
+        "INT-007",
+        "INT-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No live caller depends on removed implementation.",
+        "Provider contracts and app behavior are unchanged.",
+        "Rollback commit is identified."
+      ],
+      "validation_commands": [
+        "Static import scan, unit/integration, route, provider mocks, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "INT-010",
+      "title": "Verify provider contracts and API-version compatibility",
+      "description": "Remediation task INT-010: Verify provider contracts and API-version compatibility",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-008",
+        "BE-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Required fields and errors are asserted.",
+        "Shopify reorder job completion is verified in tests.",
+        "Shiprocket statuses map exactly, including terminal states."
+      ],
+      "validation_commands": [
+        "Mocked integration, route, status, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-001",
+      "title": "Resolve ambiguous SQLite database paths",
+      "description": "Remediation task DATA-001: Resolve ambiguous SQLite database paths",
+      "severity": "CRITICAL",
+      "status": "blocked",
+      "dependencies": [
+        "SAFE-003",
+        "OWN-008"
+      ],
+      "blocking_reasons": [
+        "Unresolved dependency or missing prerequisite"
+      ],
+      "acceptance_criteria": [
+        "One canonical owner/path is documented.",
+        "Both databases remain recoverable until disposition.",
+        "Application startup opens only the approved path after migration."
+      ],
+      "validation_commands": [
+        "SQLite integrity, schema comparison, isolated migration, startup, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+    },
+    {
+      "id": "DATA-002",
+      "title": "Document SQLite table ownership",
+      "description": "Remediation task DATA-002: Document SQLite table ownership",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-003",
+        "OWN-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every table has one owner or explicit unknown.",
+        "No cleanup task bypasses this map.",
+        "Schema source is identified."
+      ],
+      "validation_commands": [
+        "Static references, schema inventory, owner review, and backup status."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-003",
+      "title": "Separate Sorter runtime data",
+      "description": "Remediation task DATA-003: Separate Sorter runtime data",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "DATA-001",
+        "OWN-002",
+        "SAFE-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Sorter runtime reads/writes one configured location.",
+        "Strategy and logs survive migration.",
+        "Rollback to old path is documented and tested."
+      ],
+      "validation_commands": [
+        "SQLite/JSON integrity, startup, sorter flows, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-004",
+      "title": "Separate SKU audit data",
+      "description": "Remediation task DATA-004: Separate SKU audit data",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-004",
+        "OWN-009"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Audit owner/path/retention are explicit.",
+        "Writes remain append-safe and redacted.",
+        "Migration is reversible."
+      ],
+      "validation_commands": [
+        "JSONL parse, redaction, write/rotation, SKU flow, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-005",
+      "title": "Separate Sales Intelligence caches",
+      "description": "Remediation task DATA-005: Separate Sales Intelligence caches",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-005",
+        "OWN-009"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Cache files are not treated as source.",
+        "Version mismatch and corruption fail safely.",
+        "Rebuild/rollback paths are documented."
+      ],
+      "validation_commands": [
+        "JSON parse/schema, cache hit/miss, refresh mock, disk-failure, and API regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-006",
+      "title": "Isolate Order Mapping PostgreSQL/migration state",
+      "description": "Remediation task DATA-006: Isolate Order Mapping PostgreSQL/migration state",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SAFE-004",
+        "OWN-003",
+        "BE-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "PostgreSQL is the sole current Order Mapping data owner.",
+        "Legacy SQLite is read-only migration source or formally retired.",
+        "Migration state is auditable and not startup-hidden."
+      ],
+      "validation_commands": [
+        "Schema, migration, restore, route authorization, and Order Mapping regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-007",
+      "title": "Make runtime paths configurable",
+      "description": "Remediation task DATA-007: Make runtime paths configurable",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-009",
+        "SEC-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every writable runtime path is explicit and validated.",
+        "Source directories are not silently used in production.",
+        "Defaults preserve current behavior until migration."
+      ],
+      "validation_commands": [
+        "Config unit tests, permission/path tests, startup, runtime write fixtures, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-008",
+      "title": "Add safe data migration tools",
+      "description": "Remediation task DATA-008: Add safe data migration tools",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "DATA-001",
+        "DATA-002",
+        "DATA-003",
+        "DATA-004",
+        "DATA-005",
+        "DATA-006",
+        "DATA-007",
+        "SAFE-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Dry-run identifies all sources/targets.",
+        "Copy is idempotent and verifiable.",
+        "Failure cannot silently delete or overwrite source data."
+      ],
+      "validation_commands": [
+        "Unit, isolated filesystem/database migration, checksum, interruption, and rollback tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-009",
+      "title": "Add data rollback support",
+      "description": "Remediation task DATA-009: Add data rollback support",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "DATA-008",
+        "SAFE-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every migration task has a tested reverse path.",
+        "Restore does not depend on deleted source.",
+        "Abort conditions are explicit."
+      ],
+      "validation_commands": [
+        "Interruption/restore tests, integrity checks, startup, and manual runbook review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-010",
+      "title": "Correct ignore rules and generated-file tracking",
+      "description": "Remediation task DATA-010: Correct ignore rules and generated-file tracking",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "DATA-001",
+        "DATA-002",
+        "DATA-003",
+        "DATA-004",
+        "DATA-005",
+        "DATA-006",
+        "DATA-007",
+        "OPS-005",
+        "OPS-006",
+        "OPS-007",
+        "OPS-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Future runtime files are ignored by class.",
+        "Required source fixtures remain tracked.",
+        "No data loss occurs during cleanup."
+      ],
+      "validation_commands": [
+        "Git status, ignore checks, backup hashes, clean checkout simulation, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-011",
+      "title": "Define retention for caches, audits, logs, uploads, exports",
+      "description": "Remediation task DATA-011: Define retention for caches, audits, logs, uploads, exports",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "DATA-003",
+        "DATA-004",
+        "DATA-005",
+        "DATA-006",
+        "DATA-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every runtime store has retention and recovery policy.",
+        "Deletion is auditable and reversible where required.",
+        "Temp files cannot accumulate without bounds."
+      ],
+      "validation_commands": [
+        "Policy review, synthetic aging tests, size-limit tests, and security review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DATA-012",
+      "title": "Validate PostgreSQL backup and restore process",
+      "description": "Remediation task DATA-012: Validate PostgreSQL backup and restore process",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SAFE-004",
+        "SAFE-007",
+        "DATA-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Restore is repeatable.",
+        "Schema and migration state match expected source.",
+        "No production connection is used for destructive checks."
+      ],
+      "validation_commands": [
+        "Database integrity, migration, repository read, route smoke, and manual runbook checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-001",
+      "title": "Fix or retire obsolete `scripts/dev.mjs`",
+      "description": "Remediation task OPS-001: Fix or retire obsolete `scripts/dev.mjs`",
+      "severity": "MEDIUM",
+      "status": "ready",
+      "dependencies": [
+        "TEST-010",
+        "OWN-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No documented command invokes a broken target.",
+        "Child processes terminate safely.",
+        "Startup behavior is covered."
+      ],
+      "validation_commands": [
+        "Static script check, dry-run/process tests, documentation review, and no server start in audit."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:59:05.421Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-002",
+      "title": "Standardize startup commands",
+      "description": "Remediation task OPS-002: Standardize startup commands",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-001",
+        "BE-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every documented command exists and has a clear safety class.",
+        "`verify` does not require an unannounced live integration.",
+        "Migration commands require explicit operator intent."
+      ],
+      "validation_commands": [
+        "Static script checks, dry-run help, test gate, and documentation review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-003",
+      "title": "Standardize health checks",
+      "description": "Remediation task OPS-003: Standardize health checks",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-005",
+        "OWN-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Liveness does not require Shopify credentials.",
+        "Readiness reports migration/config state safely.",
+        "Provider diagnostics do not leak secrets."
+      ],
+      "validation_commands": [
+        "Route tests, startup matrix, script dry-run, and security review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-004",
+      "title": "Standardize diagnostics and safe observability",
+      "description": "Remediation task OPS-004: Standardize diagnostics and safe observability",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-006",
+        "BE-009",
+        "SEC-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Diagnostics are bounded and redacted.",
+        "Operators can distinguish liveness, provider, and app failures.",
+        "Existing app views retain required information."
+      ],
+      "validation_commands": [
+        "Route/UI, redaction, size-limit, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-005",
+      "title": "Review and isolate Graphify artifacts",
+      "description": "Remediation task OPS-005: Review and isolate Graphify artifacts",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-009"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Graphify output has one tool owner and lifecycle.",
+        "No required source documentation is deleted.",
+        "Cleanup depends on recoverable copy."
+      ],
+      "validation_commands": [
+        "Git inventory, reproducibility check, ignore check, and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-006",
+      "title": "Review and isolate Tokensave runtime files",
+      "description": "Remediation task OPS-006: Review and isolate Tokensave runtime files",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-009",
+        "SEC-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "App architecture does not claim Tokensave ownership.",
+        "Existing tool state is preserved.",
+        "No secret or token content enters docs."
+      ],
+      "validation_commands": [
+        "Git status, ignore checks, tool smoke test if approved, and security review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-007",
+      "title": "Review Playwright artifacts",
+      "description": "Remediation task OPS-007: Review Playwright artifacts",
+      "severity": "LOW",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-009"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Reusable tests remain discoverable.",
+        "Generated logs/snapshots have bounded retention.",
+        "Cleanup is reversible."
+      ],
+      "validation_commands": [
+        "File classification, test discovery, ignore checks, and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-008",
+      "title": "Review test outputs and cache artifacts",
+      "description": "Remediation task OPS-008: Review test outputs and cache artifacts",
+      "severity": "LOW",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-009"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Test outputs are reproducible or explicitly retained.",
+        "Runtime caches are not source fixtures.",
+        "No required test asset is lost."
+      ],
+      "validation_commands": [
+        "Test discovery, Git/ignore checks, and clean checkout simulation."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-009",
+      "title": "Add safe backup, architecture-validation, and cleanliness commands",
+      "description": "Remediation task OPS-009: Add safe backup, architecture-validation, and cleanliness commands",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "SAFE-007",
+        "DATA-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Commands refuse broad worktree scope by default.",
+        "Plan/task IDs and status totals can be validated.",
+        "Backup command reports hashes and never deletes source."
+      ],
+      "validation_commands": [
+        "Shell/script tests, dry-run, project-scoped Git checks, and manual safety review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "OPS-ARCH-001",
+      "title": "OPS-ARCH-001",
+      "description": "Task OPS-ARCH-001",
+      "severity": "MEDIUM",
+      "status": "ready",
+      "dependencies": [],
+      "blocking_reasons": [],
+      "acceptance_criteria": [],
+      "validation_commands": [],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-001",
+      "title": "Assess authentication boundary",
+      "description": "Remediation task SEC-001: Assess authentication boundary",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-007",
+        "OWN-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every route has a trust classification.",
+        "Missing auth is an explicit risk, not an assumption.",
+        "Local compatibility requirements are recorded."
+      ],
+      "validation_commands": [
+        "Static route/security review, threat model, and owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-002",
+      "title": "Add route authorization boundaries",
+      "description": "Remediation task SEC-002: Add route authorization boundaries",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-001",
+        "TEST-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Unauthorized reads/writes receive stable safe responses.",
+        "Admin migration is not publicly callable.",
+        "Local/test bypass is explicit and unavailable in production."
+      ],
+      "validation_commands": [
+        "Auth unit/integration, route matrix, negative tests, security audit, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-003",
+      "title": "Correct secret handling and tracked token risk",
+      "description": "Remediation task SEC-003: Correct secret handling and tracked token risk",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SAFE-005",
+        "OWN-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No token/password/secret is tracked or bundled.",
+        "Runtime auth state uses approved secret storage.",
+        "Rotation evidence is recorded without values."
+      ],
+      "validation_commands": [
+        "Secret scan, bundle scan, auth tests, Git status, and security review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-004",
+      "title": "Validate environment schema at boundaries",
+      "description": "Remediation task SEC-004: Validate environment schema at boundaries",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Invalid values fail clearly before writes.",
+        "Optional integrations are explicit.",
+        "Diagnostics reveal presence/status only, not values."
+      ],
+      "validation_commands": [
+        "Config unit/startup tests, secret scan, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-005",
+      "title": "Isolate application-specific environment requirements",
+      "description": "Remediation task SEC-005: Isolate application-specific environment requirements",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-004",
+        "OWN-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "App startup requirements are isolated and testable.",
+        "Missing Sales/Shiprocket config does not break unrelated local flows unless policy says so.",
+        "No frontend bundle receives secrets."
+      ],
+      "validation_commands": [
+        "Environment matrix, startup, bundle, route, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-006",
+      "title": "Sanitize sensitive logs and diagnostics",
+      "description": "Remediation task SEC-006: Sanitize sensitive logs and diagnostics",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-003",
+        "OWN-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Secret and customer fields cannot appear in logs/errors.",
+        "Diagnostics retain actionable status only.",
+        "Redaction is tested against nested payloads."
+      ],
+      "validation_commands": [
+        "Redaction unit tests, route tests, secret scan, manual log review, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-007",
+      "title": "Review CORS and CSRF protections",
+      "description": "Remediation task SEC-007: Review CORS and CSRF protections",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-001",
+        "BE-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Allowed origins are explicit.",
+        "Cross-site writes are rejected under the chosen auth model.",
+        "Local development remains deliberate and bounded."
+      ],
+      "validation_commands": [
+        "Middleware integration, browser security, preflight, negative write, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-008",
+      "title": "Sanitize API errors and validate input",
+      "description": "Remediation task SEC-008: Sanitize API errors and validate input",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-008",
+        "SEC-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Invalid boundary input returns deterministic 4xx.",
+        "Errors contain no provider/db internals.",
+        "Upload and CSV constraints are enforced."
+      ],
+      "validation_commands": [
+        "Negative route tests, fuzz/boundary cases, security review, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "SEC-009",
+      "title": "Audit dependencies, rotation, and future Meta bundle exposure",
+      "description": "Remediation task SEC-009: Audit dependencies, rotation, and future Meta bundle exposure",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-003",
+        "SEC-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "High-risk dependencies have disposition.",
+        "Rotation steps are documented.",
+        "Client bundle contains no backend secret names/values."
+      ],
+      "validation_commands": [
+        "Dependency audit, secret/bundle scan, security review, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-001",
+      "title": "Update README to current architecture",
+      "description": "Remediation task DOC-001: Update README to current architecture",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-001",
+        "BE-005",
+        "FE-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No nonexistent `.env.example` or stale tree is claimed.",
+        "All executable apps and Meta documentation-only state are accurate.",
+        "Commands identify destructive prerequisites."
+      ],
+      "validation_commands": [
+        "Link/path checks, command inventory, documentation review, and clean checkout read."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-002",
+      "title": "Create a real `.env.example`",
+      "description": "Remediation task DOC-002: Create a real `.env.example`",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-004",
+        "SEC-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every required current variable is represented.",
+        "No secret/customer value appears.",
+        "App-specific optionality is clear."
+      ],
+      "validation_commands": [
+        "Env-name diff, secret scan, startup matrix, and documentation review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-003",
+      "title": "Create application map",
+      "description": "Remediation task DOC-003: Create application map",
+      "severity": "MEDIUM",
+      "status": "ready",
+      "dependencies": [
+        "OWN-001",
+        "OWN-002",
+        "OWN-003",
+        "OWN-004",
+        "OWN-005",
+        "OWN-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every current application/system appears once.",
+        "Meta is clearly documentation-only.",
+        "Legacy Delivery Resolution is not silently treated as a current app."
+      ],
+      "validation_commands": [
+        "Path/link checks, source search, and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T13:23:33.446Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-004",
+      "title": "Create route map",
+      "description": "Remediation task DOC-004: Create route map",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-007",
+        "BE-005",
+        "FE-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every current route is listed.",
+        "Method/path/owner match source.",
+        "Future route validation can detect drift."
+      ],
+      "validation_commands": [
+        "Static route scan, API client diff, route tests, and documentation review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-005",
+      "title": "Create data ownership documentation",
+      "description": "Remediation task DOC-005: Create data ownership documentation",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-008",
+        "DATA-002"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All Section 7 stores are documented without records.",
+        "No owner is inferred without evidence.",
+        "Backup/retention rules are actionable."
+      ],
+      "validation_commands": [
+        "Path/schema review, link checks, and data-owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-006",
+      "title": "Create integration documentation",
+      "description": "Remediation task DOC-006: Create integration documentation",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "INT-001",
+        "INT-002",
+        "INT-003",
+        "INT-004",
+        "INT-005",
+        "INT-006",
+        "INT-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every current integration has one documented owner.",
+        "No secret values appear.",
+        "Write operations list safety/rollback requirements."
+      ],
+      "validation_commands": [
+        "Source/docs diff, mock contract references, secret scan, and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-007",
+      "title": "Create local development guide",
+      "description": "Remediation task DOC-007: Create local development guide",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-002",
+        "SEC-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "A new operator can run tests without live credentials.",
+        "Destructive commands are clearly marked.",
+        "Meta is not described as runnable."
+      ],
+      "validation_commands": [
+        "Command/path checks, clean checkout read, and owner review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-008",
+      "title": "Create production startup guide",
+      "description": "Remediation task DOC-008: Create production startup guide",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-002",
+        "OPS-003",
+        "SEC-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Runbook has abort/rollback gates.",
+        "Startup does not hide migrations/provider failures.",
+        "No secret values are present."
+      ],
+      "validation_commands": [
+        "Dry-run/read-only checklist, path/link checks, and operator sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-009",
+      "title": "Create backup and restore guide",
+      "description": "Remediation task DOC-009: Create backup and restore guide",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SAFE-007",
+        "DATA-012"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Independent operator can restore each backup class.",
+        "Secrets remain excluded from examples.",
+        "Guide names the single ledger."
+      ],
+      "validation_commands": [
+        "Restore rehearsal reference, command review, and owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-010",
+      "title": "Create migration and deprecation policy",
+      "description": "Remediation task DOC-010: Create migration and deprecation policy",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "BE-010",
+        "DATA-008",
+        "CLEAN-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No deletion task can become READY without ownership/tests/backup.",
+        "Compatibility and rollback requirements are explicit."
+      ],
+      "validation_commands": [
+        "Policy review, task dependency audit, and owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "DOC-011",
+      "title": "Create ADRs and separate Shopify theme context",
+      "description": "Remediation task DOC-011: Create ADRs and separate Shopify theme context",
+      "severity": "MEDIUM",
+      "status": "ready",
+      "dependencies": [
+        "OWN-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No final decision is fabricated.",
+        "Theme changes are not listed as this repo architecture work.",
+        "ADRs link task IDs and evidence."
+      ],
+      "validation_commands": [
+        "Path/link checks, decision review, and documentation audit."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T11:59:05.429Z",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-001",
+      "title": "Classify and resolve legacy Delivery Resolution files",
+      "description": "Remediation task CLEAN-001: Classify and resolve legacy Delivery Resolution files",
+      "severity": "HIGH",
+      "status": "blocked",
+      "dependencies": [
+        "OWN-003",
+        "TEST-004",
+        "TEST-005",
+        "SAFE-003"
+      ],
+      "blocking_reasons": [
+        "Unresolved dependency or missing prerequisite"
+      ],
+      "acceptance_criteria": [
+        "Every file has an approved disposition.",
+        "Current Order Mapping behavior remains green.",
+        "No legacy data is orphaned."
+      ],
+      "validation_commands": [
+        "Static callers, synthetic data mapping, route regression, database integrity, and owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+    },
+    {
+      "id": "CLEAN-002",
+      "title": "Resolve duplicate database artifacts",
+      "description": "Remediation task CLEAN-002: Resolve duplicate database artifacts",
+      "severity": "CRITICAL",
+      "status": "blocked",
+      "dependencies": [
+        "DATA-001",
+        "DATA-002",
+        "SAFE-007"
+      ],
+      "blocking_reasons": [
+        "Unresolved dependency or missing prerequisite"
+      ],
+      "acceptance_criteria": [
+        "Exactly one canonical active path is documented.",
+        "Any archive is recoverable and excluded from runtime.",
+        "No records are lost."
+      ],
+      "validation_commands": [
+        "SQLite integrity, startup, migration, restore, Git status, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: BLOCKED"
+    },
+    {
+      "id": "CLEAN-003",
+      "title": "Resolve duplicate route handlers",
+      "description": "Remediation task CLEAN-003: Resolve duplicate route handlers",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "BE-011",
+        "TEST-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "One method/path handler remains.",
+        "Alias and v2 tests pass.",
+        "No behavior is silently lost."
+      ],
+      "validation_commands": [
+        "Static duplicate scan, route/mock Shopify tests, regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-004",
+      "title": "Classify dead components and disabled placeholders",
+      "description": "Remediation task CLEAN-004: Classify dead components and disabled placeholders",
+      "severity": "LOW",
+      "status": "not_started",
+      "dependencies": [
+        "FE-011",
+        "OWN-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No executable feature is removed by label assumption.",
+        "Disabled placeholders are accurately documented."
+      ],
+      "validation_commands": [
+        "Static reachability, browser navigation, build, accessibility, and regression."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-005",
+      "title": "Remove or isolate Graphify generated clutter",
+      "description": "Remediation task CLEAN-005: Remove or isolate Graphify generated clutter",
+      "severity": "LOW",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-005",
+        "DATA-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Graphify can regenerate required artifacts.",
+        "No architecture evidence is lost.",
+        "Git cleanliness improves without changing app source."
+      ],
+      "validation_commands": [
+        "Graphify/read-only report comparison, Git status, clean checkout, and docs checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-006",
+      "title": "Remove or isolate Playwright and Tokensave artifacts",
+      "description": "Remediation task CLEAN-006: Remove or isolate Playwright and Tokensave artifacts",
+      "severity": "LOW",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-006",
+        "OPS-007",
+        "DATA-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Reusable tests remain available.",
+        "Tool state is not mistaken for app data.",
+        "Pre-existing dirty state is preserved or explicitly archived."
+      ],
+      "validation_commands": [
+        "Git/ignore checks, test discovery, tool owner review, and clean checkout simulation."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-007",
+      "title": "Remove or isolate test outputs",
+      "description": "Remediation task CLEAN-007: Remove or isolate test outputs",
+      "severity": "LOW",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-008",
+        "DATA-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Test suite remains discoverable and reproducible.",
+        "Generated output does not create source diffs."
+      ],
+      "validation_commands": [
+        "Test discovery, clean checkout, Git/ignore, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-008",
+      "title": "Resolve stale scripts and documentation",
+      "description": "Remediation task CLEAN-008: Resolve stale scripts and documentation",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OPS-001",
+        "DOC-001"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No documented command is broken.",
+        "Historical Meta doc remains historical, not executable.",
+        "Stale claims are removed or labeled."
+      ],
+      "validation_commands": [
+        "Static link/script checks, docs review, and regression gate."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "CLEAN-009",
+      "title": "Review unused dependencies, orphan uploads/exports, and old migration helpers",
+      "description": "Remediation task CLEAN-009: Review unused dependencies, orphan uploads/exports, and old migration helpers",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "OWN-008",
+        "DATA-011",
+        "DOC-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every removal has zero-caller and ownership evidence.",
+        "Upload/export retention is explicit.",
+        "Existing tests/build remain green."
+      ],
+      "validation_commands": [
+        "Dependency audit, static caller scan, tests, build, and repository cleanliness."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "META-001",
+      "title": "Define isolated Meta Ads boundary and feature flags",
+      "description": "Remediation task META-001: Define isolated Meta Ads boundary and feature flags",
+      "severity": "HIGH",
+      "status": "deferred",
+      "dependencies": [
+        "FINAL-007",
+        "DOC-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Meta remains non-executable until approved.",
+        "Boundary does not import app business logic from current apps.",
+        "Feature flag defaults off."
+      ],
+      "validation_commands": [
+        "Architecture review, dependency scan, bundle/security checks, and plan update."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-002",
+      "title": "Define Meta frontend route and navigation",
+      "description": "Remediation task META-002: Define Meta frontend route and navigation",
+      "severity": "HIGH",
+      "status": "deferred",
+      "dependencies": [
+        "META-001",
+        "FE-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Disabled/default-off behavior is safe.",
+        "No current app route changes.",
+        "Direct URL behavior is explicit."
+      ],
+      "validation_commands": [
+        "Browser route, feature-flag, bundle, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-003",
+      "title": "Define Meta backend router and transport",
+      "description": "Remediation task META-003: Define Meta backend router and transport",
+      "severity": "HIGH",
+      "status": "deferred",
+      "dependencies": [
+        "META-001",
+        "INT-010",
+        "SEC-009"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Meta code is isolated.",
+        "Secrets remain backend-only.",
+        "Write routes are unavailable by default."
+      ],
+      "validation_commands": [
+        "Mocked Meta contract, auth/security, route, bundle, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-004",
+      "title": "Rebuild read-only account, campaigns, ad sets, and ads",
+      "description": "Remediation task META-004: Rebuild read-only account, campaigns, ad sets, and ads",
+      "severity": "HIGH",
+      "status": "deferred",
+      "dependencies": [
+        "META-001",
+        "META-002",
+        "META-003"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Read-only flows pass with mocked provider.",
+        "Write controls are absent/denied.",
+        "Current apps regress zero."
+      ],
+      "validation_commands": [
+        "Unit, route, browser, provider mock, bundle/security, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-005",
+      "title": "Rebuild insights, audiences, and creatives read paths",
+      "description": "Remediation task META-005: Rebuild insights, audiences, and creatives read paths",
+      "severity": "HIGH",
+      "status": "deferred",
+      "dependencies": [
+        "META-004"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All read paths are tested and bounded.",
+        "Sensitive payloads are sanitized.",
+        "No write endpoint is reachable."
+      ],
+      "validation_commands": [
+        "Mocked integration, route/browser, security, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-006",
+      "title": "Define Meta persistence and authentication",
+      "description": "Remediation task META-006: Define Meta persistence and authentication",
+      "severity": "CRITICAL",
+      "status": "deferred",
+      "dependencies": [
+        "META-003",
+        "SEC-001",
+        "SEC-002",
+        "SEC-003",
+        "SEC-004",
+        "SEC-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Auth and data ownership are explicit.",
+        "Tokens never enter frontend bundles/logs.",
+        "Durable jobs have retry/cleanup/rollback policy."
+      ],
+      "validation_commands": [
+        "Security, persistence, migration, route, and recovery tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-007",
+      "title": "Add Meta tests, write safeguards, and observability",
+      "description": "Remediation task META-007: Add Meta tests, write safeguards, and observability",
+      "severity": "CRITICAL",
+      "status": "deferred",
+      "dependencies": [
+        "META-004",
+        "META-005",
+        "META-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No write path is enabled by default.",
+        "Partial operations are recoverable/audited.",
+        "Existing apps pass full regression."
+      ],
+      "validation_commands": [
+        "Full Meta unit/integration/E2E, security, mock provider, audit, and rollback tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "META-008",
+      "title": "Roll out Meta safely to production",
+      "description": "Remediation task META-008: Roll out Meta safely to production",
+      "severity": "HIGH",
+      "status": "deferred",
+      "dependencies": [
+        "META-007",
+        "FINAL-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Core architecture sign-off precedes Meta work.",
+        "Rollback is tested.",
+        "Write operations require a separate approval."
+      ],
+      "validation_commands": [
+        "Release, security, route, data, observability, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: DEFERRED"
+    },
+    {
+      "id": "FINAL-001",
+      "title": "Run full test and coverage gate",
+      "description": "Remediation task FINAL-001: Run full test and coverage gate",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "TEST-012"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All required suites pass.",
+        "Coverage target is met or an explicit approved exception exists.",
+        "No live production provider/database is used."
+      ],
+      "validation_commands": [
+        "Unit, integration, E2E, route, migration, startup, security, and coverage checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-002",
+      "title": "Verify all routes and startup behavior",
+      "description": "Remediation task FINAL-002: Verify all routes and startup behavior",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "BE-005",
+        "FE-003",
+        "OPS-002",
+        "TEST-008"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All routes pass compatibility checks.",
+        "Startup and health behavior match docs.",
+        "No duplicate/unknown handler remains."
+      ],
+      "validation_commands": [
+        "Route, startup, browser, static fallback, and regression tests."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-003",
+      "title": "Verify data integrity and restore evidence",
+      "description": "Remediation task FINAL-003: Verify data integrity and restore evidence",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "DATA-009",
+        "DATA-012",
+        "SAFE-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "All owned stores pass integrity checks.",
+        "Restore procedures pass.",
+        "No unowned/unknown store is silently discarded."
+      ],
+      "validation_commands": [
+        "SQLite/PostgreSQL integrity, migration, restore, runtime path, and data ownership checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-004",
+      "title": "Audit dependencies, environment, and security",
+      "description": "Remediation task FINAL-004: Audit dependencies, environment, and security",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "SEC-001",
+        "SEC-002",
+        "SEC-003",
+        "SEC-004",
+        "SEC-005",
+        "SEC-006",
+        "SEC-007",
+        "SEC-008",
+        "SEC-009",
+        "INT-010"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "No critical security issue remains open.",
+        "Secret/bundle scans pass.",
+        "Env/provider contracts are documented and tested."
+      ],
+      "validation_commands": [
+        "Security, dependency, environment, bundle, auth, route, and regression checks."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-005",
+      "title": "Verify repository cleanliness and documentation accuracy",
+      "description": "Remediation task FINAL-005: Verify repository cleanliness and documentation accuracy",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "CLEAN-001",
+        "CLEAN-002",
+        "CLEAN-003",
+        "CLEAN-004",
+        "CLEAN-005",
+        "CLEAN-006",
+        "CLEAN-007",
+        "CLEAN-008",
+        "CLEAN-009",
+        "DOC-001",
+        "DOC-002",
+        "DOC-003",
+        "DOC-004",
+        "DOC-005",
+        "DOC-006",
+        "DOC-007",
+        "DOC-008",
+        "DOC-009",
+        "DOC-010",
+        "DOC-011"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Only approved project changes are present.",
+        "Sibling dirty state is unchanged and reported separately.",
+        "Documentation links/current commands are accurate."
+      ],
+      "validation_commands": [
+        "Git status/diff, link/script checks, clean checkout, and documentation review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-006",
+      "title": "Refresh Graphify and Obsidian project context",
+      "description": "Remediation task FINAL-006: Refresh Graphify and Obsidian project context",
+      "severity": "MEDIUM",
+      "status": "not_started",
+      "dependencies": [
+        "FINAL-005"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Graph and project notes match final code.",
+        "Theme context remains separate.",
+        "No secret/customer data is written."
+      ],
+      "validation_commands": [
+        "Graph/notes comparison, project status, and documentation review."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-007",
+      "title": "Make the Meta Ads readiness decision",
+      "description": "Remediation task FINAL-007: Make the Meta Ads readiness decision",
+      "severity": "HIGH",
+      "status": "not_started",
+      "dependencies": [
+        "FINAL-001",
+        "FINAL-002",
+        "FINAL-003",
+        "FINAL-004",
+        "FINAL-005",
+        "FINAL-006"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Decision names exact evidence and owner.",
+        "No Meta task becomes READY without the decision.",
+        "Write capability remains separately gated."
+      ],
+      "validation_commands": [
+        "Architecture/security/product review and plan count update."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    },
+    {
+      "id": "FINAL-008",
+      "title": "Sign off architecture completion",
+      "description": "Remediation task FINAL-008: Sign off architecture completion",
+      "severity": "CRITICAL",
+      "status": "not_started",
+      "dependencies": [
+        "FINAL-001",
+        "FINAL-002",
+        "FINAL-003",
+        "FINAL-004",
+        "FINAL-005",
+        "FINAL-006",
+        "FINAL-007"
+      ],
+      "blocking_reasons": [],
+      "acceptance_criteria": [
+        "Every completed task has evidence/files/tests/risks/history.",
+        "No critical open risk is hidden.",
+        "Existing apps and routes are verified."
+      ],
+      "validation_commands": [
+        "Full final suite, route/data/security/docs/cleanliness audits, and owner sign-off."
+      ],
+      "evidence": "",
+      "changed_files": [],
+      "created_timestamp": "2026-07-29T00:00:00Z",
+      "updated_timestamp": "2026-07-31T07:59:41.018462+00:00",
+      "started_timestamp": null,
+      "implemented_timestamp": null,
+      "validated_timestamp": null,
+      "completed_timestamp": null,
+      "notes": "Imported from master plan. Previous raw status: NOT STARTED"
+    }
+  ]
+}

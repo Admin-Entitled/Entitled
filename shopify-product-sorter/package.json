@@ -2,6 +2,7 @@
   "name": "entitled-collection-placement-manager",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "workspaces": [
     "server",
     "client"
@@ -14,7 +15,32 @@
     "build": "npm run build --workspace client",
     "start": "npm run start --workspace server",
     "health": "curl http://localhost:4000/api/debug/shopify",
-    "verify": "npm run health && echo 'System Ready'"
+    "verify": "node scripts/verify.mjs",
+    "test:regression-gate": "node scripts/regression-gate.mjs",
+    "arch:doctor": "node scripts/architecture-ledger.mjs doctor",
+    "arch:status": "node scripts/architecture-ledger.mjs status",
+    "arch:resume": "node scripts/architecture-ledger.mjs resume",
+    "arch:show": "node scripts/architecture-ledger.mjs show",
+    "arch:start": "node scripts/architecture-ledger.mjs start",
+    "arch:implement": "node scripts/architecture-ledger.mjs implement",
+    "arch:validate-task": "node scripts/architecture-ledger.mjs validate-task",
+    "arch:complete": "node scripts/architecture-ledger.mjs complete",
+    "arch:block": "node scripts/architecture-ledger.mjs block",
+    "arch:ready": "node scripts/architecture-ledger.mjs ready",
+    "arch:defer": "node scripts/architecture-ledger.mjs defer",
+    "arch:history": "node scripts/architecture-ledger.mjs history",
+    "arch:generate": "node scripts/architecture-ledger.mjs generate",
+    "arch:validate": "node scripts/architecture-ledger.mjs validate",
+    "arch:checkpoint": "node scripts/architecture-ledger.mjs checkpoint",
+    "arch:sync-obsidian": "node scripts/architecture-ledger.mjs sync-obsidian",
+    "test:architecture-ledger": "node --test tests/architecture-ledger.test.js",
+    "test:client": "node --test --test-name-pattern='feature form and table styles stay inside dashboard features|front-end regression: Sorter, SKU Image Manager, and Order Mapping all render in dashboard' client/src/styles.test.js",
+    "arch:reconcile": "node scripts/architecture-ledger.mjs reconcile",
+    "arch:next": "node scripts/architecture-ledger.mjs next",
+    "arch:audit-completed": "node scripts/architecture-ledger.mjs audit-completed",
+    "delivery-migrator": "node server/src/scripts/deliveryMigrator.js",
+    "repo:clean": "node scripts/clean.mjs",
+    "repo:clean:confirm": "node scripts/clean.mjs --confirm"
   },
   "devDependencies": {
     "concurrently": "^10.0.3"

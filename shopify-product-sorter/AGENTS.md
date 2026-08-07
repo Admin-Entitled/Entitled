@@ -90,23 +90,31 @@ Rules:
 
 ### Authoritative ledger
 
-The single authoritative architecture execution ledger is:
+The authoritative architecture execution ledger files are:
+- `docs/architecture/ledger/tasks.json` (JSON task database)
+- `docs/architecture/ledger/history.jsonl` (SHA-256 hash-chained history log)
 
-`docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md`
+`docs/architecture/ARCHITECTURE_REMEDIATION_MASTER_PLAN.md` is a generated report; direct edits to task status in the Markdown file are strictly prohibited.
 
 No separate architecture checklist, progress file, task ledger, or competing plan may be created.
 
 ### Mandatory session startup
 
-Before modifying any repository file, every Codex session must:
+Before modifying any repository file, every Codex architecture session must:
 
 1. Read `AGENTS.md`.
-2. Read the master plan's Document control, Status definitions, Architecture principles, Master task index, Current execution focus, and the detailed record for every requested task ID.
-3. Confirm that requested task dependencies are satisfied.
-4. Capture the current Git baseline.
-5. Identify pre-existing changes and leave them untouched.
-6. State the exact task IDs being executed.
-7. Refuse opportunistic changes outside those task IDs.
+2. Begin with `npm run arch:resume`.
+3. Direct task-status edits to generated Markdown are prohibited.
+4. All transitions use the ledger CLI (`scripts/architecture-ledger.mjs` or `npm run arch:*`).
+5. A conversational claim of completion is not authoritative.
+6. A task is completed only after implementation, validation, ledger update, history append, generated report synchronization, Git commit, remote push and SHA verification via `npm run arch:checkpoint`.
+7. One architecture task per commit.
+8. No task status may be inferred from Obsidian alone.
+9. Inspect current in-progress, ready, and blocked tasks and confirm requested task dependencies are satisfied.
+10. Capture the current Git baseline.
+11. Identify pre-existing changes and leave them untouched.
+12. State the exact task IDs being executed.
+13. Refuse opportunistic changes outside those task IDs.
 
 ### Mandatory execution scope
 

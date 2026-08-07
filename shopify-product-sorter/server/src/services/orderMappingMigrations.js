@@ -1,11 +1,17 @@
 import { env } from "../config/env.js";
 import { loadOrderMappingMigrationFiles, withOrderMappingClient } from "./orderMappingDb.js";
+import { logInfo } from "../utils/logger.js";
 
 function fillSchema(sql) {
   return sql.replaceAll("__SCHEMA__", `"${env.orderMappingSchema}"`);
 }
 
 export async function runOrderMappingMigrations() {
+  if (!env.databaseUrl) {
+    logInfo("Order Mapping disabled because DATABASE_URL is not configured.");
+    return false;
+  }
+
   await withOrderMappingClient(async (client) => {
     await client.query(`CREATE SCHEMA IF NOT EXISTS "${env.orderMappingSchema}"`);
     await client.query(`
