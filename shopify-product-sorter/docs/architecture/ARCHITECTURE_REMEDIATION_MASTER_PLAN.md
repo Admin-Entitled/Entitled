@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-07T08:44:12.338Z` |
+| Generated timestamp | `2026-08-07T08:44:25.059Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `f9d036a` |
+| Local commit | `fd684f6` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
