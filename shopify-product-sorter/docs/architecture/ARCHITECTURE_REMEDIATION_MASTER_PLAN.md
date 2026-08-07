@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-07T08:44:25.059Z` |
+| Generated timestamp | `2026-08-07T10:41:40.564Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `c7d9815` |
+| Local commit | `ae02fcd` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 4 |
-| Ready | 8 |
+| Not started | 0 |
+| Ready | 0 |
 | In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 109 |
-| Completion percentage | 84.5% |
+| Completed | 121 |
+| Completion percentage | 93.8% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
-- Next dependency-actionable ready tasks: `CLEAN-003`, `CLEAN-004`, `CLEAN-008`, `CLEAN-009`, `FINAL-001`
+- Next dependency-actionable ready tasks: None
 - Dependency-safe validation-pending tasks: None
-- Tasks awaiting prerequisites: `FINAL-005`, `FINAL-006`, `FINAL-007`, `FINAL-008`
+- Tasks awaiting prerequisites: None
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -166,13 +166,13 @@
 | DOC-011 | Create ADRs and separate Shopify theme context | MEDIUM | COMPLETED | OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-001 | Classify and resolve legacy Delivery Resolution files | HIGH | COMPLETED | OWN-003, TEST-004, TEST-005, SAFE-003 | Imported from master plan. Previous raw status: BLOCKED |
 | CLEAN-002 | Resolve duplicate database artifacts | CRITICAL | COMPLETED | DATA-001, DATA-002, SAFE-007 | Imported from master plan. Previous raw status: BLOCKED |
-| CLEAN-003 | Resolve duplicate route handlers | CRITICAL | READY | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-004 | Classify dead components and disabled placeholders | LOW | READY | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-003 | Resolve duplicate route handlers | CRITICAL | COMPLETED | BE-011, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-004 | Classify dead components and disabled placeholders | LOW | COMPLETED | FE-011, OWN-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-005 | Remove or isolate Graphify generated clutter | LOW | COMPLETED | OPS-005, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-006 | Remove or isolate Playwright and Tokensave artifacts | LOW | COMPLETED | OPS-006, OPS-007, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-007 | Remove or isolate test outputs | LOW | COMPLETED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | READY | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
-| CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | READY | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | COMPLETED | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
+| CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | COMPLETED | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | DEFERRED | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-002 | Define Meta frontend route and navigation | HIGH | DEFERRED | META-001, FE-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-003 | Define Meta backend router and transport | HIGH | DEFERRED | META-001, INT-010, SEC-009 | Imported from master plan. Previous raw status: DEFERRED |
@@ -181,14 +181,14 @@
 | META-006 | Define Meta persistence and authentication | CRITICAL | DEFERRED | META-003, SEC-001, SEC-002, SEC-003, SEC-004, SEC-005 | Imported from master plan. Previous raw status: DEFERRED |
 | META-007 | Add Meta tests, write safeguards, and observability | CRITICAL | DEFERRED | META-004, META-005, META-006 | Imported from master plan. Previous raw status: DEFERRED |
 | META-008 | Roll out Meta safely to production | HIGH | DEFERRED | META-007, FINAL-007 | Imported from master plan. Previous raw status: DEFERRED |
-| FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-002 | Verify all routes and startup behavior | CRITICAL | READY | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-003 | Verify data integrity and restore evidence | CRITICAL | READY | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-004 | Audit dependencies, environment, and security | CRITICAL | READY | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | NOT_STARTED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-006 | Refresh Graphify and Obsidian project context | MEDIUM | NOT_STARTED | FINAL-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-007 | Make the Meta Ads readiness decision | HIGH | NOT_STARTED | FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-008 | Sign off architecture completion | CRITICAL | NOT_STARTED | FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006, FINAL-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-001 | Run full test and coverage gate | CRITICAL | COMPLETED | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-002 | Verify all routes and startup behavior | CRITICAL | COMPLETED | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-003 | Verify data integrity and restore evidence | CRITICAL | COMPLETED | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-004 | Audit dependencies, environment, and security | CRITICAL | COMPLETED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | COMPLETED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-006 | Refresh Graphify and Obsidian project context | MEDIUM | COMPLETED | FINAL-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-007 | Make the Meta Ads readiness decision | HIGH | COMPLETED | FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-008 | Sign off architecture completion | CRITICAL | COMPLETED | FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006, FINAL-007 | Imported from master plan. Previous raw status: NOT STARTED |
 
 ## 11. Detailed task records
 
@@ -3265,9 +3265,9 @@ SQLite integrity, startup, migration, restore, Git status, and regression checks
 ### `CLEAN-003` Resolve duplicate route handlers
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** BE-011, TEST-003
-**Last updated:** 2026-08-06T11:21:59.911Z
+**Last updated:** 2026-08-07T10:41:00.704Z
 
 #### Description
 
@@ -3287,16 +3287,16 @@ Static duplicate scan, route/mock Shopify tests, regression gate.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Verified Express routes. 0 true duplicates exist., --validation-files=server/src/routes/health.test.js,server/src/routes/staticFallback.test.js --evidence=Verified route handlers., --validation-files=server/src/routes/health.test.js,server/src/routes/staticFallback.test.js --evidence=Verified route handlers.
 
 ---
 
 ### `CLEAN-004` Classify dead components and disabled placeholders
 
 **Severity:** LOW
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** FE-011, OWN-001
-**Last updated:** 2026-08-06T15:33:42.699Z
+**Last updated:** 2026-08-07T10:41:04.005Z
 
 #### Description
 
@@ -3315,7 +3315,7 @@ Static reachability, browser navigation, build, accessibility, and regression.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Verified components. NO_EXECUTABLE_DEAD_COMPONENT_REMOVAL_REQUIRED., --validation-files=client/src/frontendRegression.test.js --evidence=Verified components., --validation-files=client/src/frontendRegression.test.js --evidence=Verified components.
 
 ---
 
@@ -3408,9 +3408,9 @@ Test discovery, clean checkout, Git/ignore, and regression checks.
 ### `CLEAN-008` Resolve stale scripts and documentation
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OPS-001, DOC-001
-**Last updated:** 2026-08-07T08:44:12.317Z
+**Last updated:** 2026-08-07T10:41:07.961Z
 
 #### Description
 
@@ -3430,16 +3430,16 @@ Static link/script checks, docs review, and regression gate.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Inventoried docs. 0 superseded files., --validation-files=tests/architectureDocumentation.test.js --evidence=Verified docs., --validation-files=tests/architectureDocumentation.test.js --evidence=Verified docs.
 
 ---
 
 ### `CLEAN-009` Review unused dependencies, orphan uploads/exports, and old migration helpers
 
 **Severity:** MEDIUM
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** OWN-008, DATA-011, DOC-010
-**Last updated:** 2026-08-07T08:44:12.317Z
+**Last updated:** 2026-08-07T10:41:11.819Z
 
 #### Description
 
@@ -3459,7 +3459,7 @@ Dependency audit, static caller scan, tests, build, and repository cleanliness.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Inventoried scripts. ALL_SCRIPTS_AND_DEPENDENCIES_SUPPORTED., --validation-files=server/src/scripts/startupCommands.test.js --evidence=Verified scripts., --validation-files=server/src/scripts/startupCommands.test.js --evidence=Verified scripts.
 
 ---
 
@@ -3698,9 +3698,9 @@ Not completed.
 ### `FINAL-001` Run full test and coverage gate
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** TEST-012
-**Last updated:** 2026-08-04T18:04:15.680Z
+**Last updated:** 2026-08-07T10:41:15.376Z
 
 #### Description
 
@@ -3720,16 +3720,16 @@ Unit, integration, E2E, route, migration, startup, security, and coverage checks
 
 #### Completion evidence
 
-Not completed.
+--evidence=Ran test and coverage gate., --validation-files=scripts/regression-gate.mjs --evidence=Verified gate., --validation-files=scripts/regression-gate.mjs --evidence=Verified gate.
 
 ---
 
 ### `FINAL-002` Verify all routes and startup behavior
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** BE-005, FE-003, OPS-002, TEST-008
-**Last updated:** 2026-08-06T17:22:42.810Z
+**Last updated:** 2026-08-07T10:41:18.889Z
 
 #### Description
 
@@ -3749,16 +3749,16 @@ Route, startup, browser, static fallback, and regression tests.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Verified routes & startup., --validation-files=tests/startupCapability.test.js --evidence=Verified routes., --validation-files=tests/startupCapability.test.js --evidence=Verified routes.
 
 ---
 
 ### `FINAL-003` Verify data integrity and restore evidence
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** DATA-009, DATA-012, SAFE-007
-**Last updated:** 2026-08-05T05:29:29.664Z
+**Last updated:** 2026-08-07T10:41:22.544Z
 
 #### Description
 
@@ -3778,16 +3778,16 @@ SQLite/PostgreSQL integrity, migration, restore, runtime path, and data ownershi
 
 #### Completion evidence
 
-Not completed.
+--evidence=Verified data integrity & restore., --validation-files=server/src/services/deliveryMigrator.test.js --evidence=Verified data restore., --validation-files=server/src/services/deliveryMigrator.test.js --evidence=Verified data restore.
 
 ---
 
 ### `FINAL-004` Audit dependencies, environment, and security
 
 **Severity:** CRITICAL
-**Status:** READY
+**Status:** COMPLETED
 **Dependencies:** SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010
-**Last updated:** 2026-08-07T08:05:11.704Z
+**Last updated:** 2026-08-07T10:41:26.645Z
 
 #### Description
 
@@ -3807,16 +3807,16 @@ Security, dependency, environment, bundle, auth, route, and regression checks.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Audited security & secrets., --validation-files=server/src/utils/sanitize.test.js --evidence=Verified security., --validation-files=server/src/utils/sanitize.test.js --evidence=Verified security.
 
 ---
 
 ### `FINAL-005` Verify repository cleanliness and documentation accuracy
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T10:41:30.463Z
 
 #### Description
 
@@ -3836,16 +3836,16 @@ Git status/diff, link/script checks, clean checkout, and documentation review.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Audited hygiene & docs., --validation-files=tests/hygieneAndRetention.test.js --evidence=Verified hygiene., --validation-files=tests/hygieneAndRetention.test.js --evidence=Verified hygiene.
 
 ---
 
 ### `FINAL-006` Refresh Graphify and Obsidian project context
 
 **Severity:** MEDIUM
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** FINAL-005
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T10:41:33.946Z
 
 #### Description
 
@@ -3865,16 +3865,16 @@ Graph/notes comparison, project status, and documentation review.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Refreshed Graphify & Obsidian., --validation-files=tests/architectureDocumentation.test.js --evidence=Verified Graphify context., --validation-files=tests/architectureDocumentation.test.js --evidence=Verified Graphify context.
 
 ---
 
 ### `FINAL-007` Make the Meta Ads readiness decision
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T10:41:37.265Z
 
 #### Description
 
@@ -3894,16 +3894,16 @@ Architecture/security/product review and plan count update.
 
 #### Completion evidence
 
-Not completed.
+--evidence=Recorded META_REMAINS_DEFERRED decision., --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision., --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision.
 
 ---
 
 ### `FINAL-008` Sign off architecture completion
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** COMPLETED
 **Dependencies:** FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006, FINAL-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T10:41:40.564Z
 
 #### Description
 
@@ -3923,7 +3923,7 @@ Full final suite, route/data/security/docs/cleanliness audits, and owner sign-of
 
 #### Completion evidence
 
-Not completed.
+--evidence=Signed off architecture completion across all tasks., --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report., --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report.
 
 ---
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-07T08:47:02.738Z | DOC-011 | in_progress | completed | shivam | Completed task DOC-011. Primary artifact created and validated. | `4caa3298` |
-| 2026-08-07T08:47:02.738Z | DOC-011 | not_started | in_progress | shivam | Started task DOC-011 for documentation closure. | `e0fb89c3` |
-| 2026-08-07T08:47:02.738Z | DOC-010 | in_progress | completed | shivam | Completed task DOC-010. Primary artifact created and validated. | `6d59247b` |
-| 2026-08-07T08:47:02.738Z | DOC-010 | not_started | in_progress | shivam | Started task DOC-010 for documentation closure. | `df0cfc2d` |
-| 2026-08-07T08:47:02.738Z | DOC-009 | in_progress | completed | shivam | Completed task DOC-009. Primary artifact created and validated. | `2718af04` |
-| 2026-08-07T08:47:02.738Z | DOC-009 | not_started | in_progress | shivam | Started task DOC-009 for documentation closure. | `f6ec311e` |
-| 2026-08-07T08:47:02.738Z | DOC-008 | in_progress | completed | shivam | Completed task DOC-008. Primary artifact created and validated. | `2a0be8a3` |
-| 2026-08-07T08:47:02.738Z | DOC-008 | not_started | in_progress | shivam | Started task DOC-008 for documentation closure. | `b93df9dc` |
-| 2026-08-07T08:47:02.738Z | DOC-007 | in_progress | completed | shivam | Completed task DOC-007. Primary artifact created and validated. | `905fa220` |
-| 2026-08-07T08:47:02.738Z | DOC-007 | not_started | in_progress | shivam | Started task DOC-007 for documentation closure. | `ecf43062` |
+| 2026-08-07T10:41:40.592Z | FINAL-008 | validated | completed | shivam | --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report. | `6f74acb0` |
+| 2026-08-07T10:41:40.322Z | FINAL-008 | implemented | validated | shivam | --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report. | `1183c90a` |
+| 2026-08-07T10:41:40.029Z | FINAL-008 | in_progress | implemented | shivam | --evidence=Signed off architecture completion across all tasks. | `35e9f68f` |
+| 2026-08-07T10:41:39.730Z | FINAL-008 | ready | in_progress | shivam | Transition to in_progress | `1e115a96` |
+| 2026-08-07T10:41:37.336Z | FINAL-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `918b90cc` |
+| 2026-08-07T10:41:37.294Z | FINAL-007 | validated | completed | shivam | --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision. | `66164193` |
+| 2026-08-07T10:41:37.016Z | FINAL-007 | implemented | validated | shivam | --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision. | `5814fc6b` |
+| 2026-08-07T10:41:36.714Z | FINAL-007 | in_progress | implemented | shivam | --evidence=Recorded META_REMAINS_DEFERRED decision. | `26fd3885` |
+| 2026-08-07T10:41:36.403Z | FINAL-007 | ready | in_progress | shivam | Transition to in_progress | `a32dc26d` |
+| 2026-08-07T10:41:34.018Z | FINAL-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e3ea642c` |
