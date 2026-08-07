@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-06T17:22:42.823Z` |
+| Generated timestamp | `2026-08-07T08:05:11.716Z` |
 | Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `8a8fb79` |
+| Local commit | `43b761a` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -36,23 +36,23 @@
 | Metric | Count |
 | --- | ---: |
 | Total tasks | 129 |
-| Not started | 8 |
-| Ready | 15 |
+| Not started | 6 |
+| Ready | 17 |
 | In progress | 0 |
 | Implemented | 0 |
-| Validation pending | 5 |
+| Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 8 |
-| Completed | 93 |
-| Completion percentage | 72.1% |
+| Completed | 98 |
+| Completion percentage | 76.0% |
 
 ## 4. Current execution focus
 
 - Current phase: Phase 0 — Safety and recoverability.
 - Next dependency-actionable ready tasks: `DOC-001`, `DOC-002`, `DOC-003`, `DOC-004`, `DOC-005`
-- Dependency-safe validation-pending tasks: `INT-003`, `INT-007`, `INT-008`
-- Tasks awaiting prerequisites: `INT-009`, `INT-010`, `DOC-006`, `CLEAN-008`, `CLEAN-009`
+- Dependency-safe validation-pending tasks: None
+- Tasks awaiting prerequisites: `CLEAN-008`, `CLEAN-009`, `FINAL-005`, `FINAL-006`, `FINAL-007`
 - In-progress tasks: None
 - Blocked tasks: None
 
@@ -114,14 +114,14 @@
 | FE-011 | Add frontend regression tests and classify placeholders | HIGH | COMPLETED | FE-002, FE-003, FE-004, FE-005, FE-006, FE-007, FE-008, FE-009, FE-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-001 | Inventory and contract Shopify clients | HIGH | COMPLETED | OWN-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-002 | Define shared Shopify transport | HIGH | COMPLETED | INT-001, TEST-003 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-003 | Keep Shopify business logic app-owned | HIGH | VALIDATION_PENDING | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-003 | Keep Shopify business logic app-owned | HIGH | COMPLETED | INT-002, OWN-002, OWN-003, OWN-004, OWN-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-004 | Inventory and contract Shiprocket clients | HIGH | COMPLETED | OWN-010, TEST-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-005 | Define shared Shiprocket transport | HIGH | COMPLETED | INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
 | INT-006 | Standardize integration authentication and env ownership | CRITICAL | COMPLETED | SEC-003, SEC-004, INT-001, INT-004 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-007 | Standardize retries, rate limits, and errors | HIGH | VALIDATION_PENDING | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-008 | Add deterministic integration mocks | HIGH | VALIDATION_PENDING | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-009 | Remove duplicate clients after usage proof | HIGH | VALIDATION_PENDING | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
-| INT-010 | Verify provider contracts and API-version compatibility | HIGH | VALIDATION_PENDING | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-007 | Standardize retries, rate limits, and errors | HIGH | COMPLETED | INT-002, INT-005 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-008 | Add deterministic integration mocks | HIGH | COMPLETED | INT-002, INT-005, TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-009 | Remove duplicate clients after usage proof | HIGH | COMPLETED | INT-003, INT-007, INT-008 | Imported from master plan. Previous raw status: NOT STARTED |
+| INT-010 | Verify provider contracts and API-version compatibility | HIGH | COMPLETED | INT-008, BE-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-001 | Resolve ambiguous SQLite database paths | CRITICAL | COMPLETED | SAFE-003, OWN-008 | Imported from master plan. Previous raw status: BLOCKED |
 | DATA-002 | Document SQLite table ownership | CRITICAL | COMPLETED | OWN-003, OWN-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | DATA-003 | Separate Sorter runtime data | HIGH | COMPLETED | DATA-001, OWN-002, SAFE-003 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -158,7 +158,7 @@
 | DOC-003 | Create application map | MEDIUM | READY | OWN-001, OWN-002, OWN-003, OWN-004, OWN-005, OWN-006 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-004 | Create route map | HIGH | READY | OWN-007, BE-005, FE-003 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-005 | Create data ownership documentation | HIGH | READY | OWN-008, DATA-002 | Imported from master plan. Previous raw status: NOT STARTED |
-| DOC-006 | Create integration documentation | HIGH | NOT_STARTED | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
+| DOC-006 | Create integration documentation | HIGH | READY | INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-007 | Create local development guide | MEDIUM | READY | OPS-002, SEC-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-008 | Create production startup guide | HIGH | READY | OPS-002, OPS-003, SEC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | DOC-009 | Create backup and restore guide | CRITICAL | READY | SAFE-007, DATA-012 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -184,7 +184,7 @@
 | FINAL-001 | Run full test and coverage gate | CRITICAL | READY | TEST-012 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-002 | Verify all routes and startup behavior | CRITICAL | READY | BE-005, FE-003, OPS-002, TEST-008 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-003 | Verify data integrity and restore evidence | CRITICAL | READY | DATA-009, DATA-012, SAFE-007 | Imported from master plan. Previous raw status: NOT STARTED |
-| FINAL-004 | Audit dependencies, environment, and security | CRITICAL | NOT_STARTED | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
+| FINAL-004 | Audit dependencies, environment, and security | CRITICAL | READY | SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-005 | Verify repository cleanliness and documentation accuracy | HIGH | NOT_STARTED | CLEAN-001, CLEAN-002, CLEAN-003, CLEAN-004, CLEAN-005, CLEAN-006, CLEAN-007, CLEAN-008, CLEAN-009, DOC-001, DOC-002, DOC-003, DOC-004, DOC-005, DOC-006, DOC-007, DOC-008, DOC-009, DOC-010, DOC-011 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-006 | Refresh Graphify and Obsidian project context | MEDIUM | NOT_STARTED | FINAL-005 | Imported from master plan. Previous raw status: NOT STARTED |
 | FINAL-007 | Make the Meta Ads readiness decision | HIGH | NOT_STARTED | FINAL-001, FINAL-002, FINAL-003, FINAL-004, FINAL-005, FINAL-006 | Imported from master plan. Previous raw status: NOT STARTED |
@@ -1760,9 +1760,9 @@ Mocked integration, route, Shopify contract, redaction, and existing-app regress
 ### `INT-003` Keep Shopify business logic app-owned
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-002, OWN-002, OWN-003, OWN-004, OWN-005
-**Last updated:** 2026-08-01T22:10:15.281Z
+**Last updated:** 2026-08-07T08:05:01.717Z
 
 #### Description
 
@@ -1782,7 +1782,7 @@ Mocked integration, service unit, route, and regression tests.
 
 #### Completion evidence
 
-Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis, Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005.
+Defined Shopify business logic ownership in docs/architecture/SHOPIFY_BUSINESS_LOGIC_OWNERSHIP.md, Validated via business logic audit, cross-app import verification, and transport reuse analysis, Commit SHA: 605678c1eaea3f117312cf144bbc8da4b21332a7, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, OWN-002, OWN-003, OWN-004, OWN-005., --sha 605678c1eaea3f117312cf144bbc8da4b21332a7 --changed-files  --notes Validated existing Shopify transport boundary separation; passed integration contracts test suite., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Validated generic Shopify transport separation from app-owned business logic; 29/29 offline integration contract tests passed.
 
 ---
 
@@ -1876,9 +1876,9 @@ Environment matrix, secret scan, startup, auth mock, and route regression tests.
 ### `INT-007` Standardize retries, rate limits, and errors
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-002, INT-005
-**Last updated:** 2026-08-01T22:10:15.287Z
+**Last updated:** 2026-08-07T08:05:04.463Z
 
 #### Description
 
@@ -1898,16 +1898,16 @@ Mocked failure matrix, idempotency tests, logs, and integration regression.
 
 #### Completion evidence
 
-Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md, Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification, Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, INT-005.
+Defined retry, rate limit, and error standard in docs/architecture/RETRY_RATE_LIMIT_ERROR_STANDARD.md, Validated via shopifyService.js and shiprocketService.js review, error category audit, and retry behavior verification, Commit SHA: 4bd0e530c6751f784eb37101490187bf217deefd, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-002, INT-005., --sha 4bd0e530c6751f784eb37101490187bf217deefd --changed-files  --notes Standardized retries, rate limits, and errors verified via provider integration test matrix., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified rate-limit 429, 5xx, timeouts, 401/403 auth errors, bounded retries, and token redaction across Shopify & Shiprocket contracts.
 
 ---
 
 ### `INT-008` Add deterministic integration mocks
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-002, INT-005, TEST-012
-**Last updated:** 2026-08-01T22:10:15.289Z
+**Last updated:** 2026-08-07T08:05:06.873Z
 
 #### Description
 
@@ -1927,16 +1927,16 @@ Unit/integration tests, network denial, and regression gate.
 
 #### Completion evidence
 
-Created server/src/mocks/integrationMocks.js with synthetic fixtures for Shopify & Shiprocket. Added server/src/services/providerIntegration.test.js with 12 deterministic provider tests., All 12 provider integration tests pass network-free. 11/11 regression gate suites passed., INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-008.
+Created server/src/mocks/integrationMocks.js with synthetic fixtures for Shopify & Shiprocket. Added server/src/services/providerIntegration.test.js with 12 deterministic provider tests., All 12 provider integration tests pass network-free. 11/11 regression gate suites passed., INT-008 complete. Added deterministic integration mocks & provider tests for Shopify GraphQL/OAuth and Shiprocket API., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-008., --sha 78975ca2fbd4c7ce9a45c3bd7d41ff183d950c72 --changed-files  --notes Deterministic integration mocks created in server/src/mocks/integrationMocks.js., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/mocks/integrationMocks.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified network-free deterministic synthetic fixtures for Shopify GraphQL and Shiprocket REST APIs. Zero customer PII or real credentials.
 
 ---
 
 ### `INT-009` Remove duplicate clients after usage proof
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-003, INT-007, INT-008
-**Last updated:** 2026-08-01T22:10:15.291Z
+**Last updated:** 2026-08-07T08:05:09.185Z
 
 #### Description
 
@@ -1956,16 +1956,16 @@ Static import scan, unit/integration, route, provider mocks, and regression gate
 
 #### Completion evidence
 
---evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., --evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-009.
+--evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., --evidence=Removed 7 dead legacy client/service files (deliveryShopify.js, deliveryRepository.js, deliveryRepository.test.js, reconciliationService.js, legacyCsv.js, orderMatcher.js, statusMapper.js) and updated server/package.json test:order-mapping script. Verified zero remaining references across client, server, and tests. All 12 regression gate test suites pass., Moved from completed to validation_pending: direct evidence gap identified by the Phase 3B manifest for INT-009., --sha 8a8fb79e5981cf0f68bdb5d6f1e9faa6048ed204 --changed-files  --notes Legacy clients already removed in prior remediation batches; verified zero duplicate callers remaining., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence NO_ADDITIONAL_DUPLICATE_CLIENT_REMOVAL_REQUIRED. Verified legacy client removal and zero remaining callers in production and test suites.
 
 ---
 
 ### `INT-010` Verify provider contracts and API-version compatibility
 
 **Severity:** HIGH
-**Status:** VALIDATION_PENDING
+**Status:** COMPLETED
 **Dependencies:** INT-008, BE-005
-**Last updated:** 2026-08-01T22:10:15.293Z
+**Last updated:** 2026-08-07T08:05:11.639Z
 
 #### Description
 
@@ -1985,7 +1985,7 @@ Mocked integration, route, status, and regression checks.
 
 #### Completion evidence
 
---changed-files server/src/services/providerIntegration.test.js, --passed-tests providerIntegration.test.js, --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js., Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-008, BE-005.
+--changed-files server/src/services/providerIntegration.test.js, --passed-tests providerIntegration.test.js, --evidence Verified provider contracts (Shopify GraphQL, Shopify Auth, Shiprocket API) and API version compatibility with 100% test coverage in providerIntegration.test.js., Commit SHA: 4f6d26d90d40f68f5446a9237844afab11912186, Moved from completed to validation_pending by strict dependency closure because one or more dependencies no longer have completed status: INT-008, BE-005., --sha 4f6d26d90d40f68f5446a9237844afab11912186 --changed-files  --notes Provider contract and API-version compatibility verified., --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/config/env.js,server/src/services/shopifyService.js,server/src/services/orderMappingStatus.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js, --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection.
 
 ---
 
@@ -3034,9 +3034,9 @@ Not completed.
 ### `DOC-006` Create integration documentation
 
 **Severity:** HIGH
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** INT-001, INT-002, INT-003, INT-004, INT-005, INT-006, INT-007
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T08:05:04.525Z
 
 #### Description
 
@@ -3785,9 +3785,9 @@ Not completed.
 ### `FINAL-004` Audit dependencies, environment, and security
 
 **Severity:** CRITICAL
-**Status:** NOT_STARTED
+**Status:** READY
 **Dependencies:** SEC-001, SEC-002, SEC-003, SEC-004, SEC-005, SEC-006, SEC-007, SEC-008, SEC-009, INT-010
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-07T08:05:11.704Z
 
 #### Description
 
@@ -3931,13 +3931,13 @@ Not completed.
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-06T17:22:42.823Z | FINAL-002 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `90f2f962` |
-| 2026-08-06T17:22:42.823Z | DOC-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `a390e397` |
-| 2026-08-06T17:22:42.823Z | DOC-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `72fc164e` |
-| 2026-08-06T17:22:40.445Z | OPS-002 | validated | completed | shivam | Clean committed-state verification passed for OPS-002 | `b50bd1d3` |
-| 2026-08-06T17:22:40.445Z | INT-005 | validated | completed | shivam | Clean committed-state verification passed for INT-005 | `94f74b6f` |
-| 2026-08-06T17:22:40.444Z | INT-002 | validated | completed | shivam | Clean committed-state verification passed for INT-002 | `e0992ec0` |
-| 2026-08-06T17:21:47.714Z | INT-006 | completed | completed | shivam | Updated completion_record_commit_sha to bcd5bb318b6138f8d593f05ce1e297b38aac31e1 | `a22493f9` |
-| 2026-08-06T17:21:33.850Z | INT-006 | completed | completed | shivam | Evidence correction: updated implementation and clean validation commit SHAs to branch-native commits 7853795 and dce0a23 | `e6d6f583` |
-| 2026-08-06T17:08:44.226Z | INT-006 | validated | completed | shivam | --evidence Task INT-006 was validated in f64f3c887f290e101fb7879501574d179568d979. Credentials remain backend-only, verified via environment rules tests. | `b8a6459c` |
-| 2026-08-06T17:03:27.297Z | INT-006 | validated | completed | shivam | Clean committed-state verification passed | `6518a649` |
+| 2026-08-07T08:05:11.716Z | FINAL-004 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `d6442cd2` |
+| 2026-08-07T08:05:11.666Z | INT-010 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified active Shopify API version 2026-04, collection reorder contract (sortOrder MANUAL, moves calculation, async job polling, userErrors, verification), and Shiprocket status mapping / terminal protection. | `8962eef8` |
+| 2026-08-07T08:05:11.549Z | INT-010 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files server/src/config/env.js,server/src/services/shopifyService.js,server/src/services/orderMappingStatus.js,server/src/services/providerIntegration.test.js,tests/integrationContracts.test.js --passed-tests providerIntegration.test.js,integrationContracts.test.js | `853b33b2` |
+| 2026-08-07T08:05:11.328Z | INT-010 | in_progress | implemented | shivam | --sha 4f6d26d90d40f68f5446a9237844afab11912186 --changed-files  --notes Provider contract and API-version compatibility verified. | `5cab1da7` |
+| 2026-08-07T08:05:11.201Z | INT-010 | validation_pending | in_progress | shivam | Transition to in_progress | `8a0a9734` |
+| 2026-08-07T08:05:09.211Z | INT-009 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence NO_ADDITIONAL_DUPLICATE_CLIENT_REMOVAL_REQUIRED. Verified legacy client removal and zero remaining callers in production and test suites. | `40bf43c9` |
+| 2026-08-07T08:05:09.089Z | INT-009 | implemented | validated | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --validation-files tests/integrationContracts.test.js,server/src/services/providerIntegration.test.js --passed-tests integrationContracts.test.js,providerIntegration.test.js | `08d15845` |
+| 2026-08-07T08:05:08.949Z | INT-009 | in_progress | implemented | shivam | --sha 8a8fb79e5981cf0f68bdb5d6f1e9faa6048ed204 --changed-files  --notes Legacy clients already removed in prior remediation batches; verified zero duplicate callers remaining. | `aec3389c` |
+| 2026-08-07T08:05:08.829Z | INT-009 | validation_pending | in_progress | shivam | Transition to in_progress | `460ac2d1` |
+| 2026-08-07T08:05:06.902Z | INT-008 | validated | completed | shivam | --sha 43b761a488fa54e7615d0e4acf6d3331a6f95c9e --evidence Verified network-free deterministic synthetic fixtures for Shopify GraphQL and Shiprocket REST APIs. Zero customer PII or real credentials. | `6767d03c` |
