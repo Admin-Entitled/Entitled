@@ -12,8 +12,8 @@
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-07T10:41:40.564Z` |
-| Current branch | `ops/architecture-ledger-hardening` |
-| Local commit | `41a9fee` |
+| Current branch | `main` |
+| Local commit | `5f1c76f` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
