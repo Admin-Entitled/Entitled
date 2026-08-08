@@ -29,7 +29,7 @@ import {
   withSyncLock,
 } from "./orderMappingRepository.js";
 import { matchOrderMappingShipment } from "./orderMappingMatcher.js";
-import { normalizeOrderMappingStatus } from "./orderMappingStatus.js";
+import { normalizeOrderMappingStatus, normalizeShiprocketStatus } from "./orderMappingStatus.js";
 
 function safeRange(range) {
   if (range?.start && range?.end) {
@@ -131,13 +131,10 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
       } catch {
         trackingFallbacks += 1;
       }
-      const providerStatus =
-        trackingPayload?.rawStatus ||
-        trackingPayload?.rawStatusCode ||
-        match.row.rawStatus ||
-        match.row.rawStatusCode ||
-        "";
-      const normalizedStatus = normalizeOrderMappingStatus(providerStatus, null);
+      const rawStatusText = trackingPayload?.rawStatus || match.row.rawStatus || "";
+      const rawStatusCode = trackingPayload?.rawStatusCode || match.row.rawStatusCode || "";
+      const normalized = normalizeShiprocketStatus(rawStatusText, rawStatusCode);
+      const normalizedStatus = normalized.canonicalStatus === "UNKNOWN" ? null : normalized.canonicalStatus;
       const result = await applyShipmentUpdate(shipment.id, {
         awb: trackingPayload?.awb || match.row.awb,
         normalizedStatus: normalizedStatus || shipment.normalized_status,

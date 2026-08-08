@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-07T10:41:40.564Z` |
+| Generated timestamp | `2026-08-08T15:28:50.377Z` |
 | Current branch | `main` |
-| Local commit | `5f1c76f` |
+| Local commit | `ba8b035` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -38,12 +38,12 @@
 | Total tasks | 129 |
 | Not started | 0 |
 | Ready | 0 |
-| In progress | 0 |
+| In progress | 1 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 0 |
-| Deferred | 8 |
+| Deferred | 7 |
 | Completed | 121 |
 | Completion percentage | 93.8% |
 
@@ -53,7 +53,7 @@
 - Next dependency-actionable ready tasks: None
 - Dependency-safe validation-pending tasks: None
 - Tasks awaiting prerequisites: None
-- In-progress tasks: None
+- In-progress tasks: `META-001`
 - Blocked tasks: None
 
 ## 10. Master task index
@@ -173,7 +173,7 @@
 | CLEAN-007 | Remove or isolate test outputs | LOW | COMPLETED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | COMPLETED | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | COMPLETED | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | DEFERRED | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
+| META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | IN_PROGRESS | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-002 | Define Meta frontend route and navigation | HIGH | DEFERRED | META-001, FE-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-003 | Define Meta backend router and transport | HIGH | DEFERRED | META-001, INT-010, SEC-009 | Imported from master plan. Previous raw status: DEFERRED |
 | META-004 | Rebuild read-only account, campaigns, ad sets, and ads | HIGH | DEFERRED | META-001, META-002, META-003 | Imported from master plan. Previous raw status: DEFERRED |
@@ -3466,9 +3466,9 @@ Dependency audit, static caller scan, tests, build, and repository cleanliness.
 ### `META-001` Define isolated Meta Ads boundary and feature flags
 
 **Severity:** HIGH
-**Status:** DEFERRED
+**Status:** IN_PROGRESS
 **Dependencies:** FINAL-007, DOC-003
-**Last updated:** 2026-07-31T07:59:41.018462+00:00
+**Last updated:** 2026-08-08T15:28:50.377Z
 
 #### Description
 
@@ -3488,7 +3488,7 @@ Architecture review, dependency scan, bundle/security checks, and plan update.
 
 #### Completion evidence
 
-Not completed.
+Defining isolated Meta Ads boundary and feature flags
 
 ---
 
@@ -3931,6 +3931,8 @@ Full final suite, route/data/security/docs/cleanliness audits, and owner sign-of
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-08T15:28:50.406Z | META-001 | ready | in_progress | shivam | Defining isolated Meta Ads boundary and feature flags | `4a179b5c` |
+| 2026-08-08T15:28:48.110Z | META-001 | deferred | ready | shivam | Transition to ready | `11cf63f8` |
 | 2026-08-07T10:41:40.592Z | FINAL-008 | validated | completed | shivam | --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report. | `6f74acb0` |
 | 2026-08-07T10:41:40.322Z | FINAL-008 | implemented | validated | shivam | --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report. | `1183c90a` |
 | 2026-08-07T10:41:40.029Z | FINAL-008 | in_progress | implemented | shivam | --evidence=Signed off architecture completion across all tasks. | `35e9f68f` |
@@ -3939,5 +3941,3 @@ Full final suite, route/data/security/docs/cleanliness audits, and owner sign-of
 | 2026-08-07T10:41:37.294Z | FINAL-007 | validated | completed | shivam | --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision. | `66164193` |
 | 2026-08-07T10:41:37.016Z | FINAL-007 | implemented | validated | shivam | --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision. | `5814fc6b` |
 | 2026-08-07T10:41:36.714Z | FINAL-007 | in_progress | implemented | shivam | --evidence=Recorded META_REMAINS_DEFERRED decision. | `26fd3885` |
-| 2026-08-07T10:41:36.403Z | FINAL-007 | ready | in_progress | shivam | Transition to in_progress | `a32dc26d` |
-| 2026-08-07T10:41:34.018Z | FINAL-007 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `e3ea642c` |

@@ -6,6 +6,8 @@ import SkuImageManager from "./SkuImageManager";
 import Sorter from "./Sorter";
 
 import { sidebarModules } from "./sidebarModules.js";
+import NetworkActivity from "./NetworkActivity";
+import SystemDiagnostics from "./SystemDiagnostics";
 
 
 export default function App() {
@@ -313,265 +315,62 @@ function clearCurrentLogs() {
         <div className="sidebar-footer">
           <button
             type="button"
-            className="diagnostics-toggle-button"
-            onClick={() => setDiagnosticsOpen((prev) => !prev)}
-            aria-expanded={diagnosticsOpen}
+            className={`diagnostics-toggle-button ${activeModule === "diagnostics" ? "active" : ""}`}
+            onClick={() => setActiveModule("diagnostics")}
+            style={{
+              width: "100%",
+              padding: "0.75rem",
+              background: activeModule === "diagnostics" ? "#0066cc" : "transparent",
+              color: activeModule === "diagnostics" ? "#fff" : "#666",
+              border: "1px solid #ddd",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              textAlign: "center"
+            }}
           >
-            <span>System Diagnostics</span>
-            <span className="toggle-icon">{diagnosticsOpen ? "▲" : "▼"}</span>
+            System Diagnostics
           </button>
         </div>
-
-        {diagnosticsOpen ? (
-          <div className="diagnostic-panel">
-            <h4 className="diagnostic-title">System Diagnostics</h4>
-            <div className="diagnostic-stats">
-            {activeModule === "sku-image-manager" ? (
-              <>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Module:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.activeModule}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Loaded SKUs:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.loadedSkuRows}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Unique Products:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.uniqueParentProducts}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Selected:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.selectedProducts}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Editing Product:</span>
-                  <span className="diagnostic-value text-truncate" title={skuSidebarState.diagnostics.currentEditingProduct}>
-                    {skuSidebarState.diagnostics.currentEditingProduct}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Editing SKU:</span>
-                  <span className="diagnostic-value text-truncate" title={skuSidebarState.diagnostics.currentEditingSku}>
-                    {skuSidebarState.diagnostics.currentEditingSku}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Images:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.currentImageCount}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Last Action:</span>
-                  <span className="diagnostic-value text-truncate" title={skuSidebarState.diagnostics.lastSkuApiAction}>
-                    {skuSidebarState.diagnostics.lastSkuApiAction}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Media Action:</span>
-                  <span className="diagnostic-value text-truncate" title={skuSidebarState.diagnostics.lastShopifyMediaAction}>
-                    {skuSidebarState.diagnostics.lastShopifyMediaAction}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Status:</span>
-                  <span className={`diagnostic-value status-${skuSidebarState.diagnostics.lastActionStatus}`}>
-                    {skuSidebarState.diagnostics.lastActionStatus.toUpperCase()}
-                    {skuSidebarState.diagnostics.lastRefreshTime ? ` (${skuSidebarState.diagnostics.lastRefreshTime})` : ""}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Last Error:</span>
-                  <span className="diagnostic-value text-truncate" title={skuSidebarState.diagnostics.lastError}>
-                    {skuSidebarState.diagnostics.lastError}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Scopes:</span>
-                  <span className="diagnostic-value text-truncate" title={skuSidebarState.diagnostics.requiredScopesStatus}>
-                    {skuSidebarState.diagnostics.requiredScopesStatus}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Bulk Mode:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.bulkModeOpen ? "Open" : "Closed"}</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Running:</span>
-                  <span className="diagnostic-value">{skuSidebarState.diagnostics.actionRunning ? "Yes" : "No"}</span>
-                </div>
-              </>
-            ) : activeModule === "order-mapping" ? (
-              <>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Module:</span>
-                  <span className="diagnostic-value">{actualSalesSidebarState.diagnostics.activeModule}</span>
-                </div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Total orders:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.loadedOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Orders with AWB:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.ordersWithAwb}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Shiprocket matched:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.matchedOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Delivered:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.deliveredOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">RTO delivered:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.rtoOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Pending tracking:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.pendingOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Historical courier:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.historicalOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Shiprocket unmatched:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.unmatchedShiprocketOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Active shipments:</span>
-<span className="diagnostic-value">{actualSalesSidebarState.diagnostics.activeOrders}</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Current state:</span>
-<span className="diagnostic-value text-truncate" title={actualSalesSidebarState.diagnostics.shiprocketStatus}>
-{actualSalesSidebarState.diagnostics.shiprocketStatus}
-</span>
-</div>
-<div className="diagnostic-item">
-<span className="diagnostic-label">Last sync:</span>
-<span className={`diagnostic-value status-${actualSalesSidebarState.diagnostics.lastActionStatus}`}>
-{actualSalesSidebarState.diagnostics.lastActionStatus.toUpperCase()}
-{actualSalesSidebarState.diagnostics.lastRefreshTime ? ` (${actualSalesSidebarState.diagnostics.lastRefreshTime})` : ""}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Last Error:</span>
-                  <span className="diagnostic-value text-truncate" title={actualSalesSidebarState.diagnostics.lastError}>
-                    {actualSalesSidebarState.diagnostics.lastError}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Collections:</span>
-                  <span className="diagnostic-value">{diagnostics.collectionsLoaded} loaded</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Products:</span>
-                  <span className="diagnostic-value">{diagnostics.productsLoaded} loaded</span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Selected:</span>
-                  <span className="diagnostic-value text-truncate" title={diagnostics.selectedCollection}>
-                    {diagnostics.selectedCollection}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Last API:</span>
-                  <span className="diagnostic-value text-truncate" title={diagnostics.lastApiCall}>
-                    {diagnostics.lastApiCall}
-                  </span>
-                </div>
-                <div className="diagnostic-item">
-                  <span className="diagnostic-label">Status:</span>
-                  <span className={`diagnostic-value status-${diagnostics.lastApiStatus}`}>
-                    {diagnostics.lastApiStatus.toUpperCase()}
-                    {diagnostics.lastApiTimestamp ? ` (${diagnostics.lastApiTimestamp})` : ""}
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-<div className="diagnostic-logs-container">
-<div className="diagnostic-logs-header">
-<span className="diagnostic-label">{activeModule === "order-mapping" ? "System diagnostics logs:" : "Network & Action Logs:"}</span>
-<div className="diagnostic-logs-actions">
-{activeModule === "order-mapping" ? (
-<div className="diagnostic-tab-group" role="tablist" aria-label="Order Mapping logs">
-<button type="button" className={`diagnostic-tab ${orderMappingLogTab === "activity" ? "active" : ""}`} onClick={() => setOrderMappingLogTab("activity")}>
-Activity
-</button>
-<button type="button" className={`diagnostic-tab ${orderMappingLogTab === "network" ? "active" : ""}`} onClick={() => setOrderMappingLogTab("network")}>
-Network
-</button>
-</div>
-) : null}
-<button type="button" className="diagnostic-clear-button" onClick={clearCurrentLogs}>
-Clear Logs
-</button>
-</div>
-</div>
-<div className="diagnostic-logs">
-{activeModule === "sorter" && logsError ? (
-<div className="error-text">{logsError}</div>
-) : null}
-{visibleLogs.length === 0 ? (
-<div className="diagnostic-log-empty">{activeModule === "order-mapping" ? "No diagnostics logged." : "No activity logged."}</div>
-) : (
- visibleLogs.map((log, index) => (
-                  typeof log === "string" ? (
-                    <div key={index} className="diagnostic-log-line">{log}</div>
-                  ) : (
-                    <div
-                      key={`${log.timestamp}-${index}`}
-                      className="diagnostic-log-entry"
-                      title={`${log.endpoint || ""} ${log.message || ""} ${log.error || ""}`.trim()}
-                    >
-                      <div className="diagnostic-log-top">
-                        <span className="diagnostic-log-time">{log.timestamp}</span>
-                        <span className={`diagnostic-badge status-${String(log.status || "idle").toLowerCase().replace(/\s+/g, "-")}`}>
-                          {log.status}
-                        </span>
-                      </div>
-                      <div className="diagnostic-log-line">[{log.module}] {log.actionType}</div>
-                      <div className="diagnostic-log-line">{log.message}</div>
-                    </div>
-                  )
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-        ) : null}
       </aside>
 
       {activeModule === "sorter" ? (
-      <ErrorBoundary key="sorter">
-      <Sorter
-              sidebarBridge={sorterSidebarBridge}
-              capability={shopifyCapability}
-              readinessLoading={readinessLoading}
-              orderMapping={readiness?.orderMapping ?? null}
-              onRetryConnection={fetchReadiness}
-            />
-      </ErrorBoundary>
+        <ErrorBoundary key="sorter">
+          <Sorter
+            sidebarBridge={sorterSidebarBridge}
+            capability={shopifyCapability}
+            readinessLoading={readinessLoading}
+            orderMapping={readiness?.orderMapping ?? null}
+            onRetryConnection={fetchReadiness}
+          />
+        </ErrorBoundary>
       ) : activeModule === "order-mapping" ? (
-      <ErrorBoundary key="order-mapping">
-      <OrderMapping sidebarBridge={orderMappingSidebarBridge} />
-      </ErrorBoundary>
+        <ErrorBoundary key="order-mapping">
+          <OrderMapping sidebarBridge={orderMappingSidebarBridge} />
+        </ErrorBoundary>
+      ) : activeModule === "network" ? (
+        <ErrorBoundary key="network">
+          <main className="dashboard">
+            <NetworkActivity />
+          </main>
+        </ErrorBoundary>
+      ) : activeModule === "diagnostics" ? (
+        <ErrorBoundary key="diagnostics">
+          <main className="dashboard">
+            <SystemDiagnostics />
+          </main>
+        </ErrorBoundary>
       ) : (
-      <ErrorBoundary key="sku-image-manager">
-      <main className="dashboard">
-        <SkuImageManager
-          sidebarBridge={{
-            updateDiagnostics: updateSkuDiagnostics,
-            pushLog: pushSkuLog,
-          }}
-        />
-      </main>
-      </ErrorBoundary>
+        <ErrorBoundary key="sku-image-manager">
+          <main className="dashboard">
+            <SkuImageManager
+              sidebarBridge={{
+                updateDiagnostics: updateSkuDiagnostics,
+                pushLog: pushSkuLog,
+              }}
+            />
+          </main>
+        </ErrorBoundary>
       )}
       </div>
     </div>

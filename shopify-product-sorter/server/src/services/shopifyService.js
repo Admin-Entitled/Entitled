@@ -1,5 +1,6 @@
 import { logError, logInfo } from "../utils/logger.js";
 import { getShopifyAuthHeaders, getShopifyGraphQLEndpoint } from "./shopifyAuth.js";
+import { addNetworkLog } from "./sorterRuntimeService.js";
 
 export async function shopifyGraphQL(query, variables = {}) {
   const endpoint = getShopifyGraphQLEndpoint();
@@ -15,58 +16,88 @@ export async function shopifyGraphQL(query, variables = {}) {
     variables,
   });
 
+  const startedAt = new Date().toISOString();
+  const startTime = Date.now();
+
+  const opMatch = query.replace(/\s+/g, " ").match(/(query|mutation)\s+([A-Za-z0-9_]+)/);
+  const operationName = opMatch ? opMatch[2] : "GraphQL Query";
+
   let response;
+  let statusCode = null;
+  let statusText = "failed";
+  let errorMessage = null;
+  let payload = null;
+
   try {
     response = await fetch(endpoint, {
       method: "POST",
       headers,
       body: JSON.stringify({ query, variables }),
     });
+    statusCode = response.status;
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "Unknown error response body");
+      errorMessage = `Shopify API HTTP ${response.status}: ${errorText}`;
+      logError("Shopify GraphQL HTTP Error Status Received", new Error(errorMessage), {
+        endpoint,
+        httpStatus: response.status,
+        errorText,
+        queryPreview,
+      });
+      throw new Error(errorMessage);
+    }
+    payload = await response.json();
+    if (payload.errors?.length) {
+      errorMessage = payload.errors.map((item) => item.message).join(", ");
+      logError("Shopify GraphQL API Errors Returned", new Error(errorMessage), {
+        endpoint,
+        errors: payload.errors,
+        queryPreview,
+      });
+      throw new Error(errorMessage);
+    }
+    statusText = "success";
+    
+    const throttle = payload.extensions?.cost?.throttleStatus;
+    const cost = payload.extensions?.cost;
+
+    logInfo("Shopify GraphQL Request Completed", {
+      endpoint,
+      queryPreview,
+      requestedQueryCost: cost?.requestedQueryCost,
+      actualQueryCost: cost?.actualQueryCost,
+      throttleAvailable: throttle?.currentlyAvailable,
+      throttleRestoreRate: throttle?.restoreRate,
+    });
+
+    return payload.data;
   } catch (err) {
-    logError("Shopify GraphQL Network Fetch Failed", err, {
-      endpoint,
-      queryPreview,
-    });
+    statusText = "failed";
+    errorMessage = err.message;
     throw err;
+  } finally {
+    const durationMs = Date.now() - startTime;
+    try {
+      addNetworkLog({
+        provider: "shopify",
+        operationName,
+        method: "POST",
+        endpoint: "/admin/api/graphql.json",
+        statusCode,
+        status: statusText,
+        durationMs,
+        errorMessage,
+        startedAt,
+        completedAt: new Date().toISOString(),
+        metadata: {
+          cost: payload?.extensions?.cost?.actualQueryCost,
+          throttle: payload?.extensions?.cost?.throttleStatus?.currentlyAvailable,
+        }
+      });
+    } catch (logErr) {
+      // Ignore logging failures to avoid crash
+    }
   }
-
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => "Unknown error response body");
-    const error = new Error(`Shopify API HTTP ${response.status}: ${errorText}`);
-    logError("Shopify GraphQL HTTP Error Status Received", error, {
-      endpoint,
-      httpStatus: response.status,
-      errorText,
-      queryPreview,
-    });
-    throw error;
-  }
-
-  const payload = await response.json();
-  if (payload.errors?.length) {
-    const errorMessage = payload.errors.map((item) => item.message).join(", ");
-    const error = new Error(errorMessage);
-    logError("Shopify GraphQL API Errors Returned", error, {
-      endpoint,
-      errors: payload.errors,
-      queryPreview,
-    });
-    throw error;
-  }
-
-  const throttle = payload.extensions?.cost?.throttleStatus;
-  const cost = payload.extensions?.cost;
-
-  logInfo("Shopify GraphQL Request Completed", {
-    endpoint,
-    queryPreview,
-    requestedQueryCost: cost?.requestedQueryCost,
-    actualQueryCost: cost?.actualQueryCost,
-    throttleAvailable: throttle?.currentlyAvailable,
-    throttleRestoreRate: throttle?.restoreRate,
-  });
-
-  return payload.data;
 }
 
 async function paginate(query, variables, pickConnection) {
@@ -195,14 +226,25 @@ export async function fetchCollectionProducts(collectionId) {
           title
           handle
           sortOrder
+          productsCount {
+            count
+          }
         }
       }
     `,
     { id: collectionId },
   );
 
+  const expectedCount = collection.collection?.productsCount?.count ?? 0;
+  const fetchedCount = edges.length;
+  if (fetchedCount < expectedCount) {
+    throw new Error(`PRODUCT_FETCH_INCOMPLETE: expected ${expectedCount} products, but only fetched ${fetchedCount}`);
+  }
+
   return {
     collection: collection.collection,
+    expectedCount,
+    fetchedCount,
     products: edges
       .map(({ node }) => node)
       .filter((node) => node.status === "ACTIVE")

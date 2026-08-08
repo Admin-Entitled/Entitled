@@ -3,9 +3,10 @@ import { redactSecrets } from "../utils/sanitize.js";
 import salesIntelligenceRouter from "./salesIntelligence.js";
 import skuMediaRouter from "./skuMedia.js";
 import sorterRouter from "./sorter.js";
+import metaRouter from "./metaAds.js";
 import express from "express";
 import { getCachedTokenStatus } from "../services/shopifyAuth.js";
-import { env, getShopifyCapability } from "../config/env.js";
+import { env, getShopifyCapability, getMetaCapability } from "../config/env.js";
 import { isOrderMappingAvailable } from "../services/orderMappingDb.js";
 import { fetchShopCounts } from "../services/shopifyService.js";
 import { logError } from "../utils/logger.js";
@@ -16,6 +17,7 @@ const MAX_DIAGNOSTIC_DETAIL_LENGTH = 500;
 router.use(sorterRouter);
 router.use(skuMediaRouter);
 router.use(salesIntelligenceRouter);
+router.use(metaRouter);
 
 function diagnosticDetail(value) {
   return value ? redactSecrets(value).slice(0, MAX_DIAGNOSTIC_DETAIL_LENGTH) : null;
@@ -38,6 +40,7 @@ router.get("/health/readiness", (req, res) => {
     const isReady = missingTables.length === 0;
 
     const shopifyCap = getShopifyCapability();
+    const metaCap = getMetaCapability();
 
     res.status(isReady ? 200 : 503).json({
       ok: isReady,
@@ -49,6 +52,7 @@ router.get("/health/readiness", (req, res) => {
         shiprocketConfigured: Boolean(env.shiprocketEmail && env.shiprocketPassword),
         sqlitePathConfigured: Boolean(env.sqlitePath),
         orderMappingConfigured: Boolean(env.databaseUrl),
+        metaAdsConfigured: metaCap.available,
       },
       shopify: {
         available: shopifyCap.available,
@@ -61,6 +65,12 @@ router.get("/health/readiness", (req, res) => {
         available: isOrderMappingAvailable(),
         status: isOrderMappingAvailable() ? "ready" : "unavailable",
         reasonCategory: isOrderMappingAvailable() ? undefined : "configuration_missing",
+      },
+      metaAds: {
+        available: metaCap.available,
+        status: metaCap.status,
+        reasonCategory: metaCap.reasonCategory,
+        missingVariables: metaCap.missingVariables,
       },
       timestamp: new Date().toISOString(),
     });
@@ -133,6 +143,7 @@ router.get("/health/diagnostics", async (req, res) => {
     const shopifyTokenStatus = getCachedTokenStatus();
     const shopifyConfigured = Boolean(env.shopifyStoreDomain && (env.shopifyAdminAccessToken || (env.shopifyClientId && env.shopifyClientSecret)));
     const shiprocketConfigured = Boolean(env.shiprocketEmail && env.shiprocketPassword);
+    const metaCap = getMetaCapability();
     let shopifyCounts = { collectionsCount: 0, productsCount: 0 };
     let shopifyError = diagnosticDetail(shopifyTokenStatus.lastAuthError);
 
@@ -163,6 +174,10 @@ router.get("/health/diagnostics", async (req, res) => {
         status: shiprocketConfigured ? "configured" : "not_configured",
         configured: shiprocketConfigured,
         tokenPresent: Boolean(env.shiprocketToken),
+      },
+      metaAds: {
+        status: metaCap.status,
+        configured: metaCap.available,
       },
       timestamp: new Date().toISOString(),
     });

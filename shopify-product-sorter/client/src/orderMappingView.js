@@ -54,3 +54,43 @@ export function getOrderStatusDisplay(order) {
 export function getStatusFilterLabel(value) {
   return value === "ALL" ? "All Statuses" : labelStatus(value);
 }
+
+// ─── Order display helpers ───────────────────────────────────────────────────
+
+/**
+ * Email fallback chain used by order cards. Never exposes a raw value when
+ * the order has no email on record.
+ */
+export function getEmail(order) {
+  return order.customer_email || order.email || order.contact_email || "";
+}
+
+export function getOrderLabel(order) {
+  return order.shopify_order_name || `#${order.shopify_order_number || order.id}`;
+}
+
+export function getSubtitle(order) {
+  return order.shopify_order_number ? `Order ${order.shopify_order_number}` : "";
+}
+
+/**
+ * Normalize a list-orders API payload into dashboard state slices.
+ * Accepts either `globalSummary` (canonical) or the legacy `summary` shape.
+ */
+export function readOrdersPayload(payload) {
+  const nextOrders = Array.isArray(payload.orders) ? payload.orders : [];
+  const nextSummary =
+    payload.globalSummary && typeof payload.globalSummary === "object"
+      ? payload.globalSummary
+      : payload.summary && typeof payload.summary === "object"
+        ? payload.summary
+        : {};
+  return {
+    orders: nextOrders,
+    total: Number(payload.total || nextOrders.length || 0),
+    statuses: ["ALL", ...Object.keys(nextSummary).filter((status) => Number(nextSummary[status] || 0) > 0)],
+    page: Number(payload.page || 1),
+    pageSize: Number(payload.pageSize || nextOrders.length || 0),
+    deliveredAmountTotal: payload.deliveredAmountTotal || "0",
+  };
+}

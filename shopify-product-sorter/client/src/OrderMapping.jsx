@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./orderMappingApi";
+import { OrderCard, MetricCard, OrderTable } from "./OrderMappingComponents.jsx";
 import {
-  getOrderStatusDisplay,
   getStatusFilterLabel,
+  readOrdersPayload,
 } from "./orderMappingView";
+import { formatCount, formatCurrency } from "./utils/format.js";
 import "./orderMapping.css";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
@@ -12,168 +14,6 @@ const TODAY = new Date().toISOString().slice(0, 10);
 
 let pendingOrdersPromise = null;
 let pendingOrdersKey = "";
-
-function formatDate(value) {
-  if (!value) {
-    return "—";
-  }
-
-  return new Intl.DateTimeFormat("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-    timeZone: "Asia/Kolkata",
-  }).format(new Date(value));
-}
-
-function formatCount(value) {
-  return new Intl.NumberFormat("en-IN").format(Number(value || 0));
-}
-
-function formatCurrency(value) {
-  const amount = Number.parseFloat(value || 0);
-  if (!Number.isFinite(amount)) {
-    return "—";
-  }
-
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-
-function formatText(value) {
-  return value ? String(value) : "—";
-}
-
-function getEmail(order) {
-  return order.customer_email || order.email || order.contact_email || "";
-}
-
-function getOrderLabel(order) {
-  return order.shopify_order_name || `#${order.shopify_order_number || order.id}`;
-}
-
-function getSubtitle(order) {
-  return order.shopify_order_number ? `Order ${order.shopify_order_number}` : "";
-}
-
-function readOrdersPayload(payload) {
-  const nextOrders = Array.isArray(payload.orders) ? payload.orders : [];
-  const nextSummary = payload.globalSummary && typeof payload.globalSummary === "object"
-    ? payload.globalSummary
-    : payload.summary && typeof payload.summary === "object"
-      ? payload.summary
-      : {};
-  return {
-    orders: nextOrders,
-    total: Number(payload.total || nextOrders.length || 0),
-    statuses: ["ALL", ...Object.keys(nextSummary).filter((status) => Number(nextSummary[status] || 0) > 0)],
-    page: Number(payload.page || 1),
-    pageSize: Number(payload.pageSize || nextOrders.length || 0),
-    deliveredAmountTotal: payload.deliveredAmountTotal || "0",
-  };
-}
-
-function OrderCard({ order }) {
-  const email = getEmail(order);
-  const status = getOrderStatusDisplay(order);
-
-  return (
-    <article className="order-mapping-card">
-      <div className="order-mapping-card-title">
-        <strong>{getOrderLabel(order)}</strong>
-        <span>{formatDate(order.order_date)}</span>
-      </div>
-
-      <dl className="order-mapping-card-grid">
-        <div>
-          <dt>Customer</dt>
-          <dd>{formatText(order.customer_name)}</dd>
-        </div>
-        {email ? (
-          <div>
-            <dt>Email</dt>
-            <dd>{email}</dd>
-          </div>
-        ) : null}
-        <div>
-          <dt>Created</dt>
-          <dd>{formatDate(order.order_date)}</dd>
-        </div>
-        <div>
-          <dt>Status</dt>
-          <dd>{status.label}</dd>
-        </div>
-        <div>
-          <dt>Amount</dt>
-          <dd>{formatCurrency(order.order_amount)}</dd>
-        </div>
-        <div>
-          <dt>Details</dt>
-          <dd>{status.detail}</dd>
-        </div>
-      </dl>
-    </article>
-  );
-}
-
-function MetricCard({ label, value, detail, tone = "default" }) {
-  return (
-    <article className={`order-mapping-metric-card order-mapping-metric-card--${tone}`}>
-      <span className="order-mapping-metric-label">{label}</span>
-      <strong className="order-mapping-metric-value">{value}</strong>
-      {detail ? <span className="order-mapping-metric-detail">{detail}</span> : null}
-    </article>
-  );
-}
-
-function OrderTable({ orders }) {
-  return (
-    <div className="order-mapping-table-wrap">
-      <table className="order-mapping-table">
-        <thead>
-          <tr>
-            <th scope="col">Order</th>
-            <th scope="col">Customer</th>
-            <th scope="col">Email</th>
-            <th scope="col">Created</th>
-            <th scope="col">Status</th>
-            <th scope="col">Amount</th>
-            <th scope="col">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => {
-            const email = getEmail(order);
-            const status = getOrderStatusDisplay(order);
-
-            return (
-              <tr key={order.id}>
-                <td className="order-mapping-cell order-mapping-cell--order">
-                  <div className="order-mapping-primary">{getOrderLabel(order)}</div>
-                  <div className="order-mapping-secondary">{getSubtitle(order)}</div>
-                </td>
-                <td className="order-mapping-cell">
-                  <div className="order-mapping-primary">{formatText(order.customer_name)}</div>
-                </td>
-                <td className="order-mapping-cell">{email || "—"}</td>
-                <td className="order-mapping-cell">{formatDate(order.order_date)}</td>
-                <td className="order-mapping-cell">
-                  <span className={`order-mapping-pill order-mapping-pill--${status.tone}`}>
-                    {status.label}
-                  </span>
-                </td>
-                <td className="order-mapping-cell">{formatCurrency(order.order_amount)}</td>
-                <td className="order-mapping-cell">{status.detail}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
 
 function loadShopifyOrders({ status, page, pageSize, startDate, endDate }) {
   const requestKey = JSON.stringify({
@@ -337,19 +177,28 @@ export default function OrderMapping() {
         window.clearInterval(refreshTimer);
       }, 30000);
 
-      await api.syncShopify(dateStartInput && dateEndInput ? { start: dateStartInput, end: dateEndInput } : {});
+      const syncResult = await api.syncShopify(dateStartInput && dateEndInput ? { start: dateStartInput, end: dateEndInput } : {});
       await refreshOrders({
         startDate: appliedStartDate,
         endDate: appliedEndDate,
       });
-      setSyncMessage(
-        dateStartInput && dateEndInput
-          ? `Sync finished for ${dateStartInput} to ${dateEndInput}.`
-          : "Sync finished. The list now reflects the latest Shiprocket statuses.",
-      );
+      
+      if (syncResult && syncResult.status === "partially_completed") {
+        setSyncMessage(
+          `SYNC COMPLETED WITH WARNINGS: ${syncResult.ordersFetched || 0} orders processed, ${syncResult.tracking?.updated || 0} updated, ${syncResult.tracking?.failed || 0} require attention.`
+        );
+      } else if (syncResult) {
+        setSyncMessage(
+          `Sync completed successfully: ${syncResult.ordersFetched || 0} orders processed, ${syncResult.tracking?.updated || 0} updated, ${syncResult.tracking?.skippedTerminal || 0} skipped terminal.`
+        );
+      } else {
+        setSyncMessage("Sync finished.");
+      }
       setSyncError("");
-    } catch {
-      setSyncError("Sync failed. Please try again.");
+    } catch (err) {
+      const code = err.code || "SYNC_FAILED";
+      const message = err.message || "Please try again.";
+      setSyncError(`${code}: ${message}`);
     } finally {
       window.clearInterval(refreshTimer);
       window.clearTimeout(stopTimer);

@@ -1,127 +1,65 @@
 import { env } from "../config/env.js";
 import { orderMappingError } from "./orderMappingError.js";
 import { createNetworkLog } from "./orderMappingRepository.js";
+import {
+  authenticateShiprocket,
+  getCachedShiprocketToken,
+  getShiprocketBaseUrl,
+  isShiprocketConfigured,
+  setCachedShiprocketToken,
+  shiprocketRequest,
+} from "./shiprocketTransport.js";
 
-let token = env.shiprocketToken;
-const timeoutMs = Number(process.env.SHIPROCKET_REQUEST_TIMEOUT_MS || 15_000);
+/**
+ * Order Mapping Shiprocket client.
+ *
+ * Consumes the canonical shiprocketTransport (auth, token refresh, timeout,
+ * retry) while keeping this domain's error contract and order-mapping log sink.
+ */
 
-function configured() {
-  return Boolean(token || (env.shiprocketEmail && env.shiprocketPassword));
-}
-
-function baseUrl() {
-  return env.shiprocketBaseUrl.replace(/\/$/, "");
-}
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function sortLatestFirst(rows, getTimestamp) {
-  return [...rows].sort((left, right) => {
-    const leftTime = Date.parse(getTimestamp(left) || "") || 0;
-    const rightTime = Date.parse(getTimestamp(right) || "") || 0;
-    return rightTime - leftTime;
-  });
-}
-
-async function shiprocketRequest(url, options, allowRefresh = true, operation = "shiprocket_api") {
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    const startedAt = new Date();
-
-    try {
-      const response = await fetch(url, { ...options, signal: controller.signal });
-      const payload = await response.json().catch(() => ({}));
-
-      if (response.status === 401 && allowRefresh && !env.shiprocketToken) {
-        token = "";
-        await authenticateShiprocket();
-        return shiprocketRequest(url, options, false, operation);
-      }
-
-      if (response.ok) {
-        await createNetworkLog({
-          operation,
-          provider: "SHIPROCKET",
-          method: options?.method || "GET",
-          endpoint: typeof url === "string" ? new URL(url).pathname : url.pathname,
-          status: "success",
-          statusCode: response.status,
-          startedAt: startedAt.toISOString(),
-          completedAt: new Date().toISOString(),
-          durationMs: Date.now() - startedAt.getTime(),
-        });
-        return payload;
-      }
-
-      if ((response.status === 429 || response.status >= 500) && attempt < 2) {
-        await sleep(250 * (2 ** attempt));
-        continue;
-      }
-
-      const error = orderMappingError(
-        response.status === 401
-          ? "ORDER_MAPPING_PROVIDER_AUTH_FAILED"
-          : "ORDER_MAPPING_PROVIDER_REQUEST_FAILED",
-        response.status === 401
-          ? "Shiprocket authentication failed"
-          : "Shiprocket request failed",
-        { statusCode: response.status === 401 ? 502 : 503 },
-      );
-      error.category = response.status === 401 ? "shiprocket_authentication" : "shiprocket_api";
-      await createNetworkLog({
-        operation,
-        provider: "SHIPROCKET",
-        method: options?.method || "GET",
-        endpoint: typeof url === "string" ? new URL(url).pathname : url.pathname,
-        status: "failed",
-        statusCode: response.status,
-        startedAt: startedAt.toISOString(),
-        completedAt: new Date().toISOString(),
-        durationMs: Date.now() - startedAt.getTime(),
-        errorSummary: error.message,
-      });
-      throw error;
-    } catch (error) {
-      if (attempt === 2 || error.category) {
-        error.category ||= error.name === "AbortError" ? "shiprocket_timeout" : "shiprocket_network";
-        await createNetworkLog({
-          operation,
-          provider: "SHIPROCKET",
-          method: options?.method || "GET",
-          endpoint: typeof url === "string" ? new URL(url).pathname : url.pathname,
-          status: "failed",
-          statusCode: error.statusCode || null,
-          startedAt: startedAt.toISOString(),
-          completedAt: new Date().toISOString(),
-          durationMs: Date.now() - startedAt.getTime(),
-          errorSummary: error.message,
-        }).catch(() => {});
-        throw error;
-      }
-
-      await sleep(250 * (2 ** attempt));
-    } finally {
-      clearTimeout(timer);
-    }
-  }
-
-  return {};
-}
-
-async function authenticateShiprocket() {
-  const payload = await shiprocketRequest(
-    `${baseUrl()}/v1/external/auth/login`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: env.shiprocketEmail, password: env.shiprocketPassword }),
-    },
-    false,
-    "shiprocket_auth",
+function createOrderMappingError({ status }) {
+  const error = orderMappingError(
+    status === 401
+      ? "ORDER_MAPPING_PROVIDER_AUTH_FAILED"
+      : "ORDER_MAPPING_PROVIDER_REQUEST_FAILED",
+    status === 401
+      ? "Shiprocket authentication failed"
+      : "Shiprocket request failed",
+    { statusCode: status === 401 ? 502 : 503 },
   );
+  error.category = status === 401 ? "shiprocket_authentication" : "shiprocket_api";
+  return error;
+}
+
+function logNetworkEntry(entry) {
+  // Legacy logging cadence: the 401-refresh attempt and transient retries are
+  // not recorded; only final success/failure entries reach the repo.
+  if (entry.type === "refreshing") {
+    return undefined;
+  }
+  if (entry.type === "failed" && !entry.final) {
+    return undefined;
+  }
+  return createNetworkLog({
+    operation: entry.operation,
+    provider: "SHIPROCKET",
+    method: entry.method,
+    endpoint: entry.endpoint,
+    status: entry.status,
+    statusCode: entry.statusCode,
+    startedAt: entry.startedAt.toISOString(),
+    completedAt: entry.completedAt.toISOString(),
+    durationMs: entry.durationMs,
+    errorSummary: entry.errorSummary,
+  }).catch(() => {});
+}
+
+async function authenticate() {
+  const payload = await authenticateShiprocket({
+    operation: "shiprocket_auth",
+    onLog: logNetworkEntry,
+    createError: createOrderMappingError,
+  });
 
   if (!payload.token) {
     const error = orderMappingError(
@@ -133,7 +71,15 @@ async function authenticateShiprocket() {
     throw error;
   }
 
-  token = payload.token;
+  setCachedShiprocketToken(payload.token);
+}
+
+function sortLatestFirst(rows, getTimestamp) {
+  return [...rows].sort((left, right) => {
+    const leftTime = Date.parse(getTimestamp(left) || "") || 0;
+    const rightTime = Date.parse(getTimestamp(right) || "") || 0;
+    return rightTime - leftTime;
+  });
 }
 
 function normalizeShiprocketRow(item, shipment) {
@@ -185,12 +131,12 @@ function normalizeShiprocketRow(item, shipment) {
 }
 
 export async function fetchOrderMappingShiprocketShipments({ start, end }) {
-  if (!configured()) {
+  if (!isShiprocketConfigured()) {
     return { configured: false, pages: 0, shipments: [] };
   }
 
-  if (!token) {
-    await authenticateShiprocket();
+  if (!getCachedShiprocketToken()) {
+    await authenticate();
   }
 
   let page = 1;
@@ -198,7 +144,7 @@ export async function fetchOrderMappingShiprocketShipments({ start, end }) {
   const shipments = [];
 
   while (page <= totalPages) {
-    const url = new URL(`${baseUrl()}/v1/external/orders`);
+    const url = new URL(`${getShiprocketBaseUrl()}/v1/external/orders`);
     for (const [key, value] of Object.entries({
       page,
       per_page: 100,
@@ -215,9 +161,13 @@ export async function fetchOrderMappingShiprocketShipments({ start, end }) {
 
     const payload = await shiprocketRequest(
       url,
-      { headers: { Authorization: `Bearer ${token}` } },
-      true,
-      "shiprocket_orders",
+      { headers: { Authorization: `Bearer ${getCachedShiprocketToken()}` } },
+      {
+        operation: "shiprocket_orders",
+        refresh: authenticate,
+        onLog: logNetworkEntry,
+        createError: createOrderMappingError,
+      },
     );
     const data = Array.isArray(payload.data) ? payload.data : [];
     for (const item of data) {
@@ -232,12 +182,12 @@ export async function fetchOrderMappingShiprocketShipments({ start, end }) {
 }
 
 export async function fetchOrderMappingShiprocketTracking(awb) {
-  if (!configured()) {
+  if (!isShiprocketConfigured()) {
     return { configured: false };
   }
 
-  if (!token) {
-    await authenticateShiprocket();
+  if (!getCachedShiprocketToken()) {
+    await authenticate();
   }
 
   const safeAwb = String(awb || "").trim();
@@ -246,10 +196,14 @@ export async function fetchOrderMappingShiprocketTracking(awb) {
   }
 
   const payload = await shiprocketRequest(
-    `${baseUrl()}/v1/external/courier/track/awb/${encodeURIComponent(safeAwb)}`,
-    { headers: { Authorization: `Bearer ${token}` } },
-    true,
-    "shiprocket_tracking",
+    `${getShiprocketBaseUrl()}/v1/external/courier/track/awb/${encodeURIComponent(safeAwb)}`,
+    { headers: { Authorization: `Bearer ${getCachedShiprocketToken()}` } },
+    {
+      operation: "shiprocket_tracking",
+      refresh: authenticate,
+      onLog: logNetworkEntry,
+      createError: createOrderMappingError,
+    },
   );
 
   const tracking = payload.tracking_data || payload.data || payload || {};

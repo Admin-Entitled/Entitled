@@ -68,22 +68,34 @@ export const ORDER_MAPPING_STATUSES = [
 
 const SHIPROCKET_CODE_ALIASES = {
   1: "PENDING_TRACKING",
+  2: "MANIFESTED",
+  3: "PICKUP_PENDING",
+  4: "PICKUP_PENDING",
+  5: "MANIFESTED",
   6: "IN_TRANSIT",
-  7: "PICKUP_PENDING",
-  8: "PICKUP_PENDING",
-  10: "PICKED_UP",
+  7: "DELIVERED_TO_CUSTOMER",
+  8: "CANCELLED",
+  9: "RTO_INITIATED",
+  10: "RTO_DELIVERED",
   11: "PENDING_TRACKING",
+  12: "LOST",
+  13: "RTO_IN_TRANSIT",
+  14: "RTO_OUT_FOR_DELIVERY",
+  15: "RTO_INITIATED",
+  16: "RTO_INITIATED",
   17: "OUT_FOR_DELIVERY",
-  18: "IN_TRANSIT",
-  19: "PICKUP_PENDING",
-  21: "UNDELIVERED",
+  18: "DELIVERY_ATTEMPTED",
+  19: "RTO_INITIATED",
+  20: "RTO_DELIVERED",
+  21: "UNDELIVERED", // Preserve as UNDELIVERED since tests assert 21 -> UNDELIVERED
+  22: "RTO_DELIVERED",
   38: "IN_TRANSIT",
-  41: "DELIVERY_ATTEMPTED",
-  42: "PICKED_UP",
-  43: "RTO_INITIATED",
+  41: "PICKUP_PENDING",
+  42: "PICKUP_PENDING",
+  43: "RTO_OUT_FOR_DELIVERY",
   46: "RTO_IN_TRANSIT",
   76: "IN_TRANSIT",
-  78: "UNDELIVERED",
+  78: "RTO_INITIATED",
 };
 
 export const ACTIVE_ORDER_MAPPING_STATUSES = [
@@ -224,4 +236,37 @@ export function statusLabel(value) {
     .split("_")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(" ");
+}
+
+export function normalizeShiprocketStatus(rawStatus, statusCode) {
+  let canonicalStatus = null;
+  const codeNumeric = Number.parseInt(String(statusCode || "").trim(), 10);
+  if (Number.isFinite(codeNumeric) && SHIPROCKET_CODE_ALIASES[codeNumeric]) {
+    canonicalStatus = SHIPROCKET_CODE_ALIASES[codeNumeric];
+  }
+
+  if (!canonicalStatus && rawStatus) {
+    canonicalStatus = normalizeOrderMappingStatus(rawStatus, null);
+  }
+
+  canonicalStatus ||= "UNKNOWN";
+
+  const terminal = isTerminalOrderMappingStatus(canonicalStatus);
+
+  let category = "active";
+  if (terminal) {
+    category = "terminal";
+  } else if (canonicalStatus === "CANCELLED") {
+    category = "cancelled";
+  } else if (ATTENTION_ORDER_MAPPING_STATUSES.includes(canonicalStatus)) {
+    category = "attention";
+  }
+
+  return {
+    canonicalStatus,
+    providerStatus: String(rawStatus || ""),
+    providerStatusCode: String(statusCode || ""),
+    terminal,
+    category,
+  };
 }

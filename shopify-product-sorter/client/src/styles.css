@@ -1894,3 +1894,47 @@ button:focus-visible,
 .table-wrapper > .empty-state {
   margin: 20px;
 }
+
+/* Preview score/reason transparency tags */
+.score-tag {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(200, 181, 138, 0.12);
+  color: var(--metal);
+  border: 1px solid rgba(200, 181, 138, 0.22);
+  cursor: help;
+  white-space: nowrap;
+}
+
+.reason-tag {
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(137, 167, 125, 0.12);
+  color: var(--success);
+  border: 1px solid rgba(137, 167, 125, 0.22);
+  white-space: nowrap;
+}
+
+/* Strategy section UI improvements */
+.strategy-note {
+  margin: 0 0 14px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.weight-label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.weight-desc {
+  display: block;
+  font-size: 11px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+

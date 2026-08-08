@@ -208,6 +208,10 @@ export const env = {
   set adminSecret(v) { overrides.adminSecret = parseString(v); },
   get apiSecret() { return overrides.apiSecret ?? parseString(process.env.API_SECRET); },
   set apiSecret(v) { overrides.apiSecret = parseString(v); },
+  get metaAccessToken() { return overrides.metaAccessToken ?? parseString(process.env.META_ACCESS_TOKEN); },
+  set metaAccessToken(v) { overrides.metaAccessToken = parseString(v); },
+  get metaAdAccountId() { return overrides.metaAdAccountId ?? parseString(process.env.META_AD_ACCOUNT_ID); },
+  set metaAdAccountId(v) { overrides.metaAdAccountId = parseString(v); },
 
   toSnapshot() {
     return Object.freeze({
@@ -241,9 +245,37 @@ export const env = {
       shiprocketEnabled: this.shiprocketEnabled,
       adminSecret: this.adminSecret,
       apiSecret: this.apiSecret,
+      metaAccessToken: this.metaAccessToken,
+      metaAdAccountId: this.metaAdAccountId,
     });
   },
 };
+
+export function getMetaCapability(customEnv = process.env) {
+  const token = parseString(customEnv.META_ACCESS_TOKEN) || env.metaAccessToken;
+  const accountId = parseString(customEnv.META_AD_ACCOUNT_ID) || env.metaAdAccountId;
+
+  const missingVariables = [];
+  if (!token) missingVariables.push("META_ACCESS_TOKEN");
+  if (!accountId) missingVariables.push("META_AD_ACCOUNT_ID");
+
+  return {
+    available: missingVariables.length === 0,
+    status: missingVariables.length === 0 ? "available" : "unavailable",
+    reasonCategory: missingVariables.length === 0 ? null : "configuration_missing",
+    missingVariables,
+  };
+}
+
+export function ensureMetaEnv(customEnv = process.env) {
+  const capability = getMetaCapability(customEnv);
+  if (!capability.available) {
+    throw new EnvValidationError(
+      `Missing required Meta Ads environment variable(s): ${capability.missingVariables.join(", ")}`,
+      capability.missingVariables,
+    );
+  }
+}
 
 export function getShopifyCapability(customEnv = process.env) {
   // Fall back to the env getters so runtime overrides (used by tests and

@@ -159,9 +159,16 @@ test("Sorter: write actions are guarded", () => {
   assert.ok(sorterSource.includes("!preview.newOrder.length"), "Apply must be disabled without a generated order");
   assert.ok(sorterSource.includes("!preview.previewVersion"), "Apply must check previewVersion");
   assert.ok(sorterSource.includes("previewStale"), "Apply must check for stale preview");
-  assert.ok(sorterSource.includes("disabled={isSyncingAll || !collections.length}"), "Update All must be disabled without collections");
-  assert.ok(sorterSource.includes("Preview only — no changes are written to Shopify until you Apply."));
+  assert.ok(sorterSource.includes("disabled={isSyncingAll || !collections.length || !isStrategyValid}"), "Update All must be disabled without collections or a valid strategy");
   assert.ok(sorterSource.includes("button danger"));
+});
+
+test("GeneratedOrderPreview: preview copy warns that nothing is written until Apply", () => {
+  // The preview panel is a cohesive extracted component; the copy-text contract
+  // is asserted at its canonical location.
+  const previewSource = readFileSync(new URL("./GeneratedOrderPreview.jsx", import.meta.url), "utf8");
+  assert.ok(previewSource.includes("Preview only — no changes are written to Shopify until you Apply."));
+  assert.ok(previewSource.includes("Clear Preview"));
 });
 
 test("App: readiness is the first capability request and is fetched once", () => {
@@ -173,10 +180,13 @@ test("App: readiness is the first capability request and is fetched once", () =>
   assert.ok(!appSource.includes("getCollections()"));
 });
 
-test("App: diagnostics are a collapsible drawer, collapsed by default and out of the permanent sidebar", () => {
-  assert.ok(appSource.includes("useState(false)"), "diagnostics must default to collapsed");
-  assert.ok(appSource.includes("diagnosticsOpen ? ("), "diagnostics must render conditionally");
-  assert.ok(appSource.includes("setDiagnosticsOpen"), "diagnostics must have an explicit toggle");
+test("App: diagnostics are a first-class module selected through activeModule", () => {
+  // System Diagnostics is now a module (see sidebarModules ACTIVE_FEATURE),
+  // reached through the same routing used by the other operational modules.
+  assert.ok(appSource.includes('activeModule === "diagnostics"'), "diagnostics must be routed as a module");
+  assert.ok(appSource.includes('setActiveModule("diagnostics")'), "diagnostics must have an explicit nav action");
+  assert.ok(appSource.includes("<SystemDiagnostics"), "App must render the SystemDiagnostics module");
+  assert.ok(appSource.includes('key="diagnostics"'), "SystemDiagnostics must be ErrorBoundary-wrapped");
 });
 
 // ─────────────────────────────────────────────────────────────────────────────

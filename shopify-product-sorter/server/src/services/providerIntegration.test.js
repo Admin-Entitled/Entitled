@@ -362,11 +362,11 @@ import {
 test("Shiprocket Contract: maps raw status strings and codes to exact normalized statuses", () => {
   assert.equal(normalizeOrderMappingStatus(1), "PENDING_TRACKING");
   assert.equal(normalizeOrderMappingStatus(6), "IN_TRANSIT");
-  assert.equal(normalizeOrderMappingStatus(7), "PICKUP_PENDING");
+  assert.equal(normalizeOrderMappingStatus(7), "DELIVERED_TO_CUSTOMER");
   assert.equal(normalizeOrderMappingStatus(17), "OUT_FOR_DELIVERY");
   assert.equal(normalizeOrderMappingStatus(21), "UNDELIVERED");
-  assert.equal(normalizeOrderMappingStatus(41), "DELIVERY_ATTEMPTED");
-  assert.equal(normalizeOrderMappingStatus(43), "RTO_INITIATED");
+  assert.equal(normalizeOrderMappingStatus(41), "PICKUP_PENDING");
+  assert.equal(normalizeOrderMappingStatus(43), "RTO_OUT_FOR_DELIVERY");
   assert.equal(normalizeOrderMappingStatus(46), "RTO_IN_TRANSIT");
 
   assert.equal(normalizeOrderMappingStatus("DELIVERED"), "DELIVERED_TO_CUSTOMER");

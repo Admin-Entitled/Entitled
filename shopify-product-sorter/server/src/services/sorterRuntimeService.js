@@ -321,6 +321,10 @@ export function listActionLogs({ afterId = 0, limit = 30 } = {}) {
   return rows.map(mapActionLog);
 }
 
+export function clearNetworkLogs() {
+  db.prepare(`DELETE FROM sorter_network_logs`).run();
+}
+
 export function addNetworkLog(entry) {
   const startedAt = entry.startedAt || nowIso();
   const result = db.prepare(
@@ -350,6 +354,9 @@ export function addNetworkLog(entry) {
     startedAt,
     entry.completedAt ?? null,
   );
+
+  // Bounded size check - keep latest 200 logs
+  db.prepare(`DELETE FROM sorter_network_logs WHERE id <= (SELECT MAX(id) - 200 FROM sorter_network_logs)`).run();
 
   const row = db.prepare(`SELECT * FROM sorter_network_logs WHERE id = ?`).get(result.lastInsertRowid);
   return mapNetworkLog(row);

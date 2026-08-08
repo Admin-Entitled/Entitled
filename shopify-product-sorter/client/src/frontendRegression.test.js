@@ -22,9 +22,9 @@ test("Frontend Regression: Module Classification & Placeholder Ownership", () =>
   }
 
   const activeModules = getActiveModules();
-  assert.equal(activeModules.length, 3);
+  assert.equal(activeModules.length, 5);
   const activeIds = activeModules.map((m) => m.id);
-  assert.deepEqual(activeIds, ["sorter", "order-mapping", "sku-image-manager"]);
+  assert.deepEqual(activeIds, ["sorter", "order-mapping", "sku-image-manager", "network", "diagnostics"]);
 
   for (const module of activeModules) {
     assert.equal(module.enabled, true);
@@ -286,3 +286,103 @@ test("Frontend Regression: preview is invalidated when inputs change", () => {
     "a stale preview must surface the operator guidance message",
   );
 });
+
+// ===== Currency correctness regression =====
+// The canonical INR formatter now lives in utils/format.js (single source of
+// truth); Sorter.jsx and OrderMapping.jsx import it. These tests assert the
+// canonical location and that the product table renders through it.
+
+test("CURRENCY-I: canonical formatMoney uses INR currency code, not USD", () => {
+  const src = readFileSync(new URL("./utils/format.js", import.meta.url), "utf8");
+  assert.match(src, /currency: "INR"/, "formatMoney must use INR currency code");
+  assert.ok(!src.includes('currency: "USD"'), "formatMoney must not use USD currency code");
+});
+
+test("CURRENCY-J: canonical formatMoney uses en-IN locale, not en-US", () => {
+  const src = readFileSync(new URL("./utils/format.js", import.meta.url), "utf8");
+  assert.match(src, /"en-IN"/, "formatMoney must use the en-IN locale for Indian number grouping");
+  assert.ok(!src.includes('"en-US"'), "canonical formatter must not use en-US locale for money formatting");
+});
+
+test("CURRENCY-K: no bare dollar symbol hard-coded as currency label in canonical formatter", () => {
+  const src = readFileSync(new URL("./utils/format.js", import.meta.url), "utf8");
+  // Check that the canonical formatMoney does NOT default to a dollar literal output.
+  // Specifically: there must be no string like "$" or '$ ' used as a currency prefix.
+  // The correct output is via Intl.NumberFormat with INR which produces ₹.
+  assert.ok(!src.includes('style: "currency",\n    currency: "USD"'), "No USD currency formatting must remain");
+  assert.ok(!src.includes('"$"'), 'No bare "$" string literal must appear as a currency symbol');
+  assert.ok(!src.includes("'$'"), "No bare '$' string literal must appear as a currency symbol");
+  // Verify INR is used instead
+  assert.match(src, /currency: "INR"/, "INR must be the currency used in formatMoney");
+  assert.match(src, /function formatMoney/, "canonical formatMoney function must exist");
+});
+
+test("CURRENCY-L: product table revenue renders through the canonical INR formatter", () => {
+  const utilsSrc = readFileSync(new URL("./utils/format.js", import.meta.url), "utf8");
+  assert.match(utilsSrc, /function formatMoney/, "canonical formatMoney must exist");
+  assert.match(utilsSrc, /currency: "INR"/, "formatMoney must use INR");
+  // Verify the product table in Sorter.jsx renders revenue via formatMoney
+  const sorterSrc = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  assert.match(sorterSrc, /formatMoney\(product\.salesRevenue/, "product table must use formatMoney for revenue");
+});
+
+// ===== Dead frontend scoring code removal =====
+
+test("STRATEGY-CLEANUP: dead frontend scoring functions have been removed", () => {
+  const src = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  // These were frontend-only scoring functions with wrong field names — they must be gone.
+  assert.ok(!src.includes("function recencyScore"), "Dead recencyScore function must be removed");
+  assert.ok(!src.includes("function resolveStrategy"), "Dead resolveStrategy function must be removed");
+  assert.ok(!src.includes("function buildScoringContext"), "Dead buildScoringContext function must be removed");
+  assert.ok(!src.includes("function scoreProduct"), "Dead scoreProduct function must be removed");
+  assert.ok(!src.includes("function calculateScore"), "Dead calculateScore function must be removed");
+  assert.ok(!src.includes("brandPriorityWeight"), "Dead brandPriorityWeight (wrong schema) must be removed");
+  assert.ok(!src.includes("newProductBoost"), "Dead newProductBoost (wrong schema) must be removed");
+  assert.ok(!src.includes("lowSellerPenalty"), "Dead lowSellerPenalty (wrong schema) must be removed");
+});
+
+test("STRATEGY-CLEANUP: weightFields match the canonical backend strategy schema", () => {
+  const src = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  // The five canonical keys must all appear in weightFields
+  assert.match(src, /salesWeight/, "weightFields must include salesWeight");
+  assert.match(src, /inventoryWeight/, "weightFields must include inventoryWeight");
+  assert.match(src, /newnessWeight/, "weightFields must include newnessWeight");
+  assert.match(src, /momentumWeight/, "weightFields must include momentumWeight");
+  assert.match(src, /rotationWeight/, "weightFields must include rotationWeight");
+});
+
+// ===== Strategy UI Integration Regression =====
+
+test("STRATEGY-UI-REGRESSION: Sorter.jsx renders weight fields, percentage displays, dirty state badge, and reset compact button", () => {
+  const src = readFileSync(new URL("./Sorter.jsx", import.meta.url), "utf8");
+  assert.match(src, /UNSAVED CHANGES/, "strategy UI must check and display UNSAVED CHANGES state");
+  assert.match(src, /SAVED/, "strategy UI must check and display SAVED state");
+  assert.match(src, /strategyTotalPercent\(\) === 100/, "isStrategyValid must assert sum is 100");
+  assert.match(src, /Reset to Defaults/, "strategy UI must render Reset to Defaults button");
+  assert.match(src, /disabled=\{loading || !isStrategyValid\}/, "Save Strategy must be disabled if invalid");
+  assert.match(src, /disabled=\{loading || !snapshot || !isStrategyValid || hasUnsavedChanges\}/, "Generate must be disabled when strategy is invalid or unsaved");
+});
+
+test("NAVIGATION-TEST: routeConfig resolves legacy and unknown routes safely", () => {
+  // unknown diagnostic route fails safely by resolving to ROOT_NAMES.APP
+  const resolvedUnknown = resolveRootPath("/unknown-diagnostic-route-path");
+  assert.equal(resolvedUnknown, "app");
+
+  // legacy route redirects correctly
+  const redirect = legacyRedirectFor("/delivery-resolution");
+  assert.equal(redirect, "/order-mapping");
+
+  // canonical route resolves correctly
+  const resolvedCanonical = resolveRootPath("/order-mapping");
+  assert.equal(resolvedCanonical, "order-mapping");
+});
+
+test("DIAGNOSTICS-COMPONENTS-WIRING: App.jsx imports NetworkActivity and SystemDiagnostics", () => {
+  const src = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
+  assert.match(src, /import NetworkActivity from "\.\/NetworkActivity"/);
+  assert.match(src, /import SystemDiagnostics from "\.\/SystemDiagnostics"/);
+  assert.match(src, /activeModule === "network"/);
+  assert.match(src, /activeModule === "diagnostics"/);
+});
+
+

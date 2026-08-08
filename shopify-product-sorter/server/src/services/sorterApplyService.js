@@ -31,7 +31,7 @@ export function reorderSnapshot(snapshot, orderIds) {
  * product count. Never exposes product IDs to the browser by itself; it is a
  * concurrency/staleness guard only, not an authentication mechanism.
  */
-export function computePreviewVersion(collectionId, snapshot) {
+export function computePreviewVersion(collectionId, snapshot, strategy = {}) {
   const orderedIds = snapshot.products
     .slice()
     .sort((left, right) => left.collectionPosition - right.collectionPosition)
@@ -40,6 +40,8 @@ export function computePreviewVersion(collectionId, snapshot) {
     collectionId,
     snapshot.syncedAt || "",
     snapshot.products.length,
+    strategy.version || "",
+    strategy.hash || "",
     ...orderedIds,
   ].join("|");
   return crypto.createHash("sha256").update(material).digest("hex").slice(0, 16);
@@ -110,9 +112,9 @@ function setMismatchDetails(snapshot, orderIds) {
  *
  * Returns the counts-only details when the apply is valid.
  */
-export function assertApplyOrderValid(collectionId, snapshot, orderIds, previewVersion) {
+export function assertApplyOrderValid(collectionId, snapshot, orderIds, previewVersion, strategy) {
   if (previewVersion !== undefined && previewVersion !== null) {
-    const currentVersion = computePreviewVersion(collectionId, snapshot);
+    const currentVersion = computePreviewVersion(collectionId, snapshot, strategy);
     if (currentVersion !== previewVersion) {
       throw new AppError("GENERATED_ORDER_STALE", STALE_MESSAGE, {
         statusCode: 409,
@@ -151,10 +153,10 @@ export async function applyGeneratedOrder(
   collectionId,
   snapshot,
   newOrderIds,
-  { previewVersion, syncCollectionOrderFn = syncCollectionOrder } = {},
+  { previewVersion, strategy, syncCollectionOrderFn = syncCollectionOrder } = {},
 ) {
   validateOrderIds(newOrderIds);
-  assertApplyOrderValid(collectionId, snapshot, newOrderIds, previewVersion);
+  assertApplyOrderValid(collectionId, snapshot, newOrderIds, previewVersion, strategy);
 
   createBackup(
     collectionId,

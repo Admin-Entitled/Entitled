@@ -253,3 +253,66 @@ test("TEST-005: safe logging assertion - excludes customer PII and raw CSV conte
   assert.equal(serializedLog.includes(piiObject.rawCsvRow), false);
   assert.equal(serializedLog.includes(piiObject.authSessionToken), false);
 });
+
+// ============================================================
+// CORRECTNESS & MATCHING SPECIFIC TESTS (41-47)
+// ============================================================
+
+import { normalizeShiprocketStatus } from "./orderMappingStatus.js";
+
+test("MATCHING-CORRECTNESS: exact normalization and priorities", () => {
+  const rows = [
+    { shiprocket_channel_reference: "1255" }
+  ];
+  // #1255 matches channel_order_id "1255"
+  const m1 = matchOrderMappingShipment({ orderNumber: "#1255" }, rows);
+  assert.equal(m1.method, "shiprocket_channel_reference");
+  assert.equal(m1.row, rows[0]);
+
+  // "#1255" normalization matches exact 1255
+  assert.equal(normalizeOrderMappingIdentifier("#1255"), "1255");
+  assert.equal(normalizeOrderMappingIdentifier("1255"), "1255");
+
+  // 1255 does NOT match 11255
+  const rowsMismatch = [{ shiprocket_channel_reference: "11255" }];
+  const mMismatch = matchOrderMappingShipment({ orderNumber: "1255" }, rowsMismatch);
+  assert.equal(mMismatch.row, null);
+
+  // persisted shipment ID/response ID is preferred where valid
+  const rowsPref = [
+    { shiprocket_response_id: "SR_1255", shiprocket_channel_reference: "9999" },
+    { shiprocket_response_id: "SR_9999", shiprocket_channel_reference: "1255" }
+  ];
+  const mPref = matchOrderMappingShipment({ shiprocketResponseId: "SR_1255", orderNumber: "1255" }, rowsPref);
+  assert.equal(mPref.method, "shiprocket_response_id");
+  assert.equal(mPref.row, rowsPref[0]);
+});
+
+test("STATUS-CORRECTNESS: maps raw provider status to canonical", () => {
+  // Delivered maps correctly
+  const sDelivered = normalizeShiprocketStatus("Delivered", 7);
+  assert.equal(sDelivered.canonicalStatus, "DELIVERED_TO_CUSTOMER");
+  assert.equal(sDelivered.terminal, true);
+  assert.equal(sDelivered.category, "terminal");
+
+  // RTO Delivered maps correctly
+  const sRtoDelivered = normalizeShiprocketStatus("RTO Delivered", 10);
+  assert.equal(sRtoDelivered.canonicalStatus, "RTO_DELIVERED");
+  assert.equal(sRtoDelivered.terminal, true);
+
+  // RTO In Transit maps correctly
+  const sRtoInTransit = normalizeShiprocketStatus("RTO In Transit", 13);
+  assert.equal(sRtoInTransit.canonicalStatus, "RTO_IN_TRANSIT");
+
+  // Lost maps correctly
+  const sLost = normalizeShiprocketStatus("Lost", 12);
+  assert.equal(sLost.canonicalStatus, "LOST");
+
+  // Active transit maps correctly
+  const sInTransit = normalizeShiprocketStatus("Shipped", 6);
+  assert.equal(sInTransit.canonicalStatus, "IN_TRANSIT");
+
+  // Unknown status text maps safely to UNKNOWN
+  const sUnknown = normalizeShiprocketStatus("Totally Fake Status Text", 9999);
+  assert.equal(sUnknown.canonicalStatus, "UNKNOWN");
+});

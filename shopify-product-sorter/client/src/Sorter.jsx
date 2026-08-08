@@ -1,20 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api, validateApplyOrderIds } from "./sorterApi";
-
-const defaultFilters = {
-  search: "",
-  idSearch: "",
-  vendor: "all",
-  stock: "all",
-  soldRange: "all",
-  rotation: "all",
-  allottedOnly: false,
-  performance: "all",
-  allocation: "all",
-  currentRange: "all",
-  status: "all",
-  updatedRange: "all",
-};
+import GeneratedOrderPreview from "./GeneratedOrderPreview.jsx";
+import { defaultFilters, getAllocationState, matchesFilters } from "./sorterFilters.js";
+import { INITIAL_SETTINGS, STRATEGY_PRESETS, weightFields } from "./strategySchema.js";
+import { formatDate, formatMoney } from "./utils/format.js";
 
 const emptyPreview = {
   newOrder: [],
@@ -25,313 +14,21 @@ const emptyPreview = {
 const fallbackImage =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23f5f5f5' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-size='16' fill='%23999' text-anchor='middle' dy='.3em'%3ENo image%3C/text%3E%3C/svg%3E";
 
-const strategyFields = [
-  { key: "brandPriorityWeight", label: "Brand Priority" },
-  { key: "newProductBoost", label: "New Product Boost" },
-  { key: "salesWeight", label: "Sales" },
-  { key: "inventoryWeight", label: "Inventory" },
-  { key: "lowSellerPenalty", label: "Low Seller Penalty" },
-  { key: "randomnessWeight", label: "Randomness" },
-];
-
-const strategyTotal = (strategy) => strategyFields.reduce((sum, field) => sum + Number(strategy[field.key] || 0), 0);
-
-function formatMoney(value, currencyCode = "USD") {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(value);
-}
-
-function formatDate(value) {
-  if (!value) return "Never";
-  return new Date(value).toLocaleString();
-}
-
-function performanceBucket(product) {
-  const sold = product.soldQuantity || 0;
-  if (sold >= 20) return "hot";
-  if (sold >= 3) return "warm";
-  return "cold";
-}
-
-function getAllocationState(product) {
-  if (product.allottedPosition) return "pinned";
-  if (product.includeInRotation !== false) return "eligible";
-  return "hidden";
-}
-
-function matchesFilters(product, filters) {
-  const matchesSearch =
-    !filters.search ||
-    product.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-    product.handle.toLowerCase().includes(filters.search.toLowerCase());
-  const matchesId =
-    !filters.idSearch ||
-    product.id.split("/").pop().toLowerCase().includes(filters.idSearch.toLowerCase());
-  const matchesVendor = filters.vendor === "all" || product.vendor === filters.vendor;
-  const matchesCurrentRange =
-    filters.currentRange === "all" ||
-    (filters.currentRange === "page1" && product.collectionPosition <= 40) ||
-    (filters.currentRange === "afterPage1" && product.collectionPosition > 40);
-  const matchesStock =
-    filters.stock === "all" ||
-    (filters.stock === "in" && product.inventoryQuantity > 0) ||
-    (filters.stock === "out" && product.inventoryQuantity <= 0);
-  const matchesSold =
-    filters.soldRange === "all" ||
-    (filters.soldRange === "0-2" && product.soldQuantity <= 2) ||
-    (filters.soldRange === "3-19" && product.soldQuantity > 2 && product.soldQuantity < 20) ||
-    (filters.soldRange === "20+" && product.soldQuantity >= 20);
-  const matchesRotation =
-    filters.rotation === "all" ||
-    (filters.rotation === "yes" && product.includeInRotation !== false) ||
-    (filters.rotation === "no" && product.includeInRotation === false);
-  const matchesAllotted = !filters.allottedOnly || Boolean(product.allottedPosition);
-  const bucket = performanceBucket(product);
-  const matchesPerformance = filters.performance === "all" || filters.performance === bucket;
-  const matchesAllocation =
-    filters.allocation === "all" || filters.allocation === getAllocationState(product);
-  const matchesStatus = filters.status === "all" || product.status === filters.status;
-  const updatedAgeDays = product.updatedAt
-    ? (Date.now() - new Date(product.updatedAt).getTime()) / (1000 * 60 * 60 * 24)
-    : Number.POSITIVE_INFINITY;
-  const matchesUpdatedRange =
-    filters.updatedRange === "all" ||
-    (filters.updatedRange === "7d" && updatedAgeDays <= 7) ||
-    (filters.updatedRange === "30d" && updatedAgeDays <= 30) ||
-    (filters.updatedRange === "older" && updatedAgeDays > 30);
-
-  return (
-    matchesSearch &&
-    matchesId &&
-    matchesVendor &&
-    matchesCurrentRange &&
-    matchesStock &&
-    matchesSold &&
-    matchesRotation &&
-    matchesAllotted &&
-    matchesPerformance &&
-    matchesAllocation &&
-    matchesStatus &&
-    matchesUpdatedRange
-  );
-}
-
-function recencyScore(createdAt) {
-  const ageMs = Date.now() - new Date(createdAt).getTime();
-  const ageDays = ageMs / (1000 * 60 * 60 * 24);
-  if (ageDays <= 14) return 1.0;
-  if (ageDays <= 30) return 0.8;
-  if (ageDays <= 60) return 0.5;
-  if (ageDays <= 90) return 0.25;
-  return 0.1;
-}
-
-function normalize(value, max) {
-  return !max || max <= 0 ? 0 : value / max;
-}
-
-const KNOWN_COLOR_PREFIXES = [
-  "old navy",
-  "navy blue",
-  "light blue",
-  "dark blue",
-  "off white",
-  "forest green",
-  "olive green",
-  "sky blue",
-  "royal blue",
-  "maroon",
-  "orange",
-  "beige",
-  "black",
-  "white",
-  "brown",
-  "green",
-  "grey",
-  "gray",
-  "blue",
-  "navy",
-  "red",
-  "pink",
-  "tan",
-];
-
-function extractTypeAndColor(title) {
-  const normalized = (title || "").trim();
-  const lower = normalized.toLowerCase();
-
-  for (const prefix of KNOWN_COLOR_PREFIXES) {
-    if (!lower.startsWith(prefix)) {
-      continue;
-    }
-
-    const color = normalized.slice(0, prefix.length).trim();
-    const productType = normalized.slice(prefix.length).trim();
-    return {
-      color: color || "Unknown",
-      productType: productType || normalized || "Unknown",
-    };
-  }
-
-  return {
-    color: normalized.split(/\s+/)[0] || "Unknown",
-    productType: normalized,
-  };
-}
-
-function inferProductType(product) {
-  if (product.productType?.trim()) {
-    return product.productType.trim();
-  }
-  const parts = product.title.split("|").map((part) => part.trim()).filter(Boolean);
-  if (parts.length >= 3) {
-    return parts[1];
-  }
-  if (parts.length === 2) {
-    return extractTypeAndColor(parts[1]).productType;
-  }
-  return "Unknown";
-}
-
-function inferColor(product) {
-  const parts = product.title.split("|").map((part) => part.trim()).filter(Boolean);
-  if (parts.length >= 3) {
-    return parts[parts.length - 1];
-  }
-  if (parts.length === 2) {
-    return extractTypeAndColor(parts[1]).color;
-  }
-  return "Unknown";
-}
-
-function buildDimensionScores(products, pickKey) {
-  const raw = {};
-
-  for (const product of products) {
-    const key = pickKey(product);
-    if (!key) {
-      continue;
-    }
-
-    if (!raw[key]) {
-      raw[key] = { soldQuantity: 0, salesRevenue: 0 };
-    }
-
-    raw[key].soldQuantity += product.soldQuantity || 0;
-    raw[key].salesRevenue += product.salesRevenue || 0;
-  }
-
-  const maxSold = Math.max(...Object.values(raw).map((entry) => entry.soldQuantity), 0);
-  const maxRevenue = Math.max(...Object.values(raw).map((entry) => entry.salesRevenue), 0);
-  const scores = {};
-
-  for (const [key, entry] of Object.entries(raw)) {
-    scores[key] = normalize(entry.soldQuantity, maxSold) * 0.5 + normalize(entry.salesRevenue, maxRevenue) * 0.5;
-  }
-
-  return scores;
-}
-
-function resolveStrategy(settings = {}) {
-  return {
-    brandPriorityWeight: Number(settings.brandPriorityWeight ?? 0.15),
-    salesWeight: Number(settings.salesWeight ?? 0.25),
-    inventoryWeight: Number(settings.inventoryWeight ?? 0.1),
-    newProductBoost: Number(settings.newProductBoost ?? 0.35),
-    lowSellerPenalty: Number(settings.lowSellerPenalty ?? 0.2),
-    randomnessWeight: Number(settings.randomnessWeight ?? 0.15),
-    brandTrendWeight: Number(settings.brandTrendWeight ?? 0.12),
-    productTypeTrendWeight: Number(settings.productTypeTrendWeight ?? 0.08),
-    colorTrendWeight: Number(settings.colorTrendWeight ?? 0.05),
-  };
-}
-
-function buildScoringContext(allProducts, settings) {
-  const brandPriorities = settings.brandPriorities || {};
-  return {
-    maxima: {
-      maxSoldQuantity: Math.max(...allProducts.map((product) => product.soldQuantity || 0), 0),
-      maxInventory: Math.max(...allProducts.map((product) => product.inventoryQuantity || 0), 0),
-    },
-    brandPriorities,
-    maxBrandPriority: Math.max(...allProducts.map((product) => brandPriorities[product.vendor] || 0), 1),
-    trendScores: {
-      brand: buildDimensionScores(allProducts, (product) => product.vendor || "Unknown"),
-      productType: buildDimensionScores(allProducts, (product) => inferProductType(product)),
-      color: buildDimensionScores(allProducts, (product) => inferColor(product)),
-    },
-    strategy: resolveStrategy(settings),
-  };
-}
-
-function scoreProduct(product, context) {
-  const salesScore = normalize(product.soldQuantity || 0, context.maxima.maxSoldQuantity);
-  const inventoryScore = normalize(product.inventoryQuantity || 0, context.maxima.maxInventory);
-  const newnessScore = recencyScore(product.createdAt);
-  const brandVal = context.brandPriorities[product.vendor] || 0;
-  const brandScore = context.maxBrandPriority > 0 ? brandVal / context.maxBrandPriority : 0;
-  const brandPriorityContribution = brandVal * context.strategy.brandPriorityWeight;
-  const productType = inferProductType(product);
-  const color = inferColor(product);
-  const brandTrendScore = context.trendScores.brand[product.vendor || "Unknown"] || 0;
-  const productTypeTrendScore = context.trendScores.productType[productType] || 0;
-  const colorTrendScore = context.trendScores.color[color] || 0;
-
-  const baseBeforePenalty =
-    brandPriorityContribution +
-    newnessScore * context.strategy.newProductBoost +
-    salesScore * context.strategy.salesWeight +
-    inventoryScore * context.strategy.inventoryWeight +
-    brandTrendScore * context.strategy.brandTrendWeight +
-    productTypeTrendScore * context.strategy.productTypeTrendWeight +
-    colorTrendScore * context.strategy.colorTrendWeight;
-
-  const outOfStockPenalty = (product.inventoryQuantity || 0) <= 0 ? 0.1 : 1.0;
-  const lowSellerFactor = (product.soldQuantity || 0) <= 2
-    ? Math.max(0.25, 1 - context.strategy.lowSellerPenalty)
-    : 1.0;
-  const baseScore = baseBeforePenalty * outOfStockPenalty * lowSellerFactor;
-
-  return {
-    ...product,
-    brandScore,
-    brandPriorityContribution,
-    newnessScore,
-    salesScore,
-    inventoryScore,
-    brandTrendScore,
-    productTypeTrendScore,
-    colorTrendScore,
-    productType,
-    inferredColor: color,
-    randomnessScore: product.randomnessScore || 0,
-    baseScore,
-    weightedScore: baseScore + (product.randomnessScore || 0),
-  };
-}
-
-function calculateScore(product, allProducts, settings) {
-  if (!allProducts || allProducts.length === 0) return "0.0000";
-  return scoreProduct(product, buildScoringContext(allProducts, settings)).baseScore.toFixed(4);
-}
 
 export default function Sorter({ sidebarBridge, capability = null, readinessLoading = false, orderMapping = null, onRetryConnection }) {
   const [collections, setCollections] = useState([]);
   const [selectedCollectionId, setSelectedCollectionId] = useState("");
   const [snapshot, setSnapshot] = useState(null);
-  const [settings, setSettings] = useState({
-    firstPageLimit: 40,
-    salesWeight: 0.4,
-    inventoryWeight: 0.25,
-    newnessWeight: 0.2,
-    momentumWeight: 0.1,
-    rotationWeight: 0.05,
-  });
+  const [settings, setSettings] = useState(INITIAL_SETTINGS);
+  // Track last saved settings from backend to detect dirty/unsaved state
+  const [savedSettings, setSavedSettings] = useState(INITIAL_SETTINGS);
   const [filters, setFilters] = useState(defaultFilters);
   const [preview, setPreview] = useState(emptyPreview);
+  const [manualOrder, setManualOrder] = useState([]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
   const [previewStale, setPreviewStale] = useState(false);
+  const [presetName, setPresetName] = useState("Balanced");
+  const [expandedScoreIds, setExpandedScoreIds] = useState({});
   const [backup, setBackup] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isSyncingAll, setIsSyncingAll] = useState(false);
@@ -345,6 +42,9 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
   const [copied, setCopied] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  // strategyUsed: populated from Generate response; represents what backend actually used.
+  // Never derived from current UI state.
+  const [strategyUsed, setStrategyUsed] = useState(null);
 
   // One-shot guards: fetch readiness/collections exactly once per availability
   // state and ignore stale results after unmount (StrictMode-safe).
@@ -356,16 +56,36 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
 
   const products = snapshot?.products || [];
 
-  const weightFields = [
-    { key: "salesWeight", label: "Sales" },
-    { key: "inventoryWeight", label: "Inventory" },
-    { key: "newnessWeight", label: "Newness" },
-    { key: "momentumWeight", label: "Momentum" },
-    { key: "rotationWeight", label: "Rotation" },
-  ];
+  const applyPreset = (name) => {
+    if (STRATEGY_PRESETS[name]) {
+      setSettings(prev => ({ ...prev, ...STRATEGY_PRESETS[name] }));
+      setPresetName(name);
+      setPreviewStale(true);
+    }
+  };
 
-  const strategyTotal = () =>
-    weightFields.reduce((sum, field) => sum + Number(settings[field.key] || 0), 0);
+  // Helper to compute sum of weights in percentage (0 to 100)
+  const strategyTotalPercent = () => {
+    const total = weightFields.reduce((sum, field) => sum + Math.round((Number(settings[field.key]) || 0) * 100), 0);
+    return total;
+  };
+
+  const isStrategyValid = strategyTotalPercent() === 100;
+
+  // Helper to check if there are unsaved changes
+  const hasUnsavedChanges = useMemo(() => {
+    const weightsDirty = weightFields.some((field) => {
+      const currentVal = Math.round((Number(settings[field.key]) || 0) * 100);
+      const savedVal = Math.round((Number(savedSettings[field.key]) || 0) * 100);
+      return currentVal !== savedVal;
+    });
+    const overrideDirty = Boolean(settings.override) !== Boolean(savedSettings.override);
+    return weightsDirty || overrideDirty;
+  }, [settings, savedSettings]);
+
+  const isStrategyMismatched = useMemo(() => {
+    return Boolean(savedSettings?.hash && strategyUsed?.hash && savedSettings.hash !== strategyUsed.hash);
+  }, [savedSettings?.hash, strategyUsed?.hash]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -445,13 +165,13 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
     [products, filters],
   );
 
-  const previewTop = preview.newOrder.slice(0, settings.firstPageLimit || 40);
+  const previewTop = manualOrder.slice(0, settings.firstPageLimit || 40);
 
   function mergeSettingsFromResponse(responseSettings) {
     if (!responseSettings) {
       return;
     }
-    setSettings((prev) => {
+    const updateState = (prev) => {
       const next = { ...prev };
       for (const field of weightFields) {
         const value = Number(responseSettings[field.key]);
@@ -459,12 +179,29 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
           next[field.key] = value;
         }
       }
+      if (responseSettings.override !== undefined) {
+        next.override = Boolean(responseSettings.override);
+      }
       const limit = Number(responseSettings.firstPageLimit);
       if (Number.isFinite(limit) && limit >= 1) {
         next.firstPageLimit = limit;
       }
+      if (responseSettings.hash !== undefined) {
+        next.hash = responseSettings.hash;
+      }
+      if (responseSettings.version !== undefined) {
+        next.version = responseSettings.version;
+      }
+      if (responseSettings.source !== undefined) {
+        next.source = responseSettings.source;
+      }
+      if (responseSettings.preset !== undefined) {
+        next.preset = responseSettings.preset;
+      }
       return next;
-    });
+    };
+    setSettings(updateState);
+    setSavedSettings(updateState);
   }
 
   const handleCollectionSelect = useCallback(async (collectionId) => {
@@ -480,6 +217,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
     setLoading(true);
     setError("");
     setPreview(emptyPreview);
+    setManualOrder([]);
     setPreviewStale(false);
 
     try {
@@ -532,6 +270,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
             setSnapshot(stateResponse.snapshot || null);
             mergeSettingsFromResponse(stateResponse.settings);
             setPreview(emptyPreview);
+            setManualOrder([]);
             setPreviewStale(false);
           }
         } catch {
@@ -564,25 +303,47 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
   }, [selectedCollectionId, loadCollections]);
 
   const handleSaveStrategy = useCallback(async () => {
-    if (!selectedCollectionId) return;
-    const total = strategyTotal();
-    if (Math.round(total * 100) !== 100) {
-      setStrategyMessage(`Strategy weights must total 1.00 (currently ${total.toFixed(2)}).`);
+    const targetCollectionId = selectedCollectionId || "__global__";
+    const total = strategyTotalPercent();
+    if (total !== 100) {
+      setStrategyMessage(`Strategy weights must total 100% (currently ${total}%).`);
       return;
     }
     setLoading(true);
     setError("");
     setStrategyMessage("");
 
+    const updatePayload = {
+      salesWeight: Number(settings.salesWeight),
+      revenueWeight: Number(settings.revenueWeight),
+      inventoryWeight: Number(settings.inventoryWeight),
+      newnessWeight: Number(settings.newnessWeight),
+      momentumWeight: Number(settings.momentumWeight),
+      rotationWeight: Number(settings.rotationWeight),
+      override: Boolean(settings.override),
+    };
+
     try {
-      await api.updateSettings(selectedCollectionId, {
-        salesWeight: Number(settings.salesWeight),
-        inventoryWeight: Number(settings.inventoryWeight),
-        newnessWeight: Number(settings.newnessWeight),
-        momentumWeight: Number(settings.momentumWeight),
-        rotationWeight: Number(settings.rotationWeight),
-      });
+      const response = await api.updateSettings(targetCollectionId, updatePayload);
       if (mountedRef.current) {
+        // Use server-returned canonical settings as truth.
+        const serverSettings = response?.settings || {};
+        const updateState = (prev) => ({
+          ...prev,
+          ...updatePayload,
+          ...(serverSettings.salesWeight !== undefined ? { salesWeight: Number(serverSettings.salesWeight) } : {}),
+          ...(serverSettings.revenueWeight !== undefined ? { revenueWeight: Number(serverSettings.revenueWeight) } : {}),
+          ...(serverSettings.inventoryWeight !== undefined ? { inventoryWeight: Number(serverSettings.inventoryWeight) } : {}),
+          ...(serverSettings.newnessWeight !== undefined ? { newnessWeight: Number(serverSettings.newnessWeight) } : {}),
+          ...(serverSettings.momentumWeight !== undefined ? { momentumWeight: Number(serverSettings.momentumWeight) } : {}),
+          ...(serverSettings.rotationWeight !== undefined ? { rotationWeight: Number(serverSettings.rotationWeight) } : {}),
+          ...(serverSettings.override !== undefined ? { override: Boolean(serverSettings.override) } : {}),
+          ...(serverSettings.hash !== undefined ? { hash: serverSettings.hash } : {}),
+          ...(serverSettings.version !== undefined ? { version: serverSettings.version } : {}),
+          ...(serverSettings.source !== undefined ? { source: serverSettings.source } : {}),
+        });
+        setSavedSettings(updateState);
+        setSettings(updateState);
         // Persisted strategy changes alter future generations; the current
         // preview is no longer representative.
         setPreviewStale(true);
@@ -597,13 +358,17 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
         setLoading(false);
       }
     }
-  }, [selectedCollectionId, settings, strategyTotal]);
+  }, [selectedCollectionId, settings]);
 
   const handleGenerate = useCallback(async () => {
     if (!snapshot) return;
-    const total = strategyTotal();
-    if (Math.round(total * 100) !== 100) {
-      setError("Strategy weights must total 1.00 before generating an order.");
+    if (hasUnsavedChanges) {
+      setError("Please save strategy changes before generating Today's Order.");
+      return;
+    }
+    const total = strategyTotalPercent();
+    if (total !== 100) {
+      setError("Strategy weights must total 100% before generating an order.");
       return;
     }
     setLoading(true);
@@ -618,7 +383,14 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
           previewUrl: response.previewUrl || null,
           previewVersion: response.previewVersion || null,
         });
+        setManualOrder(response.newOrder || []);
+        setExpandedScoreIds({});
         setPreviewStale(false);
+        // Store backend-reported strategy — this is the AUTHORITATIVE source of
+        // what strategy was actually used. Frontend must NOT re-derive this.
+        if (response.strategyUsed) {
+          setStrategyUsed(response.strategyUsed);
+        }
         setMessage("Generated order — preview only, nothing written to Shopify");
       }
     } catch (err) {
@@ -630,18 +402,27 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
         setLoading(false);
       }
     }
-  }, [snapshot, selectedCollectionId, settings, strategyTotal]);
+  }, [snapshot, selectedCollectionId, settings, hasUnsavedChanges]);
 
   const handleApply = useCallback(async () => {
     // Double-click protection: never issue a second apply while one is in flight.
     if (applyInProgressRef.current) return;
-    if (!preview.newOrder.length || !preview.previewVersion || previewStale) return;
+    if (!manualOrder.length || !preview.previewVersion || previewStale || isStrategyMismatched) return;
+
+    const originalIds = preview.newOrder.map((product) => product.id).sort();
+    const manualIds = manualOrder.map(p => p.id).sort();
+    
+    if (originalIds.length !== manualIds.length || !originalIds.every((id, idx) => id === manualIds[idx])) {
+      setError("Manual order contains mismatched or duplicate products compared to the generated order.");
+      setMessage("");
+      return;
+    }
 
     // Serialize the preview to string product IDs only and validate locally.
     // On failure the request is not sent and the preview stays visible.
     let orderIds;
     try {
-      orderIds = validateApplyOrderIds(preview.newOrder.map((product) => product.id));
+      orderIds = validateApplyOrderIds(manualOrder.map((product) => product.id));
     } catch (err) {
       setError(err.message);
       setMessage("");
@@ -660,6 +441,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
         setSnapshot(updated.snapshot || null);
         setBackup({ createdAt: new Date().toISOString(), products: snapshot.products });
         setPreview(emptyPreview);
+        setManualOrder([]);
         setPreviewStale(false);
         setMessage("Applied order to Shopify");
       }
@@ -678,7 +460,7 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
         setLoading(false);
       }
     }
-  }, [preview, selectedCollectionId, snapshot, previewStale]);
+  }, [preview, selectedCollectionId, snapshot, previewStale, isStrategyMismatched]);
 
   const handleRollback = useCallback(async () => {
     if (!backup) return;
@@ -775,6 +557,54 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
     },
     [snapshot, selectedCollectionId, products],
   );
+
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e, index) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+    
+    setManualOrder(prev => {
+      const newOrder = [...prev];
+      const draggedItem = newOrder[draggedIndex];
+      newOrder.splice(draggedIndex, 1);
+      newOrder.splice(index, 0, draggedItem);
+      return newOrder;
+    });
+    setDraggedIndex(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
+  const moveUp = (index) => {
+    if (index === 0) return;
+    setManualOrder(prev => {
+      const newOrder = [...prev];
+      [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+      return newOrder;
+    });
+  };
+
+  const moveDown = (index) => {
+    if (index === manualOrder.length - 1) return;
+    setManualOrder(prev => {
+      const newOrder = [...prev];
+      [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+      return newOrder;
+    });
+  };
+
+  const isManualOrderModified = preview.newOrder.length > 0 && manualOrder.some((p, i) => p.id !== preview.newOrder[i]?.id);
 
   const copyVariableTemplate = useCallback(async () => {
     const names = [
@@ -903,10 +733,12 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
             <button className="button ghost" onClick={handleSync} disabled={isSyncing}>
               {isSyncing ? `Syncing…` : "Sync Live Data"}
             </button>
-            <button className="button accent" onClick={handleGenerate} disabled={loading || !snapshot}>
-              Generate Today&apos;s Order
+            <button className="button accent" onClick={handleGenerate} disabled={loading || !snapshot || !isStrategyValid || hasUnsavedChanges}
+              title={!snapshot ? "Select a collection and sync data first" : !isStrategyValid ? "Strategy weights must total 100% before generating" : hasUnsavedChanges ? "Please save strategy changes before generating" : "Generate Today's Order"}
+            >
+              {loading && snapshot ? "Generating…" : "Generate Today's Order"}
             </button>
-            <button type="button" className="button metal" onClick={handleReorderAllLive} disabled={isSyncingAll || !collections.length}>
+            <button type="button" className="button metal" onClick={handleReorderAllLive} disabled={isSyncingAll || !collections.length || !isStrategyValid}>
               Update All Collections
             </button>
             <button
@@ -918,9 +750,10 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
                 !preview.newOrder.length ||
                 !preview.previewVersion ||
                 previewStale ||
+                isStrategyMismatched ||
                 !capability?.available
               }
-              title="Requires a fresh generated preview"
+              title={isStrategyMismatched ? "Strategy mismatch detected" : "Requires a fresh generated preview"}
             >
               Apply Order to Shopify
             </button>
@@ -1031,88 +864,146 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
           aria-expanded={strategyOpen}
         >
           <span>Strategy Configuration</span>
-          <span className="toggle-icon">{strategyOpen ? "▲" : "▼"}</span>
+          <span className="strategy-state-badge" style={{ marginLeft: "auto", marginRight: "12px", fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "4px", backgroundColor: hasUnsavedChanges ? "rgba(199, 104, 104, 0.15)" : "rgba(137, 167, 125, 0.15)", color: hasUnsavedChanges ? "var(--danger)" : "var(--success)" }}>
+            {hasUnsavedChanges ? "UNSAVED CHANGES" : "SAVED"}
+          </span>
+          <span className="toggle-icon">{strategyOpen ? "\u25b2" : "\u25bc"}</span>
         </button>
         {strategyOpen ? (
           <div className="strategy-body">
-            <div className="weights-grid">
-              {weightFields.map((field) => (
-                <label key={field.key}>
-                  {field.label}
+            {selectedCollectionId ? (
+              <div className="strategy-scope-selector" style={{ marginBottom: "16px", display: "flex", gap: "16px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
                   <input
-                    type="number"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={settings[field.key] ?? 0}
-                    onChange={(event) => {
-                      const value = Number(event.target.value || 0);
-                      setSettings((prev) => ({ ...prev, [field.key]: value }));
-                      setStrategyMessage("");
-                      // Weight changes alter generation inputs; invalidate the preview.
+                    type="radio"
+                    name="strategyScope"
+                    checked={!settings.override}
+                    onChange={() => {
+                      setSettings(prev => ({ ...prev, override: false }));
                       setPreviewStale(true);
                     }}
                   />
+                  Use Global Strategy
                 </label>
-              ))}
+                <label style={{ display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" }}>
+                  <input
+                    type="radio"
+                    name="strategyScope"
+                    checked={settings.override}
+                    onChange={() => {
+                      setSettings(prev => ({ ...prev, override: true }));
+                      setPreviewStale(true);
+                    }}
+                  />
+                  Use Collection Override
+                </label>
+              </div>
+            ) : (
+              <div style={{ marginBottom: "16px", fontWeight: "600" }}>Editing Global Strategy</div>
+            )}
+            <p className="strategy-note muted">
+              Weights control how much each factor contributes to the ranking score. They must total exactly 100%.
+              Save Strategy persists weights for this collection. Generate Today&apos;s Order always uses the current saved weights.
+            </p>
+            <div style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "10px" }}>
+              <label style={{ fontWeight: "bold" }}>Presets:</label>
+              <select 
+                value={presetName}
+                onChange={(e) => applyPreset(e.target.value)}
+                style={{ padding: "4px 8px" }}
+              >
+                <option value="Custom" disabled>Custom</option>
+                {Object.keys(STRATEGY_PRESETS).map(name => (
+                  <option key={name} value={name}>{name}</option>
+                ))}
+              </select>
             </div>
-            <div className="strategy-footer">
-              <span className={Math.round(strategyTotal() * 100) === 100 ? "muted" : "error-text"}>
-                Total: {strategyTotal().toFixed(2)} (must equal 1.00)
+            <div className="weights-grid">
+              {weightFields.map((field) => {
+                // Convert fractional backend representation to percentage for display
+                const displayVal = Math.round((Number(settings[field.key]) || 0) * 100);
+                return (
+                  <label key={field.key} title={field.description}>
+                    <span className="weight-label">{field.label}</span>
+                    {field.description ? <span className="weight-desc muted">{field.description}</span> : null}
+                    <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="5"
+                        value={displayVal}
+                        onChange={(event) => {
+                          const percentValue = Math.max(0, Math.min(100, Number(event.target.value || 0)));
+                          const fractionalValue = Number((percentValue / 100).toFixed(2));
+                          setSettings((prev) => ({ ...prev, [field.key]: fractionalValue }));
+                          setPresetName("Custom");
+                          setStrategyMessage("");
+                          // Weight changes alter generation inputs; invalidate the preview.
+                          setPreviewStale(true);
+                        }}
+                        style={{ width: "80px" }}
+                        disabled={selectedCollectionId && !settings.override}
+                      />
+                      <span style={{ fontSize: "14px", fontWeight: "bold" }}>%</span>
+                    </div>
+                  </label>
+                );
+              })}
+            </div>
+            <div className="strategy-footer" style={{ marginTop: "20px", display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+              <span className={isStrategyValid ? "success-text" : "error-text"} style={{ fontWeight: "600" }}>
+                TOTAL WEIGHT: {strategyTotalPercent()}% {isStrategyValid ? "" : " (Weights must total exactly 100%)"}
               </span>
               {strategyMessage ? <span className="error-text" role="alert">{strategyMessage}</span> : null}
-              <button type="button" className="button compact" onClick={handleSaveStrategy} disabled={loading}>
-                Save Strategy
-              </button>
+              <div style={{ marginLeft: "auto", display: "flex", gap: "10px" }}>
+                <button
+                  type="button"
+                  className="button ghost compact"
+                  onClick={() => applyPreset("Balanced")}
+                  disabled={loading || (selectedCollectionId && !settings.override)}
+                >
+                  Reset to Defaults
+                </button>
+                <button
+                  type="button"
+                  className="button compact"
+                  onClick={handleSaveStrategy}
+                  disabled={loading || !isStrategyValid}
+                >
+                  Save Strategy
+                </button>
+              </div>
             </div>
           </div>
         ) : null}
       </section>
 
-      {preview.newOrder.length > 0 ? (
-        <section className="panel preview-panel" aria-label="Generated order preview">
-          <div className="preview-heading">
-            <div>
-              <h3>Generated Order Preview</h3>
-              <p className="preview-note">Preview only — no changes are written to Shopify until you Apply.</p>
-            </div>
-            <button
-              type="button"
-              className="button ghost compact"
-              onClick={() => {
-                setPreview(emptyPreview);
-                setPreviewStale(false);
-              }}
-            >
-              Clear Preview
-            </button>
-          </div>
-          <div className="preview-list">
-            {previewTop.map((product, index) => {
-              const newPosition = product.finalPosition ?? index + 1;
-              const moved = product.collectionPosition !== newPosition;
-              return (
-                <div className="preview-item" key={product.id}>
-                  <span className="preview-rank">{index + 1}</span>
-                  <div className="preview-item-main">
-                    <strong>{product.title}</strong>
-                    <div className="preview-movement-row">
-                      <span className="position-tag">Current: {product.collectionPosition}</span>
-                      <span className="position-tag arrow">→</span>
-                      <span className="position-tag new">New: {newPosition}</span>
-                      {moved ? (
-                        <span className={`movement-tag ${product.collectionPosition > newPosition ? "up" : "down"}`}>
-                          {product.collectionPosition > newPosition ? "↑" : "↓"} {Math.abs(product.collectionPosition - newPosition)}
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      ) : null}
+      <GeneratedOrderPreview
+        preview={preview}
+        previewTop={previewTop}
+        isManualOrderModified={isManualOrderModified}
+        previewStale={previewStale}
+        isStrategyMismatched={isStrategyMismatched}
+        strategyUsed={strategyUsed}
+        expandedScoreIds={expandedScoreIds}
+        onToggleScore={(productId) =>
+          setExpandedScoreIds((prev) => ({ ...prev, [productId]: !prev[productId] }))
+        }
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onDragEnd={handleDragEnd}
+        onMoveUp={moveUp}
+        onMoveDown={moveDown}
+        onResetToGenerated={() => setManualOrder(preview.newOrder)}
+        onClear={() => {
+          setPreview(emptyPreview);
+          setManualOrder([]);
+          setPreviewStale(false);
+        }}
+        fallbackImage={fallbackImage}
+      />
 
       <section className="table-wrapper panel">
         {!snapshot ? (
@@ -1132,8 +1023,8 @@ export default function Sorter({ sidebarBridge, capability = null, readinessLoad
                 <th>Vendor</th>
                 <th>Status</th>
                 <th>Stock</th>
-                <th>Sold</th>
-                <th>Revenue</th>
+                <th>Sold (90d)</th>
+                <th>Revenue (INR)</th>
                 <th>Allocation</th>
               </tr>
             </thead>
