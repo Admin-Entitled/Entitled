@@ -1,17 +1,328 @@
-import { env, getMetaCapability } from "../config/env.js";
+import { env } from "../config/env.js";
 import { addNetworkLog } from "./sorterRuntimeService.js";
-import { logInfo, logError } from "../utils/logger.js";
+import { AppError } from "../middleware/errorBoundary.js";
+import {
+  metaGet,
+  metaGetAllPages,
+  metaGetAccount,
+  isMetaRateLimitError,
+  META_ERROR_CODES,
+} from "./metaAdsClient.js";
 
-// Bounded in-memory cache
-// Key structure: `account:range_start:range_end:endpoint_name`
+/**
+ * Meta Ads domain service (read-only).
+ *
+ * Responsibilities:
+ *  - connectivity / health with differentiated statuses
+ *  - account metadata (currency + timezone become canonical reporting context)
+ *  - campaigns / ad sets / ads with COMPLETE cursor pagination
+ *  - canonical insights normalization (spend, ctr, cpc, cpm, purchases, ROAS)
+ *  - canonical purchase-event normalization (action_type inspected explicitly)
+ *  - daily trend for the dashboard chart
+ *  - account+range-aware bounded cache, refreshable via bypassCache / clear
+ *
+ * No Meta mutation capability exists in this module or the client.
+ */
+
+// ────────────────────────────────────────────────────────────────────────────
+// Purchase event normalization (canonical rule)
+//
+// Meta reports conversions through several event types depending on the
+// installation (Pixel, Conversions API, app events). The same purchase can
+// surface under more than one type, so we MUST NOT sum every purchase-looking
+// action. Rule: use a priority list and take the FIRST present type, and use
+// the SAME type for both purchases count and purchase value so the two never
+// mix incompatible action types.
+//
+//   1. "purchase"                         — standard web purchase event
+//   2. "offsite_conversion.fb_pixel_purchase" — Pixel-sourced purchase
+//   3. "omni_purchase"                    — omnichannel purchase attribution
+// ────────────────────────────────────────────────────────────────────────────
+export const PURCHASE_EVENT_TYPES = [
+  "purchase",
+  "offsite_conversion.fb_pixel_purchase",
+  "omni_purchase",
+];
+
+function findPurchaseAction(entries, field) {
+  if (!Array.isArray(entries)) return null;
+  for (const type of PURCHASE_EVENT_TYPES) {
+    const match = entries.find((entry) => entry && entry.action_type === type && entry[field] !== undefined);
+    if (match) return match;
+  }
+  return null;
+}
+
+/**
+ * Canonical purchase + purchase-value extraction.
+ * Returns { purchases, purchaseValue } using a single consistent event type.
+ */
+export function extractPurchaseMetrics(actions, actionValues) {
+  const countEntry = findPurchaseAction(actions, "value");
+  const valueEntry = findPurchaseAction(actionValues, "value");
+  const purchases = countEntry ? parseInt(countEntry.value || "0", 10) : 0;
+  const purchaseValue = valueEntry ? parseFloat(valueEntry.value || "0") : 0;
+  return {
+    purchases: Number.isFinite(purchases) ? purchases : 0,
+    purchaseValue: Number.isFinite(purchaseValue) ? purchaseValue : 0,
+  };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Insights normalization
+// ────────────────────────────────────────────────────────────────────────────
+
+export function normalizeInsights(rawInsight) {
+  const spend = parseFloat(rawInsight.spend || 0);
+  const impressions = parseInt(rawInsight.impressions || 0, 10);
+  const reach = parseInt(rawInsight.reach || 0, 10);
+  const clicks = parseInt(rawInsight.clicks || 0, 10);
+
+  const safeSpend = Number.isFinite(spend) ? spend : 0;
+  const safeImpressions = Number.isFinite(impressions) ? impressions : 0;
+  const safeReach = Number.isFinite(reach) ? reach : 0;
+  const safeClicks = Number.isFinite(clicks) ? clicks : 0;
+
+  const ctr = safeImpressions > 0 ? (safeClicks / safeImpressions) * 100 : 0;
+  const cpc = safeClicks > 0 ? safeSpend / safeClicks : 0;
+  const cpm = safeImpressions > 0 ? (safeSpend / safeImpressions) * 1000 : 0;
+
+  const { purchases, purchaseValue } = extractPurchaseMetrics(rawInsight.actions, rawInsight.action_values);
+  const purchaseRoas = safeSpend > 0 ? purchaseValue / safeSpend : 0;
+
+  return {
+    spend: safeSpend,
+    impressions: safeImpressions,
+    reach: safeReach,
+    clicks: safeClicks,
+    ctr,
+    cpc,
+    cpm,
+    purchases,
+    purchaseValue,
+    purchaseRoas,
+    dateStart: rawInsight.date_start || null,
+    dateStop: rawInsight.date_stop || null,
+  };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Status normalization
+// ────────────────────────────────────────────────────────────────────────────
+
+const STATUS_LABELS = {
+  ACTIVE: "Active",
+  PAUSED: "Paused",
+  ARCHIVED: "Archived",
+  DELETED: "Deleted",
+  CAMPAIGN_PAUSED: "Paused (campaign)",
+  ADSET_PAUSED: "Paused (ad set)",
+  WITH_ISSUES: "Active with issues",
+  PENDING_REVIEW: "Pending review",
+  DISAPPROVED: "Disapproved",
+  PREAPPROVED: "Preapproved",
+  PENDING_BILLING_INFO: "Pending billing",
+  REJECTED: "Rejected",
+  IN_PROCESS: "In process",
+  PENDING: "Pending",
+};
+
+/**
+ * Normalize provider status + effective status into a stable display object.
+ * Frontend renders these labels; it never maps raw provider strings.
+ */
+export function normalizeMetaStatus(status, effectiveStatus) {
+  const effective = effectiveStatus || status || "UNKNOWN";
+  const primary = status || effective;
+
+  let tone = "neutral";
+  if (primary === "ACTIVE" || primary === "IN_PROCESS" || primary === "PENDING") {
+    tone = "active";
+  } else if (primary === "PAUSED" || primary === "CAMPAIGN_PAUSED" || primary === "ADSET_PAUSED") {
+    tone = "paused";
+  } else if (primary === "ARCHIVED") {
+    tone = "archived";
+  } else if (primary === "DELETED") {
+    tone = "deleted";
+  } else if (primary === "DISAPPROVED" || primary === "REJECTED" || primary === "WITH_ISSUES") {
+    tone = "issue";
+  }
+
+  return {
+    status: primary,
+    effectiveStatus: effective,
+    label: STATUS_LABELS[primary] || primary,
+    effectiveLabel: STATUS_LABELS[effective] || effective,
+    tone,
+    isActive: effective === "ACTIVE",
+  };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Date range parsing (canonical YYYY-MM-DD contract)
+// ────────────────────────────────────────────────────────────────────────────
+
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+export function parseMetaDateRange({ since, until } = {}) {
+  if (Boolean(since) !== Boolean(until)) {
+    throw new AppError("VALIDATION_ERROR", "Meta date range requires both 'since' and 'until' (YYYY-MM-DD).", {
+      statusCode: 400,
+      details: [{ path: "query.since/until", code: "PARTIAL_RANGE" }],
+    });
+  }
+  if (!since || !until) {
+    const untilDate = new Date();
+    const sinceDate = new Date();
+    sinceDate.setDate(untilDate.getDate() - 30);
+    return {
+      since: sinceDate.toISOString().split("T")[0],
+      until: untilDate.toISOString().split("T")[0],
+    };
+  }
+  if (!DATE_REGEX.test(since) || !DATE_REGEX.test(until)) {
+    throw new AppError("VALIDATION_ERROR", "Invalid Meta date range. Use YYYY-MM-DD.", {
+      statusCode: 400,
+      details: [{ path: "query.since/until", code: "INVALID_DATE_FORMAT" }],
+    });
+  }
+  if (since > until) {
+    throw new AppError("VALIDATION_ERROR", "Meta date range 'since' must not be after 'until'.", {
+      statusCode: 400,
+      details: [{ path: "query.since/until", code: "REVERSED_RANGE" }],
+    });
+  }
+  return { since, until };
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Connectivity & account (cached, so System Diagnostics polling never hammers
+// the provider)
+// ────────────────────────────────────────────────────────────────────────────
+
+const CONNECTIVITY_CACHE_TTL_MS = 60 * 1000;
+let connectivityCache = { timestamp: 0, result: null };
+
+export function clearConnectivityCache() {
+  connectivityCache = { timestamp: 0, result: null };
+}
+
+function isCacheFresh(entry, ttlMs = CONNECTIVITY_CACHE_TTL_MS) {
+  return Boolean(entry?.result && Date.now() - entry.timestamp < ttlMs);
+}
+
+/**
+ * Live (or freshly-cached) connectivity check with differentiated statuses:
+ * NOT_CONFIGURED | CONNECTED | INVALID_TOKEN | INSUFFICIENT_PERMISSIONS |
+ * RATE_LIMITED | UNAVAILABLE
+ */
+export async function checkMetaConnectivity({ bypassCache = false } = {}) {
+  if (!bypassCache && isCacheFresh(connectivityCache)) {
+    return connectivityCache.result;
+  }
+
+  const capability = getMetaCapability();
+  if (!capability.available) {
+    const result = { status: "NOT_CONFIGURED", ok: false, missingVariables: capability.missingVariables };
+    connectivityCache = { timestamp: Date.now(), result };
+    return result;
+  }
+
+  try {
+    const account = await metaGetAccount();
+    const result = {
+      status: "CONNECTED",
+      ok: true,
+      account: {
+        id: account.id,
+        name: account.name,
+        currency: account.currency,
+        timezone: account.timezoneName,
+        accountStatus: account.accountStatus,
+      },
+      currency: account.currency,
+      timezone: account.timezoneName,
+      checkedAt: new Date().toISOString(),
+    };
+    connectivityCache = { timestamp: Date.now(), result };
+    return result;
+  } catch (error) {
+    const code = error?.code || META_ERROR_CODES.API_ERROR;
+    let status = "UNAVAILABLE";
+    if (code === META_ERROR_CODES.AUTH_FAILED) status = "INVALID_TOKEN";
+    else if (code === META_ERROR_CODES.PERMISSION_DENIED) status = "INSUFFICIENT_PERMISSIONS";
+    else if (code === META_ERROR_CODES.RATE_LIMITED) status = "RATE_LIMITED";
+    const result = { status, ok: false, error: error.message };
+    connectivityCache = { timestamp: Date.now(), result };
+    return result;
+  }
+}
+
+/**
+ * Diagnostics snapshot WITHOUT a live provider call. Used by /health/diagnostics
+ * which the frontend polls. Reports the cached connectivity plus config state.
+ */
+export function getMetaDiagnosticsSnapshot() {
+  const capability = getMetaCapability();
+  if (!capability.available) {
+    return {
+      configured: false,
+      status: "NOT_CONFIGURED",
+      connectionStatus: "NOT_CONFIGURED",
+      missingVariables: capability.missingVariables,
+      lastSuccessAt: null,
+    };
+  }
+  const cached = connectivityCache.result;
+  return {
+    configured: true,
+    status: capability.status,
+    connectionStatus: cached?.status || "UNKNOWN",
+    accountName: cached?.ok ? cached.account?.name : null,
+    currency: cached?.ok ? cached.currency : null,
+    timezone: cached?.ok ? cached.timezone : null,
+    lastSuccessAt: cached?.ok ? cached.checkedAt : null,
+  };
+}
+
+function getMetaCapability() {
+  const missingVariables = [];
+  if (!env.metaAccessToken) missingVariables.push("META_ACCESS_TOKEN");
+  if (!env.metaAdAccountId) missingVariables.push("META_AD_ACCOUNT_ID");
+  return {
+    available: missingVariables.length === 0,
+    missingVariables,
+  };
+}
+
+function ensureConfigured() {
+  const capability = getMetaCapability();
+  if (!capability.available) {
+    throw new AppError(META_ERROR_CODES.NOT_CONFIGURED, "Meta Ads is not configured.", {
+      statusCode: 503,
+      details: { missingVariables: capability.missingVariables },
+    });
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// Cache (account-aware + date-range-aware, bounded, refreshable)
+// ────────────────────────────────────────────────────────────────────────────
+
+const CACHE_TTL_MS = 60 * 1000;
+const CACHE_MAX_ENTRIES = 100;
 const cache = new Map();
-const CACHE_TTL_MS = 60 * 1000; // 1 minute cache
 
 export function clearMetaCache() {
   cache.clear();
+  clearConnectivityCache();
 }
 
-function getCacheEntry(key) {
+function getCacheKey(prefix, dateRange, qualifier = "") {
+  return `${env.metaAdAccountId}:${prefix}:${dateRange.since}:${dateRange.until}:${qualifier}`;
+}
+
+function cacheGet(key) {
   const entry = cache.get(key);
   if (!entry) return null;
   if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
@@ -21,625 +332,220 @@ function getCacheEntry(key) {
   return entry.data;
 }
 
-function setCacheEntry(key, data) {
-  // Keep cache bounded to 100 entries to prevent memory leak
-  if (cache.size >= 100) {
-    const firstKey = cache.keys().next().value;
-    cache.delete(firstKey);
+function cacheSet(key, data) {
+  if (cache.size >= CACHE_MAX_ENTRIES) {
+    const oldest = cache.keys().next().value;
+    cache.delete(oldest);
   }
   cache.set(key, { timestamp: Date.now(), data });
 }
 
-// Fetch helper with network logs integration
-async function callMetaGraphApi(url, params = {}, options = {}) {
-  const capability = getMetaCapability();
-  const token = params.access_token || capability.available ? env.metaAccessToken : null;
-  
-  const finalParams = {
-    ...params,
-    access_token: token,
-  };
+// ────────────────────────────────────────────────────────────────────────────
+// Entities + insights (complete pagination)
+// ────────────────────────────────────────────────────────────────────────────
 
-  const startedAt = new Date().toISOString();
-  const startTime = Date.now();
-  
-  const sanitizedUrl = url.replace(/access_token=[^&]+/, "access_token=REDACTED");
-  
-  try {
-    const urlObj = new URL(url);
-    for (const [key, value] of Object.entries(finalParams)) {
-      if (value !== undefined && value !== null) {
-        urlObj.searchParams.append(key, value);
-      }
-    }
+const INSIGHTS_FIELDS = "spend,impressions,reach,clicks,actions,action_values,date_start,date_stop";
 
-    const response = await fetch(urlObj.toString(), {
-      method: "GET",
-      signal: AbortSignal.timeout(15000),
-    });
-    
-    const data = await response.json();
-    const durationMs = Date.now() - startTime;
-
-    if (!response.ok) {
-      const error = new Error(`Request failed with status ${response.status}`);
-      error.response = { status: response.status, data };
-      throw error;
-    }
-    
-    // Record to NetworkActivity
-    addNetworkLog({
-      provider: "Meta",
-      operationName: options.operationName || "FetchMeta",
-      method: "GET",
-      endpoint: sanitizedUrl,
-      statusCode: response.status,
-      status: "success",
-      durationMs,
-      startedAt,
-      completedAt: new Date().toISOString(),
-    });
-
-    return data;
-  } catch (error) {
-    const durationMs = Date.now() - startTime;
-    const statusCode = error.response?.status || 500;
-    const errorData = error.response?.data?.error || {};
-    
-    const errorMessage = errorData.message || error.message;
-    const rateLimitType = isMetaRateLimitError(errorData) ? "rate_limited" : null;
-
-    addNetworkLog({
-      provider: "Meta",
-      operationName: options.operationName || "FetchMeta",
-      method: "GET",
-      endpoint: sanitizedUrl,
-      statusCode,
-      status: rateLimitType ? "rate_limited" : "failure",
-      durationMs,
-      errorMessage,
-      startedAt,
-      completedAt: new Date().toISOString(),
-      metadata: { error: errorData },
-    });
-
-    throw error;
+async function fetchInsightsForLevel(level, idField, dateRange) {
+  const rows = await metaGetAllPages(`act_${env.metaAdAccountId}/insights`, {
+    level,
+    time_range: JSON.stringify({ since: dateRange.since, until: dateRange.until }),
+    fields: `${idField},${INSIGHTS_FIELDS}`,
+    limit: 100,
+  }, { operationName: `Fetch${level}Insights` });
+  const map = new Map();
+  for (const row of rows) {
+    const key = row[idField];
+    if (key) map.set(String(key), row);
   }
+  return map;
 }
 
-function isMetaRateLimitError(fbError) {
-  const code = fbError.code;
-  const subcode = fbError.error_subcode;
-  // Common Facebook Rate Limit Codes
-  // 17: User request limit reached
-  // 32: Page request limit reached
-  // 613: Custom level rate limit
-  return code === 17 || code === 32 || code === 613 || subcode === 2446079;
+function mergeInsights(entity, insightsMap, dateRange) {
+  const raw = insightsMap.get(String(entity.id)) || { date_start: dateRange.since, date_stop: dateRange.until };
+  return normalizeInsights(raw);
 }
 
-export async function checkMetaConnectivity() {
-  const capability = getMetaCapability();
-  if (!capability.available) {
-    return { status: "NOT_CONFIGURED", ok: false };
-  }
-
-  // Use test mock if NODE_ENV is test or if specifically mocked
-  if (process.env.NODE_ENV === "test" && !env.metaAccessToken) {
-    return {
-      status: "CONNECTED",
-      ok: true,
-      adAccount: "Mock Ad Account (12345)",
-      currency: "INR",
-      timezone: "Asia/Kolkata",
-    };
-  }
-
-  try {
-    const accountId = env.metaAdAccountId;
-    const url = `https://graph.facebook.com/v19.0/act_${accountId}`;
-    const data = await callMetaGraphApi(url, {
-      fields: "name,currency,timezone_name",
-    }, { operationName: "CheckConnectivity" });
-
-    return {
-      status: "CONNECTED",
-      ok: true,
-      adAccount: data.name,
-      currency: data.currency,
-      timezone: data.timezone_name,
-    };
-  } catch (error) {
-    const fbError = error.response?.data?.error || {};
-    if (isMetaRateLimitError(fbError)) {
-      return { status: "RATE_LIMITED", ok: false, error: fbError.message };
-    }
-    
-    // Check permission vs authentication issues
-    // Code 190 = invalid OAuth access token
-    // Code 200-299 = permissions issues
-    if (fbError.code === 190) {
-      return { status: "TOKEN_INVALID", ok: false, error: fbError.message };
-    }
-    
-    if (fbError.code >= 200 && fbError.code <= 299) {
-      return { status: "PERMISSION_INSUFFICIENT", ok: false, error: fbError.message };
-    }
-
-    return { status: "UNAVAILABLE", ok: false, error: fbError.message || error.message };
-  }
-}
-
-// Normalise Insights
-export function normalizeInsights(rawInsight) {
-  const spend = parseFloat(rawInsight.spend || 0);
-  const impressions = parseInt(rawInsight.impressions || 0, 10);
-  const reach = parseInt(rawInsight.reach || 0, 10);
-  const clicks = parseInt(rawInsight.clicks || 0, 10);
-  
-  const ctr = impressions > 0 ? (clicks / impressions) * 100 : 0;
-  const cpc = clicks > 0 ? spend / clicks : 0;
-  const cpm = impressions > 0 ? (spend / impressions) * 1000 : 0;
-  
-  // Normalise Purchases & Purchase Values safely
-  let purchases = 0;
-  let purchaseValue = 0;
-  let purchaseRoas = 0;
-
-  if (rawInsight.actions) {
-    const purchaseAction = rawInsight.actions.find(a => a.action_type === "purchase");
-    if (purchaseAction) {
-      purchases = parseInt(purchaseAction.value || 0, 10);
-    }
-  }
-
-  if (rawInsight.action_values) {
-    const purchaseValueAction = rawInsight.action_values.find(a => a.action_type === "purchase");
-    if (purchaseValueAction) {
-      purchaseValue = parseFloat(purchaseValueAction.value || 0);
-    }
-  }
-
-  // Calculate ROAS: purchaseValue / spend (avoid divide by zero)
-  purchaseRoas = spend > 0 ? purchaseValue / spend : 0;
-
-  return {
-    spend,
-    impressions,
-    reach,
-    clicks,
-    ctr,
-    cpc,
-    cpm,
-    purchases,
-    purchaseValue,
-    purchaseRoas,
-    dateStart: rawInsight.date_start,
-    dateStop: rawInsight.date_stop,
-  };
-}
-
-// Fetch entities with pagination
-async function fetchMetaEntityPaginated(endpoint, queryParams = {}, operationName = "FetchEntity") {
-  let allData = [];
-  let nextUrl = `https://graph.facebook.com/v19.0/${endpoint}`;
-  let params = { ...queryParams };
-
-  // Safety ceiling to prevent infinite loop/extreme memory usage in pagination
-  const PAGE_LIMIT = 20;
-  let pageCount = 0;
-
-  while (nextUrl && pageCount < PAGE_LIMIT) {
-    pageCount++;
-    let data;
-    if (pageCount === 1) {
-      data = await callMetaGraphApi(nextUrl, params, { operationName });
-    } else {
-      // url already has access_token and params embedded
-      data = await callMetaGraphApi(nextUrl, {}, { operationName });
-    }
-
-    if (data && Array.isArray(data.data)) {
-      allData.push(...data.data);
-    }
-
-    nextUrl = data?.paging?.next || null;
-    params = {}; // clear params after first request
-  }
-
-  return allData;
+export async function fetchMetaAccount() {
+  ensureConfigured();
+  const account = await metaGetAccount();
+  return account;
 }
 
 export async function fetchMetaCampaigns(dateRange, bypassCache = false) {
-  const capability = getMetaCapability();
-  if (!capability.available) {
-    throw new Error("Meta Ads integration is not configured");
-  }
-
-  const accountId = env.metaAdAccountId;
-  const cacheKey = `${accountId}:${dateRange.since}:${dateRange.until}:campaigns`;
-  
+  ensureConfigured();
+  const range = parseMetaDateRange(dateRange);
+  const key = getCacheKey("campaigns", range);
   if (!bypassCache) {
-    const cached = getCacheEntry(cacheKey);
+    const cached = cacheGet(key);
     if (cached) return cached;
   }
 
-  // Mock payload for test environment when credentials are not configured
-  if (process.env.NODE_ENV === "test" && !env.metaAccessToken) {
-    return getMockCampaigns(dateRange);
-  }
+  const campaignsRaw = await metaGetAllPages(`act_${env.metaAdAccountId}/campaigns`, {
+    fields: "id,name,objective,status,effective_status,created_time,updated_time",
+    limit: 100,
+  }, { operationName: "FetchCampaigns" });
 
-  // Fetch campaigns
-  const campaignsRaw = await fetchMetaEntityPaginated(
-    `act_${accountId}/campaigns`,
-    {
-      fields: "id,name,objective,status,effective_status,created_time,updated_time",
-      limit: 100,
-    },
-    "FetchCampaigns"
-  );
+  const insightsMap = await fetchInsightsForLevel("campaign", "campaign_id", range);
 
-  // Fetch insights for the campaigns
-  const insightsRaw = await fetchMetaEntityPaginated(
-    `act_${accountId}/insights`,
-    {
-      level: "campaign",
-      time_range: JSON.stringify({ since: dateRange.since, until: dateRange.until }),
-      fields: "campaign_id,spend,impressions,reach,clicks,actions,action_values,date_start,date_stop",
-      limit: 100,
-    },
-    "FetchCampaignInsights"
-  );
-
-  const insightsMap = new Map(insightsRaw.map(ins => [ins.campaign_id, ins]));
-
-  const normalised = campaignsRaw.map(c => {
-    const rawIns = insightsMap.get(c.id) || { date_start: dateRange.since, date_stop: dateRange.until };
+  const normalised = campaignsRaw.map((c) => {
+    const status = c.status || "UNKNOWN";
+    const effectiveStatus = c.effective_status || c.status || "UNKNOWN";
     return {
-      id: c.id,
-      name: c.name,
-      objective: c.objective,
-      status: c.status,
-      effectiveStatus: c.effective_status,
-      createdTime: c.created_time,
-      updatedTime: c.updated_time,
-      insights: normalizeInsights(rawIns),
+      id: String(c.id),
+      name: c.name || "Untitled campaign",
+      objective: c.objective || null,
+      status,
+      effectiveStatus,
+      statusDisplay: normalizeMetaStatus(status, effectiveStatus),
+      createdTime: c.created_time || null,
+      updatedTime: c.updated_time || null,
+      insights: mergeInsights(c, insightsMap, range),
     };
   });
 
-  setCacheEntry(cacheKey, normalised);
+  cacheSet(key, normalised);
   return normalised;
 }
 
 export async function fetchMetaAdSets(campaignId, dateRange, bypassCache = false) {
-  const capability = getMetaCapability();
-  if (!capability.available) {
-    throw new Error("Meta Ads integration is not configured");
-  }
-
-  const accountId = env.metaAdAccountId;
-  const cacheKey = `${accountId}:${campaignId || "all"}:${dateRange.since}:${dateRange.until}:adsets`;
-
+  ensureConfigured();
+  const range = parseMetaDateRange(dateRange);
+  const key = getCacheKey("adsets", range, campaignId || "all");
   if (!bypassCache) {
-    const cached = getCacheEntry(cacheKey);
+    const cached = cacheGet(key);
     if (cached) return cached;
   }
 
-  if (process.env.NODE_ENV === "test" && !env.metaAccessToken) {
-    return getMockAdSets(campaignId, dateRange);
-  }
+  const endpoint = campaignId ? `${campaignId}/adsets` : `act_${env.metaAdAccountId}/adsets`;
+  const adsetsRaw = await metaGetAllPages(endpoint, {
+    fields: "id,campaign_id,name,status,effective_status,optimization_goal",
+    limit: 100,
+  }, { operationName: "FetchAdSets" });
 
-  const endpoint = campaignId ? `${campaignId}/adsets` : `act_${accountId}/adsets`;
-  const adsetsRaw = await fetchMetaEntityPaginated(
-    endpoint,
-    {
-      fields: "id,campaign_id,name,status,effective_status,optimization_goal",
-      limit: 100,
-    },
-    "FetchAdSets"
-  );
+  const insightsMap = await fetchInsightsForLevel("adset", "adset_id", range);
 
-  const insightsRaw = await fetchMetaEntityPaginated(
-    `act_${accountId}/insights`,
-    {
-      level: "adset",
-      time_range: JSON.stringify({ since: dateRange.since, until: dateRange.until }),
-      fields: "adset_id,spend,impressions,reach,clicks,actions,action_values,date_start,date_stop",
-      limit: 100,
-    },
-    "FetchAdSetInsights"
-  );
-
-  const insightsMap = new Map(insightsRaw.map(ins => [ins.adset_id, ins]));
-
-  const normalised = adsetsRaw.map(a => {
-    const rawIns = insightsMap.get(a.id) || { date_start: dateRange.since, date_stop: dateRange.until };
+  const normalised = adsetsRaw.map((a) => {
+    const status = a.status || "UNKNOWN";
+    const effectiveStatus = a.effective_status || a.status || "UNKNOWN";
     return {
-      id: a.id,
-      campaignId: a.campaign_id,
-      name: a.name,
-      status: a.status,
-      effectiveStatus: a.effective_status,
-      optimizationGoal: a.optimization_goal,
-      insights: normalizeInsights(rawIns),
+      id: String(a.id),
+      campaignId: a.campaign_id != null ? String(a.campaign_id) : null,
+      name: a.name || "Untitled ad set",
+      status,
+      effectiveStatus,
+      statusDisplay: normalizeMetaStatus(status, effectiveStatus),
+      optimizationGoal: a.optimization_goal || null,
+      insights: mergeInsights(a, insightsMap, range),
     };
   });
 
-  setCacheEntry(cacheKey, normalised);
+  cacheSet(key, normalised);
   return normalised;
 }
 
 export async function fetchMetaAds(adsetId, dateRange, bypassCache = false) {
-  const capability = getMetaCapability();
-  if (!capability.available) {
-    throw new Error("Meta Ads integration is not configured");
-  }
-
-  const accountId = env.metaAdAccountId;
-  const cacheKey = `${accountId}:${adsetId || "all"}:${dateRange.since}:${dateRange.until}:ads`;
-
+  ensureConfigured();
+  const range = parseMetaDateRange(dateRange);
+  const key = getCacheKey("ads", range, adsetId || "all");
   if (!bypassCache) {
-    const cached = getCacheEntry(cacheKey);
+    const cached = cacheGet(key);
     if (cached) return cached;
   }
 
-  if (process.env.NODE_ENV === "test" && !env.metaAccessToken) {
-    return getMockAds(adsetId, dateRange);
-  }
+  const endpoint = adsetId ? `${adsetId}/ads` : `act_${env.metaAdAccountId}/ads`;
+  const adsRaw = await metaGetAllPages(endpoint, {
+    fields: "id,adset_id,campaign_id,name,status,effective_status",
+    limit: 100,
+  }, { operationName: "FetchAds" });
 
-  const endpoint = adsetId ? `${adsetId}/ads` : `act_${accountId}/ads`;
-  const adsRaw = await fetchMetaEntityPaginated(
-    endpoint,
-    {
-      fields: "id,adset_id,campaign_id,name,status,effective_status",
-      limit: 100,
-    },
-    "FetchAds"
-  );
+  const insightsMap = await fetchInsightsForLevel("ad", "ad_id", range);
 
-  const insightsRaw = await fetchMetaEntityPaginated(
-    `act_${accountId}/insights`,
-    {
-      level: "ad",
-      time_range: JSON.stringify({ since: dateRange.since, until: dateRange.until }),
-      fields: "ad_id,spend,impressions,reach,clicks,actions,action_values,date_start,date_stop",
-      limit: 100,
-    },
-    "FetchAdInsights"
-  );
-
-  const insightsMap = new Map(insightsRaw.map(ins => [ins.ad_id, ins]));
-
-  const normalised = adsRaw.map(ad => {
-    const rawIns = insightsMap.get(ad.id) || { date_start: dateRange.since, date_stop: dateRange.until };
+  const normalised = adsRaw.map((ad) => {
+    const status = ad.status || "UNKNOWN";
+    const effectiveStatus = ad.effective_status || ad.status || "UNKNOWN";
     return {
-      id: ad.id,
-      adsetId: ad.adset_id,
-      campaignId: ad.campaign_id,
-      name: ad.name,
-      status: ad.status,
-      effectiveStatus: ad.effective_status,
-      insights: normalizeInsights(rawIns),
+      id: String(ad.id),
+      adsetId: ad.adset_id != null ? String(ad.adset_id) : null,
+      campaignId: ad.campaign_id != null ? String(ad.campaign_id) : null,
+      name: ad.name || "Untitled ad",
+      status,
+      effectiveStatus,
+      statusDisplay: normalizeMetaStatus(status, effectiveStatus),
+      insights: mergeInsights(ad, insightsMap, range),
     };
   });
 
-  setCacheEntry(cacheKey, normalised);
+  cacheSet(key, normalised);
   return normalised;
 }
 
-// Mock Builders for testing and offline fallback
-function getMockCampaigns(dateRange) {
-  return [
-    {
-      id: "mock_c_1",
-      name: "Brand Awareness Campaign",
-      objective: "OUTCOME_AWARENESS",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      createdTime: "2026-08-01T00:00:00+0000",
-      updatedTime: "2026-08-05T00:00:00+0000",
-      insights: {
-        spend: 5000,
-        impressions: 120000,
-        reach: 95000,
-        clicks: 3400,
-        ctr: 2.83,
-        cpc: 1.47,
-        cpm: 41.67,
-        purchases: 0,
-        purchaseValue: 0,
-        purchaseRoas: 0,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    },
-    {
-      id: "mock_c_2",
-      name: "Shopify Purchase Conversions",
-      objective: "OUTCOME_SALES",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      createdTime: "2026-08-02T00:00:00+0000",
-      updatedTime: "2026-08-07T00:00:00+0000",
-      insights: {
-        spend: 15000,
-        impressions: 250000,
-        reach: 180000,
-        clicks: 8900,
-        ctr: 3.56,
-        cpc: 1.69,
-        cpm: 60.00,
-        purchases: 45,
-        purchaseValue: 54000,
-        purchaseRoas: 3.6,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    }
-  ];
+// ────────────────────────────────────────────────────────────────────────────
+// Account summary (dashboard KPIs)
+// ────────────────────────────────────────────────────────────────────────────
+
+export async function fetchMetaSummary(dateRange, bypassCache = false) {
+  ensureConfigured();
+  const range = parseMetaDateRange(dateRange);
+  const key = getCacheKey("summary", range);
+  if (!bypassCache) {
+    const cached = cacheGet(key);
+    if (cached) return cached;
+  }
+
+  const [account, insightsRows] = await Promise.all([
+    metaGetAccount(),
+    metaGetAllPages(`act_${env.metaAdAccountId}/insights`, {
+      level: "account",
+      time_range: JSON.stringify({ since: range.since, until: range.until }),
+      fields: INSIGHTS_FIELDS,
+      limit: 100,
+    }, { operationName: "FetchAccountInsights" }),
+  ]);
+
+  const rawInsight = insightsRows[0] || { date_start: range.since, date_stop: range.until };
+  const insights = normalizeInsights(rawInsight);
+  const summary = { account, dateRange: range, insights };
+  cacheSet(key, summary);
+  return summary;
 }
 
-function getMockAdSets(campaignId, dateRange) {
-  const adsets = [
-    {
-      id: "mock_as_1",
-      campaignId: "mock_c_1",
-      name: "Interest - Fashion & Lifestyle",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      optimizationGoal: "REACH",
-      insights: {
-        spend: 5000,
-        impressions: 120000,
-        reach: 95000,
-        clicks: 3400,
-        ctr: 2.83,
-        cpc: 1.47,
-        cpm: 41.67,
-        purchases: 0,
-        purchaseValue: 0,
-        purchaseRoas: 0,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    },
-    {
-      id: "mock_as_2",
-      campaignId: "mock_c_2",
-      name: "Lookalike 1% Purchase Sorter",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      optimizationGoal: "OFFSITE_CONVERSIONS",
-      insights: {
-        spend: 10000,
-        impressions: 160000,
-        reach: 120000,
-        clicks: 6000,
-        ctr: 3.75,
-        cpc: 1.67,
-        cpm: 62.50,
-        purchases: 32,
-        purchaseValue: 38400,
-        purchaseRoas: 3.84,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    },
-    {
-      id: "mock_as_3",
-      campaignId: "mock_c_2",
-      name: "Retargeting Cart Abandoners",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      optimizationGoal: "OFFSITE_CONVERSIONS",
-      insights: {
-        spend: 5000,
-        impressions: 90000,
-        reach: 60000,
-        clicks: 2900,
-        ctr: 3.22,
-        cpc: 1.72,
-        cpm: 55.56,
-        purchases: 13,
-        purchaseValue: 15600,
-        purchaseRoas: 3.12,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    }
-  ];
-  return campaignId ? adsets.filter(a => a.campaignId === campaignId) : adsets;
+// ────────────────────────────────────────────────────────────────────────────
+// Daily trend (single chart: spend + purchases)
+// ────────────────────────────────────────────────────────────────────────────
+
+export async function fetchMetaDailyInsights(dateRange, bypassCache = false) {
+  ensureConfigured();
+  const range = parseMetaDateRange(dateRange);
+  const key = getCacheKey("daily", range);
+  if (!bypassCache) {
+    const cached = cacheGet(key);
+    if (cached) return cached;
+  }
+
+  const rows = await metaGetAllPages(`act_${env.metaAdAccountId}/insights`, {
+    level: "account",
+    time_increment: 1,
+    time_range: JSON.stringify({ since: range.since, until: range.until }),
+    fields: `${INSIGHTS_FIELDS}`,
+    limit: 100,
+  }, { operationName: "FetchDailyInsights" });
+
+  const daily = rows
+    .map((row) => {
+      const insights = normalizeInsights(row);
+      return {
+        date: row.date_start,
+        spend: insights.spend,
+        purchases: insights.purchases,
+        purchaseValue: insights.purchaseValue,
+        purchaseRoas: insights.purchaseRoas,
+      };
+    })
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
+  cacheSet(key, daily);
+  return daily;
 }
 
-function getMockAds(adsetId, dateRange) {
-  const ads = [
-    {
-      id: "mock_ad_1",
-      adsetId: "mock_as_1",
-      campaignId: "mock_c_1",
-      name: "Video Ad - Product Intro",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      insights: {
-        spend: 5000,
-        impressions: 120000,
-        reach: 95000,
-        clicks: 3400,
-        ctr: 2.83,
-        cpc: 1.47,
-        cpm: 41.67,
-        purchases: 0,
-        purchaseValue: 0,
-        purchaseRoas: 0,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    },
-    {
-      id: "mock_ad_2",
-      adsetId: "mock_as_2",
-      campaignId: "mock_c_2",
-      name: "Carousel Image - Best Sellers",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      insights: {
-        spend: 7000,
-        impressions: 110000,
-        reach: 85000,
-        clicks: 4300,
-        ctr: 3.91,
-        cpc: 1.63,
-        cpm: 63.64,
-        purchases: 25,
-        purchaseValue: 30000,
-        purchaseRoas: 4.29,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    },
-    {
-      id: "mock_ad_3",
-      adsetId: "mock_as_2",
-      campaignId: "mock_c_2",
-      name: "Single Image - Sorter Discount",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      insights: {
-        spend: 3000,
-        impressions: 50000,
-        reach: 35000,
-        clicks: 1700,
-        ctr: 3.40,
-        cpc: 1.76,
-        cpm: 60.00,
-        purchases: 7,
-        purchaseValue: 8400,
-        purchaseRoas: 2.8,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    },
-    {
-      id: "mock_ad_4",
-      adsetId: "mock_as_3",
-      campaignId: "mock_c_2",
-      name: "Dynamic Creative retargeting",
-      status: "ACTIVE",
-      effectiveStatus: "ACTIVE",
-      insights: {
-        spend: 5000,
-        impressions: 90000,
-        reach: 60000,
-        clicks: 2900,
-        ctr: 3.22,
-        cpc: 1.72,
-        cpm: 55.56,
-        purchases: 13,
-        purchaseValue: 15600,
-        purchaseRoas: 3.12,
-        dateStart: dateRange.since,
-        dateStop: dateRange.until,
-      }
-    }
-  ];
-  return adsetId ? ads.filter(a => a.adsetId === adsetId) : ads;
-}
+export { isMetaRateLimitError };

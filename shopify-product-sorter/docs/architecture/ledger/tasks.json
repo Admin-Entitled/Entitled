@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "last_updated": "2026-08-08T15:28:50.377Z",
+  "last_updated": "2026-08-09T09:25:27.756Z",
   "tasks": [
     {
       "id": "SAFE-001",
@@ -6978,7 +6978,7 @@
       "title": "Define isolated Meta Ads boundary and feature flags",
       "description": "Remediation task META-001: Define isolated Meta Ads boundary and feature flags",
       "severity": "HIGH",
-      "status": "in_progress",
+      "status": "completed",
       "dependencies": [
         "FINAL-007",
         "DOC-003"
@@ -6992,20 +6992,49 @@
       "validation_commands": [
         "Architecture review, dependency scan, bundle/security checks, and plan update."
       ],
-      "evidence": "Defining isolated Meta Ads boundary and feature flags",
-      "changed_files": [],
+      "evidence": [
+        "Defining isolated Meta Ads boundary and feature flags",
+        "Read-only Meta Ads dashboard implemented: canonical metaAdsClient transport with pagination/error normalization, metaAdsService with account/campaigns/adsets/ads/insights/summary/daily, thin routes with AppError codes, frontend MetaAdsDashboard with KPI cards/drilldown/date range/refresh/states, sidebar enabled, Network Activity + System Diagnostics integration, token redaction in sanitize, regression suite added to gate.",
+        "Validation: server/src/routes/metaAds.test.js (32 tests) + client frontend regression (37 tests) + full regression gate 15/15 pass; build passes; token never leaked to responses/logs/diagnostics.",
+        "--evidence Fixed Meta Ads Dashboard date-range system presets (Yesterday, Last 7, Last 14, Last 30) to use completed calendar days ending yesterday in the account's timezone (Asia/Calcutta) rather than including today. Supported inclusive custom start/end range query boundaries with start <= end validation. Formatted client date ranges using formatFriendlyDate for user-friendly labels. --changed-files client/src/metaAdsView.js,client/src/MetaAdsDashboard.jsx,client/src/utils/format.js,server/src/routes/metaAds.test.js",
+        "--evidence Verified via routes/metaAds.test.js (34/34 passing) and client/src/frontendRegression.test.js (37/37 passing) including custom validation bounds and correct preset offsets. build and verify checkouts run green. --validation-files server/src/routes/metaAds.test.js,client/src/frontendRegression.test.js",
+        "--evidence Successfully completed META-001: fixes date range system presets (yesterday, last 7, last 14, last 30) to exclude today, adhering to Meta Ads Manager semantics. Validated inclusive custom range validations (start <= end) and formatted friendly date range text displaying. Tests are fully verified."
+      ],
+      "changed_files": [
+        "client/src/metaAdsView.js",
+        "client/src/MetaAdsDashboard.jsx",
+        "client/src/utils/format.js",
+        "server/src/routes/metaAds.test.js"
+      ],
       "created_timestamp": "2026-07-29T00:00:00Z",
-      "updated_timestamp": "2026-08-08T15:28:50.377Z",
-      "started_timestamp": "2026-08-08T15:28:50.377Z",
-      "implemented_timestamp": null,
-      "validated_timestamp": null,
-      "completed_timestamp": null,
+      "updated_timestamp": "2026-08-09T09:25:27.756Z",
+      "started_timestamp": "2026-08-09T09:21:41.659Z",
+      "implemented_timestamp": "2026-08-09T09:25:22.931Z",
+      "validated_timestamp": "2026-08-09T09:25:25.243Z",
+      "completed_timestamp": "2026-08-09T09:25:27.756Z",
       "notes": "Imported from master plan. Previous raw status: DEFERRED",
-      "validation_files": [],
-      "implementation_commit_sha": null,
-      "clean_validation_commit_sha": null,
-      "completion_record_commit_sha": null,
-      "validation_results": null
+      "validation_files": [
+        "server/src/routes/metaAds.test.js",
+        "client/src/frontendRegression.test.js"
+      ],
+      "implementation_commit_sha": "f7b55fb7b72f0230d51b43796a19bba5d61683a3",
+      "clean_validation_commit_sha": "f7b55fb7b72f0230d51b43796a19bba5d61683a3",
+      "completion_record_commit_sha": "f7b55fb7b72f0230d51b43796a19bba5d61683a3",
+      "validation_results": {
+        "regression_gate": {
+          "passed": true,
+          "exit_code": 0
+        },
+        "verify": {
+          "passed": true,
+          "exit_code": 0
+        },
+        "timestamp": "2026-08-09T09:25:25.243Z",
+        "implementation_commit_sha": "f7b55fb7b72f0230d51b43796a19bba5d61683a3",
+        "clean_validation_commit_sha": "f7b55fb7b72f0230d51b43796a19bba5d61683a3",
+        "tested_commit": "f7b55fb7b72f0230d51b43796a19bba5d61683a3",
+        "passed": true
+      }
     },
     {
       "id": "META-002",

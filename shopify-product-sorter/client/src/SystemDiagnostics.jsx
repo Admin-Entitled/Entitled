@@ -84,6 +84,9 @@ export default function SystemDiagnostics() {
   const dbStatus = readiness?.db === "connected" ? "HEALTHY" : "UNAVAILABLE";
   const shopifyStatus = data?.shopify?.status === "ok" ? "HEALTHY" : data?.shopify?.status === "provider_error" ? "DEGRADED" : "UNAVAILABLE";
   const shiprocketStatus = data?.shiprocket?.status === "configured" ? "HEALTHY" : "UNAVAILABLE";
+  const metaAdsStatus = data?.metaAds?.configured
+    ? (data?.metaAds?.connectionStatus === "CONNECTED" ? "HEALTHY" : data?.metaAds?.connectionStatus === "UNKNOWN" ? "UNKNOWN" : "DEGRADED")
+    : "NOT CONFIGURED";
   const appStatus = data?.application?.status === "ok" ? "HEALTHY" : "DEGRADED";
 
   return (
@@ -177,6 +180,38 @@ export default function SystemDiagnostics() {
           {data?.shopify?.error ? (
             <div style={{ fontSize: "0.75rem", color: "#f03e3e", marginTop: "0.5rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={data.shopify.error}>
               Error: {data.shopify.error}
+            </div>
+          ) : null}
+        </div>
+
+        {/* META ADS STATUS */}
+        <div style={{ border: "1px solid #eee", borderRadius: "6px", padding: "1rem", backgroundColor: "#fff" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
+            <span style={{ fontWeight: "bold", fontSize: "0.9rem", color: "#666" }}>META ADS</span>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: "bold",
+                padding: "0.2rem 0.5rem",
+                borderRadius: "12px",
+                backgroundColor: metaAdsStatus === "HEALTHY" ? "#e6fcf5" : metaAdsStatus === "NOT CONFIGURED" ? "#f1f3f5" : metaAdsStatus === "UNKNOWN" ? "#fff9db" : "#fff0f6",
+                color: metaAdsStatus === "HEALTHY" ? "#0ca678" : metaAdsStatus === "NOT CONFIGURED" ? "#868e96" : metaAdsStatus === "UNKNOWN" ? "#f08c00" : "#f03e3e",
+              }}
+            >
+              {metaAdsStatus}
+            </span>
+          </div>
+          <div style={{ fontSize: "1rem", fontWeight: "bold", color: "#222" }}>
+            {data?.metaAds?.configured ? (data?.metaAds?.accountName || "Configured") : "Not Configured"}
+          </div>
+          <div style={{ fontSize: "0.8rem", color: "#666", marginTop: "0.25rem" }}>
+            {data?.metaAds?.configured
+              ? `${data?.metaAds?.currency || "—"} · ${data?.metaAds?.timezone || "—"}${data?.metaAds?.lastSuccessAt ? ` · Last success ${new Date(data.metaAds.lastSuccessAt).toLocaleString()}` : ""}`
+              : `Missing: ${(data?.metaAds?.missingVariables || []).join(", ") || "META_ACCESS_TOKEN, META_AD_ACCOUNT_ID"}`}
+          </div>
+          {data?.metaAds?.connectionStatus && data?.metaAds?.connectionStatus !== "CONNECTED" && data?.metaAds?.configured ? (
+            <div style={{ fontSize: "0.75rem", color: "#f08c00", marginTop: "0.5rem" }}>
+              Connection: {data.metaAds.connectionStatus}
             </div>
           ) : null}
         </div>
