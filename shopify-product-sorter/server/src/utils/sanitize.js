@@ -13,6 +13,10 @@ export function redactSecrets(input) {
   text = text.replace(/shpca_[a-zA-Z0-9_-]+/gi, "[REDACTED_SHOPIFY_TOKEN]");
   text = text.replace(/shpua_[a-zA-Z0-9_-]+/gi, "[REDACTED_SHOPIFY_TOKEN]");
   text = text.replace(/bearer\s+[a-zA-Z0-9._~+/-]+=*/gi, "Bearer [REDACTED_TOKEN]");
+  // Meta Graph API access tokens (long alphanumeric strings, often starting
+  // with EAA or EAAG). Kept conservative: only substitute the known token
+  // shapes plus exact configured values so safe text is never over-redacted.
+  text = text.replace(/\bEAA(?:G)?[A-Za-z0-9]{20,}/g, "[REDACTED_META_TOKEN]");
   text = text.replace(/(postgres|postgresql|mongodb|mysql):\/\/[^\s"']+/gi, "[REDACTED_CONNECTION_STRING]");
   text = text.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gi, "[REDACTED_EMAIL]");
 
@@ -23,11 +27,13 @@ export function redactSecrets(input) {
     process.env.SHOPIFY_ADMIN_ACCESS_TOKEN,
     process.env.SHIPROCKET_PASSWORD,
     process.env.SHIPROCKET_TOKEN,
+    process.env.META_ACCESS_TOKEN,
     process.env.DATABASE_URL,
     env?.shopifyClientSecret,
     env?.shopifyAdminAccessToken,
     env?.shiprocketPassword,
     env?.shiprocketToken,
+    env?.metaAccessToken,
     env?.adminSecret,
     env?.apiSecret,
     env?.databaseUrl,
@@ -43,6 +49,10 @@ export function redactSecrets(input) {
 }
 
 export function redactNestedSecrets(data) {
+  return redactNestedSecretsInternal(data);
+}
+
+function redactNestedSecretsInternal(data) {
   if (data === null || data === undefined) {
     return data;
   }
@@ -56,7 +66,7 @@ export function redactNestedSecrets(data) {
   }
 
   if (Array.isArray(data)) {
-    return data.map((item) => redactNestedSecrets(item));
+    return data.map((item) => redactNestedSecretsInternal(item));
   }
 
   if (data instanceof Error) {
@@ -72,7 +82,7 @@ export function redactNestedSecrets(data) {
     if (SENSITIVE_KEY_PATTERN.test(key)) {
       result[key] = "[REDACTED]";
     } else {
-      result[key] = redactNestedSecrets(value);
+      result[key] = redactNestedSecretsInternal(value);
     }
   }
   return result;

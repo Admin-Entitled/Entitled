@@ -11,9 +11,9 @@
 | Repository path | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled/shopify-product-sorter` |
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
-| Generated timestamp | `2026-08-08T15:28:50.377Z` |
+| Generated timestamp | `2026-08-09T09:25:27.756Z` |
 | Current branch | `main` |
-| Local commit | `ba8b035` |
+| Local commit | `e3cd34a` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
@@ -38,14 +38,14 @@
 | Total tasks | 129 |
 | Not started | 0 |
 | Ready | 0 |
-| In progress | 1 |
+| In progress | 0 |
 | Implemented | 0 |
 | Validation pending | 0 |
 | Validated | 0 |
 | Blocked | 0 |
 | Deferred | 7 |
-| Completed | 121 |
-| Completion percentage | 93.8% |
+| Completed | 122 |
+| Completion percentage | 94.6% |
 
 ## 4. Current execution focus
 
@@ -53,7 +53,7 @@
 - Next dependency-actionable ready tasks: None
 - Dependency-safe validation-pending tasks: None
 - Tasks awaiting prerequisites: None
-- In-progress tasks: `META-001`
+- In-progress tasks: None
 - Blocked tasks: None
 
 ## 10. Master task index
@@ -173,7 +173,7 @@
 | CLEAN-007 | Remove or isolate test outputs | LOW | COMPLETED | OPS-008, DATA-010 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-008 | Resolve stale scripts and documentation | MEDIUM | COMPLETED | OPS-001, DOC-001 | Imported from master plan. Previous raw status: NOT STARTED |
 | CLEAN-009 | Review unused dependencies, orphan uploads/exports, and old migration helpers | MEDIUM | COMPLETED | OWN-008, DATA-011, DOC-010 | Imported from master plan. Previous raw status: NOT STARTED |
-| META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | IN_PROGRESS | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
+| META-001 | Define isolated Meta Ads boundary and feature flags | HIGH | COMPLETED | FINAL-007, DOC-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-002 | Define Meta frontend route and navigation | HIGH | DEFERRED | META-001, FE-003 | Imported from master plan. Previous raw status: DEFERRED |
 | META-003 | Define Meta backend router and transport | HIGH | DEFERRED | META-001, INT-010, SEC-009 | Imported from master plan. Previous raw status: DEFERRED |
 | META-004 | Rebuild read-only account, campaigns, ad sets, and ads | HIGH | DEFERRED | META-001, META-002, META-003 | Imported from master plan. Previous raw status: DEFERRED |
@@ -3466,9 +3466,9 @@ Dependency audit, static caller scan, tests, build, and repository cleanliness.
 ### `META-001` Define isolated Meta Ads boundary and feature flags
 
 **Severity:** HIGH
-**Status:** IN_PROGRESS
+**Status:** COMPLETED
 **Dependencies:** FINAL-007, DOC-003
-**Last updated:** 2026-08-08T15:28:50.377Z
+**Last updated:** 2026-08-09T09:25:27.756Z
 
 #### Description
 
@@ -3488,7 +3488,7 @@ Architecture review, dependency scan, bundle/security checks, and plan update.
 
 #### Completion evidence
 
-Defining isolated Meta Ads boundary and feature flags
+Defining isolated Meta Ads boundary and feature flags, Read-only Meta Ads dashboard implemented: canonical metaAdsClient transport with pagination/error normalization, metaAdsService with account/campaigns/adsets/ads/insights/summary/daily, thin routes with AppError codes, frontend MetaAdsDashboard with KPI cards/drilldown/date range/refresh/states, sidebar enabled, Network Activity + System Diagnostics integration, token redaction in sanitize, regression suite added to gate., Validation: server/src/routes/metaAds.test.js (32 tests) + client frontend regression (37 tests) + full regression gate 15/15 pass; build passes; token never leaked to responses/logs/diagnostics., --evidence Fixed Meta Ads Dashboard date-range system presets (Yesterday, Last 7, Last 14, Last 30) to use completed calendar days ending yesterday in the account's timezone (Asia/Calcutta) rather than including today. Supported inclusive custom start/end range query boundaries with start <= end validation. Formatted client date ranges using formatFriendlyDate for user-friendly labels. --changed-files client/src/metaAdsView.js,client/src/MetaAdsDashboard.jsx,client/src/utils/format.js,server/src/routes/metaAds.test.js, --evidence Verified via routes/metaAds.test.js (34/34 passing) and client/src/frontendRegression.test.js (37/37 passing) including custom validation bounds and correct preset offsets. build and verify checkouts run green. --validation-files server/src/routes/metaAds.test.js,client/src/frontendRegression.test.js, --evidence Successfully completed META-001: fixes date range system presets (yesterday, last 7, last 14, last 30) to exclude today, adhering to Meta Ads Manager semantics. Validated inclusive custom range validations (start <= end) and formatted friendly date range text displaying. Tests are fully verified.
 
 ---
 
@@ -3931,13 +3931,13 @@ Full final suite, route/data/security/docs/cleanliness audits, and owner sign-of
 
 | Timestamp | Task ID | Prev Status | New Status | Actor | Reason | Hash |
 | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-09T09:25:27.784Z | META-001 | validated | completed | shivam | --evidence Successfully completed META-001: fixes date range system presets (yesterday, last 7, last 14, last 30) to exclude today, adhering to Meta Ads Manager semantics. Validated inclusive custom range validations (start <= end) and formatted friendly date range text displaying. Tests are fully verified. | `30103071` |
+| 2026-08-09T09:25:25.269Z | META-001 | implemented | validated | shivam | --evidence Verified via routes/metaAds.test.js (34/34 passing) and client/src/frontendRegression.test.js (37/37 passing) including custom validation bounds and correct preset offsets. build and verify checkouts run green. --validation-files server/src/routes/metaAds.test.js,client/src/frontendRegression.test.js | `bb5727e3` |
+| 2026-08-09T09:25:22.958Z | META-001 | in_progress | implemented | shivam | --evidence Fixed Meta Ads Dashboard date-range system presets (Yesterday, Last 7, Last 14, Last 30) to use completed calendar days ending yesterday in the account's timezone (Asia/Calcutta) rather than including today. Supported inclusive custom start/end range query boundaries with start <= end validation. Formatted client date ranges using formatFriendlyDate for user-friendly labels. --changed-files client/src/metaAdsView.js,client/src/MetaAdsDashboard.jsx,client/src/utils/format.js,server/src/routes/metaAds.test.js | `7ff782c0` |
+| 2026-08-09T09:21:41.689Z | META-001 | validated | in_progress | shivam | Transition to in_progress | `e60c1de1` |
+| 2026-08-08T19:01:26.434Z | META-001 | implemented | validated | shivam | Validation: server/src/routes/metaAds.test.js (32 tests) + client frontend regression (37 tests) + full regression gate 15/15 pass; build passes; token never leaked to responses/logs/diagnostics. | `1288c44c` |
+| 2026-08-08T19:01:26.149Z | META-001 | in_progress | implemented | shivam | Read-only Meta Ads dashboard implemented: canonical metaAdsClient transport with pagination/error normalization, metaAdsService with account/campaigns/adsets/ads/insights/summary/daily, thin routes with AppError codes, frontend MetaAdsDashboard with KPI cards/drilldown/date range/refresh/states, sidebar enabled, Network Activity + System Diagnostics integration, token redaction in sanitize, regression suite added to gate. | `b68cbf54` |
 | 2026-08-08T15:28:50.406Z | META-001 | ready | in_progress | shivam | Defining isolated Meta Ads boundary and feature flags | `4a179b5c` |
 | 2026-08-08T15:28:48.110Z | META-001 | deferred | ready | shivam | Transition to ready | `11cf63f8` |
 | 2026-08-07T10:41:40.592Z | FINAL-008 | validated | completed | shivam | --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report. | `6f74acb0` |
 | 2026-08-07T10:41:40.322Z | FINAL-008 | implemented | validated | shivam | --validation-files=docs/architecture/FINAL_ARCHITECTURE_VERIFICATION.md --evidence=Verified sign-off report. | `1183c90a` |
-| 2026-08-07T10:41:40.029Z | FINAL-008 | in_progress | implemented | shivam | --evidence=Signed off architecture completion across all tasks. | `35e9f68f` |
-| 2026-08-07T10:41:39.730Z | FINAL-008 | ready | in_progress | shivam | Transition to in_progress | `1e115a96` |
-| 2026-08-07T10:41:37.336Z | FINAL-008 | not_started | ready | shivam | Automatic readiness reconciliation: all dependencies completed | `918b90cc` |
-| 2026-08-07T10:41:37.294Z | FINAL-007 | validated | completed | shivam | --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision. | `66164193` |
-| 2026-08-07T10:41:37.016Z | FINAL-007 | implemented | validated | shivam | --validation-files=docs/architecture/META_ADS_READINESS_DECISION.md --evidence=Verified Meta readiness decision. | `5814fc6b` |
-| 2026-08-07T10:41:36.714Z | FINAL-007 | in_progress | implemented | shivam | --evidence=Recorded META_REMAINS_DEFERRED decision. | `26fd3885` |
