@@ -8,6 +8,7 @@ import Sorter from "./Sorter";
 import { sidebarModules } from "./sidebarModules.js";
 import NetworkActivity from "./NetworkActivity";
 import SystemDiagnostics from "./SystemDiagnostics";
+import MetaAdsDashboard from "./MetaAdsDashboard";
 
 
 export default function App() {
@@ -347,6 +348,12 @@ function clearCurrentLogs() {
       ) : activeModule === "order-mapping" ? (
         <ErrorBoundary key="order-mapping">
           <OrderMapping sidebarBridge={orderMappingSidebarBridge} />
+        </ErrorBoundary>
+      ) : activeModule === "meta-ads" ? (
+        <ErrorBoundary key="meta-ads">
+          <main className="dashboard">
+            <MetaAdsDashboard />
+          </main>
         </ErrorBoundary>
       ) : activeModule === "network" ? (
         <ErrorBoundary key="network">

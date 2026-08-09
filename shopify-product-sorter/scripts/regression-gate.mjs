@@ -39,6 +39,7 @@ export const testSuites = [
   { name: "Order Mapping Migration Integrity", file: "server/src/services/orderMappingMigrations.test.js" },
   { name: "Startup Commands & Operator Intent", file: "server/src/scripts/startupCommands.test.js" },
   { name: "Deterministic Integration Mocks", file: "server/src/services/providerIntegration.test.js" },
+  { name: "Meta Ads Read-Only Dashboard", file: "server/src/routes/metaAds.test.js" },
   { name: "Health Checks & Diagnostics", file: "server/src/routes/health.test.js" },
   { name: "Frontend Static Fallback & Route Boundary", file: "server/src/routes/staticFallback.test.js" },
   { name: "Architecture Ledger Governance", file: "tests/architecture-ledger.test.js" },

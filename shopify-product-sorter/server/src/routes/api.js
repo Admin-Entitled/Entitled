@@ -9,6 +9,7 @@ import { getCachedTokenStatus } from "../services/shopifyAuth.js";
 import { env, getShopifyCapability, getMetaCapability } from "../config/env.js";
 import { isOrderMappingAvailable } from "../services/orderMappingDb.js";
 import { fetchShopCounts } from "../services/shopifyService.js";
+import { getMetaDiagnosticsSnapshot } from "../services/metaAdsService.js";
 import { logError } from "../utils/logger.js";
 import { shopifyCapabilityGuard } from "../middleware/shopifyCapability.js";
 
@@ -176,8 +177,7 @@ router.get("/health/diagnostics", async (req, res) => {
         tokenPresent: Boolean(env.shiprocketToken),
       },
       metaAds: {
-        status: metaCap.status,
-        configured: metaCap.available,
+        ...getMetaDiagnosticsSnapshot(),
       },
       timestamp: new Date().toISOString(),
     });
