@@ -11,10 +11,10 @@ const styles = readFileSync(new URL("./styles.css", import.meta.url), "utf8");
 
 test("Frontend Regression: Module Classification & Placeholder Ownership", () => {
   const disabledModules = getDisabledModules();
-  assert.equal(disabledModules.length, 5);
+  assert.equal(disabledModules.length, 4);
 
   const disabledIds = disabledModules.map((m) => m.id);
-  assert.deepEqual(disabledIds, ["meta-ads", "analytics", "inventory", "reports", "settings"]);
+  assert.deepEqual(disabledIds, ["analytics", "inventory", "reports", "settings"]);
 
   for (const module of disabledModules) {
     assert.equal(module.enabled, false, `Disabled module ${module.id} must have enabled=false`);
@@ -22,9 +22,9 @@ test("Frontend Regression: Module Classification & Placeholder Ownership", () =>
   }
 
   const activeModules = getActiveModules();
-  assert.equal(activeModules.length, 5);
+  assert.equal(activeModules.length, 6);
   const activeIds = activeModules.map((m) => m.id);
-  assert.deepEqual(activeIds, ["sorter", "order-mapping", "sku-image-manager", "network", "diagnostics"]);
+  assert.deepEqual(activeIds, ["sorter", "order-mapping", "sku-image-manager", "network", "diagnostics", "meta-ads"]);
 
   for (const module of activeModules) {
     assert.equal(module.enabled, true);
@@ -174,7 +174,9 @@ test("Frontend Regression: placeholder modules carry explicit classifications (F
     assert.equal(mod.classification, "ACTIVE_FEATURE", `enabled module ${mod.id} must be ACTIVE_FEATURE`);
   }
   const metaAds = sidebarModules.find((m) => m.id === "meta-ads");
-  assert.equal(metaAds.classification, "DEFERRED_META", "meta-ads must remain visibly deferred");
+  assert.equal(metaAds.enabled, true, "meta-ads must be enabled");
+  assert.equal(metaAds.classification, "ACTIVE_FEATURE", "meta-ads must be an active feature once functional");
+  assert.ok(metaAds.ownerClaim, "meta-ads must have an explicit owner claim");
 });
 
 test("Frontend Regression: disabled navigation cannot invoke missing code (FE-011)", () => {
@@ -204,6 +206,7 @@ test("Frontend Regression: frontend suites are wired into the regression gate (F
   assert.ok(files.includes("client/src/frontendRegression.test.js"), "frontend regression suite must be in the gate");
   assert.ok(files.includes("client/src/api.test.js"), "api isolation suite must be in the gate");
   assert.ok(files.includes("client/src/styles.test.js"), "style isolation suite must be in the gate");
+  assert.ok(files.includes("server/src/routes/metaAds.test.js"), "Meta Ads suite must be wired into the regression gate");
 });
 
 // ===== Product Sorter preview-to-apply contract (source-level) =====
@@ -383,6 +386,84 @@ test("DIAGNOSTICS-COMPONENTS-WIRING: App.jsx imports NetworkActivity and SystemD
   assert.match(src, /import SystemDiagnostics from "\.\/SystemDiagnostics"/);
   assert.match(src, /activeModule === "network"/);
   assert.match(src, /activeModule === "diagnostics"/);
+});
+
+test("META-ADS-FRONTEND: App.jsx renders MetaAdsDashboard behind the meta-ads module", () => {
+  const appContent = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
+  assert.match(appContent, /import MetaAdsDashboard from "\.\/MetaAdsDashboard"/);
+  assert.match(appContent, /activeModule === "meta-ads"/);
+  assert.match(appContent, /<MetaAdsDashboard \/>/);
+  assert.match(appContent, /key="meta-ads"/, "Meta Ads must be wrapped in an ErrorBoundary");
+});
+
+test("META-ADS-FRONTEND: sidebar no longer shows 'Later' for Meta Ads once enabled", () => {
+  const metaAds = sidebarModules.find((m) => m.id === "meta-ads");
+  assert.equal(metaAds.enabled, true, "Meta Ads must be enabled");
+  assert.equal(metaAds.classification, "ACTIVE_FEATURE");
+  assert.ok(metaAds.ownerClaim, "Meta Ads must have an owner claim");
+});
+
+test("META-ADS-FRONTEND: dashboard imports only its own metaAdsApi domain client", () => {
+  const src = readFileSync(new URL("./MetaAdsDashboard.jsx", import.meta.url), "utf8");
+  assert.match(src, /from "\.\/metaAdsApi(\.js)?"/);
+  assert.ok(!/from "\.\/(sorterApi|skuImageApi|orderMappingApi|salesIntelligenceApi)"/.test(src));
+});
+
+test("META-ADS-FRONTEND: metaAdsApi delegates to the shared api.js transport and is read-only", () => {
+  const src = readFileSync(new URL("./metaAdsApi.js", import.meta.url), "utf8");
+  assert.match(src, /import \{ request \} from "\.\/api\.js"/, "metaAdsApi must reuse the shared transport");
+  assert.ok(!src.includes("access_token"), "metaAdsApi must never carry or send the Meta access token");
+  assert.ok(!src.includes("META_ACCESS_TOKEN"), "token env names must not appear in the client");
+  // Read-only: only GET helpers plus the local cache refresh POST.
+  const posts = [...src.matchAll(/method: "POST"/g)];
+  assert.equal(posts.length, 1, "only the local cache refresh may be a POST");
+});
+
+test("META-ADS-FRONTEND: dashboard renders KPI cards, campaign table, drilldown, refresh, and states", () => {
+  const src = readFileSync(new URL("./MetaAdsDashboard.jsx", import.meta.url), "utf8");
+  assert.match(src, /SPEND/, "KPI card for Spend");
+  assert.match(src, /META PURCHASE VALUE/, "KPI card for Meta Purchase Value (attribution-qualified)");
+  assert.match(src, /META ROAS/, "KPI card for Meta ROAS");
+  assert.match(src, /PURCHASES/);
+  assert.match(src, /IMPRESSIONS/);
+  assert.match(src, /Refresh Meta Data/, "Refresh action must exist");
+  assert.match(src, /REFRESHING/, "Refresh must surface a REFRESHING state");
+  assert.match(src, /handleSelectCampaign/, "campaign drilldown handler");
+  assert.match(src, /handleSelectAdSet/, "ad set drilldown handler");
+  assert.match(src, /META ADS NOT CONFIGURED/, "NOT_CONFIGURED state must be explicit");
+  assert.match(src, /RATE_LIMITED|RATE LIMITED/, "rate-limited state must be surfaced");
+  assert.match(src, /INSUFFICIENT_PERMISSIONS|PERMISSION REQUIRED/, "permission-required state must be surfaced");
+  assert.match(src, /Daily Spend \+ Purchases/, "one trend chart (daily spend + purchases)");
+});
+
+test("META-ADS-FRONTEND: metaAdsView provides canonical date presets and timezone-aware ranges", () => {
+  const src = readFileSync(new URL("./metaAdsView.js", import.meta.url), "utf8");
+  for (const preset of ["today", "yesterday", "last7", "last14", "last30", "custom"]) {
+    assert.match(src, new RegExp(preset), `date preset ${preset} must exist`);
+  }
+  assert.match(src, /timeZone: timezone/, "ranges must use the account timezone, not the browser timezone");
+});
+
+test("META-ADS-FRONTEND: Meta money renders through account-currency formatter (INR grouping, no USD assumption)", () => {
+  const utilsSrc = readFileSync(new URL("./utils/format.js", import.meta.url), "utf8");
+  assert.match(utilsSrc, /function formatMoneyForCurrency/, "account-currency formatter must exist");
+  assert.match(utilsSrc, /currency === "INR" \? "en-IN"/, "INR must use en-IN grouping");
+  const dashboardSrc = readFileSync(new URL("./MetaAdsDashboard.jsx", import.meta.url), "utf8");
+  assert.match(dashboardSrc, /formatMoneyForCurrency\(value, currency/, "dashboard must format via the account currency");
+  assert.ok(!dashboardSrc.includes('currency: "USD"'), "Meta dashboard must not hardcode USD");
+});
+
+test("META-ADS-FRONTEND: NetworkActivity surfaces a Meta provider filter", () => {
+  const src = readFileSync(new URL("./NetworkActivity.jsx", import.meta.url), "utf8");
+  assert.match(src, /"Meta"/, "Network Activity must have a Meta filter tab");
+  assert.match(src, /log\.provider === "meta"/, "Network Activity must filter Meta provider logs");
+});
+
+test("META-ADS-FRONTEND: SystemDiagnostics renders a Meta Ads status card", () => {
+  const src = readFileSync(new URL("./SystemDiagnostics.jsx", import.meta.url), "utf8");
+  assert.match(src, /META ADS/, "System Diagnostics must show a Meta Ads section");
+  assert.match(src, /metaAdsStatus/, "Meta status must derive from the diagnostics payload");
+  assert.match(src, /connectionStatus/, "Meta connection status must be surfaced");
 });
 
 

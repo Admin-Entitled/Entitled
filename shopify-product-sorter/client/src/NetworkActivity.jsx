@@ -62,7 +62,8 @@ export default function NetworkActivity() {
     if (filter === "Errors") return log.status === "failed" || (log.statusCode && log.statusCode >= 400);
     if (filter === "Shopify") return log.provider === "shopify";
     if (filter === "Shiprocket") return log.provider === "shiprocket";
-    if (filter === "Internal API") return log.provider !== "shopify" && log.provider !== "shiprocket";
+    if (filter === "Meta") return log.provider === "meta";
+    if (filter === "Internal API") return log.provider !== "shopify" && log.provider !== "shiprocket" && log.provider !== "meta";
     return true;
   });
 
@@ -92,7 +93,7 @@ export default function NetworkActivity() {
       </div>
 
       <div className="filter-tabs" style={{ display: "flex", gap: "0.25rem", marginBottom: "1rem" }}>
-        {["ALL", "Shopify", "Shiprocket", "Internal API", "Errors"].map((tab) => (
+        {["ALL", "Shopify", "Shiprocket", "Meta", "Internal API", "Errors"].map((tab) => (
           <button
             key={tab}
             type="button"
@@ -159,12 +160,16 @@ export default function NetworkActivity() {
                               ? "#eef6ff"
                               : log.provider === "shiprocket"
                               ? "#fff4e5"
+                              : log.provider === "meta"
+                              ? "#f0ebff"
                               : "#f5f5f5",
                           color:
                             log.provider === "shopify"
                               ? "#0066cc"
                               : log.provider === "shiprocket"
                               ? "#cc7a00"
+                              : log.provider === "meta"
+                              ? "#7a3ff2"
                               : "#555",
                         }}
                       >

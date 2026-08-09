@@ -212,6 +212,10 @@ export const env = {
   set metaAccessToken(v) { overrides.metaAccessToken = parseString(v); },
   get metaAdAccountId() { return overrides.metaAdAccountId ?? parseString(process.env.META_AD_ACCOUNT_ID); },
   set metaAdAccountId(v) { overrides.metaAdAccountId = parseString(v); },
+  // Canonical Meta Graph / Marketing API version. Defined once here so version
+  // strings are never scattered through services or routes.
+  get metaApiVersion() { return overrides.metaApiVersion ?? parseString(process.env.META_API_VERSION, "v26.0"); },
+  set metaApiVersion(v) { overrides.metaApiVersion = parseString(v, "v26.0"); },
 
   toSnapshot() {
     return Object.freeze({
@@ -247,6 +251,7 @@ export const env = {
       apiSecret: this.apiSecret,
       metaAccessToken: this.metaAccessToken,
       metaAdAccountId: this.metaAdAccountId,
+      metaApiVersion: this.metaApiVersion,
     });
   },
 };
