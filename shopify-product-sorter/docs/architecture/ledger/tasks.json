@@ -7017,8 +7017,8 @@
         "server/src/routes/metaAds.test.js",
         "client/src/frontendRegression.test.js"
       ],
-      "implementation_commit_sha": "96f6aff88212b4d6498cc70e4f76ca14af3377f8",
-      "clean_validation_commit_sha": "96f6aff88212b4d6498cc70e4f76ca14af3377f8",
+      "implementation_commit_sha": "f27a5db09f06c698d6b8938f9ec0039bb119fb81",
+      "clean_validation_commit_sha": "f27a5db09f06c698d6b8938f9ec0039bb119fb81",
       "completion_record_commit_sha": "96f6aff88212b4d6498cc70e4f76ca14af3377f8",
       "validation_results": {
         "regression_gate": {
@@ -7029,10 +7029,10 @@
           "passed": true,
           "exit_code": 0
         },
-        "timestamp": "2026-08-09T09:25:25.243Z",
-        "implementation_commit_sha": "96f6aff88212b4d6498cc70e4f76ca14af3377f8",
-        "clean_validation_commit_sha": "96f6aff88212b4d6498cc70e4f76ca14af3377f8",
-        "tested_commit": "96f6aff88212b4d6498cc70e4f76ca14af3377f8",
+        "timestamp": "2026-08-10T06:41:45.000Z",
+        "implementation_commit_sha": "f27a5db09f06c698d6b8938f9ec0039bb119fb81",
+        "clean_validation_commit_sha": "f27a5db09f06c698d6b8938f9ec0039bb119fb81",
+        "tested_commit": "f27a5db09f06c698d6b8938f9ec0039bb119fb81",
         "passed": true
       }
     },

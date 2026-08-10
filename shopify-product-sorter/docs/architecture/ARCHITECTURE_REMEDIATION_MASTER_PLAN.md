@@ -13,7 +13,7 @@
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-09T09:25:27.756Z` |
 | Current branch | `recovery/meta-001-date-fix` |
-| Local commit | `f27a5db` |
+| Local commit | `915507b` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions
