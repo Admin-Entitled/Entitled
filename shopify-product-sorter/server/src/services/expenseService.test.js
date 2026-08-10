@@ -1,11 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { env, resetEnvOverrides } from "../config/env.js";
-import { closeOrderMappingPool, orderMappingQuery, orderMappingTable } from "./orderMappingDb.js";
-import { runOrderMappingMigrations } from "./orderMappingMigrations.js";
-import { upsertProviderExpense } from "../repositories/expenseRepository.js";
 import {
+  DEFAULT_ORDER_MAPPING_SCHEMA,
+  assertSafeExpensesTestTarget,
+  configureIsolatedOrderMappingTestSchema,
+  countRowsInSchemaTable,
+  dropIsolatedOrderMappingSchema,
+} from "../test/orderMappingTestIsolation.js";
+
+const testSchema = configureIsolatedOrderMappingTestSchema("services-expenses");
+
+const { env, resetEnvOverrides } = await import("../config/env.js");
+const { closeOrderMappingPool, orderMappingQuery, orderMappingTable } = await import("./orderMappingDb.js");
+const { runOrderMappingMigrations } = await import("./orderMappingMigrations.js");
+const { upsertProviderExpense, upsertExpenseBill } = await import("../repositories/expenseRepository.js");
+const {
   chooseShopifyCanonicalSource,
   getMonthlyConsolidatedSummary,
   getShiprocketStatementPageInfo,
@@ -15,12 +25,13 @@ import {
   shiprocketTxId,
   shopifyOrderFeeId,
   syncShopifyExpenses,
-} from "./expenseService.js";
+} = await import("./expenseService.js");
 
 const providerExpensesTable = orderMappingTable("provider_expenses");
 const expenseBillsTable = orderMappingTable("expense_bills");
 
 test.before(async () => {
+  assertSafeExpensesTestTarget();
   await runOrderMappingMigrations();
 });
 
@@ -30,6 +41,7 @@ test.afterEach(() => {
 
 test.after(async () => {
   await closeOrderMappingPool();
+  await dropIsolatedOrderMappingSchema(testSchema);
 });
 
 const SHOPIFY_ENV_KEYS = [
@@ -88,6 +100,25 @@ async function getProviderExpenseStats(provider, refs) {
 async function deleteBillsForMonth(month) {
   await orderMappingQuery(`DELETE FROM ${expenseBillsTable} WHERE billing_month = $1`, [month]);
 }
+
+async function getBillCountForMonth(month) {
+  const result = await orderMappingQuery(`SELECT COUNT(*)::int AS count FROM ${expenseBillsTable} WHERE billing_month = $1`, [month]);
+  return result.rows[0]?.count || 0;
+}
+
+test("Expenses service fixtures use an isolated test schema", async () => {
+  const normalCount = await countRowsInSchemaTable(DEFAULT_ORDER_MAPPING_SCHEMA, "provider_expenses");
+  await upsertProviderExpense({
+    provider: "SHOPIFY",
+    expenseDate: "2099-01-01",
+    amount: 9,
+    currency: "INR",
+    rawSourceReference: "isolated-schema-proof",
+  });
+  const normalAfter = await countRowsInSchemaTable(DEFAULT_ORDER_MAPPING_SCHEMA, "provider_expenses");
+  assert.equal(normalAfter, normalCount);
+  await deleteProviderExpenseRefs("SHOPIFY", ["isolated-schema-proof"]);
+});
 
 test("Shiprocket fallback identity is deterministic for the same row", () => {
   const row = {
@@ -297,6 +328,18 @@ test("Shopify sync returns UNAVAILABLE when capability is missing instead of fab
   });
 });
 
+test("Live verification paths do not insert bill fixtures", async () => {
+  const month = "2099-05";
+  await deleteBillsForMonth(month);
+  const before = await getBillCountForMonth(month);
+  await withUnconfiguredShopify(async () => {
+    const result = await syncShopifyExpenses(month);
+    assert.equal(result.status, "UNAVAILABLE");
+  });
+  const after = await getBillCountForMonth(month);
+  assert.equal(after, before);
+});
+
 test("Monthly summary remains invoice-based even when provider API activity exists", async () => {
   const month = "2099-03";
   const providerRef = "summary-invoice-basis-test";
@@ -325,6 +368,54 @@ test("Monthly summary remains invoice-based even when provider API activity exis
   assert.equal(shopify.total, 100);
   assert.equal(shopify.apiExpense, 40);
   await deleteProviderExpenseRefs("SHOPIFY", [providerRef]);
+  await deleteBillsForMonth(month);
+});
+
+test("Meta API activity without a recognized bill keeps the official monthly total at zero and marks INCOMPLETE", async () => {
+  const month = "2099-06";
+  const providerRef = "meta-api-without-bill";
+  await deleteBillsForMonth(month);
+  await deleteProviderExpenseRefs("META", [providerRef]);
+  await upsertProviderExpense({
+    provider: "META",
+    expenseDate: "2099-06-02",
+    amount: 10882.05,
+    currency: "INR",
+    reference: "Meta test activity",
+    expenseType: "AD_SPEND",
+    rawSourceReference: providerRef,
+  });
+
+  const summary = await getMonthlyConsolidatedSummary(month);
+  const meta = summary.providerTotals.find((entry) => entry.provider === "META");
+  assert.equal(summary.totalExpense, 0);
+  assert.equal(meta.total, 0);
+  assert.equal(meta.apiExpense, 10882.05);
+  assert.equal(meta.completeness, "INCOMPLETE");
+  await deleteProviderExpenseRefs("META", [providerRef]);
+});
+
+test("Manual genuine bill upload semantics change the official monthly expense immediately", async () => {
+  const month = "2099-07";
+  await deleteBillsForMonth(month);
+  await upsertExpenseBill({
+    provider: "SHIPROCKET",
+    invoiceNumber: "SHIPROCKET-2099-07",
+    invoiceDate: "2099-07-05",
+    billingMonth: month,
+    subtotal: 2500,
+    tax: 0,
+    total: 2500,
+    currency: "INR",
+    documentSource: "MANUAL",
+    status: "AVAILABLE",
+  });
+
+  const summary = await getMonthlyConsolidatedSummary(month);
+  const shiprocket = summary.providerTotals.find((entry) => entry.provider === "SHIPROCKET");
+  assert.equal(summary.totalExpense, 2500);
+  assert.equal(shiprocket.total, 2500);
+  assert.equal(shiprocket.billCount, 1);
   await deleteBillsForMonth(month);
 });
 

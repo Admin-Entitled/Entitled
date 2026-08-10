@@ -16,6 +16,13 @@ console.log("=== Integrated Application Regression Gate ===");
 
 // 1. Safety & Credential Check
 process.env.NODE_ENV = "test";
+const regressionSchemaPrefix = "order_mapping_test_gate_";
+const configuredRegressionSchema = process.env.ORDER_MAPPING_SCHEMA || `${regressionSchemaPrefix}${process.pid}`;
+if (!configuredRegressionSchema.startsWith(regressionSchemaPrefix)) {
+  console.error(`CRITICAL ERROR: Unsafe ORDER_MAPPING_SCHEMA for regression gate: ${configuredRegressionSchema}`);
+  process.exit(1);
+}
+process.env.ORDER_MAPPING_SCHEMA = configuredRegressionSchema;
 
 const dbUrl = process.env.DATABASE_URL || "";
 if (dbUrl.includes("production") && !process.env.ALLOW_PROD_TEST_RUN) {
@@ -24,7 +31,7 @@ if (dbUrl.includes("production") && !process.env.ALLOW_PROD_TEST_RUN) {
   process.exit(1);
 }
 
-console.log("✓ Environment safety check passed (NODE_ENV=test, production credentials safeguarded).");
+console.log("✓ Environment safety check passed (NODE_ENV=test, isolated ORDER_MAPPING_SCHEMA enforced, production credentials safeguarded).");
 
 // 2. Define Test Suites across all App & Route Families
 export const testSuites = [
@@ -167,7 +174,14 @@ if (isMain) {
       const suiteStart = Date.now();
       try {
         console.log(`\nRunning [${suite.name}] (${suite.file})...`);
-        safeExecSync(`node --test "${suite.file}"`, { stdio: "inherit" });
+        safeExecSync(`node --test "${suite.file}"`, {
+          stdio: "inherit",
+          env: {
+            ...process.env,
+            NODE_ENV: "test",
+            ORDER_MAPPING_SCHEMA: `${regressionSchemaPrefix}${suite.file.replace(/[^a-zA-Z0-9]+/g, "_").toLowerCase()}_${process.pid}`,
+          },
+        });
         const duration = Date.now() - suiteStart;
         results.push({
           name: suite.name,
