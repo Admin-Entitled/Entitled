@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
+import { AppError } from "../middleware/errorBoundary.js";
 
 const STORAGE_DIR = path.resolve(process.env.EXPENSE_STORAGE_DIR || "./uploads/expenses");
 const TEMP_STORAGE_DIR = path.join(STORAGE_DIR, ".imports");
@@ -11,6 +12,14 @@ const FILE_SIGNATURES = {
   PNG: { mimeType: "image/png", extension: ".png" },
   JPEG: { mimeType: "image/jpeg", extension: ".jpg" },
 };
+const PASSBOOK_EXTENSIONS = new Set([".csv", ".tsv", ".xlsx", ".xls"]);
+const PASSBOOK_MIME_TYPES = new Set([
+  "text/csv",
+  "text/tab-separated-values",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/octet-stream",
+]);
 
 function sanitizeExtension(value) {
   return path.extname(String(value || "")).toLowerCase();
@@ -56,30 +65,62 @@ function detectDocumentSignature(buffer) {
 
 export async function validateUploadedDocument(file) {
   if (!file) {
-    throw new Error("No file provided");
+    throw new AppError("VALIDATION_ERROR", "No file provided", { statusCode: 400 });
   }
 
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    throw new Error("File exceeds maximum limit of 10MB");
+    throw new AppError("FILE_TOO_LARGE", "File exceeds maximum limit of 10MB", { statusCode: 400 });
+  }
+
+  if (file.size === 0) {
+    throw new AppError("EMPTY_FILE", "The uploaded file is empty.", { statusCode: 400 });
   }
 
   const header = await readFileHeader(file.path);
   const signature = detectDocumentSignature(header);
   if (!signature) {
-    throw new Error("Unsupported file format. Only PDF, PNG, and JPG/JPEG are allowed.");
+    throw new AppError("UNSUPPORTED_FILE_TYPE", "Unsupported file format. Only PDF, PNG, and JPG/JPEG are allowed.", { statusCode: 400 });
   }
 
   const originalExtension = sanitizeExtension(file.originalname);
   const allowedExtensions = [".pdf", ".png", ".jpg", ".jpeg"];
   if (originalExtension && !allowedExtensions.includes(originalExtension)) {
-    throw new Error("Unsupported file format. Only PDF, PNG, and JPG/JPEG are allowed.");
+    throw new AppError("UNSUPPORTED_FILE_TYPE", "Unsupported file format. Only PDF, PNG, and JPG/JPEG are allowed.", { statusCode: 400 });
   }
 
   if (file.mimetype && ![signature.mimeType, "image/jpg"].includes(file.mimetype)) {
-    throw new Error("Invalid MIME type.");
+    throw new AppError("INVALID_MIME_TYPE", "Invalid MIME type.", { statusCode: 400 });
   }
 
   return signature;
+}
+
+export async function classifyExpenseImportUpload(file) {
+  if (!file) {
+    throw new AppError("VALIDATION_ERROR", "No file provided", { statusCode: 400 });
+  }
+
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    throw new AppError("FILE_TOO_LARGE", "File exceeds maximum limit of 10MB", { statusCode: 400 });
+  }
+
+  if (file.size === 0) {
+    throw new AppError("EMPTY_FILE", "The uploaded file is empty.", { statusCode: 400 });
+  }
+
+  const extension = sanitizeExtension(file.originalname);
+  if (PASSBOOK_EXTENSIONS.has(extension) || PASSBOOK_MIME_TYPES.has(String(file.mimetype || "").toLowerCase())) {
+    return {
+      kind: "PASSBOOK_DATA",
+      format: extension ? extension.slice(1).toUpperCase() : "TABULAR",
+    };
+  }
+
+  const signature = await validateUploadedDocument(file);
+  return {
+    kind: "BILL_DOCUMENT",
+    signature,
+  };
 }
 
 export async function computeDocumentHash(filePath) {

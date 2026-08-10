@@ -28,6 +28,12 @@ import {
   upsertShopifyOrders,
   withSyncLock,
 } from "./orderMappingRepository.js";
+import {
+  confirmShiprocketPassbookImport,
+  getShiprocketPassbookImportDetails,
+  listShiprocketPassbookImports,
+  previewShiprocketPassbookImport,
+} from "./orderExpenseImportService.js";
 import { matchOrderMappingShipment } from "./orderMappingMatcher.js";
 import { normalizeOrderMappingStatus, normalizeShiprocketStatus } from "./orderMappingStatus.js";
 
@@ -344,6 +350,50 @@ export async function clearManualOrderMappingShipmentStatus(shipmentId) {
       errorSummary: error.message,
     });
     throw error;
+  }
+}
+
+export async function previewOrderExpenseImport(file) {
+  try {
+    return await previewShiprocketPassbookImport(file);
+  } catch (error) {
+    throw normalizeOrderMappingError(error);
+  }
+}
+
+export async function confirmOrderExpenseImport(importId) {
+  const syncRun = await createSyncRun("shiprocket_passbook_import");
+  try {
+    const result = await confirmShiprocketPassbookImport(importId);
+    await completeSyncRun(syncRun.id, {
+      status: "completed",
+      processedCount: result.summary?.financialRows || 0,
+      updatedCount: result.insertedTransactions || 0,
+      failedCount: result.duplicateTransactions || 0,
+    });
+    return result;
+  } catch (error) {
+    await completeSyncRun(syncRun.id, {
+      status: "failed",
+      errorSummary: error.message,
+    });
+    throw normalizeOrderMappingError(error);
+  }
+}
+
+export async function listOrderExpenseImports(limit) {
+  try {
+    return { imports: await listShiprocketPassbookImports(limit) };
+  } catch (error) {
+    throw normalizeOrderMappingError(error);
+  }
+}
+
+export async function getOrderExpenseImportDetailsById(importId) {
+  try {
+    return await getShiprocketPassbookImportDetails(importId);
+  } catch (error) {
+    throw normalizeOrderMappingError(error);
   }
 }
 

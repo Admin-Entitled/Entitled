@@ -36,6 +36,19 @@ function getFieldClassName(item, key) {
   return "expenses-import-input";
 }
 
+function getPreviewStatusLabel(item) {
+  if (item.previewStatus === "ROUTE_TO_PASSBOOK") {
+    return "Import in Order Mapping";
+  }
+  if (item.previewStatus === "ERROR") {
+    return "Could not read";
+  }
+  if (item.previewStatus === "REVIEW_REQUIRED") {
+    return "Needs review";
+  }
+  return "Ready";
+}
+
 export default function ExpenseBillImportModal({
   isOpen,
   selectedMonth,
@@ -219,7 +232,9 @@ export default function ExpenseBillImportModal({
                   <div className="expenses-import-card-header">
                     <div>
                       <strong>{item.filename}</strong>
-                      <div className="expenses-history-empty-copy">Document hash tracked for duplicate detection.</div>
+                      <div className="expenses-history-empty-copy">
+                        {getPreviewStatusLabel(item)} · Document hash tracked for duplicate detection.
+                      </div>
                     </div>
                     <button
                       type="button"
@@ -236,6 +251,7 @@ export default function ExpenseBillImportModal({
                       {(item.extractionWarnings || []).map((warning) => (
                         <div key={warning} className="expenses-history-empty-copy">{warning}</div>
                       ))}
+                      {item.routingHint ? <div className="expenses-history-empty-copy">{item.routingHint}</div> : null}
                     </div>
                   )}
 

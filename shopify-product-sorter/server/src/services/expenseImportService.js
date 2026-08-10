@@ -1,3 +1,4 @@
+import fs from "node:fs/promises";
 import {
   getExpenseBillByDocumentHash,
   getExpenseBillByInvoice,
@@ -11,6 +12,7 @@ import {
   persistImportMetadata,
   readImportMetadata,
   stageBillImportDocument,
+  classifyExpenseImportUpload,
 } from "../utils/documentStorage.js";
 import { parseExpenseDocument } from "./expenseDocumentParser.js";
 
@@ -57,6 +59,9 @@ function sanitizePreview(preview) {
   return {
     importId: preview.importId,
     filename: preview.filename,
+    previewStatus: preview.previewStatus || "READY",
+    errorCode: preview.errorCode || null,
+    routingHint: preview.routingHint || null,
     provider: fieldValue(preview.fields, "provider"),
     invoiceNumber: fieldValue(preview.fields, "invoiceNumber"),
     invoiceDate: fieldValue(preview.fields, "invoiceDate"),
@@ -76,6 +81,57 @@ function sanitizePreview(preview) {
     duplicateDocument: preview.duplicateDocument,
     reviewRequired: preview.reviewRequired,
   };
+}
+
+function buildManualReviewFields({ preferredProvider = null, selectedMonth = "", extractionWarnings = {} } = {}) {
+  return {
+    provider: { value: preferredProvider || "NEEDS_REVIEW", confidence: preferredProvider ? "LOW" : "MISSING", warnings: extractionWarnings.provider || [] },
+    invoiceNumber: { value: "", confidence: "MISSING", warnings: extractionWarnings.invoiceNumber || ["Invoice number could not be found."] },
+    invoiceDate: { value: "", confidence: "MISSING", warnings: extractionWarnings.invoiceDate || ["Invoice date could not be found."] },
+    billingMonth: {
+      value: selectedMonth || "",
+      confidence: selectedMonth ? "LOW" : "MISSING",
+      warnings:
+        extractionWarnings.billingMonth
+        || (selectedMonth
+          ? ["Billing month fell back to the selected Expenses month."]
+          : ["Billing month could not be determined."]),
+    },
+    subtotal: { value: null, confidence: "MISSING", warnings: extractionWarnings.subtotal || [] },
+    tax: { value: null, confidence: "MISSING", warnings: extractionWarnings.tax || [] },
+    total: { value: null, confidence: "MISSING", warnings: extractionWarnings.total || ["Invoice total could not be confidently extracted."] },
+    currency: { value: "", confidence: "MISSING", warnings: extractionWarnings.currency || ["Currency could not be confidently determined."] },
+  };
+}
+
+function buildPreviewError({
+  importId = null,
+  filename,
+  documentHash = null,
+  selectedMonth,
+  preferredProvider,
+  errorCode,
+  extractionWarnings,
+  routingHint = null,
+  previewStatus = "ERROR",
+}) {
+  return sanitizePreview({
+    importId,
+    filename,
+    previewStatus,
+    errorCode,
+    routingHint,
+    fields: buildManualReviewFields({
+      preferredProvider,
+      selectedMonth,
+      extractionWarnings: {},
+    }),
+    extractionWarnings,
+    duplicateInvoice: null,
+    duplicateDocument: null,
+    reviewRequired: true,
+    documentHash,
+  });
 }
 
 async function buildDuplicateState(fields, documentHash) {
@@ -110,8 +166,27 @@ export async function previewExpenseBillImports(files, { selectedMonth, preferre
   const previews = [];
 
   for (const file of files || []) {
-    const staged = await stageBillImportDocument(file);
+    let staged = null;
     try {
+      const classification = await classifyExpenseImportUpload(file);
+      if (classification.kind === "PASSBOOK_DATA") {
+        previews.push(buildPreviewError({
+          filename: file.originalname || "uploaded-file",
+          selectedMonth,
+          preferredProvider,
+          errorCode: "UNSUPPORTED_FILE_TYPE",
+          previewStatus: "ROUTE_TO_PASSBOOK",
+          routingHint: "This file looks like tabular/passbook data. Import Shiprocket passbooks from Order Mapping → Import Shiprocket Passbook.",
+          extractionWarnings: [
+            `This ${classification.format} file looks like passbook data, not an invoice image or PDF.`,
+            "Import Shiprocket passbooks from Order Mapping → Import Shiprocket Passbook.",
+          ],
+        }));
+        await fs.unlink(file.path).catch(() => {});
+        continue;
+      }
+
+      staged = await stageBillImportDocument(file);
       const parsed = await parseExpenseDocument({
         filePath: staged.stagedPath,
         mimeType: staged.mimeType,
@@ -133,36 +208,42 @@ export async function previewExpenseBillImports(files, { selectedMonth, preferre
         duplicateInvoice: duplicates.duplicateInvoice,
         duplicateDocument: duplicates.duplicateDocument,
         reviewRequired: isReviewRequired(parsed.fields, duplicates),
+        previewStatus: isReviewRequired(parsed.fields, duplicates) ? "REVIEW_REQUIRED" : "READY",
       };
       await persistImportMetadata(staged.importId, preview);
       previews.push(sanitizePreview(preview));
     } catch (error) {
-      const fallbackPreview = {
-        importId: staged.importId,
-        filename: staged.originalName,
-        documentHash: staged.documentHash,
-        mimeType: staged.mimeType,
-        extension: staged.extension,
-        stagedStorageKey: staged.stagedStorageKey,
-        selectedMonth,
-        preferredProvider,
-        fields: {
-          provider: { value: preferredProvider || "NEEDS_REVIEW", confidence: preferredProvider ? "LOW" : "MISSING", warnings: [] },
-          invoiceNumber: { value: "", confidence: "MISSING", warnings: ["Invoice number could not be found."] },
-          invoiceDate: { value: "", confidence: "MISSING", warnings: ["Invoice date could not be found."] },
-          billingMonth: { value: selectedMonth || "", confidence: selectedMonth ? "LOW" : "MISSING", warnings: selectedMonth ? ["Billing month fell back to the selected Expenses month."] : ["Billing month could not be determined."] },
-          subtotal: { value: null, confidence: "MISSING", warnings: [] },
-          tax: { value: null, confidence: "MISSING", warnings: [] },
-          total: { value: null, confidence: "MISSING", warnings: ["Invoice total could not be confidently extracted."] },
-          currency: { value: "", confidence: "MISSING", warnings: ["Currency could not be confidently determined."] },
-        },
-        extractionWarnings: [error.message || "Could not automatically read this bill."],
-        duplicateInvoice: null,
-        duplicateDocument: null,
-        reviewRequired: true,
-      };
-      await persistImportMetadata(staged.importId, fallbackPreview);
-      previews.push(sanitizePreview(fallbackPreview));
+      if (staged) {
+        const fallbackPreview = {
+          importId: staged.importId,
+          filename: staged.originalName,
+          documentHash: staged.documentHash,
+          mimeType: staged.mimeType,
+          extension: staged.extension,
+          stagedStorageKey: staged.stagedStorageKey,
+          selectedMonth,
+          preferredProvider,
+          previewStatus: "ERROR",
+          errorCode: error.code || "PARSER_FAILED",
+          routingHint: null,
+          fields: buildManualReviewFields({ preferredProvider, selectedMonth }),
+          extractionWarnings: [error.message || "Could not automatically read this bill."],
+          duplicateInvoice: null,
+          duplicateDocument: null,
+          reviewRequired: true,
+        };
+        await persistImportMetadata(staged.importId, fallbackPreview);
+        previews.push(sanitizePreview(fallbackPreview));
+      } else {
+        await fs.unlink(file?.path || "").catch(() => {});
+        previews.push(buildPreviewError({
+          filename: file?.originalname || "uploaded-file",
+          selectedMonth,
+          preferredProvider,
+          errorCode: error.code || "PARSER_FAILED",
+          extractionWarnings: [error.message || "Could not automatically read this bill."],
+        }));
+      }
     }
   }
 

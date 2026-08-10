@@ -297,6 +297,25 @@ test("FE-008: orderMappingApi FormData upload keeps multipart headers browser-ow
   assert.equal(call.options.headers["Content-Type"], undefined, "multipart requests must not force Content-Type");
 });
 
+test("Order Mapping passbook preview keeps CSV/XLSX/PDF multipart headers browser-owned", async () => {
+  const original = global.fetch;
+  const formData = new FormData();
+  let call = {};
+  formData.append("file", new Blob(["Transaction ID,Date\nTXN-1,2026-07-01"]), "passbook.csv");
+  global.fetch = async (url, options = {}) => {
+    call = { url, options };
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  };
+  try {
+    await api.previewExpenseImport(formData.get("file"));
+  } finally {
+    global.fetch = original;
+  }
+  assert.equal(call.url, "/api/order-mapping/expenses/import/preview");
+  assert.ok(call.options.body instanceof FormData);
+  assert.equal(call.options.headers["Content-Type"], undefined);
+});
+
 test("FE-008: orderMappingApi failed request normalization matches the shared transport", async () => {
   const original = global.fetch;
   global.fetch = async () => new Response(JSON.stringify({ message: "Order sync failed" }), { status: 500 });

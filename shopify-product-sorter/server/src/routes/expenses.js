@@ -33,7 +33,34 @@ import {
 
 const router = express.Router();
 
-const upload = multer({
+function normalizeExpenseUploadError(error) {
+  if (!error) {
+    return null;
+  }
+  if (error instanceof AppError) {
+    return error;
+  }
+  if (error instanceof multer.MulterError) {
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return new AppError("FILE_TOO_LARGE", "File exceeds maximum limit of 10MB", { statusCode: 400 });
+    }
+    return new AppError("UPLOAD_FAILED", error.message || "File upload failed", { statusCode: 400 });
+  }
+  return error;
+}
+
+function wrapUpload(middleware) {
+  return (req, res, next) => middleware(req, res, (error) => next(normalizeExpenseUploadError(error)));
+}
+
+const previewUpload = multer({
+  dest: path.join(os.tmpdir(), "expenses-bill-uploads"),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+  },
+});
+
+const billDocumentUpload = multer({
   dest: path.join(os.tmpdir(), "expenses-bill-uploads"),
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB
@@ -43,7 +70,9 @@ const upload = multer({
     if (allowedTypes.includes(file.mimetype)) {
       callback(null, true);
     } else {
-      callback(new Error("Unsupported file format. Only PDF, PNG, and JPG/JPEG are allowed."));
+      callback(new AppError("UNSUPPORTED_FILE_TYPE", "Unsupported file format. Only PDF, PNG, and JPG/JPEG are allowed.", {
+        statusCode: 400,
+      }));
     }
   }
 });
@@ -111,7 +140,7 @@ router.post("/expenses/sync", async (req, res, next) => {
   }
 });
 
-router.post("/expenses/import/preview", upload.array("files", 10), async (req, res, next) => {
+router.post("/expenses/import/preview", wrapUpload(previewUpload.array("files", 10)), async (req, res, next) => {
   try {
     const selectedMonth = String(req.body.selectedMonth || "").trim();
     const preferredProvider = String(req.body.preferredProvider || "").trim().toUpperCase() || null;
@@ -164,7 +193,7 @@ router.post("/expenses/import/cancel", async (req, res, next) => {
 });
 
 // POST /api/expenses/bills - Manual add bill / replace existing document
-router.post("/expenses/bills", upload.single("file"), async (req, res, next) => {
+router.post("/expenses/bills", wrapUpload(billDocumentUpload.single("file")), async (req, res, next) => {
   try {
     const { provider, invoiceNumber, invoiceDate, billingMonth, subtotal, tax, total, currency } = req.body;
 

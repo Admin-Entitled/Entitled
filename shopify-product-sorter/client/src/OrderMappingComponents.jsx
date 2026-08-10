@@ -6,6 +6,10 @@ import {
   getSubtitle,
 } from "./orderMappingView.js";
 
+function renderShiprocketCost(order) {
+  return order.shiprocket_cost ? formatCurrency(order.shiprocket_cost) : "—";
+}
+
 /**
  * Order Mapping presentational components (OrderCard, MetricCard, OrderTable).
  *
@@ -13,7 +17,7 @@ import {
  * canonical view mapping from orderMappingView.js (backend-normalized states).
  */
 
-export function OrderCard({ order }) {
+export function OrderCard({ order, onOpenDetails }) {
   const email = getEmail(order);
   const status = getOrderStatusDisplay(order);
 
@@ -51,7 +55,16 @@ export function OrderCard({ order }) {
           <dt>Details</dt>
           <dd>{status.detail}</dd>
         </div>
+        <div>
+          <dt>Shiprocket Cost</dt>
+          <dd>{renderShiprocketCost(order)}</dd>
+        </div>
       </dl>
+      <div className="order-mapping-card-actions">
+        <button type="button" className="order-mapping-page-button" onClick={() => onOpenDetails?.(order.id)}>
+          View details
+        </button>
+      </div>
     </article>
   );
 }
@@ -66,7 +79,7 @@ export function MetricCard({ label, value, detail, tone = "default" }) {
   );
 }
 
-export function OrderTable({ orders }) {
+export function OrderTable({ orders, onOpenDetails }) {
   return (
     <div className="order-mapping-table-wrap">
       <table className="order-mapping-table">
@@ -77,7 +90,9 @@ export function OrderTable({ orders }) {
             <th scope="col">Created</th>
             <th scope="col">Status</th>
             <th scope="col">Amount</th>
+            <th scope="col">Shiprocket Cost</th>
             <th scope="col">Details</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -100,7 +115,13 @@ export function OrderTable({ orders }) {
                   </span>
                 </td>
                 <td className="order-mapping-cell">{formatCurrency(order.order_amount)}</td>
+                <td className="order-mapping-cell">{renderShiprocketCost(order)}</td>
                 <td className="order-mapping-cell">{status.detail}</td>
+                <td className="order-mapping-cell">
+                  <button type="button" className="order-mapping-page-button" onClick={() => onOpenDetails?.(order.id)}>
+                    View
+                  </button>
+                </td>
               </tr>
             );
           })}

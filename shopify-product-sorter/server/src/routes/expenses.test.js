@@ -409,3 +409,71 @@ test("Expenses import supports OCR image review and duplicate invoice/hash block
     server.close();
   }
 });
+
+test("Expenses import preview returns friendly passbook guidance for CSV instead of a generic 500", async () => {
+  const server = await startServer();
+  try {
+    const form = new FormData();
+    form.append("selectedMonth", "2099-07");
+    form.append(
+      "files",
+      new Blob(["Transaction ID,Date,AWB,Description,Debit,Credit\nTXN-1,2099-07-01,AWB123,Forward Freight,84,0\n"], { type: "text/csv" }),
+      "shiprocket-passbook.csv",
+    );
+
+    const response = await fetch(getServerUrl(server, "/api/expenses/import/preview"), {
+      method: "POST",
+      body: form,
+    });
+
+    assert.equal(response.status, 201);
+    const payload = await response.json();
+    assert.equal(payload.previews.length, 1);
+    assert.equal(payload.previews[0].previewStatus, "ROUTE_TO_PASSBOOK");
+    assert.equal(payload.previews[0].errorCode, "UNSUPPORTED_FILE_TYPE");
+    assert.match(payload.previews[0].routingHint, /Order Mapping/);
+    assert.match(payload.previews[0].extractionWarnings.join(" "), /passbook/i);
+  } finally {
+    server.close();
+  }
+});
+
+test("Expenses import preview keeps valid bills reviewable when one uploaded file is passbook data", async () => {
+  const month = "2099-12";
+  const server = await startServer();
+  try {
+    const pdf = buildSimplePdfBuffer([
+      "Meta Platforms India",
+      "Invoice Number: META-MIXED-2099-12",
+      "Invoice Date: 12 Dec 2099",
+      "Billing Period: November 2099",
+      "Subtotal: INR 5000.00",
+      "IGST: INR 900.00",
+      "Invoice Total: INR 5900.00",
+    ]);
+
+    const form = new FormData();
+    form.append("selectedMonth", month);
+    form.append("files", new Blob([pdf], { type: "application/pdf" }), "meta-bill.pdf");
+    form.append(
+      "files",
+      new Blob(["Transaction ID,Date,AWB,Description,Debit,Credit\nTXN-2,2099-11-01,AWB456,Forward Freight,99,0\n"], { type: "text/csv" }),
+      "shiprocket-passbook.csv",
+    );
+
+    const response = await fetch(getServerUrl(server, "/api/expenses/import/preview"), {
+      method: "POST",
+      body: form,
+    });
+
+    assert.equal(response.status, 201);
+    const payload = await response.json();
+    assert.equal(payload.previews.length, 2);
+    assert.equal(payload.previews[0].previewStatus, "READY");
+    assert.equal(payload.previews[0].provider, "META");
+    assert.equal(payload.previews[1].previewStatus, "ROUTE_TO_PASSBOOK");
+    assert.match(payload.previews[1].routingHint, /Import Shiprocket Passbook/i);
+  } finally {
+    server.close();
+  }
+});

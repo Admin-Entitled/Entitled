@@ -8,12 +8,16 @@ import { normalizeOrderMappingError, orderMappingError } from "../services/order
 import {
   clearManualOrderMappingShipmentStatus,
   commitOrderMappingCsvImport,
+  confirmOrderExpenseImport,
+  getOrderExpenseImportDetailsById,
   getOrderMappingDetails,
   listActionLogs,
   listNetworkLogs,
+  listOrderExpenseImports,
   listOrderMappings,
   migrateOrderMappingSqliteData,
   previewOrderMappingCsvImport,
+  previewOrderExpenseImport,
   refreshOrderMappingShiprocket,
   setManualOrderMappingShipmentStatus,
   syncOrderMappingShopify,
@@ -38,6 +42,11 @@ const upload = multer({
   dest: path.join(os.tmpdir(), "order-mapping"),
   limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: (req, file, done) => done(null, file.originalname.toLowerCase().endsWith(".csv")),
+});
+
+const passbookUpload = multer({
+  dest: path.join(os.tmpdir(), "order-mapping-passbook"),
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 function asyncRoute(handler) {
@@ -150,6 +159,39 @@ router.post("/imports/preview", upload.single("file"), asyncRoute(async (req, re
 
 router.post("/imports/:id/commit", asyncRoute(async (req, res) => {
   res.json(await commitOrderMappingCsvImport(req.params.id));
+}));
+
+router.get("/expenses/imports", asyncRoute(async (req, res) => {
+  res.json(await listOrderExpenseImports(req.query.limit));
+}));
+
+router.get("/expenses/imports/:id", asyncRoute(async (req, res) => {
+  const payload = await getOrderExpenseImportDetailsById(req.params.id);
+  if (!payload) {
+    throw orderMappingError("ORDER_MAPPING_IMPORT_NOT_FOUND", "Passbook import not found", { statusCode: 404 });
+  }
+  res.json(payload);
+}));
+
+router.post("/expenses/import/preview", passbookUpload.single("file"), asyncRoute(async (req, res) => {
+  try {
+    if (!req.file) {
+      throw orderMappingError("UNSUPPORTED_PASSBOOK_FORMAT", "Passbook file required");
+    }
+    res.status(201).json(await previewOrderExpenseImport(req.file));
+  } finally {
+    if (req.file?.path) {
+      await fs.unlink(req.file.path).catch(() => {});
+    }
+  }
+}));
+
+router.post("/expenses/import/confirm", asyncRoute(async (req, res) => {
+  const importId = String(req.body?.importId || "").trim();
+  if (!importId) {
+    throw orderMappingError("ORDER_MAPPING_IMPORT_REQUIRED", "Passbook importId required");
+  }
+  res.status(201).json(await confirmOrderExpenseImport(importId));
 }));
 
 router.post("/admin/migrate-sqlite", requireAdminAuth, asyncRoute(async (req, res) => {

@@ -42,4 +42,18 @@ export const api = {
     request(`/order-mapping/imports/${commitToken.batchId || commitToken.fileHash}/commit`, {
       method: "POST",
     }),
+  previewExpenseImport: (file) => {
+    const body = new FormData();
+    body.append("file", file);
+    return request("/order-mapping/expenses/import/preview", { method: "POST", body });
+  },
+  confirmExpenseImport: (importId) =>
+    request("/order-mapping/expenses/import/confirm", {
+      method: "POST",
+      body: JSON.stringify({ importId }),
+    }),
+  expenseImports: (limit = 10) =>
+    request(`/order-mapping/expenses/imports?limit=${limit}`),
+  expenseImport: (importId) =>
+    request(`/order-mapping/expenses/imports/${importId}`),
 };

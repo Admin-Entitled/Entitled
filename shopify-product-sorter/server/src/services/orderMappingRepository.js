@@ -21,6 +21,7 @@ const importRowsTable = orderMappingTable("import_rows");
 const syncRunsTable = orderMappingTable("sync_runs");
 const networkLogsTable = orderMappingTable("network_logs");
 const migrationExceptionsTable = orderMappingTable("migration_exceptions");
+const orderExpenseTransactionsTable = orderMappingTable("order_expense_transactions");
 
 function nowIso() {
   return new Date().toISOString();
@@ -237,6 +238,17 @@ export async function listOrderMappings(filters = {}) {
       SELECT DISTINCT ON (s.order_id) s.*
       FROM ${shipmentsTable} s
       ORDER BY ${primaryShipmentOrderBy()}
+    ),
+    shiprocket_costs AS (
+      SELECT
+        matched_order_id AS order_id,
+        SUM(net_amount)::text AS shiprocket_cost,
+        COUNT(*)::int AS shiprocket_transaction_count
+      FROM ${orderExpenseTransactionsTable}
+      WHERE provider = 'SHIPROCKET'
+        AND match_status = 'MATCHED'
+        AND matched_order_id IS NOT NULL
+      GROUP BY matched_order_id
     )
   `;
 
@@ -290,6 +302,8 @@ export async function listOrderMappings(filters = {}) {
          s.last_shiprocket_sync_at,
          COALESCE(s.manual_override_lock, false) AS manual_override_lock,
          COALESCE(s.manual_override, false) AS manual_override,
+         c.shiprocket_cost,
+         c.shiprocket_transaction_count,
          CASE
            WHEN o.cancellation_status IS NOT NULL THEN true
            ELSE COALESCE(s.terminal_status, false)
@@ -298,6 +312,7 @@ export async function listOrderMappings(filters = {}) {
          o.updated_at
        FROM ${ordersTable} o
        LEFT JOIN primary_shipments s ON s.order_id = o.id
+       LEFT JOIN shiprocket_costs c ON c.order_id = o.id
        ${where}
        ORDER BY ${sortClause(filters.sortBy, filters.sortDirection)}
        LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
@@ -466,7 +481,58 @@ export async function getOrderMappingDetails(orderId) {
     )
   ).rows;
 
-  return { order, shipments, history, trackingEvents };
+  const expenseTransactions = (
+    await orderMappingQuery(
+      `
+        SELECT
+          id,
+          transaction_date,
+          transaction_id,
+          charge_type,
+          description,
+          transaction_type,
+          awb,
+          debit_amount,
+          credit_amount,
+          net_amount,
+          currency,
+          match_status,
+          match_method,
+          matched_value,
+          shiprocket_order_id,
+          shiprocket_shipment_id,
+          channel_order_id
+        FROM ${orderExpenseTransactionsTable}
+        WHERE provider = 'SHIPROCKET'
+          AND matched_order_id = $1
+        ORDER BY transaction_date DESC NULLS LAST, source_row_number DESC
+      `,
+      [orderId],
+    )
+  ).rows;
+
+  const expenseBreakdown = (
+    await orderMappingQuery(
+      `
+        SELECT
+          COALESCE(SUM(CASE WHEN charge_type = 'FORWARD_FREIGHT' THEN net_amount ELSE 0 END), 0)::text AS forward_freight,
+          COALESCE(SUM(CASE WHEN charge_type = 'RTO_FREIGHT' THEN net_amount ELSE 0 END), 0)::text AS rto_freight,
+          COALESCE(SUM(CASE WHEN charge_type = 'COD_CHARGE' THEN net_amount ELSE 0 END), 0)::text AS cod_charge,
+          COALESCE(SUM(CASE WHEN charge_type = 'WEIGHT_ADJUSTMENT' THEN net_amount ELSE 0 END), 0)::text AS weight_adjustment,
+          COALESCE(SUM(CASE WHEN charge_type = 'SURCHARGE' THEN net_amount ELSE 0 END), 0)::text AS surcharge,
+          COALESCE(SUM(CASE WHEN charge_type IN ('CREDIT', 'REVERSAL', 'REFUND') THEN net_amount ELSE 0 END), 0)::text AS credits,
+          COALESCE(SUM(CASE WHEN charge_type = 'OTHER' THEN net_amount ELSE 0 END), 0)::text AS other,
+          COALESCE(SUM(net_amount), 0)::text AS net_shiprocket_cost
+        FROM ${orderExpenseTransactionsTable}
+        WHERE provider = 'SHIPROCKET'
+          AND matched_order_id = $1
+          AND match_status = 'MATCHED'
+      `,
+      [orderId],
+    )
+  ).rows[0];
+
+  return { order, shipments, history, trackingEvents, expenseTransactions, expenseBreakdown };
 }
 
 export async function createSyncRun(syncType) {
