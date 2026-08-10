@@ -605,8 +605,8 @@ test("EXPENSES-UX: current month value uses local year/month getters, not UTC sl
 test("EXPENSES-UX: unbilled API activity is presented when billed is zero", () => {
   const display = getReconciliationDisplay({
     billed: 0,
-    apiExpense: 10979.46,
-    apiAvailable: true,
+    apiActivity: 10979.46,
+    apiActivityState: "AVAILABLE",
     currency: "INR",
   });
   assert.equal(display.label, "Unbilled Activity");
@@ -616,8 +616,8 @@ test("EXPENSES-UX: unbilled API activity is presented when billed is zero", () =
 test("EXPENSES-UX: difference is presented only when both billed and API activity exist", () => {
   const display = getReconciliationDisplay({
     billed: 11200,
-    apiExpense: 10979,
-    apiAvailable: true,
+    apiActivity: 10979,
+    apiActivityState: "PARTIAL",
     currency: "INR",
   });
   assert.equal(display.label, "Difference");
@@ -626,8 +626,7 @@ test("EXPENSES-UX: difference is presented only when both billed and API activit
 
 test("EXPENSES-UX: unavailable API activity is not shown as zero", () => {
   const apiDisplay = getApiActivityDisplay({
-    apiAvailable: false,
-    apiExpense: 0,
+    apiActivityState: "UNAVAILABLE",
     currency: "INR",
   });
   assert.equal(apiDisplay.label, "API Activity");
@@ -636,12 +635,30 @@ test("EXPENSES-UX: unavailable API activity is not shown as zero", () => {
 
 test("EXPENSES-UX: genuine verified zero remains zero", () => {
   const apiDisplay = getApiActivityDisplay({
-    apiAvailable: true,
-    apiExpense: 0,
+    apiActivityState: "ZERO_VERIFIED",
+    apiActivity: 0,
     currency: "INR",
   });
   assert.equal(apiDisplay.label, "API Activity");
   assert.equal(apiDisplay.value, "₹0.00");
+});
+
+test("EXPENSES-UX: partial provider coverage can carry a real amount without pretending to be full coverage", () => {
+  const apiDisplay = getApiActivityDisplay({
+    apiActivityState: "PARTIAL",
+    apiActivity: 87.5,
+    currency: "INR",
+  });
+  assert.equal(apiDisplay.value, "₹87.50");
+  assert.equal(apiDisplay.note, "Partial coverage");
+});
+
+test("EXPENSES-UX: provider API errors are not flattened to zero", () => {
+  const apiDisplay = getApiActivityDisplay({
+    apiActivityState: "ERROR",
+    currency: "INR",
+  });
+  assert.equal(apiDisplay.value, "Could not load");
 });
 
 test("EXPENSES-UX: history empty state stays user-facing", () => {
@@ -668,4 +685,3 @@ test("EXPENSES-UX: status labels stay human-friendly", () => {
   assert.equal(getExpenseStatusLabel("NO_BILLS"), "No Bills");
   assert.equal(getExpenseStatusLabel("UNKNOWN"), "Unknown");
 });
-

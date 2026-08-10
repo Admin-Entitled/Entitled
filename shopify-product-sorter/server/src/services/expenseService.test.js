@@ -50,6 +50,12 @@ const SHOPIFY_ENV_KEYS = [
   "SHOPIFY_CLIENT_ID",
   "SHOPIFY_CLIENT_SECRET",
 ];
+const SHIPROCKET_ENV_KEYS = [
+  "SHIPROCKET_EMAIL",
+  "SHIPROCKET_PASSWORD",
+  "SHIPROCKET_TOKEN",
+  "SHIPROCKET_ENABLED",
+];
 
 async function withUnconfiguredShopify(fn) {
   const saved = {};
@@ -62,6 +68,31 @@ async function withUnconfiguredShopify(fn) {
     await fn();
   } finally {
     for (const key of SHOPIFY_ENV_KEYS) {
+      if (saved[key] === undefined) {
+        delete process.env[key];
+      } else {
+        process.env[key] = saved[key];
+      }
+    }
+    resetEnvOverrides();
+  }
+}
+
+async function withUnconfiguredShiprocket(fn) {
+  const saved = {};
+  for (const key of SHIPROCKET_ENV_KEYS) {
+    saved[key] = process.env[key];
+    delete process.env[key];
+  }
+  resetEnvOverrides();
+  env.shiprocketEmail = "";
+  env.shiprocketPassword = "";
+  env.shiprocketToken = "";
+  try {
+    await fn();
+  } finally {
+    resetEnvOverrides();
+    for (const key of SHIPROCKET_ENV_KEYS) {
       if (saved[key] === undefined) {
         delete process.env[key];
       } else {
@@ -367,6 +398,7 @@ test("Monthly summary remains invoice-based even when provider API activity exis
   assert.equal(summary.totalExpense, 100);
   assert.equal(shopify.total, 100);
   assert.equal(shopify.apiExpense, 40);
+  assert.equal(shopify.apiActivityState, "PARTIAL");
   await deleteProviderExpenseRefs("SHOPIFY", [providerRef]);
   await deleteBillsForMonth(month);
 });
@@ -426,7 +458,32 @@ test("Unavailable provider API is reported honestly as UNKNOWN rather than zero-
   await withUnconfiguredShopify(async () => {
     const summary = await getMonthlyConsolidatedSummary(month);
     const shopify = summary.providerTotals.find((entry) => entry.provider === "SHOPIFY");
-    assert.equal(shopify.apiExpense, 0);
+    assert.equal(shopify.apiExpense, null);
+    assert.equal(shopify.apiActivityState, "UNAVAILABLE");
     assert.equal(shopify.completeness, "UNKNOWN");
+  });
+});
+
+test("Shiprocket summary does not flatten non-authoritative empty statement data into zero", async () => {
+  const month = "2099-08";
+  await withUnconfiguredShiprocket(async () => {
+    const summary = await getMonthlyConsolidatedSummary(month);
+    const shiprocket = summary.providerTotals.find((entry) => entry.provider === "SHIPROCKET");
+    assert.equal(shiprocket.apiExpense, null);
+    assert.equal(shiprocket.apiActivityState, "UNAVAILABLE");
+    assert.equal(shiprocket.completeness, "UNKNOWN");
+  });
+});
+
+test("Shopify zero provider rows with missing scope stay unavailable rather than numeric zero", async () => {
+  const month = "2099-09";
+  await deleteBillsForMonth(month);
+  await withUnconfiguredShopify(async () => {
+    const result = await syncShopifyExpenses(month);
+    assert.equal(result.status, "UNAVAILABLE");
+    const summary = await getMonthlyConsolidatedSummary(month);
+    const shopify = summary.providerTotals.find((entry) => entry.provider === "SHOPIFY");
+    assert.equal(shopify.apiExpense, null);
+    assert.equal(shopify.apiActivityState, "UNAVAILABLE");
   });
 });

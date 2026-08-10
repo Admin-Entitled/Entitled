@@ -263,8 +263,10 @@ export default function Expenses() {
     total: 0,
     billCount: 0,
     completeness: "UNKNOWN",
-    apiExpense: 0,
-    difference: 0,
+    apiActivity: null,
+    apiExpense: null,
+    difference: null,
+    apiActivityState: "UNAVAILABLE",
     apiAvailable: false,
   };
 
@@ -366,17 +368,25 @@ export default function Expenses() {
         {PROVIDERS.map((provider) => {
           const providerSummary = getProviderSummary(provider.key);
           const billed = providerSummary.total || 0;
-          const apiExpense = providerSummary.apiExpense || 0;
+          const apiActivity = Number.isFinite(providerSummary.apiActivity)
+            ? providerSummary.apiActivity
+            : Number.isFinite(providerSummary.apiExpense)
+              ? providerSummary.apiExpense
+              : null;
           const billCount = providerSummary.billCount || 0;
           const apiDisplay = getApiActivityDisplay({
             apiAvailable: providerSummary.apiAvailable,
-            apiExpense,
+            apiExpense: providerSummary.apiExpense,
+            apiActivity,
+            apiActivityState: providerSummary.apiActivityState,
             currency,
           });
           const reconciliationDisplay = getReconciliationDisplay({
             billed,
-            apiExpense,
+            apiExpense: providerSummary.apiExpense,
+            apiActivity,
             apiAvailable: providerSummary.apiAvailable,
+            apiActivityState: providerSummary.apiActivityState,
             currency,
           });
 
@@ -398,6 +408,12 @@ export default function Expenses() {
                   <span>{apiDisplay.label}</span>
                   <span className={apiDisplay.isUnavailable ? "expenses-muted-value" : ""}>{apiDisplay.value}</span>
                 </div>
+                {apiDisplay.note && (
+                  <div className="expenses-provider-row">
+                    <span>Coverage</span>
+                    <span className="expenses-muted-value">{apiDisplay.note}</span>
+                  </div>
+                )}
                 {reconciliationDisplay && (
                   <div className="expenses-provider-row">
                     <span>{reconciliationDisplay.label}</span>

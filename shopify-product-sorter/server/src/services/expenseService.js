@@ -19,11 +19,19 @@ import {
   setCachedShiprocketToken,
   shiprocketRequest,
 } from "./shiprocketTransport.js";
+import { fetchOrderMappingShiprocketShipments } from "./orderMappingShiprocket.js";
 import { shopifyGraphQL } from "./shopifyService.js";
 
 const SHIPROCKET_STATEMENT_PAGE_SIZE = 100;
 const SHOPIFY_ORDER_PAGE_SIZE = 50;
 const SHOPIFY_PAYMENTS_PAGE_SIZE = 100;
+const PROVIDER_ACTIVITY_STATES = {
+  AVAILABLE: "AVAILABLE",
+  ZERO_VERIFIED: "ZERO_VERIFIED",
+  PARTIAL: "PARTIAL",
+  UNAVAILABLE: "UNAVAILABLE",
+  ERROR: "ERROR",
+};
 
 /**
  * Derive a deterministic Shiprocket transaction identity.
@@ -148,6 +156,194 @@ export function getShiprocketStatementPageInfo(payload, page, pageSize, batchLen
   return { hasNextPage: batchLength === pageSize, totalPages: page + (batchLength === pageSize ? 1 : 0) };
 }
 
+async function fetchShiprocketStatementDiagnostics(month) {
+  if (!isShiprocketConfigured()) {
+    return {
+      configured: false,
+      month,
+      rows: [],
+      normalizedRows: [],
+      metrics: {
+        pagesFetched: 0,
+        rowsReturned: 0,
+        debitRows: 0,
+        creditRows: 0,
+        skippedRows: 0,
+        rowsWithRealTransactionId: 0,
+        rowsRequiringFallbackId: 0,
+        grossDebitTotal: 0,
+        grossCreditTotal: 0,
+        netExpense: 0,
+        currency: "INR",
+      },
+    };
+  }
+
+  await ensureShiprocketAuth();
+  const { fromDateOnly: from, toDateOnly: to } = monthDateRange(month);
+  const token = getCachedShiprocketToken();
+  const rows = [];
+  const normalizedRows = [];
+  const metrics = {
+    pagesFetched: 0,
+    rowsReturned: 0,
+    debitRows: 0,
+    creditRows: 0,
+    skippedRows: 0,
+    rowsWithRealTransactionId: 0,
+    rowsRequiringFallbackId: 0,
+    grossDebitTotal: 0,
+    grossCreditTotal: 0,
+    netExpense: 0,
+    currency: "INR",
+  };
+
+  let page = 1;
+  let keepFetching = true;
+  while (keepFetching) {
+    const url = new URL(`${getShiprocketBaseUrl()}/v1/external/account/details/statement`);
+    url.searchParams.set("from", from);
+    url.searchParams.set("to", to);
+    url.searchParams.set("page", String(page));
+    url.searchParams.set("per_page", String(SHIPROCKET_STATEMENT_PAGE_SIZE));
+
+    const payload = await shiprocketRequest(
+      url,
+      { headers: { Authorization: `Bearer ${token}` } },
+      {
+        operation: "shiprocket_statement",
+        respectRetryAfter: true,
+        refresh: ensureShiprocketAuth,
+        onLog: logNetworkEntry,
+        createError: createShiprocketError,
+      },
+    );
+
+    const batch = Array.isArray(payload?.data) ? payload.data : [];
+    if (!batch.length) {
+      break;
+    }
+
+    metrics.pagesFetched += 1;
+    metrics.rowsReturned += batch.length;
+    rows.push(...batch);
+
+    for (const row of batch) {
+      const normalized = normalizeShiprocketStatementRow(row, month);
+      if (!normalized) {
+        metrics.skippedRows += 1;
+        continue;
+      }
+
+      normalizedRows.push(normalized);
+      metrics.currency = normalized.currency || metrics.currency;
+      metrics.grossDebitTotal += normalized.debit;
+      metrics.grossCreditTotal += normalized.credit;
+      metrics.netExpense += normalized.amount;
+      if (normalized.amount < 0) {
+        metrics.creditRows += 1;
+      } else {
+        metrics.debitRows += 1;
+      }
+      if (normalized.hasRealTransactionId) {
+        metrics.rowsWithRealTransactionId += 1;
+      } else {
+        metrics.rowsRequiringFallbackId += 1;
+      }
+    }
+
+    const pageInfo = getShiprocketStatementPageInfo(payload, page, SHIPROCKET_STATEMENT_PAGE_SIZE, batch.length);
+    keepFetching = pageInfo.hasNextPage;
+    page += 1;
+  }
+
+  metrics.grossDebitTotal = Number(metrics.grossDebitTotal.toFixed(2));
+  metrics.grossCreditTotal = Number(metrics.grossCreditTotal.toFixed(2));
+  metrics.netExpense = Number(metrics.netExpense.toFixed(2));
+
+  return { configured: true, month, rows, normalizedRows, metrics };
+}
+
+export async function inspectShiprocketExpenseSource(month) {
+  const { fromDateOnly: start, toDateOnly: end } = monthDateRange(month);
+  try {
+    const [statement, shipments] = await Promise.all([
+      fetchShiprocketStatementDiagnostics(month),
+      fetchOrderMappingShiprocketShipments({ start, end }),
+    ]);
+
+    const knownAwbs = new Set(
+      (shipments.shipments || [])
+        .map((shipment) => normalizeIdentityPart(shipment.awb))
+        .filter(Boolean),
+    );
+    const statementAwbs = new Set(
+      statement.rows
+        .map((row) => normalizeIdentityPart(row?.awb_code))
+        .filter(Boolean),
+    );
+    const matchedKnownAwbs = [...knownAwbs].filter((awb) => statementAwbs.has(awb)).length;
+
+    if (!statement.configured) {
+      return {
+        apiActivity: null,
+        apiActivityState: PROVIDER_ACTIVITY_STATES.UNAVAILABLE,
+        apiActivitySource: "ACCOUNT_STATEMENT",
+        apiActivityCoverage: "MERCHANT_SHIPPING_CHARGES",
+        apiActivityReason: "SHIPROCKET_NOT_CONFIGURED",
+        diagnostics: {
+          knownShipments: shipments.shipments?.length || 0,
+          knownAwbs: knownAwbs.size,
+          statementRows: 0,
+          matchedKnownAwbs,
+        },
+      };
+    }
+
+    if (statement.normalizedRows.length > 0) {
+      return {
+        apiActivity: statement.metrics.netExpense,
+        apiActivityState: PROVIDER_ACTIVITY_STATES.AVAILABLE,
+        apiActivitySource: "ACCOUNT_STATEMENT",
+        apiActivityCoverage: "MERCHANT_SHIPPING_CHARGES",
+        apiActivityReason: null,
+        diagnostics: {
+          ...statement.metrics,
+          knownShipments: shipments.shipments?.length || 0,
+          knownAwbs: knownAwbs.size,
+          matchedKnownAwbs,
+        },
+      };
+    }
+
+    return {
+      apiActivity: null,
+      apiActivityState: PROVIDER_ACTIVITY_STATES.UNAVAILABLE,
+      apiActivitySource: "ACCOUNT_STATEMENT",
+      apiActivityCoverage: "MERCHANT_SHIPPING_CHARGES",
+      apiActivityReason:
+        (shipments.shipments?.length || 0) > 0
+          ? "STATEMENT_API_DID_NOT_EXPOSE_MERCHANT_SHIPPING_DEBITS"
+          : "STATEMENT_API_DID_NOT_EXPOSE_AUTHORITATIVE_EXPENSE_ROWS",
+      diagnostics: {
+        ...statement.metrics,
+        knownShipments: shipments.shipments?.length || 0,
+        knownAwbs: knownAwbs.size,
+        matchedKnownAwbs,
+      },
+    };
+  } catch (error) {
+    return {
+      apiActivity: null,
+      apiActivityState: PROVIDER_ACTIVITY_STATES.ERROR,
+      apiActivitySource: "ACCOUNT_STATEMENT",
+      apiActivityCoverage: "MERCHANT_SHIPPING_CHARGES",
+      apiActivityReason: error.message || "SHIPROCKET_ACTIVITY_CHECK_FAILED",
+      diagnostics: null,
+    };
+  }
+}
+
 export function shopifyOrderFeeId(transactionId, feeIndex) {
   return `shopify-fee-${transactionId}-${feeIndex}`;
 }
@@ -190,6 +386,10 @@ export function normalizeShopifyBalanceTransaction(balanceTransaction) {
   };
 }
 
+function isShopifyPaymentsGatewayLabel(value) {
+  return /shopify payments/i.test(String(value || ""));
+}
+
 function completeStateForBillCountAndStatus(total, billCount, statuses) {
   if (billCount === 0) {
     return total > 0 ? "INCOMPLETE" : "NO_BILLS";
@@ -197,14 +397,49 @@ function completeStateForBillCountAndStatus(total, billCount, statuses) {
   return statuses.has("MISSING_DOCUMENT") || statuses.has("FAILED") ? "INCOMPLETE" : "COMPLETE";
 }
 
-function finalizeProviderCompleteness({ completeness, billCount, apiAvailable, apiExpense }) {
-  if (!apiAvailable && billCount === 0) {
+function finalizeProviderCompleteness({ completeness, billCount, apiActivityState, apiActivityAmount }) {
+  if (
+    apiActivityState === PROVIDER_ACTIVITY_STATES.UNAVAILABLE
+    || apiActivityState === PROVIDER_ACTIVITY_STATES.ERROR
+  ) {
     return "UNKNOWN";
   }
-  if (apiExpense > 0 && billCount === 0) {
+  if (
+    (apiActivityState === PROVIDER_ACTIVITY_STATES.AVAILABLE || apiActivityState === PROVIDER_ACTIVITY_STATES.PARTIAL)
+    && Number(apiActivityAmount || 0) > 0
+    && billCount === 0
+  ) {
     return "INCOMPLETE";
   }
   return completeness;
+}
+
+function buildMetaActivitySummary(apiSum, configured) {
+  if (!configured) {
+    return {
+      apiActivity: null,
+      apiActivityState: PROVIDER_ACTIVITY_STATES.UNAVAILABLE,
+      apiActivitySource: "META_DAILY_INSIGHTS",
+      apiActivityCoverage: "FULL",
+      apiActivityReason: "META_NOT_CONFIGURED",
+    };
+  }
+  if (apiSum.total > 0) {
+    return {
+      apiActivity: apiSum.total,
+      apiActivityState: PROVIDER_ACTIVITY_STATES.AVAILABLE,
+      apiActivitySource: "META_DAILY_INSIGHTS",
+      apiActivityCoverage: "FULL",
+      apiActivityReason: null,
+    };
+  }
+  return {
+    apiActivity: 0,
+    apiActivityState: PROVIDER_ACTIVITY_STATES.ZERO_VERIFIED,
+    apiActivitySource: "META_DAILY_INSIGHTS",
+    apiActivityCoverage: "FULL",
+    apiActivityReason: null,
+  };
 }
 
 /**
@@ -331,99 +566,36 @@ async function ensureShiprocketAuth() {
  * Retrieve Shiprocket statement logistics charges.
  */
 export async function syncShiprocketExpenses(month) {
-  const startedAt = new Date();
   try {
     logInfo("Expense sync started", { provider: "SHIPROCKET", month });
-    if (!isShiprocketConfigured()) {
-      return { provider: "SHIPROCKET", status: "UNAVAILABLE", reason: "SHIPROCKET_NOT_CONFIGURED" };
+    const activity = await inspectShiprocketExpenseSource(month);
+    if (activity.apiActivityState !== PROVIDER_ACTIVITY_STATES.AVAILABLE) {
+      return {
+        provider: "SHIPROCKET",
+        status: activity.apiActivityState === PROVIDER_ACTIVITY_STATES.ERROR ? "ERROR" : "UNAVAILABLE",
+        reason: activity.apiActivityReason,
+        capability: activity,
+      };
     }
-    await ensureShiprocketAuth();
 
-    // Derive dates
-    const { fromDateOnly: from, toDateOnly: to } = monthDateRange(month);
+    const diagnostics = await fetchShiprocketStatementDiagnostics(month);
+    for (const row of diagnostics.normalizedRows) {
+      await upsertProviderExpense(row);
+    }
 
-    const token = getCachedShiprocketToken();
-    let page = 1;
-    let keepFetching = true;
-    let recordCount = 0;
-    const metrics = {
-      pagesFetched: 0,
-      rowsReturned: 0,
-      debitRows: 0,
-      creditRows: 0,
-      skippedRows: 0,
-      rowsWithRealTransactionId: 0,
-      rowsRequiringFallbackId: 0,
-      grossDebitTotal: 0,
-      grossCreditTotal: 0,
-      netExpense: 0,
-      currency: "INR",
+    logInfo("Shiprocket expense sync completed", {
+      provider: "SHIPROCKET",
+      month,
+      count: diagnostics.normalizedRows.length,
+      metrics: diagnostics.metrics,
+    });
+    return {
+      provider: "SHIPROCKET",
+      status: "SUCCESS",
+      count: diagnostics.normalizedRows.length,
+      metrics: diagnostics.metrics,
+      capability: activity,
     };
-
-    while (keepFetching) {
-      const url = new URL(`${getShiprocketBaseUrl()}/v1/external/account/details/statement`);
-      url.searchParams.set("from", from);
-      url.searchParams.set("to", to);
-      url.searchParams.set("page", String(page));
-      url.searchParams.set("per_page", String(SHIPROCKET_STATEMENT_PAGE_SIZE));
-
-      const payload = await shiprocketRequest(
-        url,
-        { headers: { Authorization: `Bearer ${token}` } },
-        {
-          operation: "shiprocket_statement",
-          respectRetryAfter: true,
-          refresh: ensureShiprocketAuth,
-          onLog: logNetworkEntry,
-          createError: createShiprocketError,
-        }
-      );
-
-      const batch = Array.isArray(payload.data) ? payload.data : [];
-      if (!batch.length) {
-        keepFetching = false;
-        break;
-      }
-      metrics.pagesFetched += 1;
-      metrics.rowsReturned += batch.length;
-
-      for (const row of batch) {
-        const normalized = normalizeShiprocketStatementRow(row, month);
-        if (!normalized) {
-          metrics.skippedRows += 1;
-          continue;
-        }
-
-        metrics.currency = normalized.currency || metrics.currency;
-        metrics.grossDebitTotal += normalized.debit;
-        metrics.grossCreditTotal += normalized.credit;
-        metrics.netExpense += normalized.amount;
-        if (normalized.amount < 0) {
-          metrics.creditRows += 1;
-        } else {
-          metrics.debitRows += 1;
-        }
-        if (normalized.hasRealTransactionId) {
-          metrics.rowsWithRealTransactionId += 1;
-        } else {
-          metrics.rowsRequiringFallbackId += 1;
-        }
-
-        await upsertProviderExpense(normalized);
-        recordCount++;
-      }
-
-      const pageInfo = getShiprocketStatementPageInfo(payload, page, SHIPROCKET_STATEMENT_PAGE_SIZE, batch.length);
-      keepFetching = pageInfo.hasNextPage;
-      page += 1;
-    }
-
-    metrics.grossDebitTotal = Number(metrics.grossDebitTotal.toFixed(2));
-    metrics.grossCreditTotal = Number(metrics.grossCreditTotal.toFixed(2));
-    metrics.netExpense = Number(metrics.netExpense.toFixed(2));
-
-    logInfo("Shiprocket expense sync completed", { provider: "SHIPROCKET", month, count: recordCount, metrics });
-    return { provider: "SHIPROCKET", status: "SUCCESS", count: recordCount, metrics };
   } catch (err) {
     logError("Shiprocket expense sync failed", err, { provider: "SHIPROCKET", month });
     throw err;
@@ -614,6 +786,8 @@ async function fetchShopifyOrderFeeRows(month) {
   let transactionsInspected = 0;
   const rows = [];
   const currencies = new Set();
+  const gateways = new Map();
+  let shopifyPaymentsTransactions = 0;
 
   while (hasNextPage) {
     const payload = await shopifyGraphQL(
@@ -627,8 +801,15 @@ async function fetchShopifyOrderFeeRows(month) {
               transactions {
                 id
                 gateway
+                formattedGateway
+                kind
+                status
                 fees {
                   amount {
+                    amount
+                    currencyCode
+                  }
+                  taxAmount {
                     amount
                     currencyCode
                   }
@@ -657,6 +838,22 @@ async function fetchShopifyOrderFeeRows(month) {
       const transactions = order?.transactions || [];
       transactionsInspected += transactions.length;
       for (const transaction of transactions) {
+        const gatewayKey = [
+          normalizeIdentityPart(transaction?.gateway) || "null",
+          normalizeIdentityPart(transaction?.formattedGateway) || "null",
+          normalizeIdentityPart(transaction?.kind) || "null",
+          normalizeIdentityPart(transaction?.status) || "null",
+        ].join(" | ");
+        const existingGateway = gateways.get(gatewayKey) || { transactions: 0, feeRows: 0 };
+        existingGateway.transactions += 1;
+        existingGateway.feeRows += (transaction?.fees || []).length;
+        gateways.set(gatewayKey, existingGateway);
+        if (
+          isShopifyPaymentsGatewayLabel(transaction?.gateway)
+          || isShopifyPaymentsGatewayLabel(transaction?.formattedGateway)
+        ) {
+          shopifyPaymentsTransactions += 1;
+        }
         const fees = transaction?.fees || [];
         for (let feeIndex = 0; feeIndex < fees.length; feeIndex += 1) {
           const normalized = normalizeShopifyOrderTransactionFee({
@@ -679,19 +876,167 @@ async function fetchShopifyOrderFeeRows(month) {
     cursor = payload?.orders?.pageInfo?.endCursor || null;
   }
 
-  return { rows, pagesFetched, ordersInspected, transactionsInspected, currencies: [...currencies] };
+  return {
+    rows,
+    pagesFetched,
+    ordersInspected,
+    transactionsInspected,
+    currencies: [...currencies],
+    gateways: [...gateways.entries()].map(([key, value]) => ({ key, ...value })),
+    shopifyPaymentsTransactions,
+  };
+}
+
+export async function inspectShopifyExpenseSource(month) {
+  try {
+    const capability = await inspectShopifyExpenseCapability();
+    const source = capability.canonicalSource === "UNAVAILABLE"
+      ? "ORDER_TRANSACTION_FEES"
+      : capability.canonicalSource;
+
+    if (capability.orderTransactionFees === "MISSING_SCOPE") {
+      return {
+        apiActivity: null,
+        apiActivityState: PROVIDER_ACTIVITY_STATES.UNAVAILABLE,
+        apiActivitySource: source,
+        apiActivityCoverage: "PAYMENT_FEES_ONLY",
+        apiActivityReason: "SHOPIFY_ORDER_SCOPE_MISSING",
+        capability,
+        diagnostics: null,
+      };
+    }
+
+    const orderFeeProbe = capability.orderTransactionFees === "AVAILABLE"
+      ? await fetchShopifyOrderFeeRows(month)
+      : {
+          rows: [],
+          pagesFetched: 0,
+          ordersInspected: 0,
+          transactionsInspected: 0,
+          currencies: [],
+          gateways: [],
+          shopifyPaymentsTransactions: 0,
+        };
+
+    if (capability.shopifyPaymentsBalanceTransactions === "AVAILABLE") {
+      const balanceResult = await fetchShopifyPaymentsBalanceTransactions(month);
+      const balanceRows = balanceResult.rows
+        .map((row) => normalizeShopifyBalanceTransaction(row))
+        .filter(Boolean);
+      if (balanceRows.length > 0) {
+        return {
+          apiActivity: Number(balanceRows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)),
+          apiActivityState: PROVIDER_ACTIVITY_STATES.PARTIAL,
+          apiActivitySource: "SHOPIFY_PAYMENTS_BALANCE_TRANSACTIONS",
+          apiActivityCoverage: "PAYMENT_FEES_ONLY",
+          apiActivityReason: "SHOPIFY_PLAN_AND_APP_BILLS_REQUIRE_MANUAL_UPLOAD",
+          capability,
+          diagnostics: {
+            pagesFetched: balanceResult.pagesFetched,
+            ordersInspected: orderFeeProbe.ordersInspected,
+            transactionsInspected: orderFeeProbe.transactionsInspected,
+            feeRecordsFound: balanceRows.length,
+            currencies: [...new Set(balanceRows.map((row) => row.currency).filter(Boolean))],
+            gateways: orderFeeProbe.gateways,
+            shopifyPaymentsTransactions: orderFeeProbe.shopifyPaymentsTransactions,
+          },
+        };
+      }
+
+      return {
+        apiActivity: 0,
+        apiActivityState: PROVIDER_ACTIVITY_STATES.ZERO_VERIFIED,
+        apiActivitySource: "SHOPIFY_PAYMENTS_BALANCE_TRANSACTIONS",
+        apiActivityCoverage: "PAYMENT_FEES_ONLY",
+        apiActivityReason: "SHOPIFY_PLAN_AND_APP_BILLS_REQUIRE_MANUAL_UPLOAD",
+        capability,
+        diagnostics: {
+          pagesFetched: balanceResult.pagesFetched,
+          ordersInspected: orderFeeProbe.ordersInspected,
+          transactionsInspected: orderFeeProbe.transactionsInspected,
+          feeRecordsFound: 0,
+          currencies: [],
+          gateways: orderFeeProbe.gateways,
+          shopifyPaymentsTransactions: orderFeeProbe.shopifyPaymentsTransactions,
+        },
+      };
+    }
+
+    if (orderFeeProbe.rows.length > 0) {
+      return {
+        apiActivity: Number(orderFeeProbe.rows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)),
+        apiActivityState: PROVIDER_ACTIVITY_STATES.PARTIAL,
+        apiActivitySource: "ORDER_TRANSACTION_FEES",
+        apiActivityCoverage: "PAYMENT_FEES_ONLY",
+        apiActivityReason: "SHOPIFY_PLAN_AND_APP_BILLS_REQUIRE_MANUAL_UPLOAD",
+        capability,
+        diagnostics: {
+          pagesFetched: orderFeeProbe.pagesFetched,
+          ordersInspected: orderFeeProbe.ordersInspected,
+          transactionsInspected: orderFeeProbe.transactionsInspected,
+          feeRecordsFound: orderFeeProbe.rows.length,
+          currencies: orderFeeProbe.currencies,
+          gateways: orderFeeProbe.gateways,
+          shopifyPaymentsTransactions: orderFeeProbe.shopifyPaymentsTransactions,
+        },
+      };
+    }
+
+    const missingScope = capability.shopifyPaymentsBalanceTransactions === "MISSING_SCOPE";
+    const hasShopifyPaymentsTransactions = orderFeeProbe.shopifyPaymentsTransactions > 0;
+    return {
+      apiActivity: null,
+      apiActivityState: PROVIDER_ACTIVITY_STATES.UNAVAILABLE,
+      apiActivitySource: source,
+      apiActivityCoverage: "PAYMENT_FEES_ONLY",
+      apiActivityReason: missingScope
+        ? hasShopifyPaymentsTransactions
+          ? "SHOPIFY_PAYMENTS_SCOPES_MISSING"
+          : "NO_SHOPIFY_PAYMENTS_FEE_SOURCE_FOR_CURRENT_TRANSACTIONS"
+        : "ORDER_TRANSACTION_FEES_DID_NOT_EXPOSE_FEE_ROWS",
+      capability,
+      diagnostics: {
+        pagesFetched: orderFeeProbe.pagesFetched,
+        ordersInspected: orderFeeProbe.ordersInspected,
+        transactionsInspected: orderFeeProbe.transactionsInspected,
+        feeRecordsFound: 0,
+        currencies: orderFeeProbe.currencies,
+        gateways: orderFeeProbe.gateways,
+        shopifyPaymentsTransactions: orderFeeProbe.shopifyPaymentsTransactions,
+      },
+    };
+  } catch (error) {
+    return {
+      apiActivity: null,
+      apiActivityState: PROVIDER_ACTIVITY_STATES.ERROR,
+      apiActivitySource: "ORDER_TRANSACTION_FEES",
+      apiActivityCoverage: "PAYMENT_FEES_ONLY",
+      apiActivityReason: error.message || "SHOPIFY_ACTIVITY_CHECK_FAILED",
+      capability: null,
+      diagnostics: null,
+    };
+  }
 }
 
 /**
  * Retrieve real Shopify transaction fees using OrderTransaction GQL.
  */
 export async function syncShopifyExpenses(month) {
-  const startedAt = new Date();
   try {
     logInfo("Expense sync started", { provider: "SHOPIFY", month });
-    const capability = await inspectShopifyExpenseCapability();
-    if (capability.canonicalSource === "UNAVAILABLE") {
-      return { provider: "SHOPIFY", status: "UNAVAILABLE", reason: capability.reason || "SHOPIFY_EXPENSE_SOURCE_UNAVAILABLE", capability };
+    const activity = await inspectShopifyExpenseSource(month);
+    if (
+      activity.apiActivityState !== PROVIDER_ACTIVITY_STATES.PARTIAL
+      && activity.apiActivityState !== PROVIDER_ACTIVITY_STATES.AVAILABLE
+      && activity.apiActivityState !== PROVIDER_ACTIVITY_STATES.ZERO_VERIFIED
+    ) {
+      return {
+        provider: "SHOPIFY",
+        status: activity.apiActivityState === PROVIDER_ACTIVITY_STATES.ERROR ? "ERROR" : "UNAVAILABLE",
+        reason: activity.apiActivityReason || "SHOPIFY_EXPENSE_SOURCE_UNAVAILABLE",
+        capability: activity.capability,
+        diagnostics: activity.diagnostics,
+      };
     }
 
     let rows = [];
@@ -700,14 +1045,14 @@ export async function syncShopifyExpenses(month) {
     let transactionsInspected = 0;
     let currencies = [];
 
-    if (capability.canonicalSource === "SHOPIFY_PAYMENTS_BALANCE_TRANSACTIONS") {
+    if (activity.apiActivitySource === "SHOPIFY_PAYMENTS_BALANCE_TRANSACTIONS") {
       const balanceResult = await fetchShopifyPaymentsBalanceTransactions(month);
       rows = balanceResult.rows
         .map((row) => normalizeShopifyBalanceTransaction(row))
         .filter(Boolean);
       pagesFetched = balanceResult.pagesFetched;
       currencies = [...new Set(rows.map((row) => row.currency).filter(Boolean))];
-    } else {
+    } else if (activity.apiActivitySource === "ORDER_TRANSACTION_FEES") {
       const feeResult = await fetchShopifyOrderFeeRows(month);
       rows = feeResult.rows;
       pagesFetched = feeResult.pagesFetched;
@@ -724,15 +1069,15 @@ export async function syncShopifyExpenses(month) {
       provider: "SHOPIFY",
       month,
       count: rows.length,
-      canonicalSource: capability.canonicalSource,
+      canonicalSource: activity.apiActivitySource,
       pagesFetched,
     });
     return {
       provider: "SHOPIFY",
       status: "SUCCESS",
       count: rows.length,
-      canonicalSource: capability.canonicalSource,
-      capability,
+      canonicalSource: activity.apiActivitySource,
+      capability: activity.capability,
       metrics: {
         pagesFetched,
         ordersInspected,
@@ -745,11 +1090,6 @@ export async function syncShopifyExpenses(month) {
     };
   } catch (err) {
     logError("Shopify expense sync failed", err, { provider: "SHOPIFY", month });
-
-    if (/Access denied|scope|permission/i.test(err.message || "")) {
-      return { provider: "SHOPIFY", status: "UNAVAILABLE", reason: "SHOPIFY_EXPENSE_SOURCE_UNAVAILABLE" };
-    }
-
     throw err;
   }
 }
@@ -806,12 +1146,7 @@ export async function syncAllExpenses(month, bypassCache = false) {
  */
 export async function getMonthlyConsolidatedSummary(month) {
   const bills = await listExpenseBills(month);
-  const providerApiAvailability = {
-    META: getMetaCapability().available,
-    SHIPROCKET: isShiprocketConfigured(),
-    SHOPIFY: getShopifyCapability().available,
-  };
-  
+
   // Aggregate totals by provider
   const providerTotals = {
     META: { total: 0, billCount: 0, statuses: new Set(), completeness: "NO_BILLS" },
@@ -837,11 +1172,53 @@ export async function getMonthlyConsolidatedSummary(month) {
     }
   }
 
-  // Get expected provider API expenses
+  const [metaApiSum, shiprocketApiSum, shopifyApiSum] = await Promise.all([
+    getProviderExpensesSum("META", month),
+    getProviderExpensesSum("SHIPROCKET", month),
+    getProviderExpensesSum("SHOPIFY", month),
+  ]);
+
+  const [shiprocketActivity, shopifyActivity] = await Promise.all([
+    shiprocketApiSum.total > 0
+      ? Promise.resolve({
+          apiActivity: shiprocketApiSum.total,
+          apiActivityState: PROVIDER_ACTIVITY_STATES.AVAILABLE,
+          apiActivitySource: "ACCOUNT_STATEMENT",
+          apiActivityCoverage: "MERCHANT_SHIPPING_CHARGES",
+          apiActivityReason: null,
+        })
+      : inspectShiprocketExpenseSource(month),
+    shopifyApiSum.total > 0
+      ? inspectShopifyExpenseSource(month).then((inspection) => ({
+          ...inspection,
+          apiActivity: shopifyApiSum.total,
+          apiActivityState: PROVIDER_ACTIVITY_STATES.PARTIAL,
+        }))
+      : inspectShopifyExpenseSource(month),
+  ]);
+
+  const activityByProvider = {
+    META: buildMetaActivitySummary(metaApiSum, getMetaCapability().available),
+    SHIPROCKET: shiprocketActivity,
+    SHOPIFY: shopifyActivity,
+  };
+
+  // Get expected provider API expenses / source state
   for (const p of ["META", "SHIPROCKET", "SHOPIFY"]) {
-    const apiSum = await getProviderExpensesSum(p, month);
-    providerTotals[p].apiExpense = apiSum.total;
-    providerTotals[p].difference = providerTotals[p].total - apiSum.total;
+    const activity = activityByProvider[p];
+    providerTotals[p].apiActivity = activity.apiActivity;
+    providerTotals[p].apiExpense = activity.apiActivity;
+    providerTotals[p].apiActivityState = activity.apiActivityState;
+    providerTotals[p].apiActivitySource = activity.apiActivitySource;
+    providerTotals[p].apiActivityCoverage = activity.apiActivityCoverage;
+    providerTotals[p].apiActivityReason = activity.apiActivityReason;
+    providerTotals[p].apiAvailable = ![
+      PROVIDER_ACTIVITY_STATES.UNAVAILABLE,
+      PROVIDER_ACTIVITY_STATES.ERROR,
+    ].includes(activity.apiActivityState);
+    providerTotals[p].difference = Number.isFinite(activity.apiActivity)
+      ? providerTotals[p].total - activity.apiActivity
+      : null;
     providerTotals[p].completeness = completeStateForBillCountAndStatus(
       providerTotals[p].total,
       providerTotals[p].billCount,
@@ -850,8 +1227,8 @@ export async function getMonthlyConsolidatedSummary(month) {
     providerTotals[p].completeness = finalizeProviderCompleteness({
       completeness: providerTotals[p].completeness,
       billCount: providerTotals[p].billCount,
-      apiAvailable: providerApiAvailability[p],
-      apiExpense: providerTotals[p].apiExpense,
+      apiActivityState: providerTotals[p].apiActivityState,
+      apiActivityAmount: providerTotals[p].apiActivity,
     });
   }
 
@@ -866,9 +1243,14 @@ export async function getMonthlyConsolidatedSummary(month) {
       total: data.total,
       billCount: data.billCount,
       completeness: data.completeness,
-      apiExpense: data.apiExpense || 0,
-      difference: data.difference || 0,
-      apiAvailable: providerApiAvailability[p],
+      apiActivity: Number.isFinite(data.apiActivity) ? data.apiActivity : null,
+      apiExpense: Number.isFinite(data.apiExpense) ? data.apiExpense : null,
+      apiActivityState: data.apiActivityState,
+      apiActivitySource: data.apiActivitySource,
+      apiActivityCoverage: data.apiActivityCoverage,
+      apiActivityReason: data.apiActivityReason,
+      difference: Number.isFinite(data.difference) ? data.difference : null,
+      apiAvailable: data.apiAvailable,
     })),
   };
 }

@@ -106,47 +106,78 @@ export function formatExpenseHeadlineValue(value, currency = "INR") {
   return formatMoneyForCurrency(value, currency, { maximumFractionDigits: 0 });
 }
 
-export function getApiActivityDisplay({ apiAvailable, apiExpense, currency = "INR" }) {
-  if (!apiAvailable) {
+export function getApiActivityDisplay({
+  apiAvailable,
+  apiExpense,
+  apiActivityState,
+  apiActivity,
+  currency = "INR",
+}) {
+  const state = apiActivityState || (apiAvailable ? "AVAILABLE" : "UNAVAILABLE");
+  const amount = Number.isFinite(apiActivity) ? apiActivity : Number.isFinite(apiExpense) ? apiExpense : null;
+
+  if (state === "ERROR") {
+    return {
+      label: "API Activity",
+      value: "Could not load",
+      tone: "muted",
+      isUnavailable: true,
+    };
+  }
+  if (state === "UNAVAILABLE") {
     return {
       label: "API Activity",
       value: "Unavailable",
       tone: "muted",
       isUnavailable: true,
+    };
+  }
+  if (state === "PARTIAL" && amount === null) {
+    return {
+      label: "API Activity",
+      value: "Partial data",
+      tone: "muted",
+      isUnavailable: false,
+      note: "Partial coverage",
     };
   }
   return {
     label: "API Activity",
-    value: formatMoneyForCurrency(apiExpense, currency),
+    value: formatMoneyForCurrency(amount || 0, currency),
     tone: "default",
     isUnavailable: false,
+    note: state === "PARTIAL" ? "Partial coverage" : null,
   };
 }
 
-export function getReconciliationDisplay({ billed = 0, apiExpense = 0, apiAvailable, currency = "INR" }) {
-  if (!apiAvailable) {
-    return {
-      label: "API Activity",
-      value: "Unavailable",
-      tone: "muted",
-      isUnavailable: true,
-    };
+export function getReconciliationDisplay({
+  billed = 0,
+  apiExpense = 0,
+  apiAvailable,
+  apiActivityState,
+  apiActivity,
+  currency = "INR",
+}) {
+  const state = apiActivityState || (apiAvailable ? "AVAILABLE" : "UNAVAILABLE");
+  const amount = Number.isFinite(apiActivity) ? apiActivity : Number.isFinite(apiExpense) ? apiExpense : null;
+  if (!["AVAILABLE", "PARTIAL", "ZERO_VERIFIED"].includes(state) || amount === null) {
+    return null;
   }
 
-  if (apiExpense > 0 && billed === 0) {
+  if (amount > 0 && billed === 0) {
     return {
       label: "Unbilled Activity",
-      value: formatMoneyForCurrency(apiExpense, currency),
+      value: formatMoneyForCurrency(amount, currency),
       tone: "warning",
       isUnavailable: false,
     };
   }
 
-  if (apiExpense > 0 && billed > 0) {
+  if (amount > 0 && billed > 0) {
     return {
       label: "Difference",
-      value: formatMoneyForCurrency(billed - apiExpense, currency),
-      tone: billed === apiExpense ? "neutral" : "default",
+      value: formatMoneyForCurrency(billed - amount, currency),
+      tone: billed === amount ? "neutral" : "default",
       isUnavailable: false,
     };
   }
@@ -161,14 +192,15 @@ export function buildCurrentMonthWarningMessages({ selectedMonth, providerTotals
   }
 
   for (const provider of providerTotals) {
-    if (provider?.apiExpense > 0 && provider?.billCount === 0) {
+    const amount = Number.isFinite(provider?.apiActivity) ? provider.apiActivity : provider?.apiExpense;
+    if (amount > 0 && provider?.billCount === 0) {
       const providerLabel = provider.provider === "META"
         ? "Meta Ads"
         : provider.provider === "SHIPROCKET"
           ? "Shiprocket"
           : "Shopify";
       messages.push(
-        `${providerLabel} has ${formatMoneyForCurrency(provider.apiExpense, currency)} of API activity with no uploaded bill.`,
+        `${providerLabel} has ${formatMoneyForCurrency(amount, currency)} of API activity with no uploaded bill.`,
       );
     }
   }

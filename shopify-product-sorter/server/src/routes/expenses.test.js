@@ -175,7 +175,7 @@ test("Expenses Backend: marks provider INCOMPLETE if expected API activity has n
   assert.equal(shopTotals.completeness, "INCOMPLETE");
 });
 
-test("Expenses Backend: marks provider NO BILLS if no API activity and no bills (Req 55)", async () => {
+test("Expenses Backend: does not mistake absent automatic provider data for verified zero (Req 55)", async () => {
   const bills = await listExpenseBills("2026-12");
   for (const b of bills) {
     await deleteExpenseBill(b.id);
@@ -184,7 +184,7 @@ test("Expenses Backend: marks provider NO BILLS if no API activity and no bills 
   const summary = await getMonthlyConsolidatedSummary("2026-12");
   const shopTotals = summary.providerTotals.find((p) => p.provider === "SHOPIFY");
 
-  assert.equal(shopTotals.completeness, "NO_BILLS");
+  assert.equal(shopTotals.completeness, "UNKNOWN");
 });
 
 test("Expenses Integration: live / mock sync execution and mapping logic", async () => {
