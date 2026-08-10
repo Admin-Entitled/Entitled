@@ -22,9 +22,9 @@ test("Frontend Regression: Module Classification & Placeholder Ownership", () =>
   }
 
   const activeModules = getActiveModules();
-  assert.equal(activeModules.length, 6);
+  assert.equal(activeModules.length, 7);
   const activeIds = activeModules.map((m) => m.id);
-  assert.deepEqual(activeIds, ["sorter", "order-mapping", "sku-image-manager", "network", "diagnostics", "meta-ads"]);
+  assert.deepEqual(activeIds, ["sorter", "order-mapping", "sku-image-manager", "network", "diagnostics", "meta-ads", "expenses"]);
 
   for (const module of activeModules) {
     assert.equal(module.enabled, true);
@@ -465,5 +465,84 @@ test("META-ADS-FRONTEND: SystemDiagnostics renders a Meta Ads status card", () =
   assert.match(src, /metaAdsStatus/, "Meta status must derive from the diagnostics payload");
   assert.match(src, /connectionStatus/, "Meta connection status must be surfaced");
 });
+
+test("META-ADS-FRONTEND: DailyTrendChart component contains dual-axis SVG, axes, lines, tooltips, and handles empty/loading states", () => {
+  const src = readFileSync(new URL("./MetaAdsDashboard.jsx", import.meta.url), "utf8");
+  
+  // Verify dual-scale SVG components exist
+  assert.match(src, /function DailyTrendChart/, "DailyTrendChart component exists");
+  assert.match(src, /viewBox=\{\`0 0 \$\{VW\} \$\{SVG_H\}\`\}/, "Uses percentage-width SVG");
+  assert.match(src, /className="meta-chart-grid"/, "Renders grid lines");
+  assert.match(src, /className="meta-chart-axis-label meta-chart-axis-label--left"/, "Renders left axis labels (Spend)");
+  assert.match(src, /className="meta-chart-axis-label meta-chart-axis-label--right"/, "Renders right axis labels (Purchases)");
+  assert.match(src, /className=\{\`meta-chart-bar-svg/, "Renders Spend bars");
+  assert.match(src, /className="meta-chart-line"/, "Renders Purchases line");
+  assert.match(src, /className=\{\`meta-chart-dot/, "Renders Purchases points/dots");
+  
+  // Verify empty, error and loading states
+  assert.match(src, /No Meta activity for this date range\./, "Renders empty state when all elements are zero");
+  assert.match(src, /Daily performance data could not be loaded\./, "Renders error state from props");
+  assert.match(src, /Loading daily data…/, "Renders loading indicator");
+  assert.match(src, /className="meta-chart-tooltip"/, "Includes tooltips for hover interaction");
+});
+
+test("META-ADS-FRONTEND: Cost Per Purchase KPI, columns, formats, sorting, and daily tooltip are integrated", () => {
+  const dashSrc = readFileSync(new URL("./MetaAdsDashboard.jsx", import.meta.url), "utf8");
+  const viewSrc = readFileSync(new URL("./metaAdsView.js", import.meta.url), "utf8");
+  const compsSrc = readFileSync(new URL("./MetaAdsComponents.jsx", import.meta.url), "utf8");
+
+  // Cost Per Purchase KPI card renders in the correct logical order (Spend, Purchases, CPP, MVP, ROAS...)
+  assert.match(dashSrc, /label="COST PER PURCHASE"/, "Cost Per Purchase KPI card exists");
+  
+  // Cost / Purchase table cell renders
+  assert.match(dashSrc, /costPerPurchase \?\? "—"|costPerPurchase != null \? renderMoney\(i\.costPerPurchase\) : "—"/, "Cost / Purchase table body cells render values or placeholder");
+
+  // Daily chart tooltip includes Cost / Purchase
+  assert.match(dashSrc, /span className="meta-chart-tooltip-key">Cost \/ Purchase<\/span>/, "Cost / Purchase appears in the daily chart tooltip");
+
+  // MetaMoneyKpiCard handles null values gracefully (rendering placeholder/—)
+  assert.match(compsSrc, /placeholder = "—"/, "MetaMoneyKpiCard supports custom placeholder");
+  assert.match(compsSrc, /value != null && Number\.isFinite/, "MetaMoneyKpiCard checks if value is finite before formatting");
+
+  // Cost Per Purchase is a sortable key
+  assert.match(viewSrc, /\{ key: "costPerPurchase", label: "Cost \/ Purchase" \}/, "costPerPurchase is added to sort keys");
+
+  // Sorting ascending/descending works, sorting places nulls at the end
+  assert.match(viewSrc, /va === null/, "valueOf handles nulls in sorting");
+  assert.match(viewSrc, /vb === null/, "valueOf handles nulls in sorting");
+  assert.match(viewSrc, /return 1; \/\/ puts a at the end/, "null elements placed at end");
+});
+
+test("META-ADS-FRONTEND: Expenses module is registered in App routing, API, and has month selectors, ZIP triggers, tables, and modal", () => {
+  const appSrc = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
+  const expSrc = readFileSync(new URL("./Expenses.jsx", import.meta.url), "utf8");
+  const expApiSrc = readFileSync(new URL("./expensesApi.js", import.meta.url), "utf8");
+  const sideSrc = readFileSync(new URL("./sidebarModules.js", import.meta.url), "utf8");
+
+  // Router / Nav registration
+  assert.match(sideSrc, /\{ id: "expenses", label: "Expenses"/, "expenses module exists in sidebar list");
+  assert.match(appSrc, /activeModule === "expenses"/, "App routing matches expenses activeModule");
+  assert.match(appSrc, /<Expenses \/>/, "App renders Expenses component");
+
+  // API mappings
+  assert.match(expApiSrc, /getMonths\(\)/, "expensesApi lists months");
+  assert.match(expApiSrc, /getSummary\(month/, "expensesApi retrieves monthly summary");
+  assert.match(expApiSrc, /getBills\(month/, "expensesApi lists detailed bills");
+  assert.match(expApiSrc, /syncExpenses\(month/, "expensesApi triggers sync");
+  assert.match(expApiSrc, /addBill\(formData/, "expensesApi posts manual upload multipart");
+
+  // UI layout elements
+  assert.match(expSrc, /className="feature-title">Expenses<\/h2>/, "Renders feature header title");
+  assert.match(expSrc, /Sync Expenses/, "Renders Sync Expenses button");
+  assert.match(expSrc, /Add Bill/, "Renders Add Bill flow button");
+  assert.match(expSrc, /Download All Bills/, "Renders bulk Download All Bills trigger link");
+  assert.match(expSrc, /Download Bills \(ZIP\)/, "Renders provider-wise bulk ZIP trigger link");
+  assert.match(expSrc, /Monthly Expense History/, "Renders history list header");
+  assert.match(expSrc, /Provider Details cards/, "Renders provider summary section comment");
+  assert.match(expSrc, /Add Merchant Bill/, "Renders manual upload form modal header");
+});
+
+
+
 
 

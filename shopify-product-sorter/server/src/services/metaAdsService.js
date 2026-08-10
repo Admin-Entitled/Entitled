@@ -68,9 +68,21 @@ export function extractPurchaseMetrics(actions, actionValues) {
   };
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// Insights normalization
-// ────────────────────────────────────────────────────────────────────────────
+/**
+ * Centrally calculate Cost Per Purchase.
+ *
+ * Cost Per Purchase = spend / purchases (if purchases > 0)
+ * Zero purchases yields null. Zero spend with positive purchases yields 0.
+ *
+ * @param {number} spend
+ * @param {number} purchases
+ * @returns {number|null}
+ */
+export function calculateCostPerPurchase(spend, purchases) {
+  if (!Number.isFinite(spend)) return null;
+  if (!Number.isFinite(purchases) || purchases <= 0) return null;
+  return spend / purchases;
+}
 
 export function normalizeInsights(rawInsight) {
   const spend = parseFloat(rawInsight.spend || 0);
@@ -89,6 +101,7 @@ export function normalizeInsights(rawInsight) {
 
   const { purchases, purchaseValue } = extractPurchaseMetrics(rawInsight.actions, rawInsight.action_values);
   const purchaseRoas = safeSpend > 0 ? purchaseValue / safeSpend : 0;
+  const costPerPurchase = calculateCostPerPurchase(safeSpend, purchases);
 
   return {
     spend: safeSpend,
@@ -99,6 +112,7 @@ export function normalizeInsights(rawInsight) {
     cpc,
     cpm,
     purchases,
+    costPerPurchase,
     purchaseValue,
     purchaseRoas,
     dateStart: rawInsight.date_start || null,
@@ -514,6 +528,36 @@ export async function fetchMetaSummary(dateRange, bypassCache = false) {
 // Daily trend (single chart: spend + purchases)
 // ────────────────────────────────────────────────────────────────────────────
 
+/**
+ * Fill calendar gaps in a daily data array.
+ *
+ * Meta does not return rows for days with no activity. For the chart to show
+ * all dates in the selected range, we fill absent days with zero spend and
+ * zero purchases. This is only done AFTER a successful provider call — a
+ * failed call throws and is never silently zeroed.
+ *
+ * @param {Array<{date:string, spend:number, purchases:number}>} rows - sorted rows from provider
+ * @param {string} since - YYYY-MM-DD range start (inclusive)
+ * @param {string} until - YYYY-MM-DD range end (inclusive)
+ * @returns {Array<{date:string, spend:number, purchases:number, purchaseValue:number, purchaseRoas:number, noActivity:boolean}>}
+ */
+export function fillMissingDays(rows, since, until) {
+  const byDate = new Map(rows.map((r) => [r.date, r]));
+  const result = [];
+  const current = new Date(`${since}T00:00:00Z`);
+  const end = new Date(`${until}T00:00:00Z`);
+  while (current <= end) {
+    const dateStr = current.toISOString().slice(0, 10);
+    if (byDate.has(dateStr)) {
+      result.push({ ...byDate.get(dateStr), noActivity: false });
+    } else {
+      result.push({ date: dateStr, spend: 0, purchases: 0, costPerPurchase: null, purchaseValue: 0, purchaseRoas: 0, noActivity: true });
+    }
+    current.setUTCDate(current.getUTCDate() + 1);
+  }
+  return result;
+}
+
 export async function fetchMetaDailyInsights(dateRange, bypassCache = false) {
   ensureConfigured();
   const range = parseMetaDateRange(dateRange);
@@ -523,6 +567,7 @@ export async function fetchMetaDailyInsights(dateRange, bypassCache = false) {
     if (cached) return cached;
   }
 
+  // Provider call — throws on failure; never silently returns zeros on error.
   const rows = await metaGetAllPages(`act_${env.metaAdAccountId}/insights`, {
     level: "account",
     time_increment: 1,
@@ -531,18 +576,22 @@ export async function fetchMetaDailyInsights(dateRange, bypassCache = false) {
     limit: 100,
   }, { operationName: "FetchDailyInsights" });
 
-  const daily = rows
+  const normalized = rows
     .map((row) => {
       const insights = normalizeInsights(row);
       return {
         date: row.date_start,
         spend: insights.spend,
         purchases: insights.purchases,
+        costPerPurchase: insights.costPerPurchase,
         purchaseValue: insights.purchaseValue,
         purchaseRoas: insights.purchaseRoas,
       };
     })
     .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
+  // Fill calendar gaps (genuine no-activity days) after a successful provider call.
+  const daily = fillMissingDays(normalized, range.since, range.until);
 
   cacheSet(key, daily);
   return daily;

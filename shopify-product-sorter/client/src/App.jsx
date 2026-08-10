@@ -9,6 +9,7 @@ import { sidebarModules } from "./sidebarModules.js";
 import NetworkActivity from "./NetworkActivity";
 import SystemDiagnostics from "./SystemDiagnostics";
 import MetaAdsDashboard from "./MetaAdsDashboard";
+import Expenses from "./Expenses";
 
 
 export default function App() {
@@ -353,6 +354,12 @@ function clearCurrentLogs() {
         <ErrorBoundary key="meta-ads">
           <main className="dashboard">
             <MetaAdsDashboard />
+          </main>
+        </ErrorBoundary>
+      ) : activeModule === "expenses" ? (
+        <ErrorBoundary key="expenses">
+          <main className="dashboard">
+            <Expenses />
           </main>
         </ErrorBoundary>
       ) : activeModule === "network" ? (

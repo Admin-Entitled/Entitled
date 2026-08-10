@@ -12,6 +12,7 @@ export const sidebarModules = [
   { id: "network", label: "Network Activity", enabled: true, ownerClaim: "Network", classification: "ACTIVE_FEATURE" },
   { id: "diagnostics", label: "System Diagnostics", enabled: true, ownerClaim: "Diagnostics", classification: "ACTIVE_FEATURE" },
   { id: "meta-ads", label: "Meta Ads Dashboard", enabled: true, ownerClaim: "MetaAdsDashboard", classification: "ACTIVE_FEATURE" },
+  { id: "expenses", label: "Expenses", enabled: true, ownerClaim: "Expenses", classification: "ACTIVE_FEATURE" },
   { id: "analytics", label: "Product Analytics", enabled: false, ownerClaim: null, classification: "INTENTIONAL_DISABLED" },
   { id: "inventory", label: "Inventory", enabled: false, ownerClaim: null, classification: "INTENTIONAL_DISABLED" },
   { id: "reports", label: "Reports", enabled: false, ownerClaim: null, classification: "INTENTIONAL_DISABLED" },

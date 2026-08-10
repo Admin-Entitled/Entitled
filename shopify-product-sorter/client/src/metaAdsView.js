@@ -182,6 +182,7 @@ export const META_CAMPAIGN_SORT_KEYS = [
   { key: "status", label: "Status" },
   { key: "spend", label: "Spend" },
   { key: "purchases", label: "Purchases" },
+  { key: "costPerPurchase", label: "Cost / Purchase" },
   { key: "purchaseValue", label: "Purchase Value" },
   { key: "purchaseRoas", label: "ROAS" },
   { key: "impressions", label: "Impressions" },
@@ -198,14 +199,24 @@ export function sortEntities(rows, sortKey, direction) {
     if (sortKey === "name") return row.name || "";
     if (sortKey === "status") return row.effectiveStatus || row.status || "";
     const i = row.insights || {};
-    return Number(i[sortKey] || 0);
+    const val = i[sortKey];
+    if (val === undefined || val === null) return null;
+    return typeof val === "string" ? parseFloat(val) : val;
   };
   copy.sort((a, b) => {
     const va = valueOf(a);
     const vb = valueOf(b);
+    
+    // String comparison (for name, status)
     if (typeof va === "string" || typeof vb === "string") {
       return String(va).localeCompare(String(vb)) * dir;
     }
+
+    // Cost Per Purchase null sorting rule: null values go to the end for both asc/desc
+    if (va === null && vb === null) return 0;
+    if (va === null) return 1; // puts a at the end
+    if (vb === null) return -1; // puts b at the end
+
     return (va - vb) * dir;
   });
   return copy;

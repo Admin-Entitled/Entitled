@@ -13,11 +13,14 @@ export function MetaKpiCard({ label, value, detail = null, tone = "default" }) {
 }
 
 /** Money-formatted KPI card using the account currency. */
-export function MetaMoneyKpiCard({ label, value, currency, detail = null, tone = "default" }) {
+export function MetaMoneyKpiCard({ label, value, currency, detail = null, tone = "default", placeholder = "—", maximumFractionDigits = 0 }) {
+  const formatted = value != null && Number.isFinite(Number(value))
+    ? formatMoneyForCurrency(value, currency, { maximumFractionDigits })
+    : placeholder;
   return (
     <MetaKpiCard
       label={label}
-      value={formatMoneyForCurrency(value, currency, { maximumFractionDigits: 0 })}
+      value={formatted}
       detail={detail}
       tone={tone}
     />

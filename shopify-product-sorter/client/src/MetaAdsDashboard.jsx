@@ -38,29 +38,243 @@ function matchStatusFilter(entity, filter) {
   return effective === filter;
 }
 
-/** Compact daily trend chart (spend bars + purchases). One chart, no decoration. */
-function DailyTrendChart({ daily, currency }) {
+/**
+ * Dual-scale daily trend chart.
+ *
+ * - Spend → bars, left Y-axis (account currency)
+ * - Purchases → line + dots, right Y-axis (integer count)
+ * - Separate scales prevent Purchases from collapsing visually against large Spend values.
+ * - Tooltip on hover/focus.
+ * - Empty state when both spend and purchases are zero for the entire range.
+ * - Error state surfaced from parent via `error` prop.
+ */
+function DailyTrendChart({ daily, currency, error, loading }) {
+  const [tooltip, setTooltip] = React.useState(null);
+  const svgRef = React.useRef(null);
+
+  if (error) {
+    return (
+      <div className="meta-chart-error" role="alert">
+        Daily performance data could not be loaded.
+        <span className="meta-chart-error-detail">{error}</span>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return <div className="meta-chart-loading">Loading daily data…</div>;
+  }
+
   if (!daily || daily.length === 0) {
     return <MetaEmptyState message="No daily trend data for the selected range." />;
   }
+
+  const allZero = daily.every((d) => d.spend === 0 && d.purchases === 0);
+  if (allZero) {
+    return <MetaEmptyState message="No Meta activity for this date range." />;
+  }
+
+  // ── Layout constants ──────────────────────────────────────────────────────
+  const PAD_LEFT = 72;   // left axis labels
+  const PAD_RIGHT = 52;  // right axis labels
+  const PAD_TOP = 16;
+  const PAD_BOTTOM = 36; // x-axis labels
+  const CHART_H = 240;   // inner chart height (plot area)
+  const SVG_H = PAD_TOP + CHART_H + PAD_BOTTOM;
+  const n = daily.length;
+
+  // We use a percentage-width SVG so it fills the container responsively.
+  // viewBox width = 700 (arbitrary reference unit).
+  const VW = 700;
+  const INNER_W = VW - PAD_LEFT - PAD_RIGHT;
+  const colW = INNER_W / n;
+
+  // ── Scales ────────────────────────────────────────────────────────────────
   const maxSpend = Math.max(...daily.map((d) => d.spend), 1);
-  const maxPurchases = Math.max(...daily.map((d) => d.purchases), 1);
+  const maxPurch = Math.max(...daily.map((d) => d.purchases), 1);
+
+  function spendY(v) {
+    return PAD_TOP + CHART_H - (v / maxSpend) * CHART_H;
+  }
+  function purchY(v) {
+    return PAD_TOP + CHART_H - (v / maxPurch) * CHART_H;
+  }
+
+  // Bar center x for each day
+  function barX(i) {
+    return PAD_LEFT + i * colW + colW / 2;
+  }
+  const barW = Math.max(colW * 0.45, 4);
+
+  // ── Left axis ticks (spend) ───────────────────────────────────────────────
+  const SPEND_TICKS = 5;
+  const spendTicks = Array.from({ length: SPEND_TICKS + 1 }, (_, i) => {
+    const v = (maxSpend / SPEND_TICKS) * i;
+    return { v, y: spendY(v), label: formatMoneyForCurrency(v, currency, { maximumFractionDigits: 0 }) };
+  });
+
+  // ── Right axis ticks (purchases) ─────────────────────────────────────────
+  const PURCH_TICKS = Math.min(maxPurch, 5);
+  const purchStep = Math.ceil(maxPurch / PURCH_TICKS);
+  const purchTicks = Array.from({ length: Math.ceil(maxPurch / purchStep) + 1 }, (_, i) => {
+    const v = purchStep * i;
+    return { v: Math.min(v, maxPurch + purchStep), y: purchY(Math.min(v, maxPurch)), label: String(Math.min(v, maxPurch + purchStep)) };
+  }).filter((t) => t.v <= maxPurch + 0.01);
+
+  // ── Purchases polyline points ─────────────────────────────────────────────
+  const linePoints = daily.map((d, i) => `${barX(i)},${purchY(d.purchases)}`).join(" ");
+
+  // ── X-axis labels: show every label if <=10, else every other ────────────
+  const labelStride = n > 14 ? 3 : n > 7 ? 2 : 1;
+
+  // ── Tooltip formatting ────────────────────────────────────────────────────
+  function handleMouseEnter(d, i) {
+    const x = barX(i);
+    const dateStr = d.date;
+    const [y, m, day] = dateStr.split("-");
+    const label = new Date(`${dateStr}T12:00:00Z`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    setTooltip({
+      x,
+      y: Math.min(spendY(d.spend), purchY(d.purchases)) - 8,
+      date: label,
+      spend: formatMoneyForCurrency(d.spend, currency, { maximumFractionDigits: 2 }),
+      purchases: d.purchases,
+      costPerPurchase: d.costPerPurchase != null ? formatMoneyForCurrency(d.costPerPurchase, currency, { maximumFractionDigits: 2 }) : null,
+      purchaseValue: d.purchaseValue > 0 ? formatMoneyForCurrency(d.purchaseValue, currency, { maximumFractionDigits: 0 }) : null,
+      roas: d.purchaseRoas > 0 ? d.purchaseRoas.toFixed(2) : null,
+      noActivity: d.noActivity,
+    });
+  }
+
   return (
-    <div className="meta-chart" role="img" aria-label="Daily spend and purchases trend">
-      <div className="meta-chart-bars">
-        {daily.map((d) => (
-          <div key={d.date} className="meta-chart-column" title={`${d.date} · spend ${formatMoneyForCurrency(d.spend, currency, { maximumFractionDigits: 0 })} · ${d.purchases} purchases`}>
-            <div className="meta-chart-bar-wrap">
-              <div className="meta-chart-bar meta-chart-bar--spend" style={{ height: `${Math.max((d.spend / maxSpend) * 100, 2)}%` }} />
-              <div className="meta-chart-bar meta-chart-bar--purchases" style={{ height: `${Math.max((d.purchases / maxPurchases) * 100, 2)}%` }} />
-            </div>
-            <span className="meta-chart-label">{d.date.slice(8, 10)}</span>
-          </div>
+    <div className="meta-chart-svg-wrap" role="img" aria-label="Daily spend and purchases trend">
+      <svg
+        ref={svgRef}
+        viewBox={`0 0 ${VW} ${SVG_H}`}
+        preserveAspectRatio="none"
+        className="meta-chart-svg"
+        onMouseLeave={() => setTooltip(null)}
+      >
+        {/* Grid lines */}
+        {spendTicks.map((t) => (
+          <line
+            key={t.v}
+            x1={PAD_LEFT} y1={t.y}
+            x2={VW - PAD_RIGHT} y2={t.y}
+            className="meta-chart-grid"
+          />
         ))}
-      </div>
+
+        {/* Left Y-axis labels (spend) */}
+        {spendTicks.map((t) => (
+          <text key={t.v} x={PAD_LEFT - 6} y={t.y + 4} className="meta-chart-axis-label meta-chart-axis-label--left">
+            {t.label}
+          </text>
+        ))}
+
+        {/* Right Y-axis labels (purchases) */}
+        {purchTicks.map((t) => (
+          <text key={t.v} x={VW - PAD_RIGHT + 6} y={t.y + 4} className="meta-chart-axis-label meta-chart-axis-label--right">
+            {t.label}
+          </text>
+        ))}
+
+        {/* Spend bars */}
+        {daily.map((d, i) => (
+          <rect
+            key={d.date}
+            x={barX(i) - barW / 2}
+            y={spendY(d.spend)}
+            width={barW}
+            height={Math.max(CHART_H - (spendY(d.spend) - PAD_TOP), 1)}
+            className={`meta-chart-bar-svg${d.noActivity ? " meta-chart-bar-svg--inactive" : ""}`}
+            onMouseEnter={() => handleMouseEnter(d, i)}
+          />
+        ))}
+
+        {/* Purchases line */}
+        {daily.length > 1 && (
+          <polyline
+            points={linePoints}
+            className="meta-chart-line"
+            fill="none"
+          />
+        )}
+
+        {/* Purchases dots */}
+        {daily.map((d, i) => (
+          <circle
+            key={d.date}
+            cx={barX(i)}
+            cy={purchY(d.purchases)}
+            r={4}
+            className={`meta-chart-dot${d.noActivity ? " meta-chart-dot--inactive" : ""}`}
+            onMouseEnter={() => handleMouseEnter(d, i)}
+          />
+        ))}
+
+        {/* X-axis labels */}
+        {daily.map((d, i) => {
+          if (i % labelStride !== 0) return null;
+          const [, , day] = d.date.split("-");
+          const month = new Date(`${d.date}T12:00:00Z`).toLocaleDateString("en-IN", { month: "short" });
+          return (
+            <text key={d.date} x={barX(i)} y={SVG_H - 6} className="meta-chart-axis-label meta-chart-axis-label--x">
+              {`${parseInt(day, 10)} ${month}`}
+            </text>
+          );
+        })}
+
+        {/* Axis lines */}
+        <line x1={PAD_LEFT} y1={PAD_TOP} x2={PAD_LEFT} y2={PAD_TOP + CHART_H} className="meta-chart-axis" />
+        <line x1={VW - PAD_RIGHT} y1={PAD_TOP} x2={VW - PAD_RIGHT} y2={PAD_TOP + CHART_H} className="meta-chart-axis meta-chart-axis--right" />
+        <line x1={PAD_LEFT} y1={PAD_TOP + CHART_H} x2={VW - PAD_RIGHT} y2={PAD_TOP + CHART_H} className="meta-chart-axis" />
+      </svg>
+
+      {/* Tooltip */}
+      {tooltip && (
+        <div
+          className="meta-chart-tooltip"
+          style={{
+            left: `${(tooltip.x / VW) * 100}%`,
+            top: `${(Math.max(tooltip.y, PAD_TOP) / SVG_H) * 100}%`,
+          }}
+        >
+          <div className="meta-chart-tooltip-date">{tooltip.date}</div>
+          <div className="meta-chart-tooltip-row">
+            <span className="meta-chart-tooltip-key">Spend</span>
+            <span className="meta-chart-tooltip-val">{tooltip.spend}</span>
+          </div>
+          <div className="meta-chart-tooltip-row">
+            <span className="meta-chart-tooltip-key">Purchases</span>
+            <span className="meta-chart-tooltip-val">{tooltip.purchases}</span>
+          </div>
+          <div className="meta-chart-tooltip-row">
+            <span className="meta-chart-tooltip-key">Cost / Purchase</span>
+            <span className="meta-chart-tooltip-val">{tooltip.costPerPurchase || "—"}</span>
+          </div>
+          {tooltip.purchaseValue && (
+            <div className="meta-chart-tooltip-row">
+              <span className="meta-chart-tooltip-key">Purchase Value</span>
+              <span className="meta-chart-tooltip-val">{tooltip.purchaseValue}</span>
+            </div>
+          )}
+          {tooltip.roas && (
+            <div className="meta-chart-tooltip-row">
+              <span className="meta-chart-tooltip-key">ROAS</span>
+              <span className="meta-chart-tooltip-val">{tooltip.roas}</span>
+            </div>
+          )}
+          {tooltip.noActivity && (
+            <div className="meta-chart-tooltip-note">No activity this day</div>
+          )}
+        </div>
+      )}
+
+      {/* Legend */}
       <div className="meta-chart-legend">
-        <span><i className="meta-legend-swatch meta-legend-swatch--spend" /> Spend</span>
-        <span><i className="meta-legend-swatch meta-legend-swatch--purchases" /> Purchases</span>
+        <span><i className="meta-legend-swatch meta-legend-swatch--spend" /> Spend ({currency})</span>
+        <span><i className="meta-legend-swatch meta-legend-swatch--purchases" /> Purchases (right axis)</span>
       </div>
     </div>
   );
@@ -89,6 +303,8 @@ export default function MetaAdsDashboard() {
   const [adsets, setAdsets] = useState([]);
   const [ads, setAds] = useState([]);
   const [daily, setDaily] = useState([]);
+  const [dailyLoading, setDailyLoading] = useState(false);
+  const [dailyError, setDailyError] = useState("");
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState("");
 
@@ -131,19 +347,29 @@ export default function MetaAdsDashboard() {
     if (!r.since || !r.until) return; // Prevent invalid custom range queries
     setDataLoading(true);
     setDataError("");
+    setDailyError("");
+    setDailyLoading(true);
     try {
-      const [summaryRes, campaignsRes, dailyRes] = await Promise.all([
+      const [summaryRes, campaignsRes] = await Promise.all([
         metaAdsApi.getSummary(r.since, r.until, bypass),
         metaAdsApi.getCampaigns(r.since, r.until, bypass),
-        metaAdsApi.getDaily(r.since, r.until, bypass),
       ]);
       setSummary(summaryRes);
       setCampaigns(campaignsRes.campaigns || []);
-      setDaily(dailyRes.daily || []);
     } catch (err) {
       setDataError(err.message || "Failed to load Meta Ads data");
     } finally {
       setDataLoading(false);
+    }
+    // Daily chart loads independently so a failure doesn't blank the whole dashboard.
+    try {
+      const dailyRes = await metaAdsApi.getDaily(r.since, r.until, bypass);
+      setDaily(dailyRes.daily || []);
+      setDailyError("");
+    } catch (err) {
+      setDailyError(err.message || "Failed to load daily chart data");
+    } finally {
+      setDailyLoading(false);
     }
   }, [range]);
 
@@ -403,9 +629,10 @@ export default function MetaAdsDashboard() {
       {/* KPI cards */}
       <div className="meta-kpi-grid">
         <MetaMoneyKpiCard label="SPEND" value={summaryInsights.spend} currency={currency} />
+        <MetaKpiCard label="PURCHASES" value={formatCount(summaryInsights.purchases)} />
+        <MetaMoneyKpiCard label="COST PER PURCHASE" value={summaryInsights.costPerPurchase} currency={currency} placeholder="—" />
         <MetaMoneyKpiCard label="META PURCHASE VALUE" value={summaryInsights.purchaseValue} currency={currency} />
         <MetaKpiCard label="META ROAS" value={renderDecimal(summaryInsights.purchaseRoas)} detail="Purchase value ÷ spend" tone={summaryInsights.purchaseRoas > 0 ? "success" : "default"} />
-        <MetaKpiCard label="PURCHASES" value={formatCount(summaryInsights.purchases)} />
         <MetaKpiCard label="IMPRESSIONS" value={formatCount(summaryInsights.impressions)} />
         <MetaKpiCard label="CLICKS" value={formatCount(summaryInsights.clicks)} />
         <MetaKpiCard label="CTR" value={`${renderDecimal(summaryInsights.ctr)}%`} detail={`CPC ${renderMoney(summaryInsights.cpc)} · CPM ${renderMoney(summaryInsights.cpm)}`} />
@@ -527,6 +754,7 @@ export default function MetaAdsDashboard() {
                       <td><MetaStatusBadge statusObj={row.statusDisplay} /></td>
                       <td>{renderMoney(i.spend)}</td>
                       <td>{formatCount(i.purchases)}</td>
+                      <td>{i.costPerPurchase != null ? renderMoney(i.costPerPurchase) : "—"}</td>
                       <td>{renderMoney(i.purchaseValue)}</td>
                       <td>{renderDecimal(i.purchaseRoas)}</td>
                       <td>{formatCount(i.impressions)}</td>
@@ -548,7 +776,7 @@ export default function MetaAdsDashboard() {
       {isCampaignView ? (
         <div className="meta-chart-panel">
           <div className="meta-chart-title">Daily Spend + Purchases ({formatFriendlyDate(range.since)} – {formatFriendlyDate(range.until)})</div>
-          <DailyTrendChart daily={daily} currency={currency} />
+          <DailyTrendChart daily={daily} currency={currency} error={dailyError} loading={dailyLoading} />
         </div>
       ) : null}
     </div>

@@ -4,6 +4,7 @@ import salesIntelligenceRouter from "./salesIntelligence.js";
 import skuMediaRouter from "./skuMedia.js";
 import sorterRouter from "./sorter.js";
 import metaRouter from "./metaAds.js";
+import expensesRouter from "./expenses.js";
 import express from "express";
 import { getCachedTokenStatus } from "../services/shopifyAuth.js";
 import { env, getShopifyCapability, getMetaCapability } from "../config/env.js";
@@ -19,6 +20,7 @@ router.use(sorterRouter);
 router.use(skuMediaRouter);
 router.use(salesIntelligenceRouter);
 router.use(metaRouter);
+router.use(expensesRouter);
 
 function diagnosticDetail(value) {
   return value ? redactSecrets(value).slice(0, MAX_DIAGNOSTIC_DETAIL_LENGTH) : null;
