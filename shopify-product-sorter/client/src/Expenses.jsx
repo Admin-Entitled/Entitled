@@ -1,7 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
+import ExpenseMonthSelector from "./ExpenseMonthSelector.jsx";
 import { expensesApi } from "./expensesApi.js";
+import { MetaEmptyState, MetaMoneyKpiCard } from "./MetaAdsComponents.jsx";
+import {
+  buildCurrentMonthWarningMessages,
+  buildExpenseMonthOptions,
+  formatExpenseMonthLabel,
+  getApiActivityDisplay,
+  getBillsEmptyStateCopy,
+  getExpenseStatusLabel,
+  getExpenseStatusTone,
+  getHistoryEmptyStateCopy,
+  getReconciliationDisplay,
+  getCurrentMonthValue,
+} from "./expensesView.js";
 import { formatMoneyForCurrency } from "./utils/format.js";
-import { MetaMoneyKpiCard, MetaKpiCard, MetaEmptyState } from "./MetaAdsComponents.jsx";
 
 const PROVIDERS = [
   { key: "META", label: "Meta Ads" },
@@ -9,24 +23,28 @@ const PROVIDERS = [
   { key: "SHOPIFY", label: "Shopify" },
 ];
 
+function isAbortError(error) {
+  return error?.name === "AbortError";
+}
+
 export default function Expenses() {
-  const [months, setMonths] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState("");
+  const [dataMonths, setDataMonths] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonthValue());
   const [summary, setSummary] = useState(null);
   const [bills, setBills] = useState([]);
   const [history, setHistory] = useState([]);
-  
+
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingMonth, setLoadingMonth] = useState("");
   const [error, setError] = useState("");
 
-  // Modal / Form state for Add Bill
   const [showAddBill, setShowAddBill] = useState(false);
   const [formProvider, setFormProvider] = useState("META");
   const [formInvoiceNumber, setFormInvoiceNumber] = useState("");
   const [formInvoiceDate, setFormInvoiceDate] = useState("");
-  const [formBillingMonth, setFormBillingMonth] = useState("");
+  const [formBillingMonth, setFormBillingMonth] = useState(() => getCurrentMonthValue());
   const [formSubtotal, setFormSubtotal] = useState("");
   const [formTax, setFormTax] = useState("");
   const [formTotal, setFormTotal] = useState("");
@@ -34,39 +52,39 @@ export default function Expenses() {
   const [formFile, setFormFile] = useState(null);
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
-  
-  // Sort State
+
   const [sortKey, setSortKey] = useState("invoiceDate");
   const [sortDirection, setSortDirection] = useState("desc");
 
-  // Load Initial Month list and History
+  const requestRef = useRef({ id: 0, controller: null });
+
   useEffect(() => {
-    loadMonths();
-    loadHistory();
+    void Promise.all([loadMonths(), loadHistory()]);
+    return () => {
+      requestRef.current.controller?.abort();
+    };
   }, []);
 
   useEffect(() => {
     if (selectedMonth) {
-      loadMonthData(selectedMonth);
+      void loadMonthData(selectedMonth);
     }
   }, [selectedMonth]);
+
+  const navigationMonths = useMemo(
+    () => buildExpenseMonthOptions({
+      currentMonth: getCurrentMonthValue(),
+      dataMonths,
+      historyMonths: history.map((entry) => entry.month),
+    }),
+    [dataMonths, history],
+  );
 
   const loadMonths = async () => {
     try {
       const res = await expensesApi.getMonths();
-      if (res.success && res.months?.length) {
-        setMonths(res.months);
-        // Default to current month or latest available
-        const currentMonthStr = new Date().toISOString().slice(0, 7);
-        if (res.months.includes(currentMonthStr)) {
-          setSelectedMonth(currentMonthStr);
-        } else {
-          setSelectedMonth(res.months[0]);
-        }
-      } else {
-        const currentMonthStr = new Date().toISOString().slice(0, 7);
-        setMonths([currentMonthStr]);
-        setSelectedMonth(currentMonthStr);
+      if (res.success) {
+        setDataMonths(res.months || []);
       }
     } catch (err) {
       setError("Failed to load month list: " + err.message);
@@ -85,39 +103,57 @@ export default function Expenses() {
   };
 
   const loadMonthData = async (month) => {
+    const nextId = requestRef.current.id + 1;
+    requestRef.current.id = nextId;
+    requestRef.current.controller?.abort();
+    const controller = new AbortController();
+    requestRef.current.controller = controller;
+
     setLoading(true);
+    setLoadingMonth(month);
     setError("");
+
     try {
       const [sumRes, billsRes] = await Promise.all([
-        expensesApi.getSummary(month),
-        expensesApi.getBills(month),
+        expensesApi.getSummary(month, false, { signal: controller.signal }),
+        expensesApi.getBills(month, { signal: controller.signal }),
       ]);
+
+      if (requestRef.current.id !== nextId) {
+        return;
+      }
+
       setSummary(sumRes);
       setBills(billsRes.bills || []);
     } catch (err) {
+      if (isAbortError(err) || requestRef.current.id !== nextId) {
+        return;
+      }
       setError(err.message || "Failed to load month expenses data");
     } finally {
-      setLoading(false);
+      if (requestRef.current.id === nextId) {
+        setLoading(false);
+        setLoadingMonth("");
+        requestRef.current.controller = null;
+      }
     }
   };
 
   const handleSync = async () => {
     if (syncing || !selectedMonth) return;
     setSyncing(true);
-    setSyncMessage("SYNCING...");
+    setSyncMessage(`Syncing ${formatExpenseMonthLabel(selectedMonth)}…`);
     setError("");
     try {
       const res = await expensesApi.syncExpenses(selectedMonth, true);
       if (res.success) {
-        setSyncMessage("Sync successful!");
+        setSyncMessage(`Synced ${formatExpenseMonthLabel(selectedMonth)}.`);
       } else {
         const errs = res.errors?.join(", ") || "";
         setSyncMessage(`Expenses synced with ${res.errors?.length} provider error(s).`);
         setError(`Provider errors: ${errs}`);
       }
-      await loadMonthData(selectedMonth);
-      await loadHistory();
-      await loadMonths();
+      await Promise.all([loadMonthData(selectedMonth), loadHistory(), loadMonths()]);
     } catch (err) {
       setSyncMessage("Sync failed.");
       setError(err.message || "Failed to sync expenses");
@@ -125,6 +161,13 @@ export default function Expenses() {
       setSyncing(false);
       setTimeout(() => setSyncMessage(""), 5000);
     }
+  };
+
+  const openAddBillModal = () => {
+    setFormBillingMonth(selectedMonth);
+    setFormError("");
+    setFormSuccess("");
+    setShowAddBill(true);
   };
 
   const handleFileChange = (e) => {
@@ -160,17 +203,13 @@ export default function Expenses() {
       const res = await expensesApi.addBill(formData);
       if (res.success) {
         setFormSuccess("Bill successfully created/updated!");
-        // Reset form
         setFormInvoiceNumber("");
         setFormInvoiceDate("");
         setFormSubtotal("");
         setFormTax("");
         setFormTotal("");
         setFormFile(null);
-        // Refresh data
-        await loadMonthData(selectedMonth);
-        await loadHistory();
-        await loadMonths();
+        await Promise.all([loadMonthData(selectedMonth), loadHistory(), loadMonths()]);
         setTimeout(() => {
           setShowAddBill(false);
           setFormSuccess("");
@@ -181,7 +220,6 @@ export default function Expenses() {
     }
   };
 
-  // Sort logic
   const handleSort = (key) => {
     if (sortKey === key) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -191,7 +229,7 @@ export default function Expenses() {
     }
   };
 
-  const sortedBills = [...bills].sort((a, b) => {
+  const sortedBills = useMemo(() => [...bills].sort((a, b) => {
     let valA = a[sortKey];
     let valB = b[sortKey];
 
@@ -208,186 +246,201 @@ export default function Expenses() {
       return valA.localeCompare(valB) * dir;
     }
     return (valA - valB) * dir;
-  });
+  }), [bills, sortDirection, sortKey]);
 
   const currency = summary?.currency || "INR";
   const totalsByProvider = summary?.providerTotals || [];
+  const warningMessages = buildCurrentMonthWarningMessages({
+    selectedMonth,
+    providerTotals: totalsByProvider,
+    currency,
+  });
+  const billsEmptyState = getBillsEmptyStateCopy(selectedMonth);
+  const historyEmptyState = getHistoryEmptyStateCopy();
 
-  const getProviderTotal = (pKey) => {
-    return totalsByProvider.find((p) => p.provider === pKey)?.total || 0;
+  const getProviderSummary = (providerKey) => totalsByProvider.find((provider) => provider.provider === providerKey) || {
+    provider: providerKey,
+    total: 0,
+    billCount: 0,
+    completeness: "UNKNOWN",
+    apiExpense: 0,
+    difference: 0,
+    apiAvailable: false,
   };
 
-  const getProviderBillCount = (pKey) => {
-    return totalsByProvider.find((p) => p.provider === pKey)?.billCount || 0;
+  const handleHistorySelect = (month) => {
+    if (month !== selectedMonth) {
+      setSelectedMonth(month);
+    }
   };
 
-  const getProviderCompleteness = (pKey) => {
-    return totalsByProvider.find((p) => p.provider === pKey)?.completeness || "UNKNOWN";
+  const handleDownload = (provider = null, billCount = bills.length) => {
+    if (billCount === 0 || !selectedMonth) {
+      return;
+    }
+    window.location.assign(expensesApi.getBulkDownloadUrl(selectedMonth, provider));
   };
-
-  const getProviderApiExpense = (pKey) => {
-    return totalsByProvider.find((p) => p.provider === pKey)?.apiExpense || 0;
-  };
-
-  const getProviderDifference = (pKey) => {
-    return totalsByProvider.find((p) => p.provider === pKey)?.difference || 0;
-  };
-
-  const formatMonthName = (mStr) => {
-    if (!mStr) return "";
-    const [y, m] = mStr.split("-");
-    const d = new Date(Number(y), Number(m) - 1, 1);
-    return d.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
-  };
-
-  const isCurrentMonth = selectedMonth === new Date().toISOString().slice(0, 7);
-
-  // Incomplete warnings
-  const showShopifyWarning = getProviderCompleteness("SHOPIFY") === "INCOMPLETE";
-  const showMetaWarning = getProviderCompleteness("META") === "INCOMPLETE";
-  const showShiprocketWarning = getProviderCompleteness("SHIPROCKET") === "INCOMPLETE";
 
   return (
-    <div className="dashboard-feature">
-      <div className="feature-header">
+    <div className="dashboard-feature meta-dashboard expenses-dashboard">
+      <div className="feature-header expenses-header">
         <div>
           <h2 className="feature-title">Expenses</h2>
           <p className="feature-subtitle">
-            Consolidated merchant monthly business expenses and billed records
+            How much has been billed, what provider activity exists, and which bills are still missing.
           </p>
         </div>
-        <div className="meta-header-actions" style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <select 
-            value={selectedMonth} 
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            className="compact"
-            style={{ padding: "0.5rem", borderRadius: "4px", background: "var(--bg)", color: "var(--text)", border: "1px solid var(--border)" }}
-          >
-            {months.map((m) => (
-              <option key={m} value={m}>{formatMonthName(m)}</option>
-            ))}
-          </select>
-          
-          <button 
-            type="button" 
-            className="button compact" 
+        <div className="meta-header-actions expenses-header-actions">
+          <ExpenseMonthSelector
+            months={navigationMonths}
+            selectedMonth={selectedMonth}
+            onChange={setSelectedMonth}
+          />
+          <button
+            type="button"
+            className="button compact"
             onClick={handleSync}
             disabled={syncing}
           >
-            {syncing ? "SYNCING..." : "Sync Expenses"}
+            {syncing ? "Syncing…" : "Sync Expenses"}
           </button>
-
           <button
             type="button"
             className="button compact secondary"
-            onClick={() => {
-              setFormBillingMonth(selectedMonth);
-              setShowAddBill(true);
-            }}
+            onClick={openAddBillModal}
           >
             Add Bill
+          </button>
+          <button
+            type="button"
+            className="button compact expenses-download-all"
+            onClick={() => handleDownload(null, bills.length)}
+            disabled={bills.length === 0 || !selectedMonth}
+            title={bills.length === 0 ? "No bills available for this month." : `Download all bills for ${formatExpenseMonthLabel(selectedMonth)}`}
+          >
+            Download All Bills
           </button>
         </div>
       </div>
 
       {syncMessage && (
-        <div className="info-banner" style={{ background: "rgba(0, 102, 204, 0.1)", border: "1px solid rgba(0, 102, 204, 0.2)", padding: "10px", borderRadius: "4px", marginBottom: "15px" }}>
+        <div className="info-banner expenses-info-banner">
           {syncMessage}
         </div>
       )}
 
       {error && (
         <div className="error-banner" style={{ marginBottom: "15px" }}>
-          <strong>EXPENSES ERROR</strong> · {error}
+          <strong>Expenses Error</strong> · {error}
         </div>
       )}
 
-      {/* Warnings */}
-      {(showShopifyWarning || showMetaWarning || showShiprocketWarning || isCurrentMonth) && (
-        <div className="info-banner" style={{ background: "rgba(200, 150, 0, 0.1)", border: "1px solid rgba(200, 150, 0, 0.2)", color: "#b38600", padding: "10px", borderRadius: "4px", marginBottom: "15px", fontSize: "12px" }}>
-          {isCurrentMonth && <div><strong>{formatMonthName(selectedMonth).toUpperCase()}</strong> is the current month and billing totals may be incomplete.</div>}
-          {showShopifyWarning && <div>⚠ Shopify billing may be incomplete. Expected activity has no uploaded invoice.</div>}
-          {showMetaWarning && <div>⚠ Meta Ads billing may be incomplete. Expected spend has no uploaded invoice.</div>}
-          {showShiprocketWarning && <div>⚠ Shiprocket billing may be incomplete. Expected statement charges have no uploaded invoice.</div>}
+      {(warningMessages.length > 0 || loading) && (
+        <div className="info-banner expenses-warning-banner">
+          {loading && (
+            <div className="expenses-loading-copy">Loading {formatExpenseMonthLabel(loadingMonth || selectedMonth)}…</div>
+          )}
+          {warningMessages.map((message) => (
+            <div key={message}>{message}</div>
+          ))}
         </div>
       )}
 
-      {/* KPI totals summary */}
-      <div className="meta-kpi-grid" style={{ marginBottom: "20px" }}>
-        <MetaMoneyKpiCard label="MONTHLY EXPENSE" value={summary?.totalExpense} currency={currency} detail="Billed invoices sum" />
-        <MetaMoneyKpiCard label="META ADS INVOICED" value={getProviderTotal("META")} currency={currency} detail={`${getProviderBillCount("META")} bills · ${getProviderCompleteness("META")}`} />
-        <MetaMoneyKpiCard label="SHIPROCKET INVOICED" value={getProviderTotal("SHIPROCKET")} currency={currency} detail={`${getProviderBillCount("SHIPROCKET")} bills · ${getProviderCompleteness("SHIPROCKET")}`} />
-        <MetaMoneyKpiCard label="SHOPIFY INVOICED" value={getProviderTotal("SHOPIFY")} currency={currency} detail={`${getProviderBillCount("SHOPIFY")} bills · ${getProviderCompleteness("SHOPIFY")}`} />
+      <div className={`meta-kpi-grid expenses-kpi-grid${loading ? " is-loading" : ""}`}>
+        <MetaMoneyKpiCard label="MONTHLY EXPENSE" value={summary?.totalExpense} currency={currency} detail="Recognized billed invoices" />
+        {PROVIDERS.map((provider) => {
+          const providerSummary = getProviderSummary(provider.key);
+          return (
+            <MetaMoneyKpiCard
+              key={provider.key}
+              label={`${provider.label.toUpperCase()} INVOICED`}
+              value={providerSummary.total}
+              currency={currency}
+              detail={`${providerSummary.billCount} bills · ${getExpenseStatusLabel(providerSummary.completeness)}`}
+            />
+          );
+        })}
       </div>
 
-      <div style={{ marginBottom: "20px" }}>
-        <a 
-          href={expensesApi.getBulkDownloadUrl(selectedMonth)} 
-          className="button compact" 
-          download
-          style={{ textDecoration: "none", display: "inline-block" }}
-        >
-          Download All Bills
-        </a>
-      </div>
-
-      {/* Provider Details cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "15px", marginBottom: "25px" }}>
-        {PROVIDERS.map((p) => {
-          const apiSpend = getProviderApiExpense(p.key);
-          const billed = getProviderTotal(p.key);
-          const diff = getProviderDifference(p.key);
-          const count = getProviderBillCount(p.key);
+      <div className={`expenses-provider-grid${loading ? " is-loading" : ""}`}>
+        {PROVIDERS.map((provider) => {
+          const providerSummary = getProviderSummary(provider.key);
+          const billed = providerSummary.total || 0;
+          const apiExpense = providerSummary.apiExpense || 0;
+          const billCount = providerSummary.billCount || 0;
+          const apiDisplay = getApiActivityDisplay({
+            apiAvailable: providerSummary.apiAvailable,
+            apiExpense,
+            currency,
+          });
+          const reconciliationDisplay = getReconciliationDisplay({
+            billed,
+            apiExpense,
+            apiAvailable: providerSummary.apiAvailable,
+            currency,
+          });
 
           return (
-            <div key={p.key} className="meta-chart-panel" style={{ padding: "15px", background: "var(--panel-bg)", border: "1px solid var(--border)", borderRadius: "8px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                <h3 style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: "var(--metal)" }}>{p.label}</h3>
-                <span className={`status-chip`} style={{ fontSize: "10px", padding: "2px 6px", background: getProviderCompleteness(p.key) === "COMPLETE" ? "rgba(137, 167, 125, 0.2)" : "rgba(200, 150, 0, 0.2)", color: getProviderCompleteness(p.key) === "COMPLETE" ? "var(--success)" : "#b38600" }}>
-                  {getProviderCompleteness(p.key)}
+            <div key={provider.key} className="meta-chart-panel expenses-provider-card">
+              <div className="expenses-provider-card-header">
+                <h3>{provider.label}</h3>
+                <span className={`status-chip expenses-status-chip tone-${getExpenseStatusTone(providerSummary.completeness)}`}>
+                  {getExpenseStatusLabel(providerSummary.completeness)}
                 </span>
               </div>
-              <div style={{ display: "grid", gap: "6px", fontSize: "12px", color: "var(--muted)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Billed Expense:</span>
-                  <strong style={{ color: "var(--text)" }}>{formatMoneyForCurrency(billed, currency)}</strong>
+
+              <div className="expenses-provider-metrics">
+                <div className="expenses-provider-row">
+                  <span>Billed Expense</span>
+                  <strong>{formatMoneyForCurrency(billed, currency)}</strong>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>API Expected Spend:</span>
-                  <span>{formatMoneyForCurrency(apiSpend, currency)}</span>
+                <div className="expenses-provider-row">
+                  <span>{apiDisplay.label}</span>
+                  <span className={apiDisplay.isUnavailable ? "expenses-muted-value" : ""}>{apiDisplay.value}</span>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Difference:</span>
-                  <span style={{ color: diff !== 0 ? "#cc3300" : "inherit" }}>{formatMoneyForCurrency(diff, currency)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "6px", marginTop: "4px" }}>
-                  <span>Bills Count:</span>
-                  <span>{count}</span>
+                {reconciliationDisplay && (
+                  <div className="expenses-provider-row">
+                    <span>{reconciliationDisplay.label}</span>
+                    <span className={reconciliationDisplay.tone === "warning" ? "expenses-warning-value" : ""}>
+                      {reconciliationDisplay.value}
+                    </span>
+                  </div>
+                )}
+                <div className="expenses-provider-row expenses-provider-row--divider">
+                  <span>Bills</span>
+                  <span>{billCount}</span>
                 </div>
               </div>
-              <div style={{ marginTop: "12px" }}>
-                <a 
-                  href={expensesApi.getBulkDownloadUrl(selectedMonth, p.key)} 
-                  className="button compact secondary" 
-                  download
-                  style={{ textDecoration: "none", display: "block", textAlign: "center", fontSize: "11px" }}
-                >
-                  Download Bills (ZIP)
-                </a>
-              </div>
+
+              <button
+                type="button"
+                className="button compact secondary expenses-provider-download"
+                onClick={() => handleDownload(provider.key, billCount)}
+                disabled={billCount === 0 || !selectedMonth}
+                title={billCount === 0 ? "No bills available for this provider this month." : `Download ${provider.label} bills for ${formatExpenseMonthLabel(selectedMonth)}`}
+              >
+                Download Bills (ZIP)
+              </button>
             </div>
           );
         })}
       </div>
 
-      {/* Bills Table */}
-      <div className="meta-table-panel" style={{ marginBottom: "25px" }}>
-        <div className="meta-table-title" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="meta-table-panel expenses-bills-panel">
+        <div className="meta-table-title expenses-section-title">
           <span>Bills & Invoices ({sortedBills.length})</span>
         </div>
         <div className="table-container" style={{ overflowX: "auto" }}>
           {sortedBills.length === 0 ? (
-            <MetaEmptyState message="No bills found for the selected month. Sync expenses or add manual bills to display invoice records." />
+            <div className="expenses-empty-state">
+              <MetaEmptyState message={`${billsEmptyState.title} ${billsEmptyState.body}`} />
+              <div className="expenses-empty-state-actions">
+                <button type="button" className="button compact secondary" onClick={openAddBillModal}>Add Bill</button>
+                <button type="button" className="button compact" onClick={handleSync} disabled={syncing}>
+                  {syncing ? "Syncing…" : "Sync Expenses"}
+                </button>
+              </div>
+            </div>
           ) : (
             <table className="data-table meta-table">
               <thead>
@@ -412,24 +465,24 @@ export default function Expenses() {
                 </tr>
               </thead>
               <tbody>
-                {sortedBills.map((b) => (
-                  <tr key={b.id} className="meta-row">
-                    <td>{new Date(b.invoiceDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</td>
-                    <td>{b.provider === "META" ? "Meta Ads" : b.provider === "SHIPROCKET" ? "Shiprocket" : "Shopify"}</td>
-                    <td>{b.invoiceNumber}</td>
-                    <td>{formatMoneyForCurrency(b.total, b.currency)}</td>
+                {sortedBills.map((bill) => (
+                  <tr key={bill.id} className="meta-row">
+                    <td>{new Date(bill.invoiceDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</td>
+                    <td>{bill.provider === "META" ? "Meta Ads" : bill.provider === "SHIPROCKET" ? "Shiprocket" : "Shopify"}</td>
+                    <td>{bill.invoiceNumber}</td>
+                    <td>{formatMoneyForCurrency(bill.total, bill.currency)}</td>
                     <td>
-                      {b.status === "AVAILABLE" ? (
-                        <a 
-                          href={expensesApi.getBillDownloadUrl(b.id)} 
-                          className="button compact secondary" 
+                      {bill.status === "AVAILABLE" ? (
+                        <a
+                          href={expensesApi.getBillDownloadUrl(bill.id)}
+                          className="button compact secondary"
                           download
                           style={{ textDecoration: "none" }}
                         >
                           Download
                         </a>
                       ) : (
-                        <span style={{ fontSize: "11px", color: "var(--muted)", fontStyle: "italic" }}>Document unavailable</span>
+                        <span className="expenses-muted-value">Document unavailable</span>
                       )}
                     </td>
                   </tr>
@@ -440,14 +493,16 @@ export default function Expenses() {
         </div>
       </div>
 
-      {/* Monthly Expense History */}
-      <div className="meta-table-panel" style={{ maxWidth: "500px" }}>
-        <div className="meta-table-title">Monthly Expense History</div>
+      <div className="meta-table-panel expenses-history-panel">
+        <div className="meta-table-title expenses-section-title">Monthly Expense History</div>
         <div className="table-container">
           {history.length === 0 ? (
-            <div style={{ padding: "15px", color: "var(--muted)", fontSize: "12px" }}>No historical totals computed.</div>
+            <div className="expenses-history-empty">
+              <div className="expenses-history-empty-title">{historyEmptyState.title}</div>
+              <div className="expenses-history-empty-copy">{historyEmptyState.body}</div>
+            </div>
           ) : (
-            <table className="data-table meta-table">
+            <table className="data-table meta-table expenses-history-table">
               <thead>
                 <tr>
                   <th>Month</th>
@@ -455,10 +510,18 @@ export default function Expenses() {
                 </tr>
               </thead>
               <tbody>
-                {history.map((h) => (
-                  <tr key={h.month}>
-                    <td>{formatMonthName(h.month)}</td>
-                    <td style={{ fontWeight: "600" }}>{formatMoneyForCurrency(h.totalExpense, h.currency)}</td>
+                {history.map((entry) => (
+                  <tr key={entry.month}>
+                    <td>
+                      <button
+                        type="button"
+                        className="expenses-history-link"
+                        onClick={() => handleHistorySelect(entry.month)}
+                      >
+                        {formatExpenseMonthLabel(entry.month)}
+                      </button>
+                    </td>
+                    <td style={{ fontWeight: "600" }}>{formatMoneyForCurrency(entry.totalExpense, entry.currency)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -467,68 +530,67 @@ export default function Expenses() {
         </div>
       </div>
 
-      {/* Manual Upload Modal Dialog overlay */}
       {showAddBill && (
-        <div className="modal-overlay" style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <div className="modal-content" style={{ background: "var(--panel-bg)", border: "1px solid var(--border)", padding: "20px", borderRadius: "8px", width: "100%", maxWidth: "450px", color: "var(--text)" }}>
-            <h3 style={{ marginTop: 0, marginBottom: "15px", borderBottom: "1px solid var(--border)", paddingBottom: "10px" }}>Add Merchant Bill</h3>
-            
-            {formError && <div className="error-banner" style={{ marginBottom: "15px" }}>{formError}</div>}
-            {formSuccess && <div className="info-banner" style={{ background: "rgba(137,167,125,0.1)", border: "1px solid var(--success)", color: "var(--success)", padding: "10px", borderRadius: "4px", marginBottom: "15px" }}>{formSuccess}</div>}
+        <div className="modal-overlay expenses-modal-overlay">
+          <div className="modal-content expenses-modal">
+            <h3 className="expenses-modal-title">Add Merchant Bill</h3>
 
-            <form onSubmit={handleAddBillSubmit} style={{ display: "grid", gap: "12px" }}>
-              <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+            {formError && <div className="error-banner" style={{ marginBottom: "15px" }}>{formError}</div>}
+            {formSuccess && <div className="info-banner expenses-success-banner">{formSuccess}</div>}
+
+            <form onSubmit={handleAddBillSubmit} className="expenses-form-grid">
+              <label className="expenses-field" htmlFor="expenses-provider">
                 <span>Provider *</span>
-                <select value={formProvider} onChange={(e) => setFormProvider(e.target.value)} style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }}>
+                <select id="expenses-provider" name="provider" value={formProvider} onChange={(e) => setFormProvider(e.target.value)}>
                   <option value="META">Meta Ads</option>
                   <option value="SHIPROCKET">Shiprocket</option>
                   <option value="SHOPIFY">Shopify</option>
                 </select>
               </label>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+              <div className="expenses-two-column-grid">
+                <label className="expenses-field" htmlFor="expenses-invoice-number">
                   <span>Invoice Number *</span>
-                  <input type="text" required value={formInvoiceNumber} onChange={(e) => setFormInvoiceNumber(e.target.value)} placeholder="META-1234" style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-invoice-number" name="invoiceNumber" type="text" required value={formInvoiceNumber} onChange={(e) => setFormInvoiceNumber(e.target.value)} placeholder="META-1234" />
                 </label>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+                <label className="expenses-field" htmlFor="expenses-invoice-date">
                   <span>Invoice Date *</span>
-                  <input type="date" required value={formInvoiceDate} onChange={(e) => setFormInvoiceDate(e.target.value)} style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-invoice-date" name="invoiceDate" type="date" required value={formInvoiceDate} onChange={(e) => setFormInvoiceDate(e.target.value)} />
                 </label>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+              <div className="expenses-two-column-grid">
+                <label className="expenses-field" htmlFor="expenses-billing-month">
                   <span>Billing Month *</span>
-                  <input type="text" required value={formBillingMonth} onChange={(e) => setFormBillingMonth(e.target.value)} placeholder="YYYY-MM" style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-billing-month" name="billingMonth" type="text" required value={formBillingMonth} onChange={(e) => setFormBillingMonth(e.target.value)} placeholder="YYYY-MM" />
                 </label>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+                <label className="expenses-field" htmlFor="expenses-currency">
                   <span>Currency *</span>
-                  <input type="text" required value={formCurrency} onChange={(e) => setFormCurrency(e.target.value)} placeholder="INR" style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-currency" name="currency" type="text" required value={formCurrency} onChange={(e) => setFormCurrency(e.target.value)} placeholder="INR" />
                 </label>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+              <div className="expenses-three-column-grid">
+                <label className="expenses-field" htmlFor="expenses-subtotal">
                   <span>Subtotal</span>
-                  <input type="number" step="0.01" value={formSubtotal} onChange={(e) => setFormSubtotal(e.target.value)} placeholder="0.00" style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-subtotal" name="subtotal" type="number" step="0.01" value={formSubtotal} onChange={(e) => setFormSubtotal(e.target.value)} placeholder="0.00" />
                 </label>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+                <label className="expenses-field" htmlFor="expenses-tax">
                   <span>Tax Amount</span>
-                  <input type="number" step="0.01" value={formTax} onChange={(e) => setFormTax(e.target.value)} placeholder="0.00" style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-tax" name="tax" type="number" step="0.01" value={formTax} onChange={(e) => setFormTax(e.target.value)} placeholder="0.00" />
                 </label>
-                <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+                <label className="expenses-field" htmlFor="expenses-total">
                   <span>Total Amount *</span>
-                  <input type="number" step="0.01" required value={formTotal} onChange={(e) => setFormTotal(e.target.value)} placeholder="0.00" style={{ padding: "6px", borderRadius: "4px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                  <input id="expenses-total" name="total" type="number" step="0.01" required value={formTotal} onChange={(e) => setFormTotal(e.target.value)} placeholder="0.00" />
                 </label>
               </div>
 
-              <label style={{ display: "grid", gap: "4px", fontSize: "12px" }}>
+              <label className="expenses-field" htmlFor="expenses-document">
                 <span>Upload Document (PDF, PNG, JPG)</span>
-                <input type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={handleFileChange} style={{ padding: "6px", background: "var(--bg)", border: "1px solid var(--border)", color: "var(--text)" }} />
+                <input id="expenses-document" name="document" type="file" accept=".pdf,.png,.jpg,.jpeg" onChange={handleFileChange} />
               </label>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "15px", borderTop: "1px solid var(--border)", paddingTop: "10px" }}>
+              <div className="expenses-modal-actions">
                 <button type="button" className="button compact secondary" onClick={() => setShowAddBill(false)}>Cancel</button>
                 <button type="submit" className="button compact">Add Invoice</button>
               </div>

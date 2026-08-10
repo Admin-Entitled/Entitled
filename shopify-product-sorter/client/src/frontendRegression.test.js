@@ -3,6 +3,19 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { sidebarModules, getActiveModules, getDisabledModules } from "./sidebarModules.js";
+import {
+  buildExpenseMonthOptions,
+  EXPENSE_MONTH_ROLLING_COUNT,
+  formatExpenseMonthLabel,
+  formatMonthValue,
+  getApiActivityDisplay,
+  getCurrentMonthValue,
+  getExpenseStatusLabel,
+  getHistoryEmptyStateCopy,
+  getReconciliationDisplay,
+  parseMonthValue,
+  shiftMonthValue,
+} from "./expensesView.js";
 import { getOrderStatusDisplay, getStatusFilterLabel } from "./orderMappingView.js";
 import ErrorBoundary from "./ErrorBoundary.js";
 import { legacyRedirectFor, resolveRootPath } from "./routeConfig.js";
@@ -517,6 +530,8 @@ test("META-ADS-FRONTEND: Expenses module is registered in App routing, API, and 
   const appSrc = readFileSync(new URL("./App.jsx", import.meta.url), "utf8");
   const expSrc = readFileSync(new URL("./Expenses.jsx", import.meta.url), "utf8");
   const expApiSrc = readFileSync(new URL("./expensesApi.js", import.meta.url), "utf8");
+  const monthSelectorSrc = readFileSync(new URL("./ExpenseMonthSelector.jsx", import.meta.url), "utf8");
+  const viewSrc = readFileSync(new URL("./expensesView.js", import.meta.url), "utf8");
   const sideSrc = readFileSync(new URL("./sidebarModules.js", import.meta.url), "utf8");
 
   // Router / Nav registration
@@ -533,16 +548,124 @@ test("META-ADS-FRONTEND: Expenses module is registered in App routing, API, and 
 
   // UI layout elements
   assert.match(expSrc, /className="feature-title">Expenses<\/h2>/, "Renders feature header title");
+  assert.match(expSrc, /<ExpenseMonthSelector/, "Renders custom month selector");
   assert.match(expSrc, /Sync Expenses/, "Renders Sync Expenses button");
   assert.match(expSrc, /Add Bill/, "Renders Add Bill flow button");
-  assert.match(expSrc, /Download All Bills/, "Renders bulk Download All Bills trigger link");
-  assert.match(expSrc, /Download Bills \(ZIP\)/, "Renders provider-wise bulk ZIP trigger link");
+  assert.match(expSrc, /Download All Bills/, "Renders bulk Download All Bills trigger");
+  assert.match(expSrc, /Download Bills \(ZIP\)/, "Renders provider-wise bulk ZIP trigger");
   assert.match(expSrc, /Monthly Expense History/, "Renders history list header");
-  assert.match(expSrc, /Provider Details cards/, "Renders provider summary section comment");
   assert.match(expSrc, /Add Merchant Bill/, "Renders manual upload form modal header");
+  assert.match(viewSrc, /API Activity/, "Uses API Activity wording");
+  assert.match(viewSrc, /Unbilled Activity/, "Uses contextual reconciliation language");
+  assert.match(viewSrc, /No billed expense history yet\./, "Uses user-facing history empty state copy");
+  assert.match(monthSelectorSrc, /role="listbox"/, "Month selector renders a DOM listbox");
+  assert.doesNotMatch(monthSelectorSrc, /<select/i, "Month selector must not be native select UI");
 });
 
+test("EXPENSES-UX: current month plus previous 23 months are generated newest-first", () => {
+  const months = buildExpenseMonthOptions({
+    currentMonth: "2026-08",
+    dataMonths: [],
+    historyMonths: [],
+  });
+  assert.equal(months.length, EXPENSE_MONTH_ROLLING_COUNT);
+  assert.equal(months[0], "2026-08");
+  assert.equal(months[1], "2026-07");
+  assert.equal(months[23], "2024-09");
+});
 
+test("EXPENSES-UX: historical months older than the rolling window are included without duplication", () => {
+  const months = buildExpenseMonthOptions({
+    currentMonth: "2026-08",
+    dataMonths: ["2026-08", "2023-12"],
+    historyMonths: ["2024-09", "2023-12"],
+  });
+  assert.equal(months.filter((month) => month === "2023-12").length, 1);
+  assert.ok(months.includes("2023-12"));
+});
 
+test("EXPENSES-UX: month parsing, formatting, and shifting stay safe across year boundaries", () => {
+  assert.deepEqual(parseMonthValue("2026-01"), { year: 2026, month: 1 });
+  assert.equal(formatMonthValue(2026, 2), "2026-02");
+  assert.equal(shiftMonthValue("2026-01", -1), "2025-12");
+  assert.equal(shiftMonthValue("2026-12", 1), "2027-01");
+  assert.equal(shiftMonthValue("2024-03", -1), "2024-02");
+});
 
+test("EXPENSES-UX: month labels are formatted from canonical YYYY-MM values", () => {
+  assert.equal(formatExpenseMonthLabel("2026-08"), "August 2026");
+  assert.equal(formatExpenseMonthLabel("2024-02"), "February 2024");
+});
+
+test("EXPENSES-UX: current month value uses local year/month getters, not UTC slicing", () => {
+  const sample = new Date(2026, 0, 31, 23, 59, 59);
+  assert.equal(getCurrentMonthValue(sample), "2026-01");
+});
+
+test("EXPENSES-UX: unbilled API activity is presented when billed is zero", () => {
+  const display = getReconciliationDisplay({
+    billed: 0,
+    apiExpense: 10979.46,
+    apiAvailable: true,
+    currency: "INR",
+  });
+  assert.equal(display.label, "Unbilled Activity");
+  assert.match(display.value, /10,979\.46/);
+});
+
+test("EXPENSES-UX: difference is presented only when both billed and API activity exist", () => {
+  const display = getReconciliationDisplay({
+    billed: 11200,
+    apiExpense: 10979,
+    apiAvailable: true,
+    currency: "INR",
+  });
+  assert.equal(display.label, "Difference");
+  assert.match(display.value, /221/);
+});
+
+test("EXPENSES-UX: unavailable API activity is not shown as zero", () => {
+  const apiDisplay = getApiActivityDisplay({
+    apiAvailable: false,
+    apiExpense: 0,
+    currency: "INR",
+  });
+  assert.equal(apiDisplay.label, "API Activity");
+  assert.equal(apiDisplay.value, "Unavailable");
+});
+
+test("EXPENSES-UX: genuine verified zero remains zero", () => {
+  const apiDisplay = getApiActivityDisplay({
+    apiAvailable: true,
+    apiExpense: 0,
+    currency: "INR",
+  });
+  assert.equal(apiDisplay.label, "API Activity");
+  assert.equal(apiDisplay.value, "₹0.00");
+});
+
+test("EXPENSES-UX: history empty state stays user-facing", () => {
+  const emptyState = getHistoryEmptyStateCopy();
+  assert.equal(emptyState.title, "No billed expense history yet.");
+  assert.match(emptyState.body, /Uploaded bills will appear here by month/);
+});
+
+test("EXPENSES-UX: source uses the custom month selector and disabled empty download states", () => {
+  const expensesSource = readFileSync(new URL("./Expenses.jsx", import.meta.url), "utf8");
+  const selectorSource = readFileSync(new URL("./ExpenseMonthSelector.jsx", import.meta.url), "utf8");
+  assert.match(selectorSource, /role="listbox"/);
+  assert.match(selectorSource, /aria-haspopup="listbox"/);
+  assert.doesNotMatch(selectorSource, /<select/i);
+  assert.match(expensesSource, /ExpenseMonthSelector/);
+  assert.doesNotMatch(expensesSource, /<select\s+value=\{selectedMonth\}/);
+  assert.match(expensesSource, /className="expenses-history-link"/);
+  assert.match(expensesSource, /disabled=\{bills\.length === 0 \|\| !selectedMonth\}/);
+});
+
+test("EXPENSES-UX: status labels stay human-friendly", () => {
+  assert.equal(getExpenseStatusLabel("COMPLETE"), "Complete");
+  assert.equal(getExpenseStatusLabel("INCOMPLETE"), "Bill Missing");
+  assert.equal(getExpenseStatusLabel("NO_BILLS"), "No Bills");
+  assert.equal(getExpenseStatusLabel("UNKNOWN"), "Unknown");
+});
 

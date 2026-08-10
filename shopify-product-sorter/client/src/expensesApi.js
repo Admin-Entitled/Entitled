@@ -8,12 +8,12 @@ export const expensesApi = {
     return request("/expenses/months");
   },
 
-  getSummary(month, bypassCache = false) {
-    return request(`/expenses/summary?month=${month}&bypassCache=${bypassCache}`);
+  getSummary(month, bypassCache = false, options = {}) {
+    return request(`/expenses/summary?month=${month}&bypassCache=${bypassCache}`, options);
   },
 
-  getBills(month) {
-    return request(`/expenses/bills?month=${month}`);
+  getBills(month, options = {}) {
+    return request(`/expenses/bills?month=${month}`, options);
   },
 
   getHistory() {
@@ -46,4 +46,3 @@ export const expensesApi = {
     return url;
   }
 };
-
