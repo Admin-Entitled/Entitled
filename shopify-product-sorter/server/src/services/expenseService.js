@@ -8,8 +8,204 @@ import {
 } from "../repositories/expenseRepository.js";
 import { fetchMetaDailyInsights } from "./metaAdsService.js";
 import { addNetworkLog } from "./sorterRuntimeService.js";
-import { env } from "../config/env.js";
+import { env, getMetaCapability, getShopifyCapability } from "../config/env.js";
 import { logInfo, logError } from "../utils/logger.js";
+import { createHash } from "node:crypto";
+import {
+  authenticateShiprocket,
+  getCachedShiprocketToken,
+  getShiprocketBaseUrl,
+  isShiprocketConfigured,
+  setCachedShiprocketToken,
+  shiprocketRequest,
+} from "./shiprocketTransport.js";
+import { shopifyGraphQL } from "./shopifyService.js";
+
+const SHIPROCKET_STATEMENT_PAGE_SIZE = 100;
+const SHOPIFY_ORDER_PAGE_SIZE = 50;
+const SHOPIFY_PAYMENTS_PAGE_SIZE = 100;
+
+/**
+ * Derive a deterministic Shiprocket transaction identity.
+ * Primary: use the real provider transaction_id.
+ * Fallback: SHA-256 fingerprint of all stable distinguishing fields so that
+ * two distinct charges on the same AWB/timestamp are never collapsed.
+ */
+export function shiprocketTxId(row) {
+  const transactionId = normalizeIdentityPart(row?.transaction_id);
+  if (transactionId) return transactionId;
+  const fingerprint = [
+    normalizeIdentityPart(row?.created_at),
+    normalizeIdentityPart(row?.awb_code),
+    normalizeIdentityPart(row?.order_id),
+    normalizeIdentityPart(row?.channel_order_id),
+    normalizeIdentityPart(row?.description),
+    normalizeAmountIdentityPart(row?.debit_amount),
+    normalizeAmountIdentityPart(row?.credit_amount),
+  ].join("|");
+  return "sr-fp-" + createHash("sha256").update(fingerprint).digest("hex").slice(0, 32);
+}
+
+function normalizeIdentityPart(value) {
+  if (value === undefined || value === null) {
+    return "";
+  }
+  return String(value).trim();
+}
+
+function normalizeAmountIdentityPart(value) {
+  const amount = parseAmount(value);
+  return Number.isFinite(amount) ? amount.toFixed(2) : "";
+}
+
+function parseAmount(value) {
+  if (value === undefined || value === null || value === "") {
+    return 0;
+  }
+  const normalized = String(value).replace(/,/g, "").trim();
+  const parsed = Number.parseFloat(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function monthDateRange(month) {
+  const start = new Date(`${month}-01T00:00:00.000Z`);
+  const end = new Date(start);
+  end.setUTCMonth(end.getUTCMonth() + 1);
+  return {
+    fromDate: start,
+    toDateExclusive: end,
+    fromDateOnly: start.toISOString().slice(0, 10),
+    toDateOnly: new Date(end.getTime() - 1).toISOString().slice(0, 10),
+    fromDateTime: start.toISOString(),
+    toDateTime: new Date(end.getTime() - 1).toISOString(),
+  };
+}
+
+function isIsoDateInMonth(value, month) {
+  if (!value) {
+    return false;
+  }
+  return String(value).slice(0, 7) === month;
+}
+
+function classifyShiprocketExpenseType(description, amount) {
+  const desc = String(description || "").toUpperCase();
+  if (amount < 0) {
+    return "SHIPROCKET_CREDIT";
+  }
+  if (desc.includes("RTO")) {
+    return "SHIPROCKET_RTO";
+  }
+  if (desc.includes("WEIGHT") || desc.includes("DISCREPANCY")) {
+    return "SHIPROCKET_WEIGHT_ADJUSTMENT";
+  }
+  if (desc.includes("FORWARD") || desc.includes("FREIGHT")) {
+    return "SHIPROCKET_FORWARD";
+  }
+  return "SHIPROCKET_OTHER";
+}
+
+export function normalizeShiprocketStatementRow(row, month) {
+  const description = String(row?.description || "").trim();
+  if (description.toUpperCase() === "WALLET BALANCE") {
+    return null;
+  }
+
+  const debit = parseAmount(row?.debit_amount);
+  const credit = parseAmount(row?.credit_amount);
+  const amount = Number((debit - credit).toFixed(2));
+
+  if (amount === 0) {
+    return null;
+  }
+
+  return {
+    provider: "SHIPROCKET",
+    expenseDate: row?.created_at ? String(row.created_at).slice(0, 10) : `${month}-01`,
+    amount,
+    currency: normalizeIdentityPart(row?.currency) || normalizeIdentityPart(row?.currency_code) || "INR",
+    reference: description || `Charge AWB ${normalizeIdentityPart(row?.awb_code) || normalizeIdentityPart(row?.order_id) || "UNKNOWN"}`,
+    expenseType: classifyShiprocketExpenseType(description, amount),
+    rawSourceReference: shiprocketTxId(row),
+    hasRealTransactionId: Boolean(normalizeIdentityPart(row?.transaction_id)),
+    debit,
+    credit,
+  };
+}
+
+export function getShiprocketStatementPageInfo(payload, page, pageSize, batchLength) {
+  const totalPages = Number(
+    payload?.meta?.pagination?.total_pages
+    || payload?.meta?.total_pages
+    || payload?.pagination?.total_pages
+    || payload?.paginate?.total_pages
+    || payload?.total_pages
+    || 0,
+  );
+  if (Number.isFinite(totalPages) && totalPages > 0) {
+    return { hasNextPage: page < totalPages, totalPages };
+  }
+  return { hasNextPage: batchLength === pageSize, totalPages: page + (batchLength === pageSize ? 1 : 0) };
+}
+
+export function shopifyOrderFeeId(transactionId, feeIndex) {
+  return `shopify-fee-${transactionId}-${feeIndex}`;
+}
+
+export function normalizeShopifyOrderTransactionFee({ order, transaction, fee, feeIndex, month }) {
+  const amount = parseAmount(fee?.amount?.amount);
+  if (amount <= 0) {
+    return null;
+  }
+
+  return {
+    provider: "SHOPIFY",
+    expenseDate: order?.processedAt ? String(order.processedAt).slice(0, 10) : `${month}-01`,
+    amount,
+    currency: normalizeIdentityPart(fee?.amount?.currencyCode) || "INR",
+    feeTaxAmount: parseAmount(fee?.taxAmount?.amount),
+    reference: `Transaction fee for order ${order?.name || order?.id || "UNKNOWN"} (${transaction?.gateway || "unknown"})`,
+    expenseType: "SHOPIFY_TRANSACTION_FEES",
+    rawSourceReference: shopifyOrderFeeId(transaction?.id, feeIndex),
+  };
+}
+
+export function normalizeShopifyBalanceTransaction(balanceTransaction) {
+  const feeAmount = parseAmount(balanceTransaction?.fee?.amount);
+  if (feeAmount <= 0) {
+    return null;
+  }
+
+  return {
+    provider: "SHOPIFY",
+    expenseDate: balanceTransaction?.transactionDate ? String(balanceTransaction.transactionDate).slice(0, 10) : null,
+    amount: feeAmount,
+    currency: normalizeIdentityPart(balanceTransaction?.fee?.currencyCode)
+      || normalizeIdentityPart(balanceTransaction?.amount?.currencyCode)
+      || "INR",
+    feeTaxAmount: 0,
+    reference: `Shopify Payments ${normalizeIdentityPart(balanceTransaction?.type) || "transaction"}${balanceTransaction?.sourceOrderTransactionId ? ` (${balanceTransaction.sourceOrderTransactionId})` : ""}`,
+    expenseType: "SHOPIFY_PAYMENTS_BALANCE_TRANSACTION_FEE",
+    rawSourceReference: normalizeIdentityPart(balanceTransaction?.id),
+  };
+}
+
+function completeStateForBillCountAndStatus(total, billCount, statuses) {
+  if (billCount === 0) {
+    return total > 0 ? "INCOMPLETE" : "NO_BILLS";
+  }
+  return statuses.has("MISSING_DOCUMENT") || statuses.has("FAILED") ? "INCOMPLETE" : "COMPLETE";
+}
+
+function finalizeProviderCompleteness({ completeness, billCount, apiAvailable, apiExpense }) {
+  if (!apiAvailable && billCount === 0) {
+    return "UNKNOWN";
+  }
+  if (apiExpense > 0 && billCount === 0) {
+    return "INCOMPLETE";
+  }
+  return completeness;
+}
 
 /**
  * Perform a month-wise synchronization of Meta Ads accrued spend activity
@@ -34,7 +230,7 @@ export async function syncMetaExpenses(month, bypassCache = false) {
 
     for (const day of dailyData) {
       if (day.spend > 0) {
-        upsertProviderExpense({
+        await upsertProviderExpense({
           provider: "META",
           expenseDate: day.date,
           amount: day.spend,
@@ -78,15 +274,6 @@ export async function syncMetaExpenses(month, bypassCache = false) {
     throw err;
   }
 }
-
-import {
-  authenticateShiprocket,
-  getCachedShiprocketToken,
-  getShiprocketBaseUrl,
-  isShiprocketConfigured,
-  setCachedShiprocketToken,
-  shiprocketRequest,
-} from "./shiprocketTransport.js";
 
 function createShiprocketError({ status }) {
   const message =
@@ -153,20 +340,32 @@ export async function syncShiprocketExpenses(month) {
     await ensureShiprocketAuth();
 
     // Derive dates
-    const from = `${month}-01`;
-    const to = `${month}-31`; // Note: Shiprocket handles monthly boundaries
+    const { fromDateOnly: from, toDateOnly: to } = monthDateRange(month);
 
     const token = getCachedShiprocketToken();
     let page = 1;
     let keepFetching = true;
     let recordCount = 0;
+    const metrics = {
+      pagesFetched: 0,
+      rowsReturned: 0,
+      debitRows: 0,
+      creditRows: 0,
+      skippedRows: 0,
+      rowsWithRealTransactionId: 0,
+      rowsRequiringFallbackId: 0,
+      grossDebitTotal: 0,
+      grossCreditTotal: 0,
+      netExpense: 0,
+      currency: "INR",
+    };
 
     while (keepFetching) {
       const url = new URL(`${getShiprocketBaseUrl()}/v1/external/account/details/statement`);
       url.searchParams.set("from", from);
       url.searchParams.set("to", to);
       url.searchParams.set("page", String(page));
-      url.searchParams.set("per_page", "100");
+      url.searchParams.set("per_page", String(SHIPROCKET_STATEMENT_PAGE_SIZE));
 
       const payload = await shiprocketRequest(
         url,
@@ -185,60 +384,46 @@ export async function syncShiprocketExpenses(month) {
         keepFetching = false;
         break;
       }
+      metrics.pagesFetched += 1;
+      metrics.rowsReturned += batch.length;
 
       for (const row of batch) {
-        if (row.description === "Wallet Balance") {
-          // Skip general wallet balance rows
+        const normalized = normalizeShiprocketStatementRow(row, month);
+        if (!normalized) {
+          metrics.skippedRows += 1;
           continue;
         }
 
-        const debit = parseFloat(row.debit_amount || 0);
-        const credit = parseFloat(row.credit_amount || 0);
-        const amount = debit - credit;
-
-        if (amount === 0) {
-          continue;
+        metrics.currency = normalized.currency || metrics.currency;
+        metrics.grossDebitTotal += normalized.debit;
+        metrics.grossCreditTotal += normalized.credit;
+        metrics.netExpense += normalized.amount;
+        if (normalized.amount < 0) {
+          metrics.creditRows += 1;
+        } else {
+          metrics.debitRows += 1;
+        }
+        if (normalized.hasRealTransactionId) {
+          metrics.rowsWithRealTransactionId += 1;
+        } else {
+          metrics.rowsRequiringFallbackId += 1;
         }
 
-        // Determine stable reference: use transaction_id, or fall back to description/awb combination
-        const txId = row.transaction_id || `sr-${row.created_at || row.description}-${row.awb_code || ''}`;
-
-        // Classify type
-        let expenseType = "SHIPROCKET_OTHER";
-        const desc = String(row.description || "").toUpperCase();
-        if (desc.includes("FORWARD") || desc.includes("FREIGHT")) {
-          expenseType = "SHIPROCKET_FORWARD";
-        } else if (desc.includes("RTO")) {
-          expenseType = "SHIPROCKET_RTO";
-        } else if (desc.includes("WEIGHT") || desc.includes("DISCREPANCY")) {
-          expenseType = "SHIPROCKET_WEIGHT_ADJUSTMENT";
-        } else if (amount < 0) {
-          expenseType = "SHIPROCKET_CREDIT";
-        }
-
-        await upsertProviderExpense({
-          provider: "SHIPROCKET",
-          expenseDate: row.created_at ? row.created_at.slice(0, 10) : `${month}-01`,
-          amount: amount,
-          currency: "INR",
-          reference: row.description || `Charge AWB ${row.awb_code || ''}`,
-          expenseType,
-          rawSourceReference: txId,
-        });
+        await upsertProviderExpense(normalized);
         recordCount++;
       }
 
-      // Check pagination details: Shiprocket statement API returns paginate fields in some versions,
-      // or we can rely on data presence and per_page page bounds.
-      if (batch.length < 100) {
-        keepFetching = false;
-      } else {
-        page++;
-      }
+      const pageInfo = getShiprocketStatementPageInfo(payload, page, SHIPROCKET_STATEMENT_PAGE_SIZE, batch.length);
+      keepFetching = pageInfo.hasNextPage;
+      page += 1;
     }
 
-    logInfo("Shiprocket expense sync completed", { provider: "SHIPROCKET", month, count: recordCount });
-    return { provider: "SHIPROCKET", status: "SUCCESS", count: recordCount };
+    metrics.grossDebitTotal = Number(metrics.grossDebitTotal.toFixed(2));
+    metrics.grossCreditTotal = Number(metrics.grossCreditTotal.toFixed(2));
+    metrics.netExpense = Number(metrics.netExpense.toFixed(2));
+
+    logInfo("Shiprocket expense sync completed", { provider: "SHIPROCKET", month, count: recordCount, metrics });
+    return { provider: "SHIPROCKET", status: "SUCCESS", count: recordCount, metrics };
   } catch (err) {
     logError("Shiprocket expense sync failed", err, { provider: "SHIPROCKET", month });
     throw err;
@@ -246,32 +431,195 @@ export async function syncShiprocketExpenses(month) {
 }
 
 /**
- * Retrieve simulated Shopify merchant subscriptions/transaction costs.
+ * Inspect current Shopify expense capabilities using the canonical GraphQL client.
  */
-import { shopifyGraphQL } from "./shopifyService.js";
+export async function inspectShopifyExpenseCapability() {
+  const capability = getShopifyCapability();
+  if (!capability.available) {
+    return {
+      installedScopes: [],
+      orderTransactionFees: "MISSING_SCOPE",
+      shopifyPaymentsConfigured: "UNKNOWN",
+      shopifyPaymentsBalanceTransactions: "MISSING_SCOPE",
+      canonicalSource: "UNAVAILABLE",
+      reason: "SHOPIFY_NOT_CONFIGURED",
+    };
+  }
 
-/**
- * Retrieve real Shopify transaction fees using OrderTransaction GQL.
- */
-export async function syncShopifyExpenses(month) {
-  const startedAt = new Date();
+  const scopeData = await shopifyGraphQL(`
+    query ExpenseScopeProbe {
+      currentAppInstallation {
+        accessScopes {
+          handle
+        }
+      }
+    }
+  `);
+  const installedScopes = (scopeData?.currentAppInstallation?.accessScopes || []).map((scope) => scope.handle);
+  const hasOrderScope = installedScopes.includes("read_orders") || installedScopes.includes("read_all_orders");
+
+  let orderTransactionFees = hasOrderScope ? "AVAILABLE" : "MISSING_SCOPE";
+  if (hasOrderScope) {
+    try {
+      await shopifyGraphQL(`
+        query ExpenseOrderFeesProbe {
+          orders(first: 1, sortKey: PROCESSED_AT, reverse: true) {
+            nodes {
+              id
+              transactions {
+                id
+                fees {
+                  amount {
+                    amount
+                    currencyCode
+                  }
+                  type
+                }
+              }
+            }
+          }
+        }
+      `);
+    } catch (error) {
+      orderTransactionFees = classifyShopifyCapabilityError(error);
+    }
+  }
+
+  let shopifyPaymentsConfigured = "UNKNOWN";
+  let shopifyPaymentsBalanceTransactions = "UNSUPPORTED";
   try {
-    logInfo("Expense sync started", { provider: "SHOPIFY", month });
+    const paymentsData = await shopifyGraphQL(`
+      query ExpensePaymentsProbe {
+        shopifyPaymentsAccount {
+          id
+          balanceTransactions(first: 1) {
+            nodes {
+              id
+            }
+          }
+        }
+      }
+    `);
+    if (paymentsData?.shopifyPaymentsAccount?.id) {
+      shopifyPaymentsConfigured = "YES";
+      shopifyPaymentsBalanceTransactions = "AVAILABLE";
+    } else {
+      shopifyPaymentsConfigured = "NO";
+      shopifyPaymentsBalanceTransactions = "NOT_CONFIGURED";
+    }
+  } catch (error) {
+    const state = classifyShopifyCapabilityError(error);
+    if (state === "MISSING_SCOPE") {
+      shopifyPaymentsConfigured = "UNKNOWN";
+      shopifyPaymentsBalanceTransactions = "MISSING_SCOPE";
+    } else {
+      shopifyPaymentsConfigured = "UNKNOWN";
+      shopifyPaymentsBalanceTransactions = state;
+    }
+  }
 
-    // Derive date boundaries
-    const since = `${month}-01T00:00:00Z`;
-    const until = `${month}-31T23:59:59Z`;
+  const canonicalSource = chooseShopifyCanonicalSource({
+    orderTransactionFees,
+    shopifyPaymentsBalanceTransactions,
+  });
 
-    let hasNextPage = true;
-    let cursor = null;
-    let recordCount = 0;
-    
-    // We check availability and fetch orders for the selected month to extract fees
-    while (hasNextPage) {
-      // Query filter options using created_at date range
-      const query = `
+  return {
+    installedScopes,
+    orderTransactionFees,
+    shopifyPaymentsConfigured,
+    shopifyPaymentsBalanceTransactions,
+    canonicalSource,
+  };
+}
+
+export function chooseShopifyCanonicalSource({ orderTransactionFees, shopifyPaymentsBalanceTransactions }) {
+  if (shopifyPaymentsBalanceTransactions === "AVAILABLE") {
+    return "SHOPIFY_PAYMENTS_BALANCE_TRANSACTIONS";
+  }
+  if (orderTransactionFees === "AVAILABLE") {
+    return "ORDER_TRANSACTION_FEES";
+  }
+  return "UNAVAILABLE";
+}
+
+function classifyShopifyCapabilityError(error) {
+  const message = String(error?.message || "");
+  if (/access denied|scope|permission/i.test(message)) {
+    return "MISSING_SCOPE";
+  }
+  if (/shopifypaymentsaccount|field .* doesn't exist|cannot query field/i.test(message)) {
+    return "UNSUPPORTED";
+  }
+  return "UNSUPPORTED";
+}
+
+async function fetchShopifyPaymentsBalanceTransactions(month) {
+  const rows = [];
+  let hasNextPage = true;
+  let cursor = null;
+  let pagesFetched = 0;
+
+  while (hasNextPage) {
+    const payload = await shopifyGraphQL(
+      `
+        query FetchPaymentsBalanceTransactions($cursor: String) {
+          shopifyPaymentsAccount {
+            balanceTransactions(first: ${SHOPIFY_PAYMENTS_PAGE_SIZE}, after: $cursor) {
+              nodes {
+                id
+                transactionDate
+                type
+                sourceOrderTransactionId
+                amount {
+                  amount
+                  currencyCode
+                }
+                fee {
+                  amount
+                  currencyCode
+                }
+                net {
+                  amount
+                  currencyCode
+                }
+              }
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+            }
+          }
+        }
+      `,
+      { cursor },
+    );
+
+    const connection = payload?.shopifyPaymentsAccount?.balanceTransactions;
+    const batch = connection?.nodes || [];
+    pagesFetched += 1;
+    rows.push(...batch.filter((node) => isIsoDateInMonth(node?.transactionDate, month)));
+    hasNextPage = connection?.pageInfo?.hasNextPage || false;
+    cursor = connection?.pageInfo?.endCursor || null;
+  }
+
+  return { rows, pagesFetched };
+}
+
+async function fetchShopifyOrderFeeRows(month) {
+  const { fromDateTime: since, toDateTime: until } = monthDateRange(month);
+  let hasNextPage = true;
+  let cursor = null;
+  let pagesFetched = 0;
+  let ordersInspected = 0;
+  let transactionsInspected = 0;
+  const rows = [];
+  const currencies = new Set();
+
+  while (hasNextPage) {
+    const payload = await shopifyGraphQL(
+      `
         query FetchOrderFees($cursor: String, $dateQuery: String!) {
-          orders(first: 50, after: $cursor, query: $dateQuery) {
+          orders(first: ${SHOPIFY_ORDER_PAGE_SIZE}, after: $cursor, query: $dateQuery) {
             nodes {
               id
               name
@@ -294,60 +642,114 @@ export async function syncShopifyExpenses(month) {
             }
           }
         }
-      `;
-
-      const variables = {
+      `,
+      {
         cursor,
-        dateQuery: `created_at:>=${since} AND created_at:<=${until}`
-      };
+        dateQuery: `created_at:>=${since} AND created_at:<=${until}`,
+      },
+    );
 
-      const payload = await shopifyGraphQL(query, variables);
-      const orders = payload?.orders?.nodes || [];
+    const orders = payload?.orders?.nodes || [];
+    pagesFetched += 1;
+    ordersInspected += orders.length;
 
-      for (const order of orders) {
-        const txs = order.transactions || [];
-        for (const tx of txs) {
-          const fees = tx.fees || [];
-          for (let i = 0; i < fees.length; i++) {
-            const fee = fees[i];
-            const amount = parseFloat(fee.amount?.amount || 0);
-            if (amount <= 0) continue;
-
-            const currency = fee.amount?.currencyCode || "INR";
-            const stableId = `shopify-fee-${tx.id}-${i}`;
-
-            await upsertProviderExpense({
-              provider: "SHOPIFY",
-              expenseDate: order.processedAt ? order.processedAt.slice(0, 10) : `${month}-01`,
-              amount,
-              currency,
-              reference: `Transaction fee for order ${order.name} (${tx.gateway || 'unknown'})`,
-              expenseType: "SHOPIFY_TRANSACTION_FEES",
-              rawSourceReference: stableId,
-            });
-            recordCount++;
+    for (const order of orders) {
+      const transactions = order?.transactions || [];
+      transactionsInspected += transactions.length;
+      for (const transaction of transactions) {
+        const fees = transaction?.fees || [];
+        for (let feeIndex = 0; feeIndex < fees.length; feeIndex += 1) {
+          const normalized = normalizeShopifyOrderTransactionFee({
+            order,
+            transaction,
+            fee: fees[feeIndex],
+            feeIndex,
+            month,
+          });
+          if (!normalized) {
+            continue;
           }
+          currencies.add(normalized.currency);
+          rows.push(normalized);
         }
       }
-
-      const pageInfo = payload?.orders?.pageInfo;
-      hasNextPage = pageInfo?.hasNextPage || false;
-      cursor = pageInfo?.endCursor || null;
     }
 
-    // If Shopify Payments account check failed or is unsupported, but we fetched 0 fees from manual orders,
-    // we still return SUCCESS with 0 records (truthful representation of no transaction fees on active orders).
-    // If shopifyGraphQL throws an access scope error or similar, it will fail into the catch block.
-    
-    logInfo("Shopify expense sync completed", { provider: "SHOPIFY", month, count: recordCount });
-    return { provider: "SHOPIFY", status: "SUCCESS", count: recordCount };
+    hasNextPage = payload?.orders?.pageInfo?.hasNextPage || false;
+    cursor = payload?.orders?.pageInfo?.endCursor || null;
+  }
+
+  return { rows, pagesFetched, ordersInspected, transactionsInspected, currencies: [...currencies] };
+}
+
+/**
+ * Retrieve real Shopify transaction fees using OrderTransaction GQL.
+ */
+export async function syncShopifyExpenses(month) {
+  const startedAt = new Date();
+  try {
+    logInfo("Expense sync started", { provider: "SHOPIFY", month });
+    const capability = await inspectShopifyExpenseCapability();
+    if (capability.canonicalSource === "UNAVAILABLE") {
+      return { provider: "SHOPIFY", status: "UNAVAILABLE", reason: capability.reason || "SHOPIFY_EXPENSE_SOURCE_UNAVAILABLE", capability };
+    }
+
+    let rows = [];
+    let pagesFetched = 0;
+    let ordersInspected = 0;
+    let transactionsInspected = 0;
+    let currencies = [];
+
+    if (capability.canonicalSource === "SHOPIFY_PAYMENTS_BALANCE_TRANSACTIONS") {
+      const balanceResult = await fetchShopifyPaymentsBalanceTransactions(month);
+      rows = balanceResult.rows
+        .map((row) => normalizeShopifyBalanceTransaction(row))
+        .filter(Boolean);
+      pagesFetched = balanceResult.pagesFetched;
+      currencies = [...new Set(rows.map((row) => row.currency).filter(Boolean))];
+    } else {
+      const feeResult = await fetchShopifyOrderFeeRows(month);
+      rows = feeResult.rows;
+      pagesFetched = feeResult.pagesFetched;
+      ordersInspected = feeResult.ordersInspected;
+      transactionsInspected = feeResult.transactionsInspected;
+      currencies = feeResult.currencies;
+    }
+
+    for (const row of rows) {
+      await upsertProviderExpense(row);
+    }
+
+    logInfo("Shopify expense sync completed", {
+      provider: "SHOPIFY",
+      month,
+      count: rows.length,
+      canonicalSource: capability.canonicalSource,
+      pagesFetched,
+    });
+    return {
+      provider: "SHOPIFY",
+      status: "SUCCESS",
+      count: rows.length,
+      canonicalSource: capability.canonicalSource,
+      capability,
+      metrics: {
+        pagesFetched,
+        ordersInspected,
+        transactionsInspected,
+        feeRecordsFound: rows.length,
+        totalFeeAmount: Number(rows.reduce((sum, row) => sum + row.amount, 0).toFixed(2)),
+        totalFeeTaxAmount: Number(rows.reduce((sum, row) => sum + (row.feeTaxAmount || 0), 0).toFixed(2)),
+        currencies,
+      },
+    };
   } catch (err) {
     logError("Shopify expense sync failed", err, { provider: "SHOPIFY", month });
-    
-    if (err.message?.includes("Access denied") || err.message?.includes("scope")) {
-      return { provider: "SHOPIFY", status: "UNAVAILABLE", reason: "SHOPIFY_PAYMENTS_NOT_AVAILABLE" };
+
+    if (/Access denied|scope|permission/i.test(err.message || "")) {
+      return { provider: "SHOPIFY", status: "UNAVAILABLE", reason: "SHOPIFY_EXPENSE_SOURCE_UNAVAILABLE" };
     }
-    
+
     throw err;
   }
 }
@@ -404,12 +806,17 @@ export async function syncAllExpenses(month, bypassCache = false) {
  */
 export async function getMonthlyConsolidatedSummary(month) {
   const bills = await listExpenseBills(month);
+  const providerApiAvailability = {
+    META: getMetaCapability().available,
+    SHIPROCKET: isShiprocketConfigured(),
+    SHOPIFY: getShopifyCapability().available,
+  };
   
   // Aggregate totals by provider
   const providerTotals = {
-    META: { total: 0, billCount: 0, completeness: "NO_BILLS" },
-    SHIPROCKET: { total: 0, billCount: 0, completeness: "NO_BILLS" },
-    SHOPIFY: { total: 0, billCount: 0, completeness: "NO_BILLS" },
+    META: { total: 0, billCount: 0, statuses: new Set(), completeness: "NO_BILLS" },
+    SHIPROCKET: { total: 0, billCount: 0, statuses: new Set(), completeness: "NO_BILLS" },
+    SHOPIFY: { total: 0, billCount: 0, statuses: new Set(), completeness: "NO_BILLS" },
   };
 
   let firstCurrency = null;
@@ -426,7 +833,7 @@ export async function getMonthlyConsolidatedSummary(month) {
     if (providerTotals[p]) {
       providerTotals[p].total += b.total;
       providerTotals[p].billCount += 1;
-      providerTotals[p].completeness = b.status === "AVAILABLE" ? "COMPLETE" : "INCOMPLETE";
+      providerTotals[p].statuses.add(b.status || "UNKNOWN");
     }
   }
 
@@ -435,16 +842,17 @@ export async function getMonthlyConsolidatedSummary(month) {
     const apiSum = await getProviderExpensesSum(p, month);
     providerTotals[p].apiExpense = apiSum.total;
     providerTotals[p].difference = providerTotals[p].total - apiSum.total;
-
-    // Determine completeness logic:
-    // If API expense exists but no supporting invoice bill exists -> INCOMPLETE
-    if (providerTotals[p].apiExpense > 0 && providerTotals[p].billCount === 0) {
-      providerTotals[p].completeness = "INCOMPLETE";
-    } else if (providerTotals[p].billCount > 0) {
-      // If we have bills, check if total bills matches or covers expected API activity closely
-      const diff = Math.abs(providerTotals[p].difference);
-      providerTotals[p].completeness = "COMPLETE";
-    }
+    providerTotals[p].completeness = completeStateForBillCountAndStatus(
+      providerTotals[p].total,
+      providerTotals[p].billCount,
+      providerTotals[p].statuses,
+    );
+    providerTotals[p].completeness = finalizeProviderCompleteness({
+      completeness: providerTotals[p].completeness,
+      billCount: providerTotals[p].billCount,
+      apiAvailable: providerApiAvailability[p],
+      apiExpense: providerTotals[p].apiExpense,
+    });
   }
 
   const totalExpense = Object.values(providerTotals).reduce((sum, item) => sum + item.total, 0);
@@ -460,6 +868,7 @@ export async function getMonthlyConsolidatedSummary(month) {
       completeness: data.completeness,
       apiExpense: data.apiExpense || 0,
       difference: data.difference || 0,
+      apiAvailable: providerApiAvailability[p],
     })),
   };
 }
