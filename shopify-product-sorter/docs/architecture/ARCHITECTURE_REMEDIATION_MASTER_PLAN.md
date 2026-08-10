@@ -12,8 +12,8 @@
 | Git worktree root | `/home/shivam/Desktop/Shivam/arkn/Resources/Entitled` |
 | Authoritative ledger | `docs/architecture/ledger/tasks.json` |
 | Generated timestamp | `2026-08-09T09:25:27.756Z` |
-| Current branch | `main` |
-| Local commit | `71be6c5` |
+| Current branch | `feature/expenses-v1` |
+| Local commit | `5d45b03` |
 | Overall status | `IN PROGRESS` |
 
 ## 2. Status definitions

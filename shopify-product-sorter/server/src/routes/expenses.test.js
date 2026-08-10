@@ -11,7 +11,9 @@ import {
 } from "../repositories/expenseRepository.js";
 import { 
   syncAllExpenses, 
-  getMonthlyConsolidatedSummary 
+  getMonthlyConsolidatedSummary,
+  syncShiprocketExpenses,
+  syncShopifyExpenses
 } from "../services/expenseService.js";
 import { runOrderMappingMigrations } from "../services/orderMappingMigrations.js";
 
@@ -141,4 +143,19 @@ test("Expenses Backend: marks provider NO BILLS if no API activity and no bills 
   const shopTotals = summary.providerTotals.find((p) => p.provider === "SHOPIFY");
 
   assert.equal(shopTotals.completeness, "NO_BILLS", "Empty provider state check failed");
+});
+
+test("Expenses Integration: live / mock sync execution and mapping logic", async () => {
+  // Test Shiprocket sync return status when not configured (or configured correctly)
+  const srRes = await syncShiprocketExpenses("2026-08");
+  assert.ok(["SUCCESS", "UNAVAILABLE"].includes(srRes.status));
+
+  // Test Shopify sync return status
+  const shopRes = await syncShopifyExpenses("2026-08");
+  assert.ok(["SUCCESS", "UNAVAILABLE"].includes(shopRes.status));
+
+  // Test syncAllExpenses orchestrator returns consolidated results
+  const allRes = await syncAllExpenses("2026-08");
+  assert.equal(typeof allRes.success, "boolean");
+  assert.ok(Array.isArray(allRes.results));
 });

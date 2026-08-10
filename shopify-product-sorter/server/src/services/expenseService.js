@@ -79,67 +79,168 @@ export async function syncMetaExpenses(month, bypassCache = false) {
   }
 }
 
+import {
+  authenticateShiprocket,
+  getCachedShiprocketToken,
+  getShiprocketBaseUrl,
+  isShiprocketConfigured,
+  setCachedShiprocketToken,
+  shiprocketRequest,
+} from "./shiprocketTransport.js";
+
+function createShiprocketError({ status }) {
+  const message =
+    status === 401
+      ? "Shiprocket authentication failed"
+      : status === 429
+        ? "Shiprocket rate limit reached"
+        : `Shiprocket API request failed (${status})`;
+  const error = new Error(message);
+  error.category =
+    status === 401
+      ? "shiprocket_authentication"
+      : status === 429
+        ? "shiprocket_rate_limit"
+        : "shiprocket_api";
+  return error;
+}
+
+function logNetworkEntry(entry) {
+  try {
+    addNetworkLog({
+      provider: "shiprocket",
+      operationName: `${entry.method} ${entry.endpoint}`,
+      method: entry.method,
+      endpoint: entry.endpoint,
+      statusCode: entry.statusCode,
+      status: entry.status === "failed" ? "failed" : "success",
+      durationMs: entry.durationMs,
+      errorMessage: entry.errorSummary,
+      startedAt: entry.startedAt.toISOString(),
+      completedAt: entry.completedAt.toISOString(),
+    });
+  } catch (e) {
+    // Diagnostics must never break provider calls.
+  }
+}
+
+async function ensureShiprocketAuth() {
+  if (!getCachedShiprocketToken()) {
+    const payload = await authenticateShiprocket({
+      operation: "shiprocket_auth",
+      onLog: logNetworkEntry,
+      createError: createShiprocketError,
+    });
+    if (!payload.token) {
+      const error = new Error("Shiprocket authentication failed");
+      error.category = "shiprocket_authentication";
+      throw error;
+    }
+    setCachedShiprocketToken(payload.token);
+  }
+}
+
 /**
- * Retrieve simulated Shiprocket statement logistics charges.
+ * Retrieve Shiprocket statement logistics charges.
  */
 export async function syncShiprocketExpenses(month) {
   const startedAt = new Date();
   try {
     logInfo("Expense sync started", { provider: "SHIPROCKET", month });
-    // In V1, Shiprocket and Shopify billing endpoints don't expose actual merchant statements.
-    // We mock/fetch statement activity or simulated data if not available.
-    // For statement sync, we generate expected expenses corresponding to the month
-    // if Shiprocket credentials exist. If not configured, we catch safely.
+    if (!isShiprocketConfigured()) {
+      return { provider: "SHIPROCKET", status: "UNAVAILABLE", reason: "SHIPROCKET_NOT_CONFIGURED" };
+    }
+    await ensureShiprocketAuth();
 
-    // Let's create mock expected provider statement entries if simulated logistics charges exist
-    // to allow API reconciliation against manually uploaded merchant bills.
-    // We register 3 simulated logistics charges for the month to verify correctness.
-    const charges = [
-      { date: `${month}-05`, amount: 15200, ref: "SR-DEBIT-001", type: "FREIGHT" },
-      { date: `${month}-12`, amount: 18400, ref: "SR-DEBIT-002", type: "RTO" },
-      { date: `${month}-22`, amount: 13400, ref: "SR-DEBIT-003", type: "WEIGHT_ADJUSTMENT" },
-    ];
+    // Derive dates
+    const from = `${month}-01`;
+    const to = `${month}-31`; // Note: Shiprocket handles monthly boundaries
 
-    for (const c of charges) {
-      upsertProviderExpense({
-        provider: "SHIPROCKET",
-        expenseDate: c.date,
-        amount: c.amount,
-        currency: "INR",
-        reference: c.ref,
-        expenseType: c.type,
-        rawSourceReference: `sr-charge-${c.date}-${c.ref}`,
-      });
+    const token = getCachedShiprocketToken();
+    let page = 1;
+    let keepFetching = true;
+    let recordCount = 0;
+
+    while (keepFetching) {
+      const url = new URL(`${getShiprocketBaseUrl()}/v1/external/account/details/statement`);
+      url.searchParams.set("from", from);
+      url.searchParams.set("to", to);
+      url.searchParams.set("page", String(page));
+      url.searchParams.set("per_page", "100");
+
+      const payload = await shiprocketRequest(
+        url,
+        { headers: { Authorization: `Bearer ${token}` } },
+        {
+          operation: "shiprocket_statement",
+          respectRetryAfter: true,
+          refresh: ensureShiprocketAuth,
+          onLog: logNetworkEntry,
+          createError: createShiprocketError,
+        }
+      );
+
+      const batch = Array.isArray(payload.data) ? payload.data : [];
+      if (!batch.length) {
+        keepFetching = false;
+        break;
+      }
+
+      for (const row of batch) {
+        if (row.description === "Wallet Balance") {
+          // Skip general wallet balance rows
+          continue;
+        }
+
+        const debit = parseFloat(row.debit_amount || 0);
+        const credit = parseFloat(row.credit_amount || 0);
+        const amount = debit - credit;
+
+        if (amount === 0) {
+          continue;
+        }
+
+        // Determine stable reference: use transaction_id, or fall back to description/awb combination
+        const txId = row.transaction_id || `sr-${row.created_at || row.description}-${row.awb_code || ''}`;
+
+        // Classify type
+        let expenseType = "SHIPROCKET_OTHER";
+        const desc = String(row.description || "").toUpperCase();
+        if (desc.includes("FORWARD") || desc.includes("FREIGHT")) {
+          expenseType = "SHIPROCKET_FORWARD";
+        } else if (desc.includes("RTO")) {
+          expenseType = "SHIPROCKET_RTO";
+        } else if (desc.includes("WEIGHT") || desc.includes("DISCREPANCY")) {
+          expenseType = "SHIPROCKET_WEIGHT_ADJUSTMENT";
+        } else if (amount < 0) {
+          expenseType = "SHIPROCKET_CREDIT";
+        }
+
+        await upsertProviderExpense({
+          provider: "SHIPROCKET",
+          expenseDate: row.created_at ? row.created_at.slice(0, 10) : `${month}-01`,
+          amount: amount,
+          currency: "INR",
+          reference: row.description || `Charge AWB ${row.awb_code || ''}`,
+          expenseType,
+          rawSourceReference: txId,
+        });
+        recordCount++;
+      }
+
+      // Check pagination details: Shiprocket statement API returns paginate fields in some versions,
+      // or we can rely on data presence and per_page page bounds.
+      if (batch.length < 100) {
+        keepFetching = false;
+      } else {
+        page++;
+      }
     }
 
-    addNetworkLog({
-      provider: "shiprocket",
-      operationName: "Shiprocket Expense Sync",
-      method: "GET",
-      endpoint: `/statement?month=${month}`,
-      statusCode: 200,
-      status: "success",
-      durationMs: Date.now() - startedAt.getTime(),
-      startedAt: startedAt.toISOString(),
-      completedAt: new Date().toISOString(),
-    });
-
-    logInfo("Shiprocket expense sync completed", { provider: "SHIPROCKET", month, count: charges.length });
-    return { provider: "SHIPROCKET", status: "SUCCESS", count: charges.length };
+    logInfo("Shiprocket expense sync completed", { provider: "SHIPROCKET", month, count: recordCount });
+    return { provider: "SHIPROCKET", status: "SUCCESS", count: recordCount };
   } catch (err) {
     logError("Shiprocket expense sync failed", err, { provider: "SHIPROCKET", month });
-    addNetworkLog({
-      provider: "shiprocket",
-      operationName: "Shiprocket Expense Sync",
-      method: "GET",
-      endpoint: `/statement?month=${month}`,
-      statusCode: 500,
-      status: "failed",
-      errorMessage: err.message,
-      durationMs: Date.now() - startedAt.getTime(),
-      startedAt: startedAt.toISOString(),
-      completedAt: new Date().toISOString(),
-    });
     throw err;
   }
 }
@@ -147,56 +248,106 @@ export async function syncShiprocketExpenses(month) {
 /**
  * Retrieve simulated Shopify merchant subscriptions/transaction costs.
  */
+import { shopifyGraphQL } from "./shopifyService.js";
+
+/**
+ * Retrieve real Shopify transaction fees using OrderTransaction GQL.
+ */
 export async function syncShopifyExpenses(month) {
   const startedAt = new Date();
   try {
     logInfo("Expense sync started", { provider: "SHOPIFY", month });
 
-    const charges = [
-      { date: `${month}-01`, amount: 2499, ref: "SHOP-SUB-001", type: "SUBSCRIPTION" },
-      { date: `${month}-15`, amount: 10400, ref: "SHOP-FEE-001", type: "TRANSACTION_FEES" },
-    ];
+    // Derive date boundaries
+    const since = `${month}-01T00:00:00Z`;
+    const until = `${month}-31T23:59:59Z`;
 
-    for (const c of charges) {
-      upsertProviderExpense({
-        provider: "SHOPIFY",
-        expenseDate: c.date,
-        amount: c.amount,
-        currency: "INR",
-        reference: c.ref,
-        expenseType: c.type,
-        rawSourceReference: `shopify-charge-${c.date}-${c.ref}`,
-      });
+    let hasNextPage = true;
+    let cursor = null;
+    let recordCount = 0;
+    
+    // We check availability and fetch orders for the selected month to extract fees
+    while (hasNextPage) {
+      // Query filter options using created_at date range
+      const query = `
+        query FetchOrderFees($cursor: String, $dateQuery: String!) {
+          orders(first: 50, after: $cursor, query: $dateQuery) {
+            nodes {
+              id
+              name
+              processedAt
+              transactions {
+                id
+                gateway
+                fees {
+                  amount {
+                    amount
+                    currencyCode
+                  }
+                  type
+                }
+              }
+            }
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+          }
+        }
+      `;
+
+      const variables = {
+        cursor,
+        dateQuery: `created_at:>=${since} AND created_at:<=${until}`
+      };
+
+      const payload = await shopifyGraphQL(query, variables);
+      const orders = payload?.orders?.nodes || [];
+
+      for (const order of orders) {
+        const txs = order.transactions || [];
+        for (const tx of txs) {
+          const fees = tx.fees || [];
+          for (let i = 0; i < fees.length; i++) {
+            const fee = fees[i];
+            const amount = parseFloat(fee.amount?.amount || 0);
+            if (amount <= 0) continue;
+
+            const currency = fee.amount?.currencyCode || "INR";
+            const stableId = `shopify-fee-${tx.id}-${i}`;
+
+            await upsertProviderExpense({
+              provider: "SHOPIFY",
+              expenseDate: order.processedAt ? order.processedAt.slice(0, 10) : `${month}-01`,
+              amount,
+              currency,
+              reference: `Transaction fee for order ${order.name} (${tx.gateway || 'unknown'})`,
+              expenseType: "SHOPIFY_TRANSACTION_FEES",
+              rawSourceReference: stableId,
+            });
+            recordCount++;
+          }
+        }
+      }
+
+      const pageInfo = payload?.orders?.pageInfo;
+      hasNextPage = pageInfo?.hasNextPage || false;
+      cursor = pageInfo?.endCursor || null;
     }
 
-    addNetworkLog({
-      provider: "shopify",
-      operationName: "Shopify Expense Sync",
-      method: "GET",
-      endpoint: `/billing?month=${month}`,
-      statusCode: 200,
-      status: "success",
-      durationMs: Date.now() - startedAt.getTime(),
-      startedAt: startedAt.toISOString(),
-      completedAt: new Date().toISOString(),
-    });
-
-    logInfo("Shopify expense sync completed", { provider: "SHOPIFY", month, count: charges.length });
-    return { provider: "SHOPIFY", status: "SUCCESS", count: charges.length };
+    // If Shopify Payments account check failed or is unsupported, but we fetched 0 fees from manual orders,
+    // we still return SUCCESS with 0 records (truthful representation of no transaction fees on active orders).
+    // If shopifyGraphQL throws an access scope error or similar, it will fail into the catch block.
+    
+    logInfo("Shopify expense sync completed", { provider: "SHOPIFY", month, count: recordCount });
+    return { provider: "SHOPIFY", status: "SUCCESS", count: recordCount };
   } catch (err) {
     logError("Shopify expense sync failed", err, { provider: "SHOPIFY", month });
-    addNetworkLog({
-      provider: "shopify",
-      operationName: "Shopify Expense Sync",
-      method: "GET",
-      endpoint: `/billing?month=${month}`,
-      statusCode: 500,
-      status: "failed",
-      errorMessage: err.message,
-      durationMs: Date.now() - startedAt.getTime(),
-      startedAt: startedAt.toISOString(),
-      completedAt: new Date().toISOString(),
-    });
+    
+    if (err.message?.includes("Access denied") || err.message?.includes("scope")) {
+      return { provider: "SHOPIFY", status: "UNAVAILABLE", reason: "SHOPIFY_PAYMENTS_NOT_AVAILABLE" };
+    }
+    
     throw err;
   }
 }
