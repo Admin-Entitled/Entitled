@@ -18,9 +18,9 @@ export async function upsertExpenseBill(bill) {
     INSERT INTO ${billsTable} (
       provider, invoice_number, invoice_date, billing_month,
       subtotal, tax, total, currency, document_source,
-      document_url, document_storage_key, source_reference, status,
+      document_url, document_storage_key, document_hash, source_reference, status,
       created_at, updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $14)
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $15)
     ON CONFLICT (provider, invoice_number) DO UPDATE
     SET invoice_date = EXCLUDED.invoice_date,
         billing_month = EXCLUDED.billing_month,
@@ -31,6 +31,7 @@ export async function upsertExpenseBill(bill) {
         document_source = EXCLUDED.document_source,
         document_url = COALESCE(EXCLUDED.document_url, ${billsTable}.document_url),
         document_storage_key = COALESCE(EXCLUDED.document_storage_key, ${billsTable}.document_storage_key),
+        document_hash = COALESCE(EXCLUDED.document_hash, ${billsTable}.document_hash),
         source_reference = COALESCE(EXCLUDED.source_reference, ${billsTable}.source_reference),
         status = EXCLUDED.status,
         updated_at = EXCLUDED.updated_at
@@ -49,6 +50,7 @@ export async function upsertExpenseBill(bill) {
     bill.documentSource || "API",
     bill.documentUrl || null,
     bill.documentStorageKey || null,
+    bill.documentHash || null,
     bill.sourceReference || null,
     bill.status || "AVAILABLE",
     now
@@ -67,6 +69,12 @@ export async function getExpenseBill(id) {
 export async function getExpenseBillByInvoice(provider, invoiceNumber) {
   const queryText = `SELECT * FROM ${billsTable} WHERE provider = $1 AND invoice_number = $2`;
   const res = await orderMappingQuery(queryText, [provider, invoiceNumber]);
+  return mapBill(res.rows[0]);
+}
+
+export async function getExpenseBillByDocumentHash(documentHash) {
+  const queryText = `SELECT * FROM ${billsTable} WHERE document_hash = $1`;
+  const res = await orderMappingQuery(queryText, [documentHash]);
   return mapBill(res.rows[0]);
 }
 
@@ -167,13 +175,14 @@ function mapBill(row) {
     invoiceNumber: row.invoice_number,
     invoiceDate: row.invoice_date instanceof Date ? row.invoice_date.toISOString().slice(0, 10) : String(row.invoice_date).slice(0, 10),
     billingMonth: row.billing_month,
-    subtotal: parseFloat(row.subtotal),
-    tax: parseFloat(row.tax),
+    subtotal: row.subtotal === null ? null : parseFloat(row.subtotal),
+    tax: row.tax === null ? null : parseFloat(row.tax),
     total: parseFloat(row.total),
     currency: row.currency,
     documentSource: row.document_source,
     documentUrl: row.document_url,
     documentStorageKey: row.document_storage_key,
+    documentHash: row.document_hash,
     sourceReference: row.source_reference,
     status: row.status,
     createdAt: row.created_at,

@@ -47,6 +47,8 @@ export const testSuites = [
   { name: "Startup Commands & Operator Intent", file: "server/src/scripts/startupCommands.test.js" },
   { name: "Deterministic Integration Mocks", file: "server/src/services/providerIntegration.test.js" },
   { name: "Meta Ads Read-Only Dashboard", file: "server/src/routes/metaAds.test.js" },
+  { name: "Expenses Backend & Import Flow", file: "server/src/routes/expenses.test.js" },
+  { name: "Expenses Provider & Parser Semantics", file: "server/src/services/expenseService.test.js" },
   { name: "Health Checks & Diagnostics", file: "server/src/routes/health.test.js" },
   { name: "Frontend Static Fallback & Route Boundary", file: "server/src/routes/staticFallback.test.js" },
   { name: "Architecture Ledger Governance", file: "tests/architecture-ledger.test.js" },

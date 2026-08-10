@@ -5,13 +5,17 @@ import test from "node:test";
 import { sidebarModules, getActiveModules, getDisabledModules } from "./sidebarModules.js";
 import {
   buildExpenseMonthOptions,
+  buildImportFieldDescriptors,
   EXPENSE_MONTH_ROLLING_COUNT,
   formatExpenseMonthLabel,
   formatMonthValue,
+  getExpenseProviderLabel,
   getApiActivityDisplay,
   getCurrentMonthValue,
   getExpenseStatusLabel,
   getHistoryEmptyStateCopy,
+  isImportItemReady,
+  isValidExpenseProvider,
   getReconciliationDisplay,
   parseMonthValue,
   shiftMonthValue,
@@ -545,16 +549,21 @@ test("META-ADS-FRONTEND: Expenses module is registered in App routing, API, and 
   assert.match(expApiSrc, /getBills\(month/, "expensesApi lists detailed bills");
   assert.match(expApiSrc, /syncExpenses\(month/, "expensesApi triggers sync");
   assert.match(expApiSrc, /addBill\(formData/, "expensesApi posts manual upload multipart");
+  assert.match(expApiSrc, /previewBillImport\(formData/, "expensesApi previews imported bills");
+  assert.match(expApiSrc, /confirmBillImport\(items/, "expensesApi confirms imported bills");
+  assert.match(expApiSrc, /cancelBillImport\(importIds/, "expensesApi cancels imported bill previews");
 
   // UI layout elements
   assert.match(expSrc, /className="feature-title">Expenses<\/h2>/, "Renders feature header title");
   assert.match(expSrc, /<ExpenseMonthSelector/, "Renders custom month selector");
   assert.match(expSrc, /Sync Expenses/, "Renders Sync Expenses button");
+  assert.match(expSrc, /Upload Bills/, "Renders Upload Bills flow button");
   assert.match(expSrc, /Add Bill/, "Renders Add Bill flow button");
   assert.match(expSrc, /Download All Bills/, "Renders bulk Download All Bills trigger");
   assert.match(expSrc, /Download Bills \(ZIP\)/, "Renders provider-wise bulk ZIP trigger");
   assert.match(expSrc, /Monthly Expense History/, "Renders history list header");
   assert.match(expSrc, /Add Merchant Bill/, "Renders manual upload form modal header");
+  assert.match(expSrc, /ExpenseBillImportModal/, "Renders document import review modal");
   assert.match(viewSrc, /API Activity/, "Uses API Activity wording");
   assert.match(viewSrc, /Unbilled Activity/, "Uses contextual reconciliation language");
   assert.match(viewSrc, /No billed expense history yet\./, "Uses user-facing history empty state copy");
@@ -684,4 +693,46 @@ test("EXPENSES-UX: status labels stay human-friendly", () => {
   assert.equal(getExpenseStatusLabel("INCOMPLETE"), "Bill Missing");
   assert.equal(getExpenseStatusLabel("NO_BILLS"), "No Bills");
   assert.equal(getExpenseStatusLabel("UNKNOWN"), "Unknown");
+});
+
+test("EXPENSES-IMPORT: provider labels and provider validity stay normalized", () => {
+  assert.equal(getExpenseProviderLabel("META"), "Meta Ads");
+  assert.equal(getExpenseProviderLabel("SHIPROCKET"), "Shiprocket");
+  assert.equal(getExpenseProviderLabel("SHOPIFY"), "Shopify");
+  assert.equal(getExpenseProviderLabel("NEEDS_REVIEW"), "Needs review");
+  assert.equal(isValidExpenseProvider("META"), true);
+  assert.equal(isValidExpenseProvider("NEEDS_REVIEW"), false);
+});
+
+test("EXPENSES-IMPORT: import field descriptors cover editable review fields", () => {
+  const fields = buildImportFieldDescriptors();
+  assert.deepEqual(fields.map((field) => field.key), [
+    "provider",
+    "invoiceNumber",
+    "invoiceDate",
+    "billingMonth",
+    "subtotal",
+    "tax",
+    "total",
+    "currency",
+  ]);
+});
+
+test("EXPENSES-IMPORT: readiness requires the mandatory confirmed bill fields", () => {
+  assert.equal(isImportItemReady({
+    provider: "META",
+    invoiceNumber: "META-100",
+    invoiceDate: "2026-08-01",
+    billingMonth: "2026-07",
+    total: "10979.46",
+    currency: "INR",
+  }), true);
+  assert.equal(isImportItemReady({
+    provider: "NEEDS_REVIEW",
+    invoiceNumber: "META-100",
+    invoiceDate: "2026-08-01",
+    billingMonth: "2026-07",
+    total: "10979.46",
+    currency: "INR",
+  }), false);
 });

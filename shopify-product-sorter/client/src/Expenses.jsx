@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
+import ExpenseBillImportModal from "./ExpenseBillImportModal.jsx";
 import ExpenseMonthSelector from "./ExpenseMonthSelector.jsx";
 import { expensesApi } from "./expensesApi.js";
 import { MetaEmptyState, MetaMoneyKpiCard } from "./MetaAdsComponents.jsx";
 import {
   buildCurrentMonthWarningMessages,
+  getExpenseProviderLabel,
   buildExpenseMonthOptions,
   formatExpenseMonthLabel,
   getApiActivityDisplay,
@@ -27,6 +29,84 @@ function isAbortError(error) {
   return error?.name === "AbortError";
 }
 
+function buildLocalSummaryFromBills(previousSummary, month, bills) {
+  const providerActivity = new Map(
+    (previousSummary?.providerTotals || []).map((provider) => [provider.provider, provider]),
+  );
+  const providerTotals = Object.fromEntries(
+    PROVIDERS.map((provider) => [
+      provider.key,
+      {
+        provider: provider.key,
+        total: 0,
+        billCount: 0,
+        statuses: new Set(),
+        apiActivity: providerActivity.get(provider.key)?.apiActivity ?? null,
+        apiExpense: providerActivity.get(provider.key)?.apiExpense ?? null,
+        apiActivityState: providerActivity.get(provider.key)?.apiActivityState ?? "UNAVAILABLE",
+        apiActivitySource: providerActivity.get(provider.key)?.apiActivitySource ?? null,
+        apiActivityCoverage: providerActivity.get(provider.key)?.apiActivityCoverage ?? null,
+        apiActivityReason: providerActivity.get(provider.key)?.apiActivityReason ?? null,
+        apiAvailable: providerActivity.get(provider.key)?.apiAvailable ?? false,
+      },
+    ]),
+  );
+
+  let firstCurrency = null;
+  let currencyMismatch = false;
+  for (const bill of bills) {
+    if (!firstCurrency) {
+      firstCurrency = bill.currency;
+    } else if (bill.currency && bill.currency !== firstCurrency) {
+      currencyMismatch = true;
+    }
+    const provider = providerTotals[bill.provider];
+    if (!provider) {
+      continue;
+    }
+    provider.total += Number(bill.total || 0);
+    provider.billCount += 1;
+    provider.statuses.add(bill.status || "UNKNOWN");
+  }
+
+  const finalizedProviderTotals = PROVIDERS.map((provider) => {
+    const summary = providerTotals[provider.key];
+    const apiState = summary.apiActivityState;
+    const apiAmount = Number.isFinite(summary.apiActivity) ? summary.apiActivity : null;
+    let completeness = "NO_BILLS";
+
+    if (summary.billCount > 0) {
+      completeness = summary.statuses.has("MISSING_DOCUMENT") || summary.statuses.has("FAILED") ? "INCOMPLETE" : "COMPLETE";
+    } else if (apiState === "UNAVAILABLE" || apiState === "ERROR") {
+      completeness = "UNKNOWN";
+    } else if ((apiState === "AVAILABLE" || apiState === "PARTIAL") && Number(apiAmount || 0) > 0) {
+      completeness = "INCOMPLETE";
+    }
+
+    return {
+      provider: provider.key,
+      total: Number(summary.total.toFixed(2)),
+      billCount: summary.billCount,
+      completeness,
+      apiActivity: apiAmount,
+      apiExpense: Number.isFinite(summary.apiExpense) ? summary.apiExpense : null,
+      apiActivityState: summary.apiActivityState,
+      apiActivitySource: summary.apiActivitySource,
+      apiActivityCoverage: summary.apiActivityCoverage,
+      apiActivityReason: summary.apiActivityReason,
+      difference: apiAmount !== null ? Number((summary.total - apiAmount).toFixed(2)) : null,
+      apiAvailable: summary.apiAvailable,
+    };
+  });
+
+  return {
+    month,
+    currency: currencyMismatch ? "CURRENCY_MISMATCH" : (firstCurrency || previousSummary?.currency || "INR"),
+    totalExpense: Number(finalizedProviderTotals.reduce((sum, provider) => sum + provider.total, 0).toFixed(2)),
+    providerTotals: finalizedProviderTotals,
+  };
+}
+
 export default function Expenses() {
   const [dataMonths, setDataMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(() => getCurrentMonthValue());
@@ -41,6 +121,8 @@ export default function Expenses() {
   const [error, setError] = useState("");
 
   const [showAddBill, setShowAddBill] = useState(false);
+  const [showImportBills, setShowImportBills] = useState(false);
+  const [importPreferredProvider, setImportPreferredProvider] = useState(null);
   const [formProvider, setFormProvider] = useState("META");
   const [formInvoiceNumber, setFormInvoiceNumber] = useState("");
   const [formInvoiceDate, setFormInvoiceDate] = useState("");
@@ -170,6 +252,11 @@ export default function Expenses() {
     setShowAddBill(true);
   };
 
+  const openImportBillsModal = (provider = null) => {
+    setImportPreferredProvider(provider);
+    setShowImportBills(true);
+  };
+
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setFormFile(e.target.files[0]);
@@ -283,6 +370,18 @@ export default function Expenses() {
     window.location.assign(expensesApi.getBulkDownloadUrl(selectedMonth, provider));
   };
 
+  const handleImportSaved = async (savedBills = []) => {
+    const savedForSelectedMonth = savedBills.filter((bill) => bill?.billingMonth === selectedMonth);
+    if (savedForSelectedMonth.length > 0) {
+      const existingIds = new Set(bills.map((bill) => bill.id));
+      const mergedBills = [...savedForSelectedMonth.filter((bill) => !existingIds.has(bill.id)), ...bills];
+      setBills(mergedBills);
+      setSummary((previousSummary) => buildLocalSummaryFromBills(previousSummary, selectedMonth, mergedBills));
+    }
+
+    await Promise.all([loadHistory(), loadMonths()]);
+  };
+
   return (
     <div className="dashboard-feature meta-dashboard expenses-dashboard">
       <div className="feature-header expenses-header">
@@ -305,6 +404,13 @@ export default function Expenses() {
             disabled={syncing}
           >
             {syncing ? "Syncing…" : "Sync Expenses"}
+          </button>
+          <button
+            type="button"
+            className="button compact secondary"
+            onClick={() => openImportBillsModal(null)}
+          >
+            Upload Bills
           </button>
           <button
             type="button"
@@ -428,6 +534,16 @@ export default function Expenses() {
                 </div>
               </div>
 
+              {billCount === 0 && (
+                <button
+                  type="button"
+                  className="button compact secondary expenses-provider-upload"
+                  onClick={() => openImportBillsModal(provider.key)}
+                >
+                  Upload {getExpenseProviderLabel(provider.key)} Bill
+                </button>
+              )}
+
               <button
                 type="button"
                 className="button compact secondary expenses-provider-download"
@@ -451,6 +567,7 @@ export default function Expenses() {
             <div className="expenses-empty-state">
               <MetaEmptyState message={`${billsEmptyState.title} ${billsEmptyState.body}`} />
               <div className="expenses-empty-state-actions">
+                <button type="button" className="button compact" onClick={() => openImportBillsModal(null)}>Upload Bills</button>
                 <button type="button" className="button compact secondary" onClick={openAddBillModal}>Add Bill</button>
                 <button type="button" className="button compact" onClick={handleSync} disabled={syncing}>
                   {syncing ? "Syncing…" : "Sync Expenses"}
@@ -614,6 +731,14 @@ export default function Expenses() {
           </div>
         </div>
       )}
+
+      <ExpenseBillImportModal
+        isOpen={showImportBills}
+        selectedMonth={selectedMonth}
+        preferredProvider={importPreferredProvider}
+        onClose={() => setShowImportBills(false)}
+        onSaved={handleImportSaved}
+      />
     </div>
   );
 }

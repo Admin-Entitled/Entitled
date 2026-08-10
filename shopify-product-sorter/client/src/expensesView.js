@@ -221,3 +221,44 @@ export function getHistoryEmptyStateCopy() {
     body: "Uploaded bills will appear here by month.",
   };
 }
+
+export function getExpenseProviderLabel(provider) {
+  if (provider === "META") return "Meta Ads";
+  if (provider === "SHIPROCKET") return "Shiprocket";
+  if (provider === "SHOPIFY") return "Shopify";
+  return "Needs review";
+}
+
+export function isValidExpenseProvider(provider) {
+  return ["META", "SHIPROCKET", "SHOPIFY"].includes(String(provider || "").trim().toUpperCase());
+}
+
+export function isRequiredImportField(key) {
+  return ["provider", "invoiceNumber", "invoiceDate", "billingMonth", "total", "currency"].includes(key);
+}
+
+export function buildImportFieldDescriptors() {
+  return [
+    { key: "provider", label: "Provider", type: "select" },
+    { key: "invoiceNumber", label: "Invoice Number", type: "text" },
+    { key: "invoiceDate", label: "Invoice Date", type: "date" },
+    { key: "billingMonth", label: "Billing Month", type: "text", placeholder: "YYYY-MM" },
+    { key: "subtotal", label: "Subtotal", type: "number" },
+    { key: "tax", label: "Tax", type: "number" },
+    { key: "total", label: "Total", type: "number" },
+    { key: "currency", label: "Currency", type: "text" },
+  ];
+}
+
+export function isImportItemReady(item) {
+  return buildImportFieldDescriptors().every((field) => {
+    if (!isRequiredImportField(field.key)) {
+      return true;
+    }
+    const value = item?.[field.key];
+    if (field.key === "provider") {
+      return isValidExpenseProvider(value);
+    }
+    return String(value || "").trim() !== "";
+  });
+}

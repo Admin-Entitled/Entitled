@@ -1,5 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 import {
   DEFAULT_ORDER_MAPPING_SCHEMA,
@@ -26,9 +31,11 @@ const {
   shopifyOrderFeeId,
   syncShopifyExpenses,
 } = await import("./expenseService.js");
+const { parseExpenseDocument } = await import("./expenseDocumentParser.js");
 
 const providerExpensesTable = orderMappingTable("provider_expenses");
 const expenseBillsTable = orderMappingTable("expense_bills");
+const execFileAsync = promisify(execFile);
 
 test.before(async () => {
   assertSafeExpensesTestTarget();
@@ -135,6 +142,71 @@ async function deleteBillsForMonth(month) {
 async function getBillCountForMonth(month) {
   const result = await orderMappingQuery(`SELECT COUNT(*)::int AS count FROM ${expenseBillsTable} WHERE billing_month = $1`, [month]);
   return result.rows[0]?.count || 0;
+}
+
+function escapePdfText(value) {
+  return String(value).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+}
+
+function buildSimplePdfBuffer(lines) {
+  const content = [
+    "BT",
+    "/F1 12 Tf",
+    "72 760 Td",
+    ...lines.flatMap((line, index) => (index === 0 ? [`(${escapePdfText(line)}) Tj`] : ["0 -18 Td", `(${escapePdfText(line)}) Tj`])),
+    "ET",
+  ].join("\n");
+  const objects = [
+    "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj",
+    "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj",
+    "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj",
+    `4 0 obj\n<< /Length ${Buffer.byteLength(content, "utf8")} >>\nstream\n${content}\nendstream\nendobj`,
+    "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj",
+  ];
+  let pdf = "%PDF-1.4\n";
+  const offsets = [0];
+  for (const object of objects) {
+    offsets.push(Buffer.byteLength(pdf, "utf8"));
+    pdf += `${object}\n`;
+  }
+  const xrefOffset = Buffer.byteLength(pdf, "utf8");
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (let index = 1; index < offsets.length; index += 1) {
+    pdf += `${String(offsets[index]).padStart(10, "0")} 00000 n \n`;
+  }
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+  return Buffer.from(pdf, "utf8");
+}
+
+async function withTempFile(buffer, suffix, work) {
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "expense-parser-test-"));
+  const filePath = path.join(tempDir, `fixture${suffix}`);
+  await fs.writeFile(filePath, buffer);
+  try {
+    return await work(filePath);
+  } finally {
+    await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+  }
+}
+
+async function buildPngBuffer(label) {
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "expense-parser-png-"));
+  const pngPath = path.join(tempDir, "fixture.png");
+  try {
+    await execFileAsync("convert", [
+      "-size", "1200x900",
+      "xc:black",
+      "-fill", "white",
+      "-pointsize", "34",
+      "-font", "DejaVu-Sans",
+      "-gravity", "northwest",
+      "-annotate", "+50+50", label,
+      pngPath,
+    ]);
+    return await fs.readFile(pngPath);
+  } finally {
+    await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+  }
 }
 
 test("Expenses service fixtures use an isolated test schema", async () => {
@@ -486,4 +558,85 @@ test("Shopify zero provider rows with missing scope stay unavailable rather than
     assert.equal(shopify.apiExpense, null);
     assert.equal(shopify.apiActivityState, "UNAVAILABLE");
   });
+});
+
+test("Expense document parser extracts required fields from machine-readable PDF content", async () => {
+  const pdf = buildSimplePdfBuffer([
+    "Meta Platforms India",
+    "Invoice Number: META-2099-08",
+    "Invoice Date: 01 Aug 2099",
+    "Billing Period: July 2099",
+    "Subtotal: INR 9304.63",
+    "IGST: INR 1674.83",
+    "Invoice Total: INR 10979.46",
+  ]);
+  const parsed = await withTempFile(pdf, ".pdf", (filePath) => parseExpenseDocument({
+    filePath,
+    mimeType: "application/pdf",
+    selectedMonth: "2099-08",
+  }));
+  assert.equal(parsed.fields.provider.value, "META");
+  assert.equal(parsed.fields.invoiceNumber.value, "META-2099-08");
+  assert.equal(parsed.fields.invoiceDate.value, "2099-08-01");
+  assert.equal(parsed.fields.billingMonth.value, "2099-07");
+  assert.equal(parsed.fields.subtotal.value, 9304.63);
+  assert.equal(parsed.fields.tax.value, 1674.83);
+  assert.equal(parsed.fields.total.value, 10979.46);
+  assert.equal(parsed.fields.currency.value, "INR");
+});
+
+test("Expense document parser uses OCR for image invoices and aggregates CGST plus SGST", async () => {
+  const png = await buildPngBuffer([
+    "Shiprocket",
+    "Invoice Number SR-2099-09",
+    "Invoice Date 15/09/2099",
+    "Billing Period August 2099",
+    "Subtotal INR 1000.00",
+    "CGST INR 90.00",
+    "SGST INR 90.00",
+    "Invoice Total INR 1180.00",
+  ].join("\n"));
+  const parsed = await withTempFile(png, ".png", (filePath) => parseExpenseDocument({
+    filePath,
+    mimeType: "image/png",
+    selectedMonth: "2099-09",
+    preferredProvider: "SHIPROCKET",
+  }));
+  assert.equal(parsed.extractionSource, "OCR");
+  assert.equal(parsed.fields.provider.value, "SHIPROCKET");
+  assert.equal(parsed.fields.tax.value, 180);
+  assert.equal(parsed.fields.total.value, 1180);
+  assert.equal(parsed.fields.billingMonth.value, "2099-08");
+});
+
+test("Expense document parser falls back to selected month with review warning when billing period is absent", async () => {
+  const pdf = buildSimplePdfBuffer([
+    "Shopify",
+    "Invoice Number: SHOP-2099-10",
+    "Invoice Date: 03 Oct 2099",
+    "Invoice Total: INR 2500.00",
+  ]);
+  const parsed = await withTempFile(pdf, ".pdf", (filePath) => parseExpenseDocument({
+    filePath,
+    mimeType: "application/pdf",
+    selectedMonth: "2099-07",
+  }));
+  assert.equal(parsed.fields.billingMonth.value, "2099-10");
+  assert.equal(parsed.fields.billingMonth.confidence, "MEDIUM");
+});
+
+test("Expense document parser marks missing invoice number and uncertain provider for review", async () => {
+  const pdf = buildSimplePdfBuffer([
+    "Monthly merchant invoice",
+    "Invoice Date: 05 Aug 2099",
+    "Invoice Total: INR 500.00",
+  ]);
+  const parsed = await withTempFile(pdf, ".pdf", (filePath) => parseExpenseDocument({
+    filePath,
+    mimeType: "application/pdf",
+    selectedMonth: "2099-08",
+  }));
+  assert.equal(parsed.fields.provider.value, "NEEDS_REVIEW");
+  assert.equal(parsed.fields.invoiceNumber.confidence, "MISSING");
+  assert.equal(parsed.fields.total.value, 500);
 });

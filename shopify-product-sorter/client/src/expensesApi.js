@@ -34,6 +34,27 @@ export const expensesApi = {
     });
   },
 
+  previewBillImport(formData) {
+    return request("/expenses/import/preview", {
+      method: "POST",
+      body: formData,
+    });
+  },
+
+  confirmBillImport(items) {
+    return request("/expenses/import/confirm", {
+      method: "POST",
+      body: JSON.stringify({ items }),
+    });
+  },
+
+  cancelBillImport(importIds) {
+    return request("/expenses/import/cancel", {
+      method: "POST",
+      body: JSON.stringify({ importIds }),
+    });
+  },
+
   getBillDownloadUrl(billId) {
     return `/api/expenses/bills/${billId}/download`;
   },

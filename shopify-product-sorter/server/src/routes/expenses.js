@@ -13,15 +13,23 @@ import {
   listExpenseBills, 
   upsertExpenseBill, 
   getExpenseBill,
+  getExpenseBillByDocumentHash,
   getDistinctBillingMonths,
   getMonthlyHistory
 } from "../repositories/expenseRepository.js";
 import { 
+  computeDocumentHash,
+  discardImportedBillDocument,
   storeBillDocument, 
   getBillDocumentPath 
 } from "../utils/documentStorage.js";
 import { addNetworkLog } from "../services/sorterRuntimeService.js";
 import { logError } from "../utils/logger.js";
+import {
+  cancelExpenseBillImports,
+  confirmExpenseBillImports,
+  previewExpenseBillImports,
+} from "../services/expenseImportService.js";
 
 const router = express.Router();
 
@@ -103,6 +111,58 @@ router.post("/expenses/sync", async (req, res, next) => {
   }
 });
 
+router.post("/expenses/import/preview", upload.array("files", 10), async (req, res, next) => {
+  try {
+    const selectedMonth = String(req.body.selectedMonth || "").trim();
+    const preferredProvider = String(req.body.preferredProvider || "").trim().toUpperCase() || null;
+    if (selectedMonth && !/^\d{4}-\d{2}$/.test(selectedMonth)) {
+      throw new AppError("VALIDATION_ERROR", "selectedMonth must be in YYYY-MM format", { statusCode: 400 });
+    }
+    const files = req.files || [];
+    if (!files.length) {
+      throw new AppError("VALIDATION_ERROR", "At least one bill document is required", { statusCode: 400 });
+    }
+
+    const previews = await previewExpenseBillImports(files, { selectedMonth, preferredProvider });
+    res.status(201).json({ success: true, previews });
+  } catch (error) {
+    for (const file of req.files || []) {
+      if (file?.path) {
+        await fs.unlink(file.path).catch(() => {});
+      }
+    }
+    next(error);
+  }
+});
+
+router.post("/expenses/import/confirm", async (req, res, next) => {
+  try {
+    const items = Array.isArray(req.body?.items) ? req.body.items : [];
+    if (!items.length) {
+      throw new AppError("VALIDATION_ERROR", "At least one import item is required", { statusCode: 400 });
+    }
+
+    const result = await confirmExpenseBillImports(items);
+    res.status(result.saved.length ? 201 : 409).json({
+      success: result.failed.length === 0,
+      saved: result.saved,
+      failed: result.failed,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/expenses/import/cancel", async (req, res, next) => {
+  try {
+    const importIds = Array.isArray(req.body?.importIds) ? req.body.importIds.filter(Boolean) : [];
+    await cancelExpenseBillImports(importIds);
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // POST /api/expenses/bills - Manual add bill / replace existing document
 router.post("/expenses/bills", upload.single("file"), async (req, res, next) => {
   try {
@@ -115,20 +175,34 @@ router.post("/expenses/bills", upload.single("file"), async (req, res, next) => 
       throw new AppError("VALIDATION_ERROR", "Missing required bill metadata fields", { statusCode: 400 });
     }
 
-    // Check duplicate bill
-    const billsList = await listExpenseBills(billingMonth);
-    const existingBill = billsList.find(
-      (b) => b.provider === provider && b.invoiceNumber === invoiceNumber
-    );
-
     let documentStorageKey = null;
     let originalName = null;
+    let documentHash = null;
     let status = "MISSING_DOCUMENT";
 
     if (req.file) {
+      documentHash = await computeDocumentHash(req.file.path);
+      const duplicateDocument = await getExpenseBillByDocumentHash(documentHash);
+      if (duplicateDocument) {
+        throw new AppError("DUPLICATE_DOCUMENT", "This bill document has already been uploaded.", {
+          statusCode: 409,
+          details: {
+            existing: {
+              id: duplicateDocument.id,
+              provider: duplicateDocument.provider,
+              invoiceNumber: duplicateDocument.invoiceNumber,
+              invoiceDate: duplicateDocument.invoiceDate,
+              billingMonth: duplicateDocument.billingMonth,
+              total: duplicateDocument.total,
+              currency: duplicateDocument.currency,
+            },
+          },
+        });
+      }
       const stored = await storeBillDocument(req.file);
       documentStorageKey = stored.storageKey;
       originalName = stored.originalName;
+      documentHash = stored.documentHash;
       status = "AVAILABLE";
     }
 
@@ -137,12 +211,13 @@ router.post("/expenses/bills", upload.single("file"), async (req, res, next) => 
       invoiceNumber,
       invoiceDate,
       billingMonth,
-      subtotal: parseFloat(subtotal || total),
-      tax: parseFloat(tax || 0),
+      subtotal: subtotal === "" || subtotal === undefined ? null : parseFloat(subtotal),
+      tax: tax === "" || tax === undefined ? null : parseFloat(tax),
       total: parseFloat(total),
       currency,
       documentSource: "MANUAL",
       documentStorageKey,
+      documentHash,
       documentUrl: originalName,
       status,
     });
