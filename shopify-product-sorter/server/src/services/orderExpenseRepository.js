@@ -209,8 +209,9 @@ export async function insertOrderExpenseTransactions(importId, rows = []) {
   return withOrderMappingClient(async (client) => {
     await client.query("BEGIN");
     try {
+      let insertedCount = 0;
       for (const row of rows) {
-        await client.query(
+        const result = await client.query(
           `
             INSERT INTO ${transactionsTable} (
               provider,
@@ -245,6 +246,7 @@ export async function insertOrderExpenseTransactions(importId, rows = []) {
               $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28
             )
             ON CONFLICT (provider, transaction_identity) DO NOTHING
+            RETURNING id
           `,
           [
             row.provider,
@@ -277,9 +279,10 @@ export async function insertOrderExpenseTransactions(importId, rows = []) {
             importId,
           ],
         );
+        insertedCount += result.rowCount;
       }
       await client.query("COMMIT");
-      return rows.length;
+      return insertedCount;
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;

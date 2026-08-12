@@ -103,6 +103,7 @@ test("Shiprocket passbook preview and confirm preserve strict matching, skipped 
   const csv = [
     "Transaction ID,Transaction Date,AWB,Shipment ID,Order ID,Channel Order ID,Description,Debit,Credit",
     "TXN-1,2026-07-01,AWB-1,SHIP-1,SRO-1,1001,Forward Freight,84,0",
+    "TXN-1,2026-07-01,AWB-1,SHIP-1,SRO-1,1001,Forward Freight,84,0",
     "TXN-2,2026-07-01,AWB-1,SHIP-1,SRO-1,1001,COD Charge,29,0",
     "TXN-3,2026-07-01,,,,9999,Weight Adjustment,16,0",
     "TXN-4,2026-07-01,,,,,Wallet Balance,5000,0",
@@ -112,14 +113,14 @@ test("Shiprocket passbook preview and confirm preserve strict matching, skipped 
 
   const preview = await previewShiprocketPassbookImport(await createUploadFile("shiprocket-passbook.csv", csv));
 
-  assert.equal(preview.financialRows, 5);
+  assert.equal(preview.financialRows, 6);
   assert.equal(preview.matched, 3);
   assert.equal(preview.unmatched, 1);
   assert.equal(preview.conflicts, 1);
-  assert.equal(preview.duplicates, 0);
-  assert.equal(preview.grossDebits, 139);
+  assert.equal(preview.duplicates, 1);
+  assert.equal(preview.grossDebits, 223);
   assert.equal(preview.grossCredits, 10);
-  assert.equal(preview.netCharges, 129);
+  assert.equal(preview.netCharges, 213);
 
   const skipped = preview.rows.find((row) => row.skippedType === "BALANCE_SNAPSHOT");
   assert.ok(skipped);
@@ -133,7 +134,7 @@ test("Shiprocket passbook preview and confirm preserve strict matching, skipped 
 
   const firstConfirm = await confirmShiprocketPassbookImport(preview.importId);
   assert.equal(firstConfirm.insertedTransactions, 5);
-  assert.equal(firstConfirm.duplicateTransactions, 0);
+  assert.equal(firstConfirm.duplicateTransactions, 1);
 
   const rowCount = await countRowsInSchemaTable(testSchema, "order_expense_transactions");
   assert.equal(rowCount, 5);
@@ -155,11 +156,33 @@ test("Shiprocket passbook preview and confirm preserve strict matching, skipped 
   assert.equal(importDetail.rows.length, 5);
 
   const secondPreview = await previewShiprocketPassbookImport(await createUploadFile("renamed-passbook.csv", csv));
-  assert.equal(secondPreview.duplicates, 5);
+  assert.equal(secondPreview.duplicates, 6);
   const secondConfirm = await confirmShiprocketPassbookImport(secondPreview.importId);
   assert.equal(secondConfirm.insertedTransactions, 0);
-  assert.equal(secondConfirm.duplicateTransactions, 5);
+  assert.equal(secondConfirm.duplicateTransactions, 6);
 
   const finalRowCount = await countRowsInSchemaTable(testSchema, "order_expense_transactions");
   assert.equal(finalRowCount, 5);
+});
+
+test("Shiprocket passbook rejects malformed non-empty amounts instead of coercing them to zero", async () => {
+  const csv = [
+    "Transaction ID,Transaction Date,Description,Debit,Credit",
+    "TXN-BAD,2026-07-01,Forward Freight,not-a-number,0",
+  ].join("\n");
+
+  await assert.rejects(
+    previewShiprocketPassbookImport(await createUploadFile("invalid-amount.csv", csv)),
+    (error) => error.code === "INVALID_AMOUNT",
+  );
+});
+
+test("Shiprocket passbook preserves an explicit supported currency code", async () => {
+  const csv = [
+    "Transaction ID,Transaction Date,Description,Amount,Currency",
+    "TXN-USD,2026-07-01,Forward Freight,12.50,USD",
+  ].join("\n");
+
+  const preview = await previewShiprocketPassbookImport(await createUploadFile("currency.csv", csv));
+  assert.equal(preview.rows[0].currency, "USD");
 });

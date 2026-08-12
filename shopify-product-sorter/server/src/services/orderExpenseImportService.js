@@ -159,9 +159,12 @@ function valueAt(row, index) {
 
 function normalizeCurrency(value) {
   const upper = String(value || "").toUpperCase();
-  if (upper.includes("INR") || upper.includes("₹")) {
-    return "INR";
-  }
+  if (upper.includes("INR") || upper.includes("₹")) return "INR";
+  if (upper.includes("USD") || upper.includes("$")) return "USD";
+  if (upper.includes("EUR") || upper.includes("€")) return "EUR";
+  if (upper.includes("GBP") || upper.includes("£")) return "GBP";
+  const code = upper.match(/\b[A-Z]{3}\b/)?.[0];
+  if (code) return code;
   return "INR";
 }
 
@@ -169,6 +172,11 @@ function inferAmounts({ debitRaw, creditRaw, amountRaw, description, transaction
   let debitAmount = parseNumericAmount(debitRaw);
   let creditAmount = parseNumericAmount(creditRaw);
   const amount = parseNumericAmount(amountRaw);
+  const invalidAmount = [
+    [debitRaw, debitAmount],
+    [creditRaw, creditAmount],
+    [amountRaw, amount],
+  ].some(([raw, parsed]) => String(raw || "").trim() !== "" && parsed === null);
   const upper = `${description || ""} ${transactionType || ""}`.toUpperCase();
 
   if (debitAmount === null && creditAmount === null && amount !== null) {
@@ -185,7 +193,7 @@ function inferAmounts({ debitRaw, creditRaw, amountRaw, description, transaction
   creditAmount = creditAmount ?? 0;
   const netAmount = Number((debitAmount - creditAmount).toFixed(2));
 
-  return { debitAmount, creditAmount, netAmount };
+  return { debitAmount, creditAmount, netAmount, invalidAmount };
 }
 
 function classifyChargeType({ description, transactionType, netAmount }) {
@@ -272,7 +280,7 @@ async function extractPassbookPdfRows(filePath) {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "shiprocket-passbook-ocr-"));
   try {
     const outputBase = path.join(tempDir, "page");
-    await runCommand("pdftoppm", ["-png", "-f", "1", "-l", "5", filePath, outputBase]);
+    await runCommand("pdftoppm", ["-png", filePath, outputBase]);
     const pageFiles = (await fs.readdir(tempDir)).filter((entry) => entry.endsWith(".png")).sort();
     const chunks = [];
     for (const pageFile of pageFiles) {
@@ -389,7 +397,12 @@ function normalizePassbookRows(rows) {
       continue;
     }
 
-    if (!Number.isFinite(normalized.netAmount)) {
+    const hasAmountInput = [
+      valueAt(row, mapping.debitAmount),
+      valueAt(row, mapping.creditAmount),
+      valueAt(row, mapping.amount),
+    ].some(Boolean);
+    if (amounts.invalidAmount || !hasAmountInput || !Number.isFinite(normalized.netAmount)) {
       throw orderMappingError("INVALID_AMOUNT", "Passbook row contains an invalid amount.", {
         details: { rowNumber: normalized.sourceRowNumber },
       });
@@ -523,6 +536,7 @@ export async function previewShiprocketPassbookImport(file) {
     });
     const existingIdentities = await getExistingOrderExpenseTransactionIdentities("SHIPROCKET", financialRows.map((row) => row.transactionIdentity));
 
+    const seenIdentities = new Set(existingIdentities);
     const previewRows = normalized.rows.map((row) => {
       if (row.skippedType) {
         return {
@@ -539,11 +553,15 @@ export async function previewShiprocketPassbookImport(file) {
         };
       }
       const match = chooseCandidate(row, lookupMaps);
+      const duplicate = seenIdentities.has(row.transactionIdentity);
+      if (!duplicate) {
+        seenIdentities.add(row.transactionIdentity);
+      }
       return {
         ...row,
         provider: "SHIPROCKET",
         ...match,
-        duplicate: existingIdentities.has(row.transactionIdentity),
+        duplicate,
         sourceFileHash: fileHash,
         sourceFileName: file.originalname,
         sourceReference: row.transactionId || row.transactionIdentity,
@@ -577,13 +595,16 @@ export async function previewShiprocketPassbookImport(file) {
 }
 
 export async function confirmShiprocketPassbookImport(importId) {
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(importId || ""))) {
+    throw orderMappingError("ORDER_MAPPING_IMPORT_INVALID", "Passbook import reference is invalid.", { statusCode: 400 });
+  }
   const metadata = await readPreviewMetadata(importId);
   const previewRows = metadata.preview.rows || [];
   const financialRows = previewRows.filter((row) => !row.skippedType);
   const existingIdentities = await getExistingOrderExpenseTransactionIdentities("SHIPROCKET", financialRows.map((row) => row.transactionIdentity));
 
   const rowsToInsert = financialRows
-    .filter((row) => !existingIdentities.has(row.transactionIdentity))
+    .filter((row) => !row.duplicate && !existingIdentities.has(row.transactionIdentity))
     .map((row) => ({
       provider: "SHIPROCKET",
       matchedOrderId: row.matchedOrderId,
@@ -630,13 +651,13 @@ export async function confirmShiprocketPassbookImport(importId) {
     status: rowsToInsert.length ? "confirmed" : "duplicate_only",
   });
 
-  await insertOrderExpenseTransactions(importRecord.id, rowsToInsert);
+  const insertedTransactions = await insertOrderExpenseTransactions(importRecord.id, rowsToInsert);
   await fs.unlink(previewMetadataPath(importId)).catch(() => {});
 
   return {
     importId: importRecord.id,
-    insertedTransactions: rowsToInsert.length,
-    duplicateTransactions: financialRows.length - rowsToInsert.length,
+    insertedTransactions,
+    duplicateTransactions: financialRows.length - insertedTransactions,
     summary: metadata.preview,
   };
 }
