@@ -42,4 +42,29 @@ export const api = {
   },
   refresh: () =>
     request("/meta-ads/refresh", { method: "POST", body: JSON.stringify({}) }),
+  downloadFullReport: async (since, until, preset = "custom") => {
+    const response = await fetch("/api/meta-ads/report", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ since, until, preset }),
+    });
+    if (!response.ok) {
+      let payload = {};
+      try { payload = await response.json(); } catch { /* safe fallback below */ }
+      throw new Error(payload.message || payload.error || "Meta report export failed.");
+    }
+    const blob = await response.blob();
+    const disposition = response.headers.get("content-disposition") || "";
+    const match = disposition.match(/filename="?([^";]+)"?/i);
+    const filename = match?.[1] || `meta-ads-report_${since}_to_${until}.zip`;
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    return { filename, size: blob.size };
+  },
 };

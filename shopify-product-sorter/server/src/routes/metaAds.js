@@ -11,6 +11,7 @@ import {
   clearMetaCache,
 } from "../services/metaAdsService.js";
 import { logError } from "../utils/logger.js";
+import { createMetaAdsReport, cleanupMetaAdsReport } from "../services/metaAdsReportService.js";
 
 /**
  * Meta Ads read-only dashboard routes.
@@ -119,6 +120,22 @@ router.get("/meta-ads/ads", async (req, res, next) => {
 router.post("/meta-ads/refresh", (req, res) => {
   clearMetaCache();
   res.json({ success: true, message: "Meta Ads cache cleared" });
+});
+
+router.post("/meta-ads/report", async (req, res, next) => {
+  let report = null;
+  try {
+    const range = parseMetaDateRange({ since: req.body?.since, until: req.body?.until });
+    report = await createMetaAdsReport({ ...range, preset: req.body?.preset || "custom" });
+    res.download(report.filePath, report.filename, async (error) => {
+      await cleanupMetaAdsReport(report);
+      if (error && !res.headersSent) next(error);
+    });
+  } catch (error) {
+    if (report) await cleanupMetaAdsReport(report);
+    logError("Meta Ads full report export failed", error);
+    next(error);
+  }
 });
 
 export default router;

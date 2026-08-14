@@ -660,9 +660,9 @@ test("Meta Ads Read-Only: routes expose no campaign/adset/ad mutation endpoints"
   assert.ok(!routeSrc.includes("router.post(\"/meta-ads/adsets\""), "No ad set creation");
   assert.ok(!routeSrc.includes("router.post(\"/meta-ads/ads\""), "No ad creation");
   assert.ok(!routeSrc.includes("router.post(\"/meta-ads/adsets\""), "No ad set creation");
-  // The ONLY POST route is the cache-clear refresh (a local cache operation).
+  // POST routes are limited to local cache clearing and read-only report generation.
   const posts = [...routeSrc.matchAll(/router\.post\("([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(posts, ["/meta-ads/refresh"]);
+  assert.deepEqual(posts, ["/meta-ads/refresh", "/meta-ads/report"]);
 });
 
 test("Meta Ads Read-Only: provider client exposes only read helpers", () => {
@@ -1318,4 +1318,3 @@ test("CPP Backend: purchase normalization is canonical denominator", async () =>
     clearMetaCache();
   }
 });
-

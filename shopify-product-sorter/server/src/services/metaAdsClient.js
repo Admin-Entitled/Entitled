@@ -212,6 +212,16 @@ export async function metaGet(path, params = {}, { operationName = "MetaRequest"
  * exhausted (bounded by MAX_PAGES to protect against runaway pagination).
  */
 export async function metaGetAllPages(path, params = {}, { operationName = "MetaFetchAll", pageLimit = MAX_PAGES } = {}) {
+  const result = await metaGetAllPagesDetailed(path, params, { operationName, pageLimit });
+  return result.data;
+}
+
+/**
+ * Export-oriented pagination helper. Unlike the dashboard convenience helper,
+ * this returns completeness metadata so a report can never imply that a
+ * provider safety cap was a complete export.
+ */
+export async function metaGetAllPagesDetailed(path, params = {}, { operationName = "MetaFetchAll", pageLimit = MAX_PAGES } = {}) {
   assertConfigured();
   const collected = [];
   let nextUrl = buildUrl(path, params);
@@ -226,7 +236,12 @@ export async function metaGetAllPages(path, params = {}, { operationName = "Meta
     nextUrl = payload?.paging?.next || null;
   }
 
-  return collected;
+  return {
+    data: collected,
+    pages,
+    paginationComplete: !nextUrl,
+    truncated: Boolean(nextUrl),
+  };
 }
 
 /**

@@ -1952,6 +1952,12 @@ button:focus-visible,
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+}
+
+.meta-report-status {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .meta-state-chip {

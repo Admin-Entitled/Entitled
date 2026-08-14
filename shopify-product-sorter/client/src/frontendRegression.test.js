@@ -431,9 +431,9 @@ test("META-ADS-FRONTEND: metaAdsApi delegates to the shared api.js transport and
   assert.match(src, /import \{ request \} from "\.\/api\.js"/, "metaAdsApi must reuse the shared transport");
   assert.ok(!src.includes("access_token"), "metaAdsApi must never carry or send the Meta access token");
   assert.ok(!src.includes("META_ACCESS_TOKEN"), "token env names must not appear in the client");
-  // Read-only: only GET helpers plus the local cache refresh POST.
+  // Read-only: GET helpers plus local cache refresh and report-generation POSTs.
   const posts = [...src.matchAll(/method: "POST"/g)];
-  assert.equal(posts.length, 1, "only the local cache refresh may be a POST");
+  assert.equal(posts.length, 2, "only cache refresh and read-only report generation may be POSTs");
 });
 
 test("META-ADS-FRONTEND: dashboard renders KPI cards, campaign table, drilldown, refresh, and states", () => {

@@ -320,6 +320,8 @@ export default function MetaAdsDashboard() {
   // ── refresh guard (no duplicate requests; data stays visible) ──
   const refreshInFlightRef = useRef(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [reportMessage, setReportMessage] = useState("");
 
   const currency = connection?.ok ? connection.currency : "INR";
   const timezone = connection?.ok ? connection.timezone : null;
@@ -416,6 +418,20 @@ export default function MetaAdsDashboard() {
     } finally {
       refreshInFlightRef.current = false;
       setRefreshing(false);
+    }
+  };
+
+  const handleFullReport = async () => {
+    if (reporting || !range.since || !range.until) return;
+    setReporting(true);
+    setReportMessage("Preparing full Meta report…");
+    try {
+      const result = await metaAdsApi.downloadFullReport(range.since, range.until, presetKey);
+      setReportMessage(`Report ready · ${(result.size / (1024 * 1024)).toFixed(1)} MB`);
+    } catch (err) {
+      setReportMessage(err.message || "Meta report export failed.");
+    } finally {
+      setReporting(false);
     }
   };
 
@@ -617,8 +633,19 @@ export default function MetaAdsDashboard() {
           >
             {refreshing ? "REFRESHING…" : "Refresh Meta Data"}
           </button>
+          <button
+            type="button"
+            className="button compact secondary"
+            onClick={handleFullReport}
+            disabled={reporting || !range.since || !range.until}
+            title="Export the full configured Meta ad account for the selected date range"
+          >
+            {reporting ? "PREPARING REPORT…" : "Download Full Report"}
+          </button>
         </div>
       </div>
+
+      {reportMessage ? <div className="meta-report-status" role="status">{reportMessage}</div> : null}
 
       {dataError ? (
         <div className="error-banner">
