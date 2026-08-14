@@ -6,6 +6,7 @@ import { env, resetEnvOverrides } from "../config/env.js";
 import {
   META_REPORT_FIELD_REGISTRY,
   META_REPORT_INSIGHT_FIELDS,
+  META_REPORT_INTENTIONAL_OMISSIONS,
   createMetaAdsReport,
   cleanupMetaAdsReport,
   rowsToCsv,
@@ -38,6 +39,8 @@ test("Meta report registry covers entities, broad insights, and action arrays", 
   assert.ok(META_REPORT_INSIGHT_FIELDS.includes("actions"));
   assert.ok(META_REPORT_INSIGHT_FIELDS.includes("action_values"));
   assert.ok(META_REPORT_INSIGHT_FIELDS.includes("purchase_roas"));
+  assert.ok(META_REPORT_INSIGHT_FIELDS.includes("website_ctr"));
+  assert.ok(META_REPORT_INTENTIONAL_OMISSIONS.account.some((entry) => entry.field === "owner"));
 });
 
 test("Meta report records pagination/field limitations and preserves every action type", async () => {
@@ -69,7 +72,7 @@ test("Meta report records pagination/field limitations and preserves every actio
         purchase_roas: [{ action_type: "omni_purchase", value: "2" }],
       }] });
     }
-    if (path.endsWith("/campaigns")) return response({ data: [{ id: "c1", name: "Campaign", status: "ACTIVE" }] });
+    if (path.endsWith("/campaigns")) return response({ data: [{ id: "c1", name: "Campaign", status: "ACTIVE", promoted_object: { pixel_id: "p1", custom_event_type: "PURCHASE" } }] });
     if (path.endsWith("/adsets")) return response({ data: [{ id: "as1", campaign_id: "c1", name: "Ad Set" }] });
     if (path.endsWith("/ads")) return response({ data: [{ id: "a1", adset_id: "as1", campaign_id: "c1", name: "Ad", creative: { id: "cr1" } }] });
     if (path.endsWith("/cr1")) return response({ id: "cr1", name: "Creative", object_story_spec: { link_data: { message: "hello" } } });
@@ -83,11 +86,23 @@ test("Meta report records pagination/field limitations and preserves every actio
     assert.equal(report.manifest.scope, "FULL_AD_ACCOUNT");
     assert.ok(report.manifest.entities.campaigns.paginationComplete);
     assert.ok(report.manifest.insights.levels.campaigns.aggregate.returned >= 1);
+    assert.equal(report.manifest.coverage.categories.NOT_REQUESTED, "NOT_REQUESTED");
+    assert.ok(report.manifest.coverage.entities.campaigns.requested.some((entry) => entry.field === "special_ad_category"));
+    assert.ok(report.manifest.coverage.entities.account.notRequested.some((entry) => entry.field === "owner"));
+    assert.ok(report.manifest.coverage.entities.creatives.requested.some((entry) => entry.field === "object_story_spec"));
+    assert.ok(report.manifest.coverage.breakdowns.levels.every((entry) => entry.level === "account"));
     const listing = execFileSync("unzip", ["-l", report.filePath], { encoding: "utf8" });
     assert.match(listing, /manifest\.json/);
     assert.match(listing, /campaigns\/campaigns\.json/);
     assert.match(listing, /actions\/campaign_actions\.csv/);
     assert.match(listing, /raw\/provider_requests_manifest\.json/);
+    const accountInsights = JSON.parse(execFileSync("unzip", ["-p", report.filePath, "insights/account_insights.json"], { encoding: "utf8" }));
+    const accountActionsCsv = execFileSync("unzip", ["-p", report.filePath, "actions/account_actions.csv"], { encoding: "utf8" }).trim().split("\n").slice(1);
+    const accountActionValuesCsv = execFileSync("unzip", ["-p", report.filePath, "actions/account_action_values.csv"], { encoding: "utf8" }).trim().split("\n").slice(1);
+    assert.equal(accountInsights.records[0].actions.length, accountActionsCsv.length);
+    assert.equal(accountInsights.records[0].action_values.length, accountActionValuesCsv.length);
+    const campaigns = JSON.parse(execFileSync("unzip", ["-p", report.filePath, "campaigns/campaigns.json"], { encoding: "utf8" }));
+    assert.deepEqual(campaigns.records[0].promoted_object, { pixel_id: "p1", custom_event_type: "PURCHASE" });
     const manifestText = execFileSync("unzip", ["-p", report.filePath, "manifest.json"], { encoding: "utf8" });
     assert.doesNotMatch(manifestText, /test-meta-report-token/);
   } finally {

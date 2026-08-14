@@ -22,7 +22,7 @@ export const META_REPORT_FIELD_REGISTRY = Object.freeze({
     "id", "account_id", "name", "account_status", "currency", "timezone_name",
     "timezone_offset_hours_utc", "business", "business_name", "spend_cap", "amount_spent",
     "balance", "min_campaign_group_spend_cap", "tax_id", "funding_source_details",
-    "created_time", "disable_reason",
+    "created_time", "disable_reason", "business_country_code", "is_personal", "end_advertiser",
   ],
   campaigns: [
     "id", "account_id", "name", "status", "effective_status", "configured_status",
@@ -30,6 +30,8 @@ export const META_REPORT_FIELD_REGISTRY = Object.freeze({
     "lifetime_budget", "budget_remaining", "start_time", "stop_time", "created_time",
     "updated_time", "special_ad_categories", "special_ad_category_country", "issues_info",
     "promoted_object", "recommendations", "source_campaign_id", "smart_promotion_type",
+    "adlabels", "can_create_brand_lift_study", "can_use_spend_cap",
+    "is_adset_budget_sharing_enabled", "is_skadnetwork_attribution", "pacing_type", "special_ad_category",
   ],
   adsets: [
     "id", "account_id", "campaign_id", "name", "status", "effective_status", "configured_status",
@@ -37,18 +39,23 @@ export const META_REPORT_FIELD_REGISTRY = Object.freeze({
     "daily_budget", "lifetime_budget", "budget_remaining", "start_time", "end_time",
     "created_time", "updated_time", "targeting", "promoted_object", "attribution_spec",
     "destination_type", "is_dynamic_creative", "frequency_control_specs", "learning_stage_info",
-    "pacing_type", "rf_prediction_id", "source_adset_id",
+    "pacing_type", "rf_prediction_id", "source_adset_id", "adlabels", "adset_schedule", "asset_feed_id",
+    "bid_adjustments", "bid_info", "brand_safety_config", "campaign", "campaign_active_time",
+    "campaign_attribution", "contextual_bundling_spec", "creative_sequence",
   ],
   ads: [
     "id", "account_id", "campaign_id", "adset_id", "name", "status", "effective_status",
     "configured_status", "created_time", "updated_time", "creative", "tracking_specs",
     "conversion_specs", "ad_review_feedback", "issues_info", "recommendations",
-    "source_ad_id", "bid_amount",
+    "source_ad_id", "bid_amount", "adlabels", "adcreatives", "conversion_domain", "display_sequence",
+    "preview_shareable_link", "creative_asset_groups_spec",
   ],
   creatives: [
     "id", "account_id", "name", "title", "body", "object_story_spec", "asset_feed_spec",
     "image_hash", "image_url", "thumbnail_url", "video_id", "object_url", "call_to_action_type",
-    "url_tags", "link_url",
+    "url_tags", "link_url", "actor_id", "effective_authorization_category",
+    "effective_instagram_media_id", "effective_object_story_id", "call_to_action",
+    "degrees_of_freedom_spec", "creative_sourcing_spec", "contextual_multi_ads",
   ],
 });
 
@@ -63,19 +70,108 @@ export const META_REPORT_INSIGHT_FIELDS = Object.freeze([
   "cost_per_action_type", "conversions", "conversion_values", "cost_per_conversion",
   "purchase_roas", "website_purchase_roas", "mobile_app_purchase_roas", "social_spend",
   "quality_ranking", "engagement_rate_ranking", "conversion_rate_ranking",
+  "cost_per_unique_inline_link_click", "cost_per_unique_outbound_click", "inline_post_engagement",
+  "landing_page_view", "landing_page_view_per_link_click", "unique_outbound_clicks",
+  "unique_outbound_clicks_ctr", "unique_inline_link_clicks", "unique_inline_link_click_ctr",
+  "outbound_clicks_ctr", "website_ctr", "cost_per_unique_action_type", "cost_per_inline_link_click",
+  "cost_per_inline_post_engagement", "cost_per_outbound_click", "cost_per_thruplay", "cost_per_result",
+  "cost_per_15_sec_video_view",
 ]);
 
+// These are documented/possible provider fields or dataset dimensions that
+// are intentionally outside this practical report. They are explicit so a
+// future analyst can distinguish omission from an API rejection or a field
+// that simply had no value in the selected range.
+export const META_REPORT_INTENTIONAL_OMISSIONS = Object.freeze({
+  account: [
+    { field: "owner", reason: "Potentially identifying account-owner metadata is not needed for advertising analysis." },
+    { field: "business_street", reason: "Business address metadata is not needed for advertising analysis." },
+    { field: "business_city", reason: "Business address metadata is not needed for advertising analysis." },
+    { field: "business_state", reason: "Business address metadata is not needed for advertising analysis." },
+    { field: "business_zip", reason: "Business address metadata is not needed for advertising analysis." },
+  ],
+  campaigns: [
+    { field: "brand_lift_studies", reason: "Optional study resource, not ordinary campaign configuration/reporting data." },
+    { field: "recommendation_details", reason: "Not a stable standard Campaign field in the configured API version." },
+  ],
+  adsets: [
+    { field: "rf_prediction_id", reason: "Reserved/conditional reach-and-frequency metadata." },
+  ],
+  ads: [
+    { field: "last_updated_by_app_id", reason: "Operational app provenance is not needed for ad performance analysis." },
+    { field: "tracking_and_conversion_with_defaults", reason: "Conditional delivery configuration; not returned for the current account probe." },
+  ],
+  creatives: [
+    { field: "link", reason: "The current API rejected this field for the connected creative endpoint." },
+    { field: "android_url", reason: "The current API rejected this field for the connected creative endpoint." },
+    { field: "ios_url", reason: "The current API rejected this field for the connected creative endpoint." },
+    { field: "link_title", reason: "The current API rejected this field for the connected creative endpoint." },
+    { field: "link_description", reason: "The current API rejected this field for the connected creative endpoint." },
+    { field: "link_caption", reason: "The current API rejected this field for the connected creative endpoint." },
+  ],
+  insights: [
+    { field: "instant_experience_outbound_clicks", reason: "Optional/conditional metric; current account probe rejected the field group." },
+    { field: "interactive_component_tap", reason: "Optional/conditional metric; current account probe rejected the field group." },
+    { field: "marketing_messages_delivered", reason: "Not applicable to the current account's selected reporting scope." },
+    { field: "marketing_messages_clicked", reason: "Not applicable to the current account's selected reporting scope." },
+    { field: "hourly_stats_aggregated_by_audience_time_zone", reason: "Not requested to avoid redundant hourly datasets; advertiser-time-zone pack is exported." },
+  ],
+});
+
+const META_REPORT_CONDITIONAL_FIELDS = Object.freeze({
+  account: ["business_country_code", "end_advertiser"],
+  campaigns: ["can_create_brand_lift_study", "brand_lift_studies", "is_adset_budget_sharing_enabled"],
+  adsets: ["asset_feed_id", "brand_safety_config", "campaign_attribution", "rf_prediction_id", "contextual_bundling_spec"],
+  ads: ["adcreatives", "creative_asset_groups_spec", "preview_shareable_link", "conversion_domain"],
+  creatives: ["asset_feed_spec", "effective_authorization_category", "effective_instagram_media_id", "effective_object_story_id", "call_to_action", "degrees_of_freedom_spec", "creative_sourcing_spec", "contextual_multi_ads"],
+  insights: ["landing_page_view", "landing_page_view_per_link_click", "video_30_sec_watched_actions", "video_avg_time_watched_actions", "website_ctr", "purchase_roas", "website_purchase_roas", "mobile_app_purchase_roas"],
+});
+
 const BREAKDOWN_PACKS = [
-  { name: "demographics_age_gender", breakdowns: "age,gender" },
-  { name: "geography_country", breakdowns: "country" },
-  { name: "geography_region", breakdowns: "region" },
-  { name: "placement_platform_position", breakdowns: "publisher_platform,platform_position" },
-  { name: "placement_device", breakdowns: "device_platform" },
-  { name: "hourly_advertiser_timezone", breakdowns: "hourly_stats_aggregated_by_advertiser_time_zone" },
+  { name: "demographics_age_gender", breakdowns: "age,gender", level: "account" },
+  { name: "geography_country", breakdowns: "country", level: "account" },
+  { name: "geography_region", breakdowns: "region", level: "account" },
+  { name: "placement_platform_position", breakdowns: "publisher_platform,platform_position", level: "account" },
+  { name: "placement_device", breakdowns: "device_platform", level: "account" },
+  { name: "hourly_advertiser_timezone", breakdowns: "hourly_stats_aggregated_by_advertiser_time_zone", level: "account" },
 ];
+
+const REPORT_FIELD_CATEGORIES = Object.freeze({
+  REQUESTED_AND_RETURNED: "REQUESTED_AND_RETURNED",
+  REQUESTED_NOT_RETURNED: "REQUESTED_NOT_RETURNED",
+  UNSUPPORTED_CURRENT_API: "UNSUPPORTED_CURRENT_API",
+  PERMISSION_RESTRICTED: "PERMISSION_RESTRICTED",
+  CONDITIONALLY_AVAILABLE: "CONDITIONALLY_AVAILABLE",
+  NOT_REQUESTED: "NOT_REQUESTED",
+});
 
 function reportError(message, details = {}) {
   return new AppError(META_ERROR_CODES.API_ERROR, message, { statusCode: 502, details });
+}
+
+function fieldCoverage(requestedFields = [], returnedFields = [], notRequested = [], restricted = [], rejected = [], conditional = []) {
+  const returned = new Set(returnedFields);
+  const restrictedSet = new Set(restricted);
+  const rejectedSet = new Set(rejected);
+  const requested = requestedFields.map((field) => ({
+    field,
+    category: restrictedSet.has(field)
+      ? REPORT_FIELD_CATEGORIES.PERMISSION_RESTRICTED
+      : rejectedSet.has(field)
+        ? REPORT_FIELD_CATEGORIES.UNSUPPORTED_CURRENT_API
+        : returned.has(field)
+          ? REPORT_FIELD_CATEGORIES.REQUESTED_AND_RETURNED
+          : conditional.includes(field)
+            ? REPORT_FIELD_CATEGORIES.CONDITIONALLY_AVAILABLE
+          : REPORT_FIELD_CATEGORIES.REQUESTED_NOT_RETURNED,
+  }));
+  return {
+    requested,
+    notRequested: notRequested.map((entry) => ({
+      ...entry,
+      category: REPORT_FIELD_CATEGORIES.NOT_REQUESTED,
+    })),
+  };
 }
 
 function scrubString(value) {
@@ -229,10 +325,10 @@ async function fetchInsights({ level, idField, range, daily, errors }) {
 async function fetchBreakdowns(range, errors) {
   const datasets = [];
   for (const pack of BREAKDOWN_PACKS) {
-    const node = { name: pack.name, breakdowns: pack.breakdowns, requested: true, returned: 0, pages: 0, paginationComplete: true, status: "COMPLETE" };
+    const node = { name: pack.name, level: pack.level, breakdowns: pack.breakdowns, requested: true, returned: 0, pages: 0, paginationComplete: true, status: "COMPLETE" };
     try {
       const result = await metaGetAllPagesDetailed(`act_${env.metaAdAccountId}/insights`, {
-        level: "account",
+        level: pack.level,
         time_range: JSON.stringify({ since: range.since, until: range.until }),
         breakdowns: pack.breakdowns,
         fields: META_REPORT_INSIGHT_FIELDS.slice(0, 18).join(","),
@@ -243,6 +339,7 @@ async function fetchBreakdowns(range, errors) {
       node.pages = result.pages;
       node.paginationComplete = result.paginationComplete;
       node.truncated = result.truncated;
+      node.fieldsRequested = META_REPORT_INSIGHT_FIELDS.slice(0, 18);
       datasets.push({ ...pack, rows });
     } catch (error) {
       node.status = "UNSUPPORTED_OR_FAILED";
@@ -266,7 +363,23 @@ async function fetchCreatives(ads, errors) {
       errors.push({ operation: "creatives", id, code: error.code || META_ERROR_CODES.API_ERROR, message: error.message });
     }
   }
-  return { rows, node: { requested: true, returned: rows.length, pages: 1, paginationComplete: true, sourceIds: ids.length } };
+  const uniqueRows = [...new Map(rows.map((row) => [String(row.id), row])).values()];
+  const returnedFields = [...new Set(uniqueRows.flatMap((row) => Object.keys(row || {})))];
+  return {
+    rows: uniqueRows,
+    node: {
+      requested: true,
+      returned: uniqueRows.length,
+      pages: 1,
+      paginationComplete: true,
+      referenceCount: ads.filter((ad) => ad?.creative?.id || ad?.creative_id).length,
+      uniqueIds: ids.length,
+      sourceIds: ids.length,
+      requestedFields: META_REPORT_FIELD_REGISTRY.creatives,
+      returnedFields,
+      unsupportedFields: META_REPORT_FIELD_REGISTRY.creatives.filter((field) => !returnedFields.includes(field)),
+    },
+  };
 }
 
 function explode(rows, field, level) {
@@ -395,17 +508,74 @@ export async function createMetaAdsReport({ since, until, preset = "custom" } = 
   }
 
   const breakdowns = await fetchBreakdowns(range, errors);
-  manifest.breakdowns.attempted = breakdowns.map(({ name, breakdowns: requested }) => ({ name, requested }));
+  manifest.breakdowns.attempted = breakdowns.map(({ name, level, breakdowns: requested }) => ({ name, level, requested }));
   manifest.breakdowns.completed = breakdowns.filter((entry) => entry.node.status === "COMPLETE").map(({ name }) => name);
   manifest.breakdowns.failed = breakdowns.filter((entry) => entry.node.status !== "COMPLETE").map((entry) => ({ name: entry.name, reason: entry.node.reason }));
-  manifest.unsupportedFields = [...new Set([
-    ...Object.values(manifest.entities).flatMap((node) => node.unsupportedFields || []),
-    ...Object.values(manifest.insights.levels).flatMap((level) => [...(level.aggregate?.unsupportedFields || []), ...(level.daily?.unsupportedFields || [])]),
+  const rejectedFields = [...new Set([
+    ...Object.values(manifest.entities).flatMap((node) => node.failedGroups?.flat() || []),
+    ...Object.values(manifest.insights.levels).flatMap((level) => [
+      ...(level.aggregate?.failedGroups?.flat() || []),
+      ...(level.daily?.failedGroups?.flat() || []),
+    ]),
   ])];
+  manifest.unsupportedFields = rejectedFields;
+  manifest.requestedNotReturnedFields = [...new Set([
+    ...Object.values(manifest.entities).flatMap((node) => node.unsupportedFields || []),
+    ...Object.values(manifest.insights.levels).flatMap((level) => [
+      ...(level.aggregate?.unsupportedFields || []),
+      ...(level.daily?.unsupportedFields || []),
+    ]),
+  ])].filter((field) => !rejectedFields.includes(field));
   manifest.permissionRestrictedFields = [...new Set(
     errors.filter((error) => error.code === META_ERROR_CODES.PERMISSION_DENIED).flatMap((error) => error.fields || []),
   )];
   manifest.providerErrors = errors;
+  manifest.notRequestedFields = Object.fromEntries(Object.entries(META_REPORT_INTENTIONAL_OMISSIONS).map(([name, entries]) => [
+    name,
+    entries.map(({ field, reason }) => ({ field, reason })),
+  ]));
+  manifest.coverage = {
+    categories: REPORT_FIELD_CATEGORIES,
+    entities: Object.fromEntries(Object.entries(manifest.entities).map(([name, node]) => [
+      name,
+      fieldCoverage(
+        node.requestedFields || META_REPORT_FIELD_REGISTRY[name] || [],
+        node.returnedFields || [],
+        META_REPORT_INTENTIONAL_OMISSIONS[name] || [],
+        manifest.permissionRestrictedFields,
+        node.failedGroups?.flat() || [],
+        META_REPORT_CONDITIONAL_FIELDS[name] || [],
+      ),
+    ])),
+    insights: Object.fromEntries(Object.entries(manifest.insights.levels).map(([name, level]) => [
+      name,
+      {
+        aggregate: fieldCoverage(
+          level.aggregate?.requestedFields || META_REPORT_INSIGHT_FIELDS,
+          level.aggregate?.returnedFields || [],
+          META_REPORT_INTENTIONAL_OMISSIONS.insights,
+          manifest.permissionRestrictedFields,
+          level.aggregate?.failedGroups?.flat() || [],
+          META_REPORT_CONDITIONAL_FIELDS.insights,
+        ),
+        daily: fieldCoverage(
+          level.daily?.requestedFields || META_REPORT_INSIGHT_FIELDS,
+          level.daily?.returnedFields || [],
+          META_REPORT_INTENTIONAL_OMISSIONS.insights,
+          manifest.permissionRestrictedFields,
+          level.daily?.failedGroups?.flat() || [],
+          META_REPORT_CONDITIONAL_FIELDS.insights,
+        ),
+      },
+    ])),
+    breakdowns: {
+      levels: breakdowns.map(({ name, level, breakdowns: requested }) => ({ name, level, requested })),
+      intentionallyOmitted: [
+        { dataset: "hourly_stats_aggregated_by_audience_time_zone", reason: "Redundant with the advertiser-time-zone hourly pack; avoids duplicate hourly requests." },
+        { dataset: "all other multi-breakdown combinations", reason: "Meta compatibility rules vary; the exporter uses bounded compatible packs rather than a Cartesian request explosion." },
+      ],
+    },
+  };
   const accountAggregate = insightData.account.aggregate[0] || {};
   const accountDerived = normalizeInsights(accountAggregate);
   const dailyAdditiveSpend = insightData.account.daily.reduce((sum, row) => sum + Number(row.spend || 0), 0);
