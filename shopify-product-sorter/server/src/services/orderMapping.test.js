@@ -7,6 +7,7 @@ import {
   isTerminalOrderMappingStatus,
   normalizeOrderMappingStatus,
 } from "./orderMappingStatus.js";
+import { assertOrderMappingPartition } from "./orderMappingRepository.js";
 import { normalizeOrderMappingError, orderMappingError } from "./orderMappingError.js";
 
 // ============================================================
@@ -26,6 +27,36 @@ test("TEST-004: normalizes identifiers and shipment statuses correctly", () => {
   assert.equal(isTerminalOrderMappingStatus("DELIVERED_TO_CUSTOMER"), true);
   assert.equal(isTerminalOrderMappingStatus("RTO_DELIVERED"), true);
   assert.equal(isTerminalOrderMappingStatus("IN_TRANSIT"), false);
+});
+
+test("RECONCILIATION: mapping and status partitions are exhaustive", () => {
+  assert.equal(
+    assertOrderMappingPartition(368, {
+      MATCHED: 248,
+      NOT_FOUND_ON_SHIPROCKET: 62,
+      CANCELLED_BEFORE_SHIPMENT: 55,
+      UNKNOWN: 3,
+    }),
+    true,
+  );
+  assert.equal(
+    assertOrderMappingPartition(368, {
+      CANCELLED: 102,
+      DELIVERED_TO_CUSTOMER: 80,
+      DELIVERY_ATTEMPTED: 25,
+      IN_TRANSIT: 2,
+      MANIFESTED: 7,
+      NOT_FOUND_ON_SHIPROCKET: 62,
+      PENDING_TRACKING: 30,
+      PICKUP_PENDING: 1,
+      RTO_DELIVERED: 41,
+      RTO_INITIATED: 12,
+      RTO_IN_TRANSIT: 3,
+      UNDELIVERED: 3,
+    }),
+    true,
+  );
+  assert.throws(() => assertOrderMappingPartition(368, { MATCHED: 367 }), /invariant failed/);
 });
 
 test("TEST-004: matches strongest available identifiers", () => {

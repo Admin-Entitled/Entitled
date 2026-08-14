@@ -45,23 +45,49 @@ function primaryShipmentOrderBy() {
     s.updated_at DESC`;
 }
 
+function canonicalStatusSql() {
+  return `CASE
+    WHEN NULLIF(TRIM(COALESCE(o.cancellation_status, '')), '') IS NOT NULL THEN 'CANCELLED'
+    ELSE COALESCE(s.normalized_status, 'PENDING_TRACKING')
+  END`;
+}
+
+function mappingStateSql() {
+  return `CASE
+    WHEN s.normalized_status = 'NOT_FOUND_ON_SHIPROCKET' OR s.sync_error = 'NO_SHIPROCKET_RECORD'
+      THEN 'NOT_FOUND_ON_SHIPROCKET'
+    WHEN s.sync_error = 'MAPPING_CONFLICT' THEN 'MAPPING_CONFLICT'
+    WHEN NULLIF(TRIM(COALESCE(o.cancellation_status, '')), '') IS NOT NULL
+      AND COALESCE(NULLIF(s.shiprocket_response_id, ''), NULLIF(s.shiprocket_channel_reference, ''), NULLIF(s.shiprocket_order_reference, '')) IS NULL
+      THEN 'CANCELLED_BEFORE_SHIPMENT'
+    WHEN COALESCE(NULLIF(s.shiprocket_response_id, ''), NULLIF(s.shiprocket_channel_reference, ''), NULLIF(s.shiprocket_order_reference, '')) IS NOT NULL
+      THEN 'MATCHED'
+    WHEN s.sync_error IS NOT NULL THEN 'PROVIDER_ERROR'
+    ELSE 'UNKNOWN'
+  END`;
+}
+
+export function assertOrderMappingPartition(total, buckets, label = 'Order Mapping partition') {
+  const bucketTotal = Object.values(buckets || {}).reduce((sum, value) => sum + Number(value || 0), 0);
+  if (Number(total) !== bucketTotal) {
+    throw new Error(`${label} invariant failed: total=${total}, buckets=${bucketTotal}`);
+  }
+  return true;
+}
+
 function buildFilters(filters, values) {
   const clauses = [];
   if (filters.queue && filters.queue !== "ALL") {
     if (filters.queue === "ACTIVE") {
       values.push(ACTIVE_ORDER_MAPPING_STATUSES);
-      clauses.push(
-        `COALESCE(s.normalized_status, 'PENDING_TRACKING') = ANY($${values.length}::text[])`,
-      );
+      clauses.push(`${canonicalStatusSql()} = ANY($${values.length}::text[])`);
     } else if (filters.queue === "COMPLETED") {
       values.push(["DELIVERED_TO_CUSTOMER", "RTO_DELIVERED"]);
-      clauses.push(
-        `COALESCE(s.normalized_status, 'PENDING_TRACKING') = ANY($${values.length}::text[])`,
-      );
+      clauses.push(`${canonicalStatusSql()} = ANY($${values.length}::text[])`);
     } else if (filters.queue === "NEEDS_ATTENTION") {
       values.push(ATTENTION_ORDER_MAPPING_STATUSES);
       clauses.push(`(
-        COALESCE(s.normalized_status, 'PENDING_TRACKING') = ANY($${values.length}::text[])
+        ${canonicalStatusSql()} = ANY($${values.length}::text[])
         OR COALESCE(s.status_source, 'SHOPIFY') = 'LEGACY_DATA'
         OR COALESCE(s.sync_error, '') <> ''
         OR COALESCE(s.awb, '') = ''
@@ -77,7 +103,7 @@ function buildFilters(filters, values) {
   }
   if (filters.status && filters.status !== "ALL") {
     values.push(filters.status);
-    clauses.push("COALESCE(s.normalized_status, 'PENDING_TRACKING') = $" + values.length);
+    clauses.push(`${canonicalStatusSql()} = $${values.length}`);
   }
   if (filters.courier && filters.courier !== "ALL") {
     values.push(filters.courier);
@@ -121,7 +147,7 @@ function sortClause(sortBy = "orderDate", direction = "desc") {
     orderDate: `o.order_date ${safeDirection}`,
     orderNumber: `o.shopify_order_name ${safeDirection}`,
     customerName: `o.customer_name ${safeDirection} NULLS LAST`,
-    status: `COALESCE(s.normalized_status, 'PENDING_TRACKING') ${safeDirection}`,
+    status: `${canonicalStatusSql()} ${safeDirection}`,
     courier: `s.courier ${safeDirection} NULLS LAST`,
     statusTimestamp: `COALESCE(s.status_timestamp, s.updated_at) ${safeDirection} NULLS LAST`,
     lastShiprocketSyncAt: `s.last_shiprocket_sync_at ${safeDirection} NULLS LAST`,
@@ -295,10 +321,8 @@ export async function listOrderMappings(filters = {}) {
            NULLIF(s.latest_provider_payload->>'total', ''),
            NULLIF(o.latest_fulfillment->>'order_total', '')
          ) AS order_amount,
-         CASE
-           WHEN o.cancellation_status IS NOT NULL THEN 'CANCELLED'
-           ELSE COALESCE(s.normalized_status, 'PENDING_TRACKING')
-         END AS normalized_status,
+         ${canonicalStatusSql()} AS normalized_status,
+         ${mappingStateSql()} AS mapping_state,
          CASE WHEN o.cancellation_status IS NOT NULL THEN 'Cancelled' ELSE s.raw_status END AS raw_status,
          CASE
            WHEN o.cancellation_status IS NOT NULL THEN 'SHOPIFY'
@@ -329,7 +353,7 @@ export async function listOrderMappings(filters = {}) {
   const summary = (
     await orderMappingQuery(
       `${base}
-       SELECT COALESCE(s.normalized_status, 'PENDING_TRACKING') AS status, COUNT(*)::int AS count
+       SELECT ${canonicalStatusSql()} AS status, COUNT(*)::int AS count
        FROM ${ordersTable} o
        LEFT JOIN primary_shipments s ON s.order_id = o.id
        ${where}
@@ -359,13 +383,35 @@ SELECT DISTINCT ON (s.order_id) s.*
 FROM ${shipmentsTable} s
 ORDER BY ${primaryShipmentOrderBy()}
 )
-SELECT COALESCE(s.normalized_status, 'PENDING_TRACKING') AS status, COUNT(*)::int AS count
+SELECT ${canonicalStatusSql()} AS status, COUNT(*)::int AS count
 FROM ${ordersTable} o
 LEFT JOIN primary_shipments s ON s.order_id = o.id
 GROUP BY 1`,
 [],
 )
 ).rows;
+
+const mappingSummary = (
+await orderMappingQuery(
+`WITH primary_shipments AS (
+SELECT DISTINCT ON (s.order_id) s.*
+FROM ${shipmentsTable} s
+ORDER BY ${primaryShipmentOrderBy()}
+)
+SELECT ${mappingStateSql()} AS state, COUNT(*)::int AS count
+FROM ${ordersTable} o
+LEFT JOIN primary_shipments s ON s.order_id = o.id
+${where}
+GROUP BY 1`,
+values,
+)
+).rows;
+
+const summaryObject = Object.fromEntries(summary.map((row) => [row.status, row.count]));
+const globalSummaryObject = Object.fromEntries(globalSummary.map((row) => [row.status, row.count]));
+const mappingSummaryObject = Object.fromEntries(mappingSummary.map((row) => [row.state, row.count]));
+assertOrderMappingPartition(total, summaryObject, "Filtered status");
+assertOrderMappingPartition(total, mappingSummaryObject, "Filtered mapping state");
 
 const globalSourceSummary = (
 await orderMappingQuery(
@@ -409,7 +455,7 @@ await orderMappingQuery(
 SELECT COALESCE(
   SUM(
     CASE
-      WHEN COALESCE(s.normalized_status, 'PENDING_TRACKING') = 'DELIVERED_TO_CUSTOMER'
+      WHEN ${canonicalStatusSql()} = 'DELIVERED_TO_CUSTOMER'
       THEN COALESCE(
         NULLIF(
           COALESCE(
@@ -441,9 +487,10 @@ display_source: displayStatusSource(row),
 total,
 page,
 pageSize,
-summary: Object.fromEntries(summary.map((row) => [row.status, row.count])),
+summary: summaryObject,
 sourceSummary: Object.fromEntries(sourceSummary.map((row) => [row.source, row.count])),
-globalSummary: Object.fromEntries(globalSummary.map((row) => [row.status, row.count])),
+globalSummary: globalSummaryObject,
+mappingSummary: mappingSummaryObject,
 globalSourceSummary: Object.fromEntries(globalSourceSummary.map((row) => [row.source, row.count])),
 globalAwbSummary: {
 withAwb: Number(globalAwbSummary.with_awb || 0),
