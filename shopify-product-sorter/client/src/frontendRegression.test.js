@@ -54,7 +54,7 @@ test("Frontend Regression: Order Mapping View Status Tones & Labels", () => {
     cancellation_status: null,
     shiprocket_response_id: null,
     shiprocket_channel_reference: "",
-    normalized_status: "UNKNOWN",
+    normalized_status: "NOT_FOUND_ON_SHIPROCKET",
     raw_status: "",
   });
   assert.equal(notFoundDisplay.tone, "not-found");

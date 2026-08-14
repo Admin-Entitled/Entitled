@@ -36,7 +36,13 @@ function parseTimestamp(value) {
 }
 
 function primaryShipmentOrderBy() {
-  return "s.order_id, s.manual_override_lock DESC, (s.shiprocket_response_id IS NOT NULL) DESC, COALESCE(s.status_timestamp, s.updated_at) DESC NULLS LAST, s.updated_at DESC";
+  return `s.order_id,
+    s.manual_override_lock DESC,
+    CASE WHEN s.normalized_status IN ('DELIVERED_TO_CUSTOMER', 'RTO_DELIVERED') THEN 1 ELSE 0 END DESC,
+    CASE WHEN s.status_source = 'SHIPROCKET_API' THEN 1 ELSE 0 END DESC,
+    (s.shiprocket_response_id IS NOT NULL) DESC,
+    COALESCE(s.status_timestamp, s.updated_at) DESC NULLS LAST,
+    s.updated_at DESC`;
 }
 
 function buildFilters(filters, values) {
@@ -639,6 +645,48 @@ export async function setShipmentSyncError(shipmentId, message) {
   );
 }
 
+export async function markShipmentNotFound(shipmentId) {
+  return withOrderMappingClient(async (client) => {
+    await client.query("BEGIN");
+    try {
+      const shipment = await findShipmentById(client, shipmentId);
+      if (!shipment || shipment.terminal_status || shipment.manual_override_lock) {
+        await client.query("COMMIT");
+        return { applied: false };
+      }
+
+      const timestamp = nowIso();
+      await client.query(
+        `UPDATE ${shipmentsTable}
+         SET normalized_status = 'NOT_FOUND_ON_SHIPROCKET',
+             raw_status = NULL,
+             status_source = 'SHIPROCKET_API',
+             status_timestamp = $2,
+             last_shiprocket_sync_at = NOW(),
+             sync_error = 'NO_SHIPROCKET_RECORD',
+             updated_at = NOW()
+         WHERE id = $1`,
+        [shipmentId, timestamp],
+      );
+      await insertStatusHistory(client, {
+        orderId: shipment.order_id,
+        shipmentId,
+        previousStatus: shipment.normalized_status,
+        nextStatus: "NOT_FOUND_ON_SHIPROCKET",
+        rawStatus: null,
+        source: "SHIPROCKET_API",
+        effectiveAt: timestamp,
+        remarks: "Complete Shiprocket search found no exact match",
+      });
+      await client.query("COMMIT");
+      return { applied: true };
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    }
+  });
+}
+
 export async function listNetworkLogs(limit = 50) {
   const rows = (
     await orderMappingQuery(
@@ -687,91 +735,173 @@ export async function upsertShopifyOrders(orders) {
   return withOrderMappingClient(async (client) => {
     await client.query("BEGIN");
     try {
-      let orderCount = 0;
+      if (!orders.length) {
+        await client.query("COMMIT");
+        return { orders: 0, shipments: 0 };
+      }
+
+      const orderParams = [];
+      const orderRows = orders.map((order) => {
+        const offset = orderParams.length;
+        orderParams.push(
+          order.shopifyOrderId,
+          order.shopifyOrderName,
+          order.shopifyOrderNumber || null,
+          parseTimestamp(order.orderDate),
+          order.customerName || null,
+          order.customerPhone || null,
+          order.shopifyFulfillmentStatus || null,
+          order.cancellationStatus || null,
+          parseTimestamp(order.shopifyUpdatedAt),
+          order.latestFulfillment || {},
+        );
+        return `($${offset + 1},$${offset + 2},$${offset + 3},$${offset + 4},$${offset + 5},$${offset + 6},$${offset + 7},$${offset + 8},$${offset + 9},NOW(),$${offset + 10},NOW())`;
+      });
+      const orderResult = await client.query(
+        `INSERT INTO ${ordersTable} (
+           shopify_order_id, shopify_order_name, shopify_order_number, order_date,
+           customer_name, customer_phone, shopify_fulfillment_status, cancellation_status,
+           shopify_updated_at, last_shopify_sync_at, latest_fulfillment, updated_at
+         ) VALUES ${orderRows.join(",")}
+         ON CONFLICT (shopify_order_id) DO UPDATE SET
+           shopify_order_name = EXCLUDED.shopify_order_name,
+           shopify_order_number = EXCLUDED.shopify_order_number,
+           order_date = EXCLUDED.order_date,
+           customer_name = EXCLUDED.customer_name,
+           customer_phone = EXCLUDED.customer_phone,
+           shopify_fulfillment_status = EXCLUDED.shopify_fulfillment_status,
+           cancellation_status = EXCLUDED.cancellation_status,
+           shopify_updated_at = EXCLUDED.shopify_updated_at,
+           last_shopify_sync_at = NOW(),
+           latest_fulfillment = EXCLUDED.latest_fulfillment,
+           updated_at = NOW()
+         RETURNING id, shopify_order_id`,
+        orderParams,
+      );
+      const orderIds = orderResult.rows.map((row) => row.id);
+      const orderIdByShopifyId = new Map(orderResult.rows.map((row) => [row.shopify_order_id, row.id]));
+      const existingShipments = (
+        await client.query(
+          `SELECT * FROM ${shipmentsTable} WHERE order_id = ANY($1::uuid[])`,
+          [orderIds],
+        )
+      ).rows;
+      const shipmentsByOrder = new Map();
+      for (const shipment of existingShipments) {
+        const list = shipmentsByOrder.get(shipment.order_id) || [];
+        list.push(shipment);
+        shipmentsByOrder.set(shipment.order_id, list);
+      }
+
+      const updates = [];
+      const inserts = [];
       let shipmentCount = 0;
       for (const order of orders) {
-        const orderResult = await client.query(
-          `INSERT INTO ${ordersTable} (
-             shopify_order_id, shopify_order_name, shopify_order_number, order_date,
-             customer_name, customer_phone, shopify_fulfillment_status, cancellation_status,
-             shopify_updated_at, last_shopify_sync_at, latest_fulfillment, updated_at
-           ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,NOW(),$10,NOW())
-           ON CONFLICT (shopify_order_id) DO UPDATE SET
-             shopify_order_name = EXCLUDED.shopify_order_name,
-             shopify_order_number = EXCLUDED.shopify_order_number,
-             order_date = EXCLUDED.order_date,
-             customer_name = EXCLUDED.customer_name,
-             customer_phone = EXCLUDED.customer_phone,
-             shopify_fulfillment_status = EXCLUDED.shopify_fulfillment_status,
-             cancellation_status = EXCLUDED.cancellation_status,
-             shopify_updated_at = EXCLUDED.shopify_updated_at,
-             last_shopify_sync_at = NOW(),
-             latest_fulfillment = EXCLUDED.latest_fulfillment,
-             updated_at = NOW()
-           RETURNING id`,
-          [
-            order.shopifyOrderId,
-            order.shopifyOrderName,
-            order.shopifyOrderNumber || null,
-            parseTimestamp(order.orderDate),
-            order.customerName || null,
-            order.customerPhone || null,
-            order.shopifyFulfillmentStatus || null,
-            order.cancellationStatus || null,
-            parseTimestamp(order.shopifyUpdatedAt),
-            order.latestFulfillment || {},
-          ],
-        );
-        const orderId = orderResult.rows[0].id;
-        orderCount += 1;
-
+        const orderId = orderIdByShopifyId.get(order.shopifyOrderId);
+        const existingForOrder = shipmentsByOrder.get(orderId) || [];
         for (const shipment of order.shipments) {
-          const existing = await findMatchingShipment(client, orderId, shipment);
-          const shipmentValues = [
-            orderId,
-            shipment.shopifyFulfillmentId || null,
-            shipment.shopifyTrackingNumber || null,
-            shipment.awb || null,
+          const fulfillmentId = shipment.shopifyFulfillmentId || null;
+          const trackingNumber = shipment.shopifyTrackingNumber || null;
+          const awb = shipment.awb || null;
+          const existing = existingForOrder.find((candidate) =>
+            (fulfillmentId && candidate.shopify_fulfillment_id === fulfillmentId) ||
+            (awb && candidate.awb === awb) ||
+            (trackingNumber && candidate.shopify_tracking_number === trackingNumber) ||
+            (!fulfillmentId && !awb && !trackingNumber && !candidate.shopify_fulfillment_id && !candidate.awb && !candidate.shopify_tracking_number),
+          ) || existingForOrder.find((candidate) =>
+            !candidate.shopify_fulfillment_id &&
+            !candidate.shopify_tracking_number &&
+            !candidate.awb &&
+            !candidate.shiprocket_response_id &&
+            !candidate.shiprocket_channel_reference,
+          );
+          const values = [
+            existing?.id || orderId,
+            fulfillmentId,
+            trackingNumber,
+            awb,
             shipment.courier || null,
             parseTimestamp(order.shopifyUpdatedAt || order.orderDate),
             shipment.latestProviderPayload || {},
           ];
-
           if (existing) {
-            await client.query(
-              `UPDATE ${shipmentsTable}
-               SET shopify_fulfillment_id = CASE
-                     WHEN shopify_fulfillment_id IS NULL AND $2::text IS NOT NULL THEN $2::text
-                     ELSE shopify_fulfillment_id
-                   END,
-                   shopify_tracking_number = $3,
-                   awb = $4,
-                   courier = $5,
-                   latest_provider_payload = CASE
-                     WHEN $7::jsonb = '{}'::jsonb THEN latest_provider_payload
-                     ELSE COALESCE(latest_provider_payload, '{}'::jsonb) || $7::jsonb
-                   END,
-                   status_source = CASE WHEN status_source = 'SHOPIFY' THEN 'SHOPIFY' ELSE status_source END,
-                   status_timestamp = COALESCE(status_timestamp, $6),
-                   updated_at = NOW()
-               WHERE id = $1`,
-              [existing.id, ...shipmentValues.slice(1)],
-            );
+            updates.push(values);
           } else {
-            await client.query(
-              `INSERT INTO ${shipmentsTable} (
-                 order_id, shopify_fulfillment_id, shopify_tracking_number, awb, courier,
-                 normalized_status, raw_status, status_source, status_timestamp,
-                 terminal_status, latest_provider_payload, updated_at
-               ) VALUES ($1,$2,$3,$4,$5,'PENDING_TRACKING',NULL,'SHOPIFY',$6,false,$7,NOW())`,
-              shipmentValues,
-            );
+            inserts.push(values);
           }
           shipmentCount += 1;
         }
       }
+
+      if (updates.length) {
+        const params = updates.flat();
+        const rows = updates.map((_, index) => {
+          const offset = index * 7;
+          return `($${offset + 1}::uuid,$${offset + 2},$${offset + 3},$${offset + 4},$${offset + 5},$${offset + 6}::timestamptz,$${offset + 7}::jsonb)`;
+        });
+        await client.query(
+          `UPDATE ${shipmentsTable} AS s
+           SET shopify_fulfillment_id = COALESCE(s.shopify_fulfillment_id, v.fulfillment_id),
+               shopify_tracking_number = v.tracking_number,
+               awb = v.awb,
+               courier = v.courier,
+               latest_provider_payload = CASE WHEN v.payload = '{}'::jsonb THEN s.latest_provider_payload ELSE COALESCE(s.latest_provider_payload, '{}'::jsonb) || v.payload END,
+               status_source = CASE WHEN s.status_source = 'SHOPIFY' THEN 'SHOPIFY' ELSE s.status_source END,
+               status_timestamp = COALESCE(s.status_timestamp, v.status_timestamp),
+               updated_at = NOW()
+           FROM (VALUES ${rows.join(",")}) AS v(id, fulfillment_id, tracking_number, awb, courier, status_timestamp, payload)
+           WHERE s.id = v.id`,
+          params,
+        );
+      }
+
+      if (inserts.length) {
+        const params = inserts.flat();
+        const rows = inserts.map((_, index) => {
+          const offset = index * 7;
+          return `($${offset + 1}::uuid,$${offset + 2},$${offset + 3},$${offset + 4},$${offset + 5},'PENDING_TRACKING',NULL,'SHOPIFY',$${offset + 6}::timestamptz,false,$${offset + 7}::jsonb,NOW())`;
+        });
+        await client.query(
+          `INSERT INTO ${shipmentsTable} (
+             order_id, shopify_fulfillment_id, shopify_tracking_number, awb, courier,
+             normalized_status, raw_status, status_source, status_timestamp,
+             terminal_status, latest_provider_payload, updated_at
+           ) VALUES ${rows.join(",")}`,
+          params,
+        );
+      }
+
+      const duplicatePlaceholderResult = await client.query(
+        `DELETE FROM ${shipmentsTable} AS placeholder
+         USING (
+           SELECT DISTINCT s.order_id
+           FROM ${shipmentsTable} s
+           WHERE s.order_id = ANY($1::uuid[])
+             AND (
+               COALESCE(s.shopify_fulfillment_id, '') <> '' OR
+               COALESCE(s.shopify_tracking_number, '') <> '' OR
+               COALESCE(s.awb, '') <> '' OR
+               COALESCE(s.shiprocket_response_id, '') <> '' OR
+               COALESCE(s.shiprocket_channel_reference, '') <> ''
+             )
+         ) AS mapped
+         WHERE placeholder.order_id = mapped.order_id
+           AND COALESCE(placeholder.shopify_fulfillment_id, '') = ''
+           AND COALESCE(placeholder.shopify_tracking_number, '') = ''
+           AND COALESCE(placeholder.awb, '') = ''
+           AND COALESCE(placeholder.shiprocket_response_id, '') = ''
+           AND COALESCE(placeholder.shiprocket_channel_reference, '') = ''
+           AND placeholder.manual_override = false
+           AND placeholder.manual_override_lock = false
+         RETURNING placeholder.id`,
+        [orderIds],
+      );
       await client.query("COMMIT");
-      return { orders: orderCount, shipments: shipmentCount };
+      return {
+        orders: orders.length,
+        shipments: shipmentCount,
+        duplicatePlaceholdersRemoved: duplicatePlaceholderResult.rowCount,
+      };
     } catch (error) {
       await client.query("ROLLBACK");
       throw error;
@@ -779,9 +909,15 @@ export async function upsertShopifyOrders(orders) {
   });
 }
 
-export async function listEligibleShipmentsForRefresh({ shipmentId = null, force = false } = {}) {
+export async function listEligibleShipmentsForRefresh({ shipmentId = null, force = false, range = null } = {}) {
   const values = [];
   const clauses = ["o.cancellation_status IS NULL"];
+  if (range?.start && range?.end) {
+    values.push(`${range.start}T00:00:00Z`);
+    clauses.push(`o.order_date >= $${values.length}`);
+    values.push(`${range.end}T23:59:59Z`);
+    clauses.push(`o.order_date <= $${values.length}`);
+  }
   if (!force) {
     clauses.push("s.terminal_status = false");
     clauses.push("s.manual_override_lock = false");

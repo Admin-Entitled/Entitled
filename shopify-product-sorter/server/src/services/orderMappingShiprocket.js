@@ -132,7 +132,7 @@ function normalizeShiprocketRow(item, shipment) {
 
 export async function fetchOrderMappingShiprocketShipments({ start, end }) {
   if (!isShiprocketConfigured()) {
-    return { configured: false, pages: 0, shipments: [] };
+    return { configured: false, complete: false, pages: 0, shipments: [] };
   }
 
   if (!getCachedShiprocketToken()) {
@@ -141,6 +141,7 @@ export async function fetchOrderMappingShiprocketShipments({ start, end }) {
 
   let page = 1;
   let totalPages = 1;
+  let complete = true;
   const shipments = [];
 
   while (page <= totalPages) {
@@ -174,11 +175,17 @@ export async function fetchOrderMappingShiprocketShipments({ start, end }) {
       const rows = Array.isArray(item.shipments) && item.shipments.length ? item.shipments : [item];
       shipments.push(...rows.map((shipment) => normalizeShiprocketRow(item, shipment)));
     }
-    totalPages = Number(payload.meta?.pagination?.total_pages || 1);
+    const pagination = payload.meta?.pagination;
+    if (!pagination || !Number.isFinite(Number(pagination.total_pages))) {
+      complete = false;
+      totalPages = data.length < 100 ? page : page + 1;
+    } else {
+      totalPages = Number(pagination.total_pages);
+    }
     page += 1;
   }
 
-  return { configured: true, pages: totalPages, shipments };
+  return { configured: true, complete, pages: page - 1, shipments };
 }
 
 export async function fetchOrderMappingShiprocketTracking(awb) {

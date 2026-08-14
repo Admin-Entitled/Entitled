@@ -41,7 +41,7 @@ test("TEST-004: matches Shopify order numbers to Shiprocket channel order IDs", 
   const rows = [{ shiprocket_channel_reference: "1243" }];
   const match = matchOrderMappingShipment({ orderNumber: "#1243" }, rows);
 
-  assert.equal(match.method, "shiprocket_channel_reference");
+  assert.equal(match.method, "channel_order_id");
   assert.equal(match.row, rows[0]);
 });
 
@@ -266,7 +266,7 @@ test("MATCHING-CORRECTNESS: exact normalization and priorities", () => {
   ];
   // #1255 matches channel_order_id "1255"
   const m1 = matchOrderMappingShipment({ orderNumber: "#1255" }, rows);
-  assert.equal(m1.method, "shiprocket_channel_reference");
+  assert.equal(m1.method, "channel_order_id");
   assert.equal(m1.row, rows[0]);
 
   // "#1255" normalization matches exact 1255
@@ -278,14 +278,41 @@ test("MATCHING-CORRECTNESS: exact normalization and priorities", () => {
   const mMismatch = matchOrderMappingShipment({ orderNumber: "1255" }, rowsMismatch);
   assert.equal(mMismatch.row, null);
 
-  // persisted shipment ID/response ID is preferred where valid
+  // Conflicting identifiers are never silently assigned.
   const rowsPref = [
     { shiprocket_response_id: "SR_1255", shiprocket_channel_reference: "9999" },
     { shiprocket_response_id: "SR_9999", shiprocket_channel_reference: "1255" }
   ];
   const mPref = matchOrderMappingShipment({ shiprocketResponseId: "SR_1255", orderNumber: "1255" }, rowsPref);
-  assert.equal(mPref.method, "shiprocket_response_id");
-  assert.equal(mPref.row, rowsPref[0]);
+  assert.equal(mPref.row, null);
+  assert.equal(mPref.conflict, true);
+});
+
+test("MATCHING-CORRECTNESS: exact identifiers match without substring matches", () => {
+  const rows = [
+    { shiprocket_channel_reference: "1255", shiprocket_order_id: "SR-1" },
+    { shiprocket_channel_reference: "12550", shiprocket_order_id: "SR-2" },
+  ];
+
+  const exact = matchOrderMappingShipment({ orderNumber: "#1255" }, rows);
+  assert.equal(exact.method, "channel_order_id");
+  assert.equal(exact.row, rows[0]);
+
+  const substring = matchOrderMappingShipment({ orderNumber: "125" }, rows);
+  assert.equal(substring.row, null);
+  assert.equal(substring.conflict, false);
+});
+
+test("MATCHING-CORRECTNESS: conflicting AWB evidence is a conflict", () => {
+  const match = matchOrderMappingShipment(
+    { orderNumber: "#1255", awb: "AWB-SHOPIFY" },
+    [
+      { shiprocket_channel_reference: "1255", awb: "AWB-SHIPROCKET" },
+      { awb: "AWB-SHOPIFY" },
+    ],
+  );
+  assert.equal(match.row, null);
+  assert.equal(match.conflict, true);
 });
 
 test("STATUS-CORRECTNESS: maps raw provider status to canonical", () => {

@@ -174,13 +174,13 @@ test("shows not found on Shiprocket when no Shiprocket match exists", () => {
       cancellation_status: null,
       shiprocket_response_id: null,
       shiprocket_channel_reference: "",
-      normalized_status: "UNKNOWN",
+      normalized_status: "NOT_FOUND_ON_SHIPROCKET",
       raw_status: "",
     }),
     {
       tone: "not-found",
       label: "Not found on Shiprocket",
-      detail: "Channel order ID not found",
+      detail: "Complete Shiprocket search found no exact match",
     },
   );
 });

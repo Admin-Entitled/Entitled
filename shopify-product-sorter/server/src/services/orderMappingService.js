@@ -22,6 +22,7 @@ import {
   listOrderMappings,
   listNetworkLogs,
   logMigrationException,
+  markShipmentNotFound,
   previewCsvImport,
   setShipmentSyncError,
   setManualShipmentStatus,
@@ -48,8 +49,8 @@ function todayIso() {
   return new Date().toISOString().slice(0, 10);
 }
 
-async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = false } = {}) {
-  const eligibleShipments = await listEligibleShipmentsForRefresh({ shipmentId, force });
+async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = false, range = null } = {}) {
+  const eligibleShipments = await listEligibleShipmentsForRefresh({ shipmentId, force, range });
   if (!eligibleShipments.length) {
     return {
       processed: 0,
@@ -58,6 +59,8 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
       failed: 0,
       unmatched: 0,
       configured: true,
+      complete: true,
+      providerState: "NOT_NEEDED",
       pagesFetched: 0,
     };
   }
@@ -79,6 +82,8 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
       failed: 0,
       unmatched: 0,
       configured: false,
+      complete: false,
+      providerState: "UNAVAILABLE",
       pagesFetched: 0,
     };
   }
@@ -88,9 +93,7 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
     shiprocket_response_id: row.shiprocketResponseId,
     shiprocket_order_reference: row.shiprocketOrderReference,
     shiprocket_channel_reference: row.shiprocketChannelReference,
-    shopify_order_id: row.shiprocketOrderReference,
-    shopify_order_name: row.shiprocketChannelReference,
-    shopify_order_number: row.shiprocketChannelReference,
+    shiprocket_order_id: row.shiprocketOrderReference,
   }));
 
   let updated = 0;
@@ -98,12 +101,19 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
   let skippedTerminal = 0;
   let unmatched = 0;
   let trackingFallbacks = 0;
-  const claimedProviderRows = new Set();
+  const claimedProviderRows = new Map();
+  for (const shipment of eligibleShipments) {
+    for (const key of [shipment.shiprocket_response_id, shipment.awb, shipment.shiprocket_channel_reference]) {
+      if (key) {
+        claimedProviderRows.set(key, shipment.id);
+      }
+    }
+  }
 
   for (const shipment of eligibleShipments) {
     const match = matchOrderMappingShipment(
       {
-        shiprocketResponseId: shipment.shiprocket_response_id,
+        shiprocketOrderId: shipment.shiprocket_order_reference,
         shopifyOrderId: shipment.shopify_order_id,
         orderNumber: shipment.shopify_order_name || shipment.shopify_order_number,
         awb: shipment.awb || shipment.shopify_tracking_number,
@@ -113,29 +123,41 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
 
     if (!match.row) {
       unmatched += 1;
+      if (provider.complete && !match.conflict) {
+        await markShipmentNotFound(shipment.id);
+        continue;
+      }
       await setShipmentSyncError(
         shipment.id,
-        match.ambiguous ? "Ambiguous Shiprocket match" : "Not found in Shiprocket",
+        provider.complete
+          ? (match.conflict ? "MAPPING_CONFLICT" : "NO_SHIPROCKET_RECORD")
+          : "SHIPROCKET_SOURCE_INCOMPLETE",
       );
       continue;
     }
 
     const providerKey =
       match.row.shiprocketResponseId || match.row.awb || match.row.shiprocketChannelReference;
-    if (providerKey && claimedProviderRows.has(providerKey)) {
+    if (providerKey && claimedProviderRows.has(providerKey) && claimedProviderRows.get(providerKey) !== shipment.id) {
+      unmatched += 1;
+      await setShipmentSyncError(shipment.id, "MAPPING_CONFLICT");
       continue;
     }
-    claimedProviderRows.add(providerKey);
+    if (providerKey) {
+      claimedProviderRows.set(providerKey, shipment.id);
+    }
 
     try {
       let trackingPayload = null;
-      try {
-        const tracking = await fetchOrderMappingShiprocketTracking(
-          match.row.awb || shipment.awb || shipment.shopify_tracking_number,
-        );
-        trackingPayload = tracking.tracking;
-      } catch {
-        trackingFallbacks += 1;
+      if (shipmentId && !match.row.rawStatus && !match.row.rawStatusCode) {
+        try {
+          const tracking = await fetchOrderMappingShiprocketTracking(
+            match.row.awb || shipment.awb || shipment.shopify_tracking_number,
+          );
+          trackingPayload = tracking.tracking;
+        } catch {
+          trackingFallbacks += 1;
+        }
       }
       const rawStatusText = trackingPayload?.rawStatus || match.row.rawStatus || "";
       const rawStatusCode = trackingPayload?.rawStatusCode || match.row.rawStatusCode || "";
@@ -188,6 +210,8 @@ async function refreshOrderMappingShiprocketCore({ shipmentId = null, force = fa
     unmatched,
     trackingFallbacks,
     configured: true,
+    complete: provider.complete,
+    providerState: provider.complete ? "AVAILABLE" : "PARTIAL",
     pagesFetched: provider.pages,
   };
 }
@@ -217,17 +241,34 @@ export async function syncOrderMappingShopify(range) {
       const selectedRange = await safeRange(range);
       const payload = await fetchOrderMappingOrders(selectedRange);
       const result = await upsertShopifyOrders(payload.orders);
-      const tracking = await refreshOrderMappingShiprocketCore({ force: false });
+      let tracking;
+      try {
+        tracking = await refreshOrderMappingShiprocketCore({ force: false, range: selectedRange });
+      } catch (error) {
+        tracking = {
+          processed: 0,
+          updated: 0,
+          skippedTerminal: 0,
+          failed: 0,
+          unmatched: 0,
+          configured: true,
+          complete: false,
+          providerState: "ERROR",
+          pagesFetched: 0,
+          error: error.message,
+        };
+      }
       await completeSyncRun(syncRun.id, {
-        status: tracking.failed ? "partial" : "completed",
+        status: ["ERROR", "PARTIAL", "UNAVAILABLE"].includes(tracking.providerState) || tracking.failed ? "partial" : "completed",
         processedCount: payload.orders.length,
         updatedCount: result.shipments + tracking.updated,
         skippedTerminalCount: tracking.skippedTerminal,
-        failedCount: tracking.failed,
+        failedCount: tracking.failed || (tracking.providerState === "ERROR" ? 1 : 0),
+        errorSummary: tracking.error || (tracking.providerState === "UNAVAILABLE" ? "Shiprocket is not configured" : null),
       });
       return {
         success: true,
-        status: tracking.failed ? "partially_completed" : "completed",
+        status: ["ERROR", "PARTIAL", "UNAVAILABLE"].includes(tracking.providerState) || tracking.failed ? "partially_completed" : "completed",
         range: selectedRange,
         pages: payload.pages,
         ordersFetched: payload.orders.length,

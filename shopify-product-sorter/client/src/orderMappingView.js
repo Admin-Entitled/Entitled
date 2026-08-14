@@ -16,15 +16,31 @@ export function getOrderStatusDisplay(order) {
     };
   }
 
+  if (order.sync_error && order.sync_error !== "NO_SHIPROCKET_RECORD") {
+    return {
+      tone: "attention",
+      label: "Unknown / Needs attention",
+      detail: order.sync_error.replaceAll("_", " "),
+    };
+  }
+
+  if (order.normalized_status === "NOT_FOUND_ON_SHIPROCKET" || order.sync_error === "NO_SHIPROCKET_RECORD") {
+    return {
+      tone: "not-found",
+      label: "Not found on Shiprocket",
+      detail: "Complete Shiprocket search found no exact match",
+    };
+  }
+
   const hasShiprocketMatch = Boolean(
     order.shiprocket_response_id || order.shiprocket_channel_reference,
   );
 
   if (!hasShiprocketMatch) {
     return {
-      tone: "not-found",
-      label: "Not found on Shiprocket",
-      detail: "Channel order ID not found",
+      tone: "attention",
+      label: "Unknown / Needs attention",
+      detail: "Shiprocket search has not completed for this order",
     };
   }
 
