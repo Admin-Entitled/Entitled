@@ -1,0 +1,154 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+
+04 — CINEMATIC CONSTRUCTION DETAIL MACRO / T-SHIRT OR POLO T-SHIRT
+
+Generate exactly one cinematic construction-detail macro photograph of the actual garment.
+
+OUTPUT
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• one continuous composition
+• no collage, inset, caption, border or watermark
+• no added text outside genuine garment branding
+
+CATEGORY AUTO-DETECTION
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+SOURCE OF TRUTH
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• proportions
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• sleeve shape and cuff construction
+• fabric texture, knit structure, drape and sheen
+• stitching, seams and reinforcement
+• chest branding, labels, artwork and all genuine trims
+
+ARTICLE IMMUTABILITY — ABSOLUTE
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions, orientation, colour, placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• collar, neckline, placket, buttons, cuffs, hems and seams
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+
+If the supplied photographs do not support exact reproduction, reject and regenerate. Never approximate.
+
+MACRO SUBJECT
+
+Select one compact area containing the highest-value construction details supported by the product photographs.
+
+Suitable details include:
+
+For a T-shirt:
+• neckband and neckline seam
+• shoulder reinforcement
+• sleeve hem
+• bottom hem
+• embroidery or print edge
+• seam intersection
+
+For a polo T-shirt:
+• collar edge and tipping
+• collar-to-placket junction
+• placket stitching
+• button and buttonhole construction
+• sleeve cuff and tipping
+• embroidered chest branding
+• permanent neck label only when fully supported
+
+Show only details genuinely present on the product.
+
+COMPOSITION
+
+• cinematic oblique macro angle
+• controlled shallow depth of field
+• one main detail tack-sharp
+• surrounding garment softly recedes
+• no extreme blur that hides construction
+• no duplicated textile surfaces
+• no impossible fabric folds
+
+SURFACE AND LIGHTING
+
+• neutral premium studio surface
+• directional soft light revealing stitch depth, rib structure and embroidery
+• realistic shadows
+• accurate colour and undertone
+• no exaggerated gloss
+• no metallic-looking cotton
+• no artificial embossed texture
+
+BRANDING SAFETY
+
+If branding appears, it must remain exact and fully legible.
+
+Do not include partially invented label text or distorted logo fragments. When exact reproduction is uncertain, frame the macro around construction without exposing unsupported text.
+
+FINAL REJECTION CHECK
+
+Reject and regenerate unless:
+
+• the selected construction area exists in the source product
+• all seams, stitches, buttons, trims and tipping are structurally correct
+• fabric texture is plausible and non-repeating
+• branding is exact when visible
+• category is preserved
+• output is exactly 1254 × 1254 px

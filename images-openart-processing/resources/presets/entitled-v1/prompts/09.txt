@@ -1,0 +1,150 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+
+09 — PURE FABRIC MACRO / T-SHIRT OR POLO T-SHIRT
+
+Generate exactly one ultra-photorealistic fabric macro photograph of the actual garment material.
+
+OUTPUT
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• pure fabric study
+• no collage, caption, border or watermark
+• no added text
+• no model
+• no logo unless a small genuine trim edge is intentionally included and exactly supported
+
+CATEGORY AUTO-DETECTION
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+SOURCE OF TRUTH
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• proportions
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• sleeve shape and cuff construction
+• fabric texture, knit structure, drape and sheen
+• stitching, seams and reinforcement
+• chest branding, labels, artwork and all genuine trims
+
+ARTICLE IMMUTABILITY — ABSOLUTE
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions, orientation, colour, placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• collar, neckline, placket, buttons, cuffs, hems and seams
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+
+If the supplied photographs do not support exact reproduction, reject and regenerate. Never approximate.
+
+FABRIC SOURCE OF TRUTH
+
+Use the supplied close product photographs to determine:
+
+• exact fabric colour and undertone
+• fibre appearance
+• knit or weave structure
+• yarn thickness
+• stitch density
+• surface softness
+• drape
+• sheen level
+• natural irregularity
+
+Never invent a generic pique, jersey or interlock texture.
+
+MACRO COMPOSITION
+
+• fabric arranged in natural soft waves or folds
+• one foreground ridge in crisp focus
+• surrounding folds retain enough detail to identify structure
+• close enough to show yarn and knit behaviour
+• not so close that the textile becomes abstract or biologically textured
+• no repeated cloned pattern
+• no impossible geometric symmetry
+
+OPTIONAL TRIM
+
+A small portion of genuine collar, cuff, neckband, tipping or hem may enter one edge of the frame only when it helps identify the product.
+
+Any visible trim must be exact.
+
+LIGHTING
+
+• soft raking light revealing surface relief
+• accurate colour
+• realistic highlight roll-off
+• no glitter
+• no synthetic shine
+• no velvet-like appearance unless the actual fabric is velvet
+• no exaggerated fibre fuzz
+
+BACKGROUND
+
+The entire frame should be dominated by the actual fabric. No tabletop, props or unrelated background should be prominent.
+
+FINAL REJECTION CHECK
+
+Reject and regenerate unless:
+
+• knit or weave structure matches the actual product
+• colour and undertone are accurate
+• drape is physically plausible
+• texture is non-repeating
+• no foreign textile structure is introduced
+• output is exactly 1254 × 1254 px

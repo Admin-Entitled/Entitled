@@ -1,0 +1,15 @@
+{
+  "endpoint": "https://mcp.openart.ai/mcp",
+  "inspection": {
+    "codex_version": "0.149.1",
+    "oauth": "completed through codex mcp login openart",
+    "transport": "streamable_http",
+    "tools_list": "unavailable to this Electron session because Codex does not expose a callable MCP client bridge"
+  },
+  "tools": [],
+  "safety": {
+    "tool_names_invented": false,
+    "api_keys_used": false,
+    "credit_consuming_calls_made": false
+  }
+}

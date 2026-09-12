@@ -1,0 +1,176 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+
+03 — COLLAR / NECKLINE / PLACKET / BRANDING DETAIL
+
+Generate exactly one premium ecommerce product-detail photograph.
+
+OUTPUT
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+CATEGORY AUTO-DETECTION
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+SOURCE OF TRUTH
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• proportions
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• sleeve shape and cuff construction
+• fabric texture, knit structure, drape and sheen
+• stitching, seams and reinforcement
+• chest branding, labels, artwork and all genuine trims
+
+ARTICLE IMMUTABILITY — ABSOLUTE
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions, orientation, colour, placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• collar, neckline, placket, buttons, cuffs, hems and seams
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+
+If the supplied photographs do not support exact reproduction, reject and regenerate. Never approximate.
+
+DETAIL DIRECTION
+
+For a T-shirt, focus on:
+
+• neckline shape and depth
+• neckband construction
+• shoulder seam
+• upper chest
+• logo, artwork or branding when present
+• fabric texture
+
+Never add a collar, placket or buttons.
+
+For a polo T-shirt, focus on:
+
+• collar
+• exact collar tipping or colour blocking
+• inner-neck trim
+• placket
+• exact buttons
+• upper chest branding
+• fabric texture
+
+Never alter collar, tipping, placket or button count.
+
+PRESENTATION
+
+• product-only image
+• garment neatly laid flat
+• no visible face or model
+• no hands
+• no hangers
+• no styling props
+• remove temporary tags, strings, loops, clips and pins
+• preserve permanent labels and genuine branding
+
+BACKGROUND
+
+• solid soft neutral background
+• warm white, pale grey or light mineral tone
+• no decorative texture or clutter
+
+LIGHTING
+
+• crisp, soft and even
+• sufficient micro-contrast to show knit, stitching and embroidery
+• accurate colour
+• no clipped highlights
+• no crushed dark detail
+• no artificial sheen
+
+FRAMING
+
+• tight deliberate crop
+• construction details centred
+• branding clearly readable when present
+• no accidental cut-off of relevant details
+• no large empty areas
+
+REALISM REJECTION
+
+Reject:
+
+• distorted lettering
+• wrong button count
+• altered tipping
+• fake stitching
+• melted seams
+• malformed collar points
+• repeated knit pattern
+• plastic texture
+• invented label text
+
+FINAL REJECTION CHECK
+
+Reject and regenerate unless:
+
+• category is correct
+• exact neckline or collar is preserved
+• placket and buttons are exact when present
+• colour and fabric texture match
+• branding is exact
+• no temporary retail attachment remains
+• output is exactly 1254 × 1254 px

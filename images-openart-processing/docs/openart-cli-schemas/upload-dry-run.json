@@ -1,0 +1,12 @@
+{
+  "body": {
+    "filename": "reference.png",
+    "size": 1234,
+    "contentType": "image/png",
+    "resourceType": "image",
+    "businessType": "create-image",
+    "needThumbnail": false,
+    "projectId": ""
+  },
+  "endpoint": "POST /api/upload/sign"
+}

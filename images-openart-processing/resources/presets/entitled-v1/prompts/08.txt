@@ -1,0 +1,843 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+
+08 — ISOLATED BACK PRODUCT / T-SHIRT OR POLO T-SHIRT
+
+Generate exactly one premium Shopify-ready isolated back product photograph.
+
+====================================================================================================
+OUTPUT
+====================================================================================================
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• product only
+• no model
+• no mannequin visible
+• no hanger
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+====================================================================================================
+CATEGORY AUTO-DETECTION
+====================================================================================================
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+====================================================================================================
+SOURCE OF TRUTH
+====================================================================================================
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• body width and length
+• shoulder width and slope
+• proportions
+• rear neckline or rear collar structure
+• collar tipping or colour blocking visible from the back
+• placket construction only insofar as it affects rear collar fall and structure
+• exact visible button count only where naturally inferable from the supplied product photographs
+• sleeve length, angle and shape
+• sleeve opening and cuff construction
+• cuff tipping or colour blocking
+• fabric texture
+• knit or weave structure
+• fabric weight and thickness
+• natural drape and sheen
+• stitching, seams and reinforcement
+• rear branding, rear labels, rear artwork and all genuine trims only when actually present
+• hem construction
+• side vents when present
+• back yoke or seam construction when present
+• rear neck seam and inner-neck trim only where naturally visible
+
+Do not use any other garment, reference image, brand catalogue or imagined design as a source of product information.
+
+
+====================================================================================================
+01 / 08 FRONT-BACK PRESENTATION MATCH — ABSOLUTE
+====================================================================================================
+
+Prompt 08 is the BACK-VIEW counterpart of Prompt 01.
+
+The final 08 image must visually pair with the approved 01 front image as the same ecommerce product set.
+
+Match Prompt 01 in:
+
+• overall garment scale
+• vertical centring
+• canvas occupancy
+• left/right breathing room
+• top and bottom breathing room
+• flat-lay / invisible-form presentation language
+• professional ironing standard
+• sleeve styling philosophy
+• sleeve-fold clarity
+• lighting softness and neutrality
+• background colour
+• background uniformity
+• shadow restraint
+• product realism
+
+Do NOT copy front-only garment details onto the back.
+
+The supplied actual back-view product photographs remain the sole source of truth for rear construction.
+
+If an approved final 01 front image is supplied as a presentation reference, use it ONLY to match:
+
+• overall scale
+• framing
+• sleeve arrangement style
+• straight-fold presentation
+• lighting character
+• background treatment
+
+Do NOT use the approved 01 image to invent or infer rear branding, rear construction, rear seams, rear artwork or rear trims.
+
+
+====================================================================================================
+ARTICLE IMMUTABILITY — ABSOLUTE
+====================================================================================================
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions
+• logo orientation
+• logo colour
+• logo placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• permanent external labels
+• collar or neckline
+• placket as it affects the actual rear collar construction
+• buttons only where naturally visible or structurally supported
+• sleeve cuffs
+• hems
+• seams
+• tipping
+• colour blocking
+• artwork and patterns
+• rear yokes
+• rear seams
+• rear vents
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• clean up, simplify or reinterpret genuine branding
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+• alter embroidery density
+• change print placement
+• alter pattern scale
+• change button count
+• change collar or cuff construction
+• modify garment proportions
+• copy any front-only detail onto the back
+• invent rear branding, rear artwork or rear trims
+
+If the supplied photographs do not support exact reproduction, reject and regenerate.
+
+Never approximate, reinterpret or invent permanent product details.
+
+====================================================================================================
+BACK-VIEW LOCK — ABSOLUTE
+====================================================================================================
+
+Show the complete garment from the back only.
+
+Use the supplied back-view product photographs as the primary reference for:
+
+• rear silhouette
+• shoulder width and slope
+• rear neckline or rear collar structure
+• collar roll, height and back collar shape
+• visible collar tipping from the back
+• back yoke or seam construction when present
+• rear neck seam and any inner-neck trim only where naturally visible
+• sleeve shape and cuff construction
+• cuff tipping
+• side seams
+• body taper
+• rear hem shape
+• rear branding only where genuinely present
+• rear artwork only where genuinely present
+• natural back drape and fabric fall
+
+Never:
+
+• show a front-facing view
+• turn the garment three-quarter
+• reveal front-only construction as if the product were twisted
+• place chest branding onto the back
+• place front artwork onto the back
+• invent rear logos, labels, text or patches
+• expose placket or button details unnaturally unless they are genuinely visible due to real collar structure
+
+The result must read immediately as a clean isolated back product photograph.
+
+====================================================================================================
+PROFESSIONAL IRONING AND GARMENT PREPARATION — MANDATORY
+====================================================================================================
+
+The article must appear professionally steam-ironed, smoothly pressed and fully prepared for premium ecommerce photography.
+
+Remove only temporary presentation defects, including:
+
+• transport wrinkles
+• packaging creases
+• compression lines
+• temporary fold marks
+• unwanted fabric ripples
+• lint
+• dust
+• loose removable threads
+• temporary tags or attachments not forming part of the final article
+
+The entire article must appear smooth and freshly ironed across:
+
+• rear collar or rear neckline
+• shoulder area
+• upper back
+• back body
+• side body
+• sleeves
+• sleeve openings or cuffs
+• lower back
+• bottom hem
+
+Ironing must not alter the actual construction, texture, volume or natural character of the fabric.
+
+Do not:
+
+• flatten ribbing
+• erase genuine knit texture
+• eliminate permanent seam shaping
+• remove intentional pleats or construction folds
+• stretch the garment
+• shrink the garment
+• make the fabric unnaturally rigid
+• create sharp artificial creases
+• produce a plastic, laminated or over-pressed appearance
+• distort embroidery, prints, labels or branding
+
+The final article must look freshly ironed and commercially prepared while retaining its authentic fabric texture, thickness, softness, structure and drape.
+
+====================================================================================================
+PRESENTATION
+====================================================================================================
+
+Show the complete garment from the back, centred and fully visible.
+
+Present the garment as either:
+
+• a perfectly arranged flat-lay product image
+
+or
+
+• a clean invisible-form product image with no mannequin visible
+
+The garment must be:
+
+• symmetrical
+• naturally shaped
+• professionally steam-ironed
+• smoothly pressed
+• completely free from temporary wrinkles and unwanted creases
+• smooth across the upper back, shoulders, sleeves and body
+• correctly proportioned
+• aligned vertically
+• free from lint, dust and removable threads
+• free from packaging or transport distortion
+
+Ensure:
+
+• both shoulder areas are evenly positioned
+• the rear collar or rear neckline is correctly formed
+• the back body hangs or lies evenly
+• both side seams are symmetrically positioned
+• side vents match the actual product when present
+• the bottom hem is straight, smooth and level
+• genuine fabric texture remains visible
+• the garment does not appear inflated
+• the garment does not appear excessively flattened
+• the garment does not appear artificially rigid or over-ironed
+
+====================================================================================================
+SLEEVE PRESENTATION — ABSOLUTE / MATCH PROMPT 01
+====================================================================================================
+
+The back-view sleeves must use the SAME presentation philosophy as Prompt 01 front.
+
+THE TWO HIGHEST-PRIORITY SLEEVE REQUIREMENTS ARE:
+
+1. PRESERVE THE ACTUAL SOURCE-DERIVED SHORT SLEEVE LENGTH.
+2. CREATE ONE CLEAR, RULER-STRAIGHT, DELIBERATELY PRESSED PRESENTATION FOLD ON EACH SLEEVE.
+
+Both conditions must be satisfied simultaneously.
+
+A result satisfying only one condition is incorrect.
+
+The sleeves MAY open outward or diagonally as much as reasonably necessary to maintain the straight fold.
+
+Do NOT force the sleeves close to the torso.
+
+Do NOT force the sleeves vertically downward.
+
+Sleeve angle is flexible.
+
+Sleeve length and dominant-fold straightness are not flexible.
+
+----------------------------------------------------------------------------------------------------
+SHORT-SLEEVE GEOMETRY LOCK — ABSOLUTE
+----------------------------------------------------------------------------------------------------
+
+Use the actual supplied product photographs as the source of truth for:
+
+• shoulder seam to sleeve hem distance
+• underarm point to sleeve hem distance
+• sleeve width
+• sleeve taper
+• sleeve-opening width
+• sleeve-to-body-length proportion
+• shoulder-to-sleeve transition
+• cuff construction
+• cuff tipping or colour blocking
+
+Never use generic T-shirt or polo sleeve proportions.
+
+Never:
+
+• lengthen the sleeves
+• shorten the sleeves
+• extend sleeves toward the elbow
+• alter sleeve width merely to improve presentation
+• enlarge the sleeve to make folding easier
+• change sleeve length because the sleeve angle changes
+• distort the cuff or sleeve opening
+
+Changing sleeve position must NEVER change sleeve length.
+
+----------------------------------------------------------------------------------------------------
+PRIMARY SLEEVE FOLD — STRAIGHT PRESSED EDGE / ABSOLUTE
+----------------------------------------------------------------------------------------------------
+
+Each sleeve must contain ONE dominant, deliberate, pressed flat-lay presentation fold.
+
+This required fold is NOT:
+
+• the natural armhole seam
+• the sleeve attachment seam
+• the curved underarm transition
+• a wrinkle
+• a ripple
+• a soft drape line
+• an approximate crease
+
+The natural armhole seam may remain curved where required by real garment construction.
+
+THE REQUIRED PRESENTATION FOLD IS A SEPARATE STRAIGHT FOLD ACROSS THE SLEEVE FABRIC.
+
+The dominant fold on each sleeve must:
+
+• form one continuous ruler-straight line
+• remain straight from upper endpoint to lower endpoint
+• remain visually clear
+• remain smooth and deliberately pressed
+• contain no convex bow
+• contain no concave bow
+• contain no arc
+• contain no S-curve
+• contain no waviness
+• contain no rounded middle section
+• contain no competing secondary fold
+• mirror the opposite sleeve closely
+
+----------------------------------------------------------------------------------------------------
+RULER TEST — ABSOLUTE
+----------------------------------------------------------------------------------------------------
+
+Imagine placing one rigid straight ruler over the complete dominant fold.
+
+The entire fold must align with that ruler.
+
+If any part of the fold:
+
+• bows inward
+• bows outward
+• curves
+• arcs
+• bends
+• wanders away from the straight path
+
+the image fails.
+
+Even a slight visible curve is unacceptable.
+
+----------------------------------------------------------------------------------------------------
+FOLD CONSTRUCTION — PHYSICALLY REALISTIC
+----------------------------------------------------------------------------------------------------
+
+The straight fold must result from believable folded fabric geometry, not a digitally drawn line.
+
+The sleeve fabric should change plane cleanly along the fold and create:
+
+• subtle physical depth
+• realistic fabric thickness
+• restrained highlight/shadow separation
+• a crisp structural edge
+• a professionally prepared ecommerce flat-lay appearance
+
+Do not invent piping, seams, printed lines or artificial edges.
+
+----------------------------------------------------------------------------------------------------
+SLEEVE ORIENTATION — FLEXIBLE
+----------------------------------------------------------------------------------------------------
+
+The sleeves may:
+
+• open outward
+• sit diagonally outward
+• spread farther from the torso
+• use a moderate downward angle
+
+Choose whichever position best preserves:
+
+1. ruler-straight dominant fold
+2. actual source-derived short sleeve length
+3. left/right mirror symmetry
+4. correct cuff / sleeve-opening construction
+
+A more open sleeve is preferable to a curved fold.
+
+Never compromise fold straightness merely to keep sleeves close to the body.
+
+----------------------------------------------------------------------------------------------------
+LEFT / RIGHT MIRROR LOCK
+----------------------------------------------------------------------------------------------------
+
+Both sleeves must closely mirror each other in:
+
+• sleeve length
+• sleeve width
+• sleeve-opening width
+• spread angle
+• dominant-fold angle
+• dominant-fold straightness
+• upper fold endpoint
+• lower fold endpoint
+• fold depth
+• visual tension
+• cuff presentation
+
+One sleeve must not appear straighter, longer, wider or more open than the other.
+
+----------------------------------------------------------------------------------------------------
+SLEEVE PRIORITY ORDER — ABSOLUTE
+----------------------------------------------------------------------------------------------------
+
+When sleeve requirements compete, follow this hierarchy:
+
+1. RULER-STRAIGHT DOMINANT PRESENTATION FOLD
+2. ORIGINAL SOURCE-DERIVED SHORT SLEEVE LENGTH
+3. LEFT/RIGHT MIRROR SYMMETRY
+4. CORRECT SLEEVE WIDTH AND SHAPE
+5. CORRECT CUFF / SLEEVE-OPENING CONSTRUCTION
+6. CORRECT TIPPING OR TRIMS
+7. CLEAN PRESSED PRESENTATION
+8. SLEEVE ANGLE
+9. PROXIMITY TO THE TORSO
+
+If opening the sleeves wider creates a straighter fold:
+
+OPEN THEM WIDER.
+
+----------------------------------------------------------------------------------------------------
+ABSOLUTE SLEEVE REJECTION CONDITIONS
+----------------------------------------------------------------------------------------------------
+
+Reject and regenerate if:
+
+• either dominant fold curves at any point
+• either dominant fold bows inward or outward
+• either dominant fold forms an arc or S-shape
+• either dominant fold follows the natural curved armhole seam
+• either dominant fold appears as a soft wrinkle
+• left and right fold geometry differs materially
+• either sleeve length differs from the source
+• sleeve length changes because of orientation
+• one sleeve is visibly longer, wider or more open than the other
+• cuff or sleeve-opening construction is distorted
+• sleeves are forced close to the torso at the expense of fold straightness
+
+FINAL REQUIRED BACK-SLEEVE RESULT:
+
+ORIGINAL SOURCE-DERIVED SHORT SLEEVE LENGTH
+
++
+
+ONE CLEAR RULER-STRAIGHT PRESSED PRESENTATION FOLD ON EACH SLEEVE
+
++
+
+MATCHED LEFT / RIGHT MIRROR GEOMETRY
+
++
+
+SLEEVE ANGLE ALLOWED TO OPEN OUTWARD AS REQUIRED
+
+The back-view sleeve presentation should visually correspond to Prompt 01 front while preserving genuine back-view product construction.
+
+===================================================================================================
+T-SHIRT BACK DIRECTION
+====================================================================================================
+
+When the detected article is a T-shirt:
+
+• preserve the exact rear neckline type
+• preserve rear neckline shape and depth
+• preserve rear neckband width
+• preserve rear neckband thickness and construction
+• preserve shoulder seams
+• preserve sleeve length
+• preserve sleeve shape
+• preserve sleeve-opening construction
+• preserve body width and length
+• preserve bottom hem construction
+• preserve the exact silhouette and fit
+
+Never:
+
+• add a collar
+• add a placket
+• add buttons
+• convert the neckline
+• alter rear neckband width
+• alter sleeve proportions
+• convert the T-shirt into a Henley, polo, sweatshirt or woven shirt
+• add front-only details onto the back
+
+====================================================================================================
+POLO BACK DIRECTION
+====================================================================================================
+
+When the detected article is a polo T-shirt:
+
+• preserve rear collar width
+• preserve rear collar length
+• preserve rear collar point behaviour as naturally visible from the back
+• preserve collar rib structure
+• preserve collar thickness
+• preserve collar stand and natural rear formation
+• preserve exact collar tipping visible from the back
+• preserve exact collar colour blocking visible from the back
+• preserve sleeve cuffs
+• preserve cuff thickness
+• preserve exact cuff tipping
+• preserve exact cuff colour blocking
+• preserve rear neck seam
+• preserve inner-neck trim only where naturally visible
+• preserve side vents when present
+• preserve the complete original rear silhouette
+
+Never:
+
+• alter the collar shape
+• enlarge or reduce the collar
+• sharpen or soften collar structure incorrectly
+• change collar tipping
+• change cuff tipping
+• invent rear branding
+• expose or fabricate front placket details unnaturally
+• convert the polo into a T-shirt, Henley, woven shirt or sweatshirt
+
+====================================================================================================
+BRANDING AND ARTWORK PROTECTION
+====================================================================================================
+
+All genuine rear branding, logos, embroidery, prints, patches, monograms, labels, text and artwork must be reproduced exactly as supported by the supplied photographs.
+
+Preserve:
+
+• exact spelling
+• exact characters
+• exact line breaks
+• exact alignment
+• exact spacing
+• exact proportions
+• exact colour
+• exact thread or print texture
+• exact orientation
+• exact location
+• exact scale relative to the garment
+
+Branding must follow the natural fabric surface and perspective without distortion.
+
+Never:
+
+• generate substitute branding
+• improve or modernise the logo
+• use visually similar text
+• invent illegible characters
+• duplicate branding
+• remove branding
+• move branding
+• mirror branding
+• straighten branding in a way that changes its actual placement
+• create new text or decorative graphics
+• copy any chest branding or front motif onto the back unless it is genuinely present there
+
+If the actual product back is plain, keep the back plain.
+
+====================================================================================================
+BACKGROUND — ABSOLUTE COLOUR LOCK
+====================================================================================================
+
+Use exactly one flat, solid studio background colour across the entire canvas:
+
+• HEX: #EDEBE8
+• RGB: 237, 235, 232
+• sRGB colour space
+
+BACKGROUND COLOUR IMMUTABILITY — ABSOLUTE
+
+The background colour is fixed and must never change.
+
+Every visible background pixel that is not occupied by the garment or its physically necessary contact shadow must visually remain #EDEBE8.
+
+Never:
+
+• choose another neutral tone
+• reinterpret #EDEBE8 as warm white, grey, beige, cream or off-white
+• make the background lighter or darker
+• shift the hue warmer or cooler
+• alter saturation
+• alter white balance
+• apply colour grading to the background
+• apply exposure variation to the background
+• create gradients
+• create radial gradients
+• create corner darkening
+• create edge falloff
+• create vignette
+• create spotlight effects
+• create background glow
+• create background haze
+• create tonal variation
+• create texture
+• create paper grain
+• create wall texture
+• create floor texture
+• create seams
+• create horizon lines
+• create wall corners
+• create environmental elements
+• create props
+• create furniture
+• create decorative shadows
+• create coloured reflections
+• allow garment colour to spill onto or tint the background
+• allow studio lights to change the perceived background colour
+
+LIGHTING IS NOT PERMITTED TO MODIFY THE BACKGROUND COLOUR.
+
+Lighting may shape and reveal the garment, but the background itself must remain visually flat, uniform and colour-constant at #EDEBE8 from corner to corner.
+
+Any necessary garment shadow must be extremely soft, neutral, minimal and localised immediately around or beneath the garment. It must not create a broad background gradient or visibly change the overall #EDEBE8 field.
+
+Do not include:
+
+• hangers
+• clips
+• pins
+• visible supports
+• hands
+• mannequins
+• human body parts
+
+BACKGROUND MATCHING REQUIREMENT
+
+The front-view and back-view images must use the exact same background specification:
+
+#EDEBE8 / RGB 237, 235, 232 / sRGB
+
+There must be no perceptible background shade difference between images.
+
+If the rendered background appears even slightly lighter, darker, warmer, cooler, greyer, creamier or more saturated than #EDEBE8, reject and regenerate.
+
+====================================================================================================
+LIGHTING
+====================================================================================================
+
+Use soft, balanced and professional ecommerce studio lighting.
+
+Lighting must provide:
+
+• accurate garment colour and undertone
+• even exposure
+• gentle dimensionality
+• enough micro-contrast to reveal fabric texture
+• visible stitching and construction
+• clear genuine branding where present
+• controlled highlights
+• clean but natural shadows
+• consistent illumination across both sleeves and the entire body
+
+Avoid:
+
+• clipped highlights
+• crushed shadows
+• harsh directional shadows
+• dramatic cinematic lighting
+• colour casts
+• excessive contrast
+• fake gloss
+• plastic fabric texture
+• metallic-looking cotton
+• over-sharpening
+• excessive HDR
+• flat lighting that removes fabric detail
+
+====================================================================================================
+FRAMING
+====================================================================================================
+
+• output must be exactly 1254 × 1254 px
+• square composition
+• complete garment visible
+• back orientation perfectly vertical
+• garment centred precisely
+• garment occupies approximately 82–88% of the canvas
+• equal and balanced breathing room around all sides
+• no cropped collar
+• no cropped neckline
+• no cropped sleeves
+• no cropped cuffs
+• no cropped side seams
+• no cropped side vents
+• no cropped bottom hem
+• no excessive empty space
+• no perspective distortion
+• no tilted presentation
+
+====================================================================================================
+REALISM
+====================================================================================================
+
+The result must appear to be a genuine professionally photographed physical garment.
+
+Preserve:
+
+• realistic fabric thickness
+• realistic knit or weave structure
+• natural seam depth
+• natural collar and cuff construction
+• authentic embroidery or print integration where present
+• realistic stitching
+• subtle natural fabric behaviour
+• believable edge definition
+
+Avoid:
+
+• CGI appearance
+• illustrated appearance
+• synthetic AI texture
+• melted details
+• duplicated stitching
+• warped seams
+• malformed collars
+• fake branding
+• inconsistent patterns
+• unnatural garment geometry
+
+====================================================================================================
+FINAL REJECTION CHECK
+====================================================================================================
+
+Reject and regenerate unless every condition below is satisfied:
+
+• exactly one image is generated
+• output is exactly 1254 × 1254 px
+• garment category is correct
+• complete back silhouette matches the actual product
+• true back construction is preserved
+• no front-only detail appears on the back unless genuinely visible from the actual product structure
+• article proportions match the supplied photographs
+• colour and undertone match
+• fabric texture and structure match
+• rear branding is exact where present
+• no invented rear branding appears
+• rear collar or rear neckline is exact
+• sleeve length and shape match
+• sleeve cuffs or openings match
+• collar and cuff tipping match when present
+• rear seams, yokes and vents match when present
+• permanent artwork and trims are preserved
+• no permanent product details are added, removed or modified
+• complete article appears freshly ironed and professionally pressed
+• upper back, shoulders, sleeves and body are smooth
+• no transport wrinkles, packaging creases or compression marks remain
+• no unwanted puckering or fabric bunching remains
+• both sleeves are symmetrical
+• both dominant sleeve presentation folds are ruler-straight from endpoint to endpoint
+• neither dominant sleeve fold contains any visible curve, bow, arc or S-shape
+• both sleeve-fold geometries visually correspond to Prompt 01 front presentation
+• both sleeve openings or cuffs form clean and level edges
+• sleeves are not rolled, curled, twisted or folded underneath
+• bottom hem is straight and smooth
+• no temporary tags, clips, threads, lint or attachments remain
+• no model, hanger or mannequin is visible
+• no part of the garment is cropped
+• background is exactly #EDEBE8 / RGB 237, 235, 232 / sRGB
+• background is visually uniform from corner to corner
+• no background gradient, vignette, exposure falloff, colour cast or white-balance shift is present
+• background shade matches the corresponding front/back product image exactly
+• no lighting effect changes the perceived background colour
+• product colour is accurately represented
+• garment remains natural rather than rigid, inflated or artificially flattened
+• no invented, approximate or replacement branding appears

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-electron/
+release/
+.vite/
+coverage/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+.env
+credentials/
+openart-auth.json
+.openart-upload-cache.json
+squashfs-root/

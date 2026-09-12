@@ -1,0 +1,75 @@
+{
+  "id": "entitled-v1",
+  "name": "ENTITLED Catalogue v1",
+  "masters": {
+    "imageRules": "masters/ENTITLED_IMAGE_RULES.md",
+    "visualSystem": "masters/ENTITLED_VISUAL_SYSTEM.md"
+  },
+  "prompts": [
+    {
+      "number": 1,
+      "name": "Isolated Front Product",
+      "file": "prompts/01.txt",
+      "canonicalFile": "prompts/01.txt",
+      "reference": "references/01-isolated-front.png"
+    },
+    {
+      "number": 2,
+      "name": "Premium Folded Product Hero",
+      "file": "prompts/02.txt",
+      "canonicalFile": "prompts/02.txt"
+    },
+    {
+      "number": 3,
+      "name": "Collar / Neckline / Placket / Branding Detail",
+      "file": "prompts/03.txt",
+      "canonicalFile": "prompts/03.txt",
+      "reference": "references/03-collar-detail.png"
+    },
+    {
+      "number": 4,
+      "name": "Construction Detail Macro",
+      "file": "prompts/04.txt",
+      "canonicalFile": "prompts/04.txt"
+    },
+    {
+      "number": 5,
+      "name": "Clean Studio Front Model",
+      "file": "prompts/05.txt",
+      "canonicalFile": "prompts/05.txt"
+    },
+    {
+      "number": 6,
+      "name": "Outdoor Lifestyle Model",
+      "file": "prompts/06.txt",
+      "canonicalFile": "prompts/06.txt"
+    },
+    {
+      "number": 7,
+      "name": "Urban Front Three-Quarter Model",
+      "file": "prompts/07.txt",
+      "canonicalFile": "prompts/07.txt"
+    },
+    {
+      "number": 8,
+      "name": "Isolated Back Product",
+      "file": "prompts/08.txt",
+      "canonicalFile": "prompts/08.txt",
+      "reference": "references/08-isolated-back.png"
+    },
+    {
+      "number": 9,
+      "name": "Pure Fabric Macro",
+      "file": "prompts/09.txt",
+      "canonicalFile": "prompts/09.txt",
+      "reference": "references/09-fabric-macro.png"
+    },
+    {
+      "number": 10,
+      "name": "Shopify Size Chart",
+      "file": "prompts/10.txt",
+      "canonicalFile": "prompts/10.txt",
+      "special": "size-chart"
+    }
+  ]
+}

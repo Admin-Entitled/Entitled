@@ -1,0 +1,156 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+
+02 — PREMIUM FOLDED PRODUCT HERO / T-SHIRT OR POLO T-SHIRT
+
+Generate exactly one premium folded-product ecommerce hero photograph.
+
+OUTPUT
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+CATEGORY AUTO-DETECTION
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+SOURCE OF TRUTH
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• proportions
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• sleeve shape and cuff construction
+• fabric texture, knit structure, drape and sheen
+• stitching, seams and reinforcement
+• chest branding, labels, artwork and all genuine trims
+
+ARTICLE IMMUTABILITY — ABSOLUTE
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions, orientation, colour, placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• collar, neckline, placket, buttons, cuffs, hems and seams
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+
+If the supplied photographs do not support exact reproduction, reject and regenerate. Never approximate.
+
+COMPOSITION
+
+Present the exact garment neatly folded on a refined matte surface.
+
+The fold must showcase the product's strongest identifying details:
+
+For a T-shirt:
+• neckline or neckband
+• upper chest
+• logo or artwork when present
+• sleeve edge
+• fabric texture
+
+For a polo T-shirt:
+• complete collar
+• exact collar tipping or colour blocking
+• placket
+• exact buttons
+• one sleeve cuff with its genuine tipping
+• upper chest logo or branding
+• permanent neck label when naturally visible
+
+The garment must remain physically plausible. Do not create impossible folds, duplicated sleeves, broken seams or distorted proportions.
+
+STYLE
+
+• luxury menswear ecommerce
+• restrained, minimal and product-first
+• premium editorial polish without decorative clutter
+• no jewellery, watch, footwear, sunglasses, books, flowers or unrelated props
+
+SURFACE AND BACKGROUND
+
+• matte stone, brushed metal, refined mineral slab or smooth neutral studio platform
+• colour must complement the garment without changing its perceived colour
+• background remains understated and secondary
+• no visible room clutter
+
+LIGHTING
+
+• soft directional studio light
+• controlled natural shadow beneath the folded garment
+• accurate fabric colour
+• visible knit structure and stitching
+• no fake shine
+• no excessive contrast
+
+FRAMING
+
+• deliberate three-quarter overhead angle
+• folded garment occupies approximately 75–85% of the canvas
+• collar or neckline and branding remain clearly readable
+• no accidental crop of relevant product details
+
+FINAL REJECTION CHECK
+
+Reject and regenerate unless:
+
+• the garment remains the exact supplied product
+• fold geometry is realistic
+• category is preserved
+• branding, collar, cuffs, placket and buttons are exact
+• no product detail is invented
+• output is exactly 1254 × 1254 px

@@ -1,0 +1,14 @@
+{
+  "body": {
+    "model": "gpt-image-2",
+    "media": "image",
+    "mode": "image2image",
+    "params": {
+      "prompt": "Studio ecommerce product photo on a clean white background",
+      "visualReferences": [
+        { "label": "reference.png", "type": "image", "url": "(uploaded from local file)" }
+      ]
+    }
+  },
+  "endpoint": "POST /api/cli/v1/generate"
+}

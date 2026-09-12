@@ -1,0 +1,21 @@
+{
+  "model": "gpt-image-2",
+  "media": "image",
+  "mode": "image2image",
+  "params": {
+    "visualReferences": [
+      {
+        "label": "presentation-reference.webp",
+        "type": "image",
+        "url": "(uploaded from local presentation reference)"
+      },
+      {
+        "label": "product-front.jpeg",
+        "type": "image",
+        "url": "(uploaded from local product source)"
+      }
+    ]
+  },
+  "endpoint": "POST /api/cli/v1/generate",
+  "verified": "The installed CLI accepted two repeated --image arguments and preserved their order in the dry-run request. No generation was submitted."
+}

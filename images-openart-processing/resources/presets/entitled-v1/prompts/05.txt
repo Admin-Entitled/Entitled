@@ -1,0 +1,230 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+
+05 — CLEAN STUDIO FRONT MODEL / T-SHIRT OR POLO T-SHIRT
+
+Generate exactly one premium studio ecommerce model photograph featuring the actual garment.
+
+OUTPUT
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• one adult male model
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+CATEGORY AUTO-DETECTION
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+SOURCE OF TRUTH
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• proportions
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• sleeve shape and cuff construction
+• fabric texture, knit structure, drape and sheen
+• stitching, seams and reinforcement
+• chest branding, labels, artwork and all genuine trims
+
+ARTICLE IMMUTABILITY — ABSOLUTE
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions, orientation, colour, placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• collar, neckline, placket, buttons, cuffs, hems and seams
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+
+If the supplied photographs do not support exact reproduction, reject and regenerate. Never approximate.
+
+MODEL DIRECTION
+
+Use a professional adult male fashion model with a natural, realistic physique suitable for the detected garment fit.
+
+For variation across different products:
+
+• do not reuse the same face, hairstyle, ethnicity, body type or pose from previous article generations
+• choose a distinct model identity for each product
+• avoid a generic repeated AI-fashion-model appearance
+• maintain anatomically correct hands, arms, shoulders and neck
+
+POSE
+
+• clean front-facing studio pose
+• torso visible from head to upper thigh or mid-thigh
+• relaxed posture
+• one hand may rest naturally in a trouser pocket
+• other arm relaxed
+• shoulders level
+• garment front, sleeves, collar or neckline, placket and branding unobstructed
+• no crossed arms
+• no hand covering logo or placket
+
+GARMENT FIT
+
+The product must fit the model according to the actual silhouette shown in the supplied photos.
+
+Preserve:
+
+• shoulder position
+• chest ease
+• body length
+• sleeve length and opening
+• hem shape
+• collar or neckline behaviour
+• placket alignment
+• logo placement relative to the body
+
+Do not make the garment tighter, looser, shorter or longer for styling.
+
+STYLING
+
+• understated solid trousers
+• no jacket, scarf or layering over the product
+• no necklace covering neckline
+• no distracting watch, bag or accessories
+• product remains dominant
+
+BACKGROUND — ABSOLUTE COLOUR LOCK
+
+Use exactly one flat, solid studio background colour across the entire canvas:
+
+• HEX: #EDEBE8
+• RGB: 237, 235, 232
+• sRGB colour space
+
+BACKGROUND COLOUR IMMUTABILITY — ABSOLUTE
+
+The background colour is fixed and must never change.
+
+Every visible background pixel that is not occupied by the model, garment or its physically necessary contact shadow must visually remain #EDEBE8.
+
+Never:
+
+• choose another neutral tone
+• reinterpret #EDEBE8 as warm white, grey, beige, cream or off-white
+• make the background lighter or darker
+• shift the hue warmer or cooler
+• alter saturation
+• alter white balance
+• apply colour grading to the background
+• apply exposure variation to the background
+• create gradients
+• create radial gradients
+• create corner darkening
+• create edge falloff
+• create vignette
+• create spotlight effects
+• create background glow
+• create background haze
+• create tonal variation
+• create texture
+• create paper grain
+• create wall texture
+• create floor texture
+• create seams
+• create horizon lines
+• create wall corners
+• create environmental elements
+• create props
+• create furniture
+• create decorative shadows
+• create coloured reflections
+• allow garment or skin colour to spill onto or tint the background
+• allow studio lights to change the perceived background colour
+
+LIGHTING IS NOT PERMITTED TO MODIFY THE BACKGROUND COLOUR.
+
+Lighting may shape and reveal the model and garment, but the background itself must remain visually flat, uniform and colour-constant at #EDEBE8 from corner to corner.
+
+Any necessary contact shadow must be extremely soft, neutral, minimal and localised immediately around or beneath the model. It must not create a broad background gradient or visibly change the overall #EDEBE8 field.
+
+BACKGROUND MATCHING REQUIREMENT
+
+This image must use the exact same background specification as 01 — ISOLATED FRONT PRODUCT:
+
+#EDEBE8 / RGB 237, 235, 232 / sRGB
+
+There must be no perceptible background shade difference between 01 and 05.
+
+If the rendered background appears even slightly lighter, darker, warmer, cooler, greyer, creamier or more saturated than #EDEBE8, reject and regenerate.
+
+LIGHTING
+
+• soft diffused key light on the model and garment only
+• realistic skin texture
+• accurate garment colour
+• controlled natural shadow
+• no beauty-filter skin
+• no synthetic plastic fabric
+• lighting must not alter, tint, brighten, darken or grade the background
+
+FINAL REJECTION CHECK
+
+Reject and regenerate unless:
+
+• garment identity is exact
+• logo and trims match
+• model anatomy is natural
+• product is fully visible and unobstructed
+• no repeated model identity is used across the catalogue
+• output is exactly 1254 × 1254 px
+• background is exactly #EDEBE8 / RGB 237, 235, 232 / sRGB
+• background is visually uniform from corner to corner
+• no background gradient, vignette, texture, exposure falloff, colour cast or white-balance shift is present
+• background shade matches 01 — ISOLATED FRONT PRODUCT exactly
+• no lighting effect changes the perceived background colour

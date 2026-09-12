@@ -1,0 +1,462 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+06 — OUTDOOR LIFESTYLE MOVEMENT HERO / T-SHIRT OR POLO T-SHIRT
+==============================================================
+
+Generate exactly one premium outdoor lifestyle campaign photograph featuring the actual garment.
+
+This image must feel ACTIVE, NATURAL and ENVIRONMENTAL.
+
+It must NOT resemble Prompt 05 or Prompt 07.
+
+====================================================================================================
+OUTPUT
+======
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• exactly one adult male model
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+====================================================================================================
+CATEGORY AUTO-DETECTION
+=======================
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket
+
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons
+
+Preserve the detected category exactly.
+
+Never convert:
+
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+====================================================================================================
+SOURCE OF TRUTH
+===============
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• body proportions
+• shoulder fit
+• body length
+• sleeve length and width
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• sleeve cuff construction
+• cuff tipping or colour blocking
+• fabric texture and structure
+• fabric weight and drape
+• stitching and seams
+• chest branding
+• artwork
+• labels
+• genuine trims
+• hem construction
+
+Do not use another garment or previous AI-generated image as a product reference.
+
+====================================================================================================
+ARTICLE IMMUTABILITY — ABSOLUTE
+===============================
+
+The garment is final.
+
+Never:
+
+• redesign it
+• modernise it
+• recolour it
+• change its fit
+• change its proportions
+• alter sleeve length
+• alter body length
+• change neckline or collar
+• change placket
+• change button count
+• change collar tipping
+• change cuff tipping
+• move branding
+• enlarge or reduce branding
+• replace genuine artwork
+• invent trims
+• remove permanent garment details
+
+The model must adapt to the garment.
+
+The garment must not be redesigned to suit the model.
+
+====================================================================================================
+MODEL UNIQUENESS
+================
+
+Use a professional adult male fashion model.
+
+The model must be visually distinct from the models used in Prompts 05 and 07.
+
+Do not repeat:
+
+• face
+• hairstyle
+• ethnicity
+• facial hair
+• body build
+• expression
+• pose
+
+Use a realistic natural physique appropriate for the garment fit.
+
+No exaggerated bodybuilding proportions.
+
+No generic repeated AI-fashion-model appearance.
+
+====================================================================================================
+CORE VISUAL IDENTITY — PROMPT 06
+================================
+
+THIS IMAGE IS A MOVEMENT-BASED OUTDOOR LIFESTYLE IMAGE.
+
+The defining characteristics are:
+
+• model genuinely walking
+• visible natural movement
+• wider environmental composition
+• premium exterior architecture
+• relaxed lifestyle energy
+• candid editorial feeling
+• garment still clearly readable
+
+Do NOT create:
+
+• a static standing portrait
+• a model leaning against a wall
+• a tightly cropped fashion portrait
+• a formal catalogue pose
+• a composition resembling Prompt 07
+
+====================================================================================================
+SCENE
+=====
+
+Use a refined outdoor architectural environment.
+
+Preferred environment:
+
+• pale limestone
+• travertine
+• light natural stone
+• restrained European-style architecture
+• premium pedestrian walkway
+• elegant exterior arcade
+• minimalist luxury hotel or gallery exterior
+• clean sunlit stone surfaces
+
+The location must feel premium but believable.
+
+No:
+
+• crowds
+• cars
+• motorcycles
+• shop signs
+• advertisements
+• readable third-party text
+• graffiti
+• colourful street clutter
+• tourist atmosphere
+• busy vegetation
+• decorative props
+
+The environment should occupy a meaningful portion of the frame.
+
+This is not a studio-style image with a wall behind the model.
+
+====================================================================================================
+MOVEMENT — NON-NEGOTIABLE
+=========================
+
+The model must be captured DURING a genuine walking stride.
+
+Show clear but controlled movement.
+
+Required:
+
+• torso moving naturally forward
+• one leg visibly advancing relative to the other
+• shoulders naturally responding to movement
+• one arm participating in natural arm swing
+• subtle fabric response caused by walking
+
+The model must NOT appear frozen in a static standing pose.
+
+Do not create an exaggerated running stride.
+
+The movement must feel:
+
+• relaxed
+• confident
+• effortless
+• natural
+• premium
+
+====================================================================================================
+POSE
+====
+
+Use:
+
+• natural walking stride
+• front or very gentle front three-quarter orientation
+• torso approximately 0–15 degrees from camera
+• head looking away from the camera or slightly across the environment
+• one hand MAY briefly enter a trouser pocket if physically natural during the stride
+• at least one arm must remain free and naturally moving
+
+Avoid:
+
+• both hands in pockets
+• crossed arms
+• hands covering garment branding
+• stiff shoulders
+• exaggerated runway posture
+• direct static front pose
+• wall leaning
+
+====================================================================================================
+NO SUNGLASSES — PROMPT 06
+=========================
+
+Do not use sunglasses.
+
+Keep the face visible and natural.
+
+Do not use:
+
+• hats
+• bags
+• scarves
+• visible necklaces
+• statement watches
+• jewellery that competes with the garment
+
+====================================================================================================
+GARMENT FIT AND MOVEMENT
+========================
+
+Preserve the exact garment fit supported by the product photographs.
+
+Preserve:
+
+• shoulder position
+• chest ease
+• body length
+• sleeve length
+• sleeve opening
+• collar or neckline behaviour
+• placket geometry
+• hem shape
+• logo placement
+
+Natural walking may introduce limited realistic folds.
+
+Allow only physically plausible movement folds.
+
+Never:
+
+• stretch the logo
+• distort the artwork
+• alter sleeve length
+• make sleeves tighter or looser
+• change body length
+• change collar shape
+• change cuff tipping
+• change collar tipping
+• change button count
+• make fabric excessively fluid
+• create wind-blown fabric unless clearly subtle
+
+====================================================================================================
+STYLING
+=======
+
+Use understated premium trousers.
+
+Preferred:
+
+• black
+• charcoal
+• dark graphite
+• deep neutral
+
+No:
+
+• jacket
+• overshirt
+• sweater
+• visible belt branding
+• competing logos
+• loud footwear
+• loud patterns
+
+The garment must remain the visual hero.
+
+====================================================================================================
+CAMERA AND FRAMING — DISTINCT FROM PROMPT 07
+============================================
+
+Use a wider lifestyle composition.
+
+Preferred visual equivalent:
+
+• approximately 35–50 mm photographic perspective
+• camera around chest or upper-waist height
+• enough environmental context to establish location
+
+Frame from:
+
+• head to approximately knee
+
+OR
+
+• head to lower thigh
+
+Do not crop tightly around the torso.
+
+The model should occupy approximately 60–72% of the frame height.
+
+The architecture must remain clearly visible.
+
+The model may be positioned slightly off-centre to create movement and directional space.
+
+Leave visual breathing room in the direction of movement.
+
+Do NOT use the tight waist-up composition reserved for Prompt 07.
+
+====================================================================================================
+LIGHTING
+========
+
+Use refined natural daylight.
+
+Preferred:
+
+• soft morning sunlight
+• late-morning directional daylight
+• controlled open shade with subtle sun interaction
+
+Lighting should create:
+
+• accurate garment colour
+• realistic skin
+• natural fabric texture
+• subtle depth
+• gentle architectural shadows
+
+Avoid:
+
+• harsh noon overexposure
+• orange sunset cast
+• cinematic teal/orange grading
+• artificial studio appearance
+• heavy contrast
+• crushed shadows
+• beauty-filter skin
+
+====================================================================================================
+ENTITLED MOOD
+=============
+
+The image should communicate:
+
+• effortless premium lifestyle
+• movement
+• exclusivity
+• quiet confidence
+• modern menswear
+• restrained luxury
+
+It should feel like a candid frame from a premium menswear campaign.
+
+Not a posed ecommerce catalogue photograph.
+
+====================================================================================================
+FINAL REJECTION CHECK
+=====================
+
+Reject and regenerate unless:
+
+• exactly one adult male model appears
+• output is exactly 1254 × 1254 px
+• garment identity matches the source
+• garment category is correct
+• garment colour and undertone are accurate
+• branding is faithful
+• collar or neckline is accurate
+• placket and button count are accurate when present
+• sleeve length is source-derived and accurate
+• cuff and collar tipping are accurate
+• model is visibly different from Prompts 05 and 07
+• model is genuinely walking
+• image clearly communicates movement
+• at least one arm participates naturally in movement
+• composition includes meaningful exterior environment
+• frame is wider than Prompt 07
+• no sunglasses appear
+• background is refined pale-stone architecture
+• no crowd, cars, signage or clutter appear
+• product remains clearly visible
+• logo is unobstructed
+• garment fit remains authentic
+• no garment redesign occurs
+• anatomy is natural
+• image does not resemble a static architectural portrait
+
+FINAL PROMPT 06 IDENTITY:
+
+MOVEMENT
+
+*
+
+WIDER ENVIRONMENT
+
+*
+
+PALE ARCHITECTURE
+
+*
+
+NATURAL WALKING
+
+*
+
+PREMIUM LIFESTYLE

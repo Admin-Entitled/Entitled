@@ -1,0 +1,7 @@
+node_modules
+dist
+dist-electron
+resources/presets/entitled-v1/masters/*.md
+coverage
+release
+artifacts/smoke-tests/**

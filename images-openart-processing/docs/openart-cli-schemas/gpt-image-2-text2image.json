@@ -1,0 +1,25 @@
+{
+  "model": "gpt-image-2",
+  "mode": "text2image",
+  "media": "image",
+  "required": ["prompt"],
+  "supported": {
+    "imageCount": [1, 8],
+    "aspectRatio": [
+      "1:1",
+      "3:2",
+      "2:3",
+      "16:9",
+      "9:16",
+      "4:3",
+      "3:4",
+      "5:4",
+      "4:5",
+      "21:9",
+      "9:21"
+    ],
+    "resolutionTier": ["1k", "2k", "4k"],
+    "quality": ["low", "medium", "high", "auto"],
+    "outputFormat": ["png", "jpeg", "webp"]
+  }
+}

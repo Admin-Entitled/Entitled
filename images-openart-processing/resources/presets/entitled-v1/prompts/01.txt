@@ -1,0 +1,981 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This prompt controls only the specific shot and composition requested below.
+
+====================================================================================================
+01 — ISOLATED FRONT PRODUCT / T-SHIRT OR POLO T-SHIRT
+=====================================================
+
+Generate exactly one premium Shopify-ready isolated front product photograph.
+
+====================================================================================================
+OUTPUT
+======
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• product only
+• no model
+• no mannequin visible
+• no hanger
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+====================================================================================================
+CATEGORY AUTO-DETECTION
+=======================
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket.
+
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons.
+
+Preserve the detected category exactly.
+
+Never convert:
+
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+====================================================================================================
+SOURCE OF TRUTH
+===============
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette and fit
+• body width and length
+• shoulder width and slope
+• proportions
+• neckline or collar
+• collar tipping or colour blocking
+• placket construction
+• exact visible button count
+• button size, colour, placement and spacing
+• sleeve length, angle and shape
+• sleeve opening and cuff construction
+• cuff tipping or colour blocking
+• fabric texture
+• knit or weave structure
+• fabric weight and thickness
+• natural drape and sheen
+• stitching, seams and reinforcement
+• chest branding
+• labels, artwork and all genuine trims
+• hem construction
+• side vents when present
+
+Do not use any other garment, reference image, brand catalogue or imagined design as a source of product information.
+
+====================================================================================================
+VISUAL REFERENCE PRIORITY — ABSOLUTE
+====================================
+
+The supplied actual-product photographs override any generic assumptions about polo proportions, sleeve shape, collar construction, branding, logo appearance or ecommerce styling.
+
+Before generation, compare all supplied product photographs together and build one consistent visual interpretation of the SAME physical garment.
+
+The output must match the supplied photographs specifically, not a generic or similar-looking garment.
+
+Preserve the photographed product's actual:
+
+• sleeve length relative to body length
+• sleeve width and taper
+• sleeve opening width
+• shoulder-to-sleeve transition
+• body width-to-length ratio
+• collar size relative to shoulder width
+• collar stripe width, spacing and colour
+• placket length and width
+• exact button count and spacing
+• chest-logo size relative to the chest
+• chest-logo placement relative to placket, shoulder and side seam
+• logo/graphic colour and contrast
+• neck-label appearance and placement
+
+Do not beautify, standardise or regularise the garment into generic fashion proportions.
+
+Do not lengthen sleeves, enlarge the collar, enlarge the logo, simplify graphics or alter body proportions merely to improve presentation.
+
+When the source photographs show a detail clearly, that photographed detail has priority over generic generation tendencies.
+
+====================================================================================================
+ARTICLE IMMUTABILITY — ABSOLUTE
+===============================
+
+The article is final.
+
+Never redesign, modernise, simplify, recolour, resize, reposition, replace, add or remove any permanent garment element.
+
+Preserve exactly:
+
+• logo characters and spelling
+• typography and letter spacing
+• logo proportions
+• logo orientation
+• logo colour
+• logo placement and scale
+• embroidery or print texture
+• thread direction and edge character
+• permanent neck labels
+• permanent external labels
+• collar or neckline
+• placket
+• buttons
+• sleeve cuffs
+• hems
+• seams
+• tipping
+• colour blocking
+• artwork and patterns
+
+Never:
+
+• retype or redraw branding
+• use a generic replacement font
+• clean up, simplify or reinterpret genuine branding
+• mirror or relocate branding
+• invent missing characters
+• substitute another brand
+• add styling details not present in the product photographs
+• remove genuine permanent details
+• alter embroidery density
+• change print placement
+• alter pattern scale
+• change button count
+• change collar or cuff construction
+• modify garment proportions
+
+Never approximate, reinterpret or invent permanent product details.
+
+====================================================================================================
+PROFESSIONAL IRONING AND GARMENT PREPARATION — MANDATORY
+========================================================
+
+The article must appear professionally steam-ironed, smoothly pressed and fully prepared for premium ecommerce photography.
+
+Remove only temporary presentation defects, including:
+
+• transport wrinkles
+• packaging creases
+• compression lines
+• temporary fold marks
+• unwanted fabric ripples
+• lint
+• dust
+• loose removable threads
+• temporary tags or attachments not forming part of the final article
+
+The entire article must appear smooth and freshly ironed across:
+
+• collar or neckline
+• shoulder area
+• chest
+• placket
+• sleeves
+• sleeve openings or cuffs
+• side body
+• lower body
+• bottom hem
+
+Ironing must not alter the actual construction, texture, volume or natural character of the fabric.
+
+Do not:
+
+• flatten ribbing
+• erase genuine knit texture
+• eliminate permanent seam shaping
+• remove intentional construction details
+• stretch the garment
+• shrink the garment
+• make the fabric unnaturally rigid
+• create artificial body creases
+• produce a plastic, laminated or over-pressed appearance
+• distort embroidery, prints, labels or branding
+
+IMPORTANT:
+
+The deliberately created straight sleeve presentation folds described later in this prompt are REQUIRED presentation folds and must remain visible.
+
+Do not remove those required sleeve folds during ironing.
+
+====================================================================================================
+PRESENTATION
+============
+
+Show the complete garment from the front, centred and fully visible.
+
+Present the garment as a professionally arranged premium flat-lay or invisible-form product photograph.
+
+The garment must be:
+
+• symmetrical
+• naturally shaped
+• professionally steam-ironed
+• smoothly pressed
+• correctly proportioned
+• aligned vertically
+• clean and commercially prepared
+• free from lint, dust and removable threads
+• free from packaging or transport distortion
+
+Ensure:
+
+• both shoulder seams are evenly positioned
+• the collar or neckline is correctly formed
+• the placket is perfectly vertical when present
+• the body lies evenly
+• both side seams are symmetrically positioned
+• side vents match the actual product when present
+• the bottom hem is straight, smooth and level
+• genuine fabric texture remains visible
+• the garment does not appear inflated
+• the garment does not appear excessively flattened
+• the garment does not appear artificially rigid
+
+====================================================================================================
+SLEEVE PRESENTATION — ABSOLUTE / NON-NEGOTIABLE
+===============================================
+
+The sleeve presentation is a defining requirement of this image.
+
+THE TWO HIGHEST-PRIORITY SLEEVE REQUIREMENTS ARE:
+
+1. PRESERVE THE ACTUAL SHORT SLEEVE LENGTH OF THE SUPPLIED PRODUCT.
+2. CREATE ONE CLEAR, RULER-STRAIGHT, DELIBERATELY PRESSED FOLD ON EACH SLEEVE.
+
+BOTH conditions must be satisfied simultaneously.
+
+A result satisfying only one condition is incorrect.
+
+The sleeves MAY open outward or diagonally as much as reasonably necessary to achieve the required straight-fold presentation.
+
+Do NOT force the sleeves close to the torso.
+
+Do NOT force the sleeves vertically downward.
+
+Sleeve angle is flexible.
+
+Sleeve length and fold straightness are not flexible.
+
+====================================================================================================
+SHORT-SLEEVE GEOMETRY LOCK — ABSOLUTE
+=====================================
+
+Preserve the actual SHORT sleeve geometry shown in the supplied product photographs.
+
+The sleeve length must come directly from the source garment.
+
+Never use:
+
+• generic polo sleeve proportions
+• generic T-shirt sleeve proportions
+• standard mid-bicep fashion sleeves
+• imagined category-default dimensions
+
+Before generation, inspect the supplied product photographs and visually preserve:
+
+• shoulder seam to sleeve hem distance
+• underarm point to sleeve hem distance
+• sleeve width
+• sleeve taper
+• sleeve-opening width
+• sleeve-to-body-length proportion
+• sleeve-to-chest-width proportion
+• shoulder-to-sleeve transition
+
+The sleeves must remain genuinely SHORT and COMPACT.
+
+Never:
+
+• lengthen the sleeves
+• shorten the sleeves
+• enlarge the sleeve merely to make folding easier
+• extend the sleeve toward the elbow
+• increase sleeve length to create a cleaner straight line
+• increase sleeve length because the sleeve is angled downward
+• distort the sleeve opening
+• convert the sleeve into a generic fashion-polo sleeve
+
+SLEEVE POSITION and SLEEVE LENGTH are independent variables.
+
+Changing sleeve position must NEVER change sleeve length.
+
+====================================================================================================
+PRIMARY SLEEVE FOLD — STRAIGHT PRESSED EDGE / ABSOLUTE
+======================================================
+
+The required visible fold on each sleeve is a DELIBERATE PRESSED FLAT-LAY FOLD EDGE.
+
+THIS DISTINCTION IS CRITICAL.
+
+The required fold is NOT:
+
+• the armhole seam
+• the sleeve attachment seam
+• the natural underarm curve
+• a natural drape line
+• a wrinkle
+• a ripple
+• a soft crease
+• a curved transition between body and sleeve
+
+The natural armhole seam may remain curved because that curvature belongs to the actual garment construction.
+
+THE REQUIRED STRAIGHT FOLD IS A SEPARATE PRESENTATION FOLD CREATED ACROSS THE SLEEVE FABRIC.
+
+====================================================================================================
+FOLD GEOMETRY — NON-NEGOTIABLE
+==============================
+
+Each sleeve must contain exactly ONE dominant presentation fold.
+
+That dominant fold must form ONE SINGLE STRAIGHT LINE SEGMENT.
+
+It must be:
+
+• ruler-straight
+• visually clear
+• continuous
+• deliberate
+• crisp
+• clean
+• professionally pressed
+• symmetrical with the opposite sleeve
+
+The fold must have:
+
+• NO convex curve
+• NO concave curve
+• NO bow
+• NO arc
+• NO S-shape
+• NO rounded middle
+• NO waviness
+• NO lateral wandering
+• NO multiple competing crease lines
+
+A gentle curve is NOT acceptable.
+
+A natural-looking curve is NOT acceptable.
+
+A visually pleasing curve is NOT acceptable.
+
+The dominant presentation fold itself must be geometrically straight.
+
+====================================================================================================
+STRAIGHT-LINE ENDPOINT LOCK
+===========================
+
+Treat each required sleeve fold as a line defined by exactly TWO endpoints.
+
+POINT A — UPPER FOLD ENDPOINT
+
+Located on the visible sleeve panel, separate from the natural curved armhole seam.
+
+POINT B — LOWER FOLD ENDPOINT
+
+Located at or immediately adjacent to the sleeve opening / cuff region.
+
+The visible pressed fold must connect POINT A directly to POINT B.
+
+A SINGLE STRAIGHT VECTOR must connect these two points.
+
+The physical fabric fold must visually follow this straight vector.
+
+Nothing between POINT A and POINT B may deviate from that straight path.
+
+====================================================================================================
+RULER TEST — ABSOLUTE
+=====================
+
+Imagine physically placing a rigid straight ruler directly over the dominant sleeve fold.
+
+The ENTIRE fold from POINT A to POINT B must align with the ruler.
+
+No section may:
+
+• move away from the ruler
+• curve toward the torso
+• curve away from the torso
+• bow inward
+• bow outward
+• round off
+• arc
+• bend
+
+If the entire fold cannot be covered by one straight ruler:
+
+THE IMAGE FAILS.
+
+Even a small visible bow is a failure.
+
+====================================================================================================
+FOLD CONSTRUCTION — PHYSICALLY REALISTIC
+========================================
+
+The fold must result from realistic folded fabric geometry.
+
+It must NOT look like:
+
+• a digitally drawn line
+• artificial dark piping
+• printed artwork
+• a seam that does not exist
+• a fake graphic overlay
+
+Instead, the fabric must change plane cleanly along the fold.
+
+The fold should create:
+
+• subtle physical depth
+• realistic fabric thickness
+• restrained highlight/shadow separation
+• a crisp structural edge
+• a professional flat-lay presentation
+
+Imagine that a professional ecommerce stylist physically prepared the garment as follows:
+
+1. place garment flat
+2. preserve the genuine short sleeve dimensions
+3. open each sleeve outward sufficiently
+4. align the sleeve fabric manually
+5. use a straight guide to establish the fold
+6. press the sleeve along that straight guide
+7. photograph the garment without disturbing the fold
+
+The generated result must visually reproduce that preparation.
+
+====================================================================================================
+ARMHOLE CURVE VS PRESENTATION FOLD — CRITICAL DISTINCTION
+=========================================================
+
+The natural armhole / sleeve attachment seam may be curved.
+
+This is allowed and should preserve genuine garment construction.
+
+However:
+
+ARMHOLE CURVE = ALLOWED
+
+DOMINANT PRESENTATION FOLD CURVE = FORBIDDEN
+
+Do NOT attempt to convert the natural armhole seam into the required fold.
+
+Do NOT follow the armhole curvature when creating the presentation fold.
+
+The straight fold must appear as a separate visible pressed edge across the sleeve panel.
+
+====================================================================================================
+SLEEVE ORIENTATION — FLEXIBLE
+=============================
+
+Sleeve orientation is intentionally flexible.
+
+The sleeves may:
+
+• open outward
+• spread farther from the torso
+• sit diagonally outward
+• use a moderate downward angle
+• use a wider flat-lay presentation
+
+Choose whichever sleeve orientation produces the best simultaneous result for:
+
+1. correct source-derived SHORT sleeve length
+2. ruler-straight dominant fold
+3. correct sleeve shape
+4. left/right mirror symmetry
+
+A more open sleeve is preferable to a curved fold.
+
+A wider sleeve angle is preferable to a curved fold.
+
+A diagonal sleeve is preferable to a curved fold.
+
+Never distort the fold merely to achieve a narrower garment silhouette.
+
+====================================================================================================
+LEFT / RIGHT MIRROR LOCK — ABSOLUTE
+===================================
+
+Both sleeve presentations must mirror one another.
+
+The two dominant folds must have:
+
+• equivalent straightness
+• equivalent angle
+• equivalent upper endpoint location
+• equivalent lower endpoint location
+• equivalent visible length
+• equivalent fold depth
+• equivalent light/shadow definition
+
+Both sleeves must have:
+
+• matching source-derived length
+• matching width
+• matching opening width
+• matching spread
+• matching presentation tension
+
+One fold must not be straight while the opposite fold curves.
+
+One sleeve must not open materially farther than the other.
+
+The garment must appear intentionally and symmetrically styled.
+
+====================================================================================================
+SLEEVE HEM / OPENING LOCK
+=========================
+
+Both sleeve openings must:
+
+• remain straight
+• remain smooth
+• remain clearly defined
+• preserve the real source construction
+• preserve genuine cuff construction
+• preserve genuine tipping or colour blocking
+• match each other symmetrically
+• contain no curling
+• contain no folding-under
+• contain no puckering
+• contain no unnecessary waves
+
+The sleeve opening itself must not be distorted to produce the straight presentation fold.
+
+====================================================================================================
+SLEEVE PRIORITY ORDER — ABSOLUTE
+================================
+
+When any sleeve requirements compete, use this exact hierarchy:
+
+1. RULER-STRAIGHT DOMINANT PRESENTATION FOLD
+2. ORIGINAL SOURCE-DERIVED SHORT SLEEVE LENGTH
+3. LEFT/RIGHT MIRROR SYMMETRY
+4. CORRECT SLEEVE WIDTH AND SHAPE
+5. CORRECT SLEEVE OPENING / CUFF CONSTRUCTION
+6. CORRECT TIPPING OR TRIMS
+7. CLEAN PRESSED PRESENTATION
+8. SLEEVE ANGLE
+9. PROXIMITY OF SLEEVE TO THE TORSO
+
+Sleeve angle and proximity to the body are lowest priority.
+
+If opening the sleeves wider produces a straighter fold:
+
+OPEN THEM WIDER.
+
+If changing the sleeve angle produces a straighter fold:
+
+CHANGE THE ANGLE.
+
+Never compromise fold straightness merely to keep the sleeves close to the torso.
+
+====================================================================================================
+ABSOLUTE SLEEVE REJECTION CONDITIONS
+====================================
+
+Reject and regenerate if either dominant presentation fold:
+
+• curves at any point
+• bows inward
+• bows outward
+• forms an arc
+• forms an S-shape
+• becomes rounded near its upper endpoint
+• becomes rounded in its middle
+• becomes rounded near the sleeve opening
+• becomes wavy
+• becomes visually ambiguous
+• looks like a natural wrinkle
+• follows the curved armhole seam
+• contains multiple competing folds
+• differs materially from the opposite sleeve
+• cannot visually align with one rigid straight ruler
+
+Also reject if:
+
+• either sleeve is longer than the source garment
+• either sleeve is shorter than the source garment
+• sleeves become generic mid-bicep length
+• sleeve length changes because of orientation
+• sleeve width changes materially
+• sleeve opening is distorted
+• left and right sleeves are asymmetrical
+• sleeves are forced close to the torso at the expense of fold straightness
+
+====================================================================================================
+FINAL REQUIRED SLEEVE APPEARANCE
+================================
+
+The final sleeve presentation must simultaneously show:
+
+ORIGINAL SOURCE-DERIVED SHORT SLEEVE LENGTH
+
+*
+
+ONE CLEAR RULER-STRAIGHT PRESSED PRESENTATION FOLD ON EACH SLEEVE
+
+*
+
+REALISTIC PHYSICAL FABRIC PLANE CHANGE
+
+*
+
+PERFECT LEFT / RIGHT MIRROR PRESENTATION
+
+*
+
+SLEEVE OPENING OUTWARD AS MUCH AS NECESSARY TO MAINTAIN THE STRAIGHT FOLD
+
+NO EXCEPTIONS.
+
+====================================================================================================
+T-SHIRT LOCK
+============
+
+When the detected article is a T-shirt:
+
+• preserve the exact neckline type
+• preserve neckline shape and depth
+• preserve neckband width
+• preserve neckband thickness and construction
+• preserve shoulder seams
+• preserve sleeve length
+• preserve sleeve shape
+• preserve sleeve-opening construction
+• preserve body width and length
+• preserve bottom hem construction
+• preserve the exact silhouette and fit
+
+Never:
+
+• add a collar
+• add a placket
+• add buttons
+• convert the neckline
+• deepen or reduce the neckline
+• alter neckband width
+• alter sleeve proportions
+• convert the T-shirt into a Henley, polo, sweatshirt or woven shirt
+
+====================================================================================================
+POLO LOCK
+=========
+
+When the detected article is a polo T-shirt:
+
+• preserve collar width
+• preserve collar length
+• preserve collar point shape
+• preserve rib structure
+• preserve collar thickness
+• preserve collar stand and natural formation
+• preserve exact collar tipping
+• preserve exact collar colour blocking
+• preserve placket length
+• preserve placket width
+• preserve placket reinforcement
+• preserve exact visible button count
+• preserve button size, colour and spacing
+• preserve sleeve cuffs
+• preserve cuff thickness
+• preserve exact cuff tipping
+• preserve exact cuff colour blocking
+• preserve side vents when present
+• preserve the complete original silhouette
+
+Never:
+
+• alter the collar shape
+• enlarge or reduce the collar
+• sharpen or soften collar points incorrectly
+• change collar tipping
+• change cuff tipping
+• change placket length or width
+• change button count
+• change button position
+• add or remove buttons
+• convert the polo into a T-shirt, Henley, woven shirt or sweatshirt
+
+====================================================================================================
+BRANDING AND ARTWORK PROTECTION — ABSOLUTE VISUAL LOCK
+======================================================
+
+All genuine branding, logos, embroidery, prints, patches, monograms, labels, text and artwork visible in the supplied product photographs are mandatory garment features.
+
+They are not optional decorative details.
+
+Use the closest supplied branding/detail photographs as the primary visual reference.
+
+Preserve exactly as visually supported:
+
+• exact wording and visible characters
+• exact overall logo composition
+• exact typography style
+• exact letter proportions
+• exact spacing
+• exact alignment
+• exact orientation
+• exact colour
+• exact contrast against the garment
+• exact print or embroidery appearance
+• exact placement
+• exact scale relative to the garment
+• exact distance from placket
+• exact distance from shoulder and side seam
+• exact neck-label size, colour and placement
+
+BRANDING VISIBILITY — MANDATORY
+
+• chest branding must remain visible
+• chest branding must not disappear into the fabric
+• chest branding must not be omitted
+• chest branding must not be replaced by a generic emblem
+• chest branding must remain in its real source position
+• permanent neck label must remain present when visible in the source
+• remove only loose removable threads/strings around the label
+• do NOT remove or alter the permanent label
+
+Never:
+
+• omit genuine branding
+• generate substitute branding
+• modernise branding
+• simplify branding
+• invent replacement lettering
+• duplicate branding
+• relocate branding
+• mirror branding
+• enlarge or shrink branding materially
+• create additional text or graphics
+
+====================================================================================================
+BACKGROUND — ABSOLUTE COLOUR LOCK
+=================================
+
+Use exactly one flat, solid studio background:
+
+• HEX: #EDEBE8
+• RGB: 237, 235, 232
+• sRGB
+
+The background colour is immutable.
+
+Every visible background area not occupied by the garment or its physically necessary localised shadow must visually remain #EDEBE8.
+
+Never:
+
+• choose another neutral tone
+• make the background lighter or darker
+• shift it warmer or cooler
+• introduce beige, grey, cream or white variation
+• alter saturation
+• create gradients
+• create radial lighting
+• create vignette
+• create edge falloff
+• create texture
+• create paper grain
+• create wall or floor texture
+• create environmental elements
+• create props
+• create broad decorative shadows
+
+Lighting is not permitted to change the perceived background colour.
+
+Any garment shadow must be:
+
+• extremely soft
+• neutral
+• minimal
+• localised immediately around the garment
+
+Do not include:
+
+• hangers
+• clips
+• pins
+• visible supports
+• hands
+• mannequins
+• human body parts
+
+====================================================================================================
+LIGHTING
+========
+
+Use soft, balanced professional ecommerce studio lighting.
+
+Lighting must provide:
+
+• accurate garment colour and undertone
+• even exposure
+• gentle dimensionality
+• enough micro-contrast to reveal fabric texture
+• visible stitching and construction
+• clear genuine branding
+• controlled highlights
+• clean natural shadows
+• sufficient fold-edge definition to make the required straight sleeve folds clearly visible
+
+Avoid:
+
+• clipped highlights
+• crushed shadows
+• harsh directional shadows
+• dramatic cinematic lighting
+• colour casts
+• excessive contrast
+• fake gloss
+• plastic fabric texture
+• metallic-looking cotton
+• over-sharpening
+• excessive HDR
+
+====================================================================================================
+FRAMING
+=======
+
+• output exactly 1254 × 1254 px
+• square composition
+• complete garment visible
+• front orientation vertically aligned
+• garment centred precisely
+• garment occupies approximately 82–88% of the canvas
+• balanced breathing room
+• no cropped collar
+• no cropped neckline
+• no cropped sleeves
+• no cropped sleeve openings
+• no cropped side seams
+• no cropped bottom hem
+• no excessive empty space
+• no perspective distortion
+• no tilted presentation
+
+If sleeves need to open somewhat farther outward to produce ruler-straight folds, reduce overall garment scale slightly if necessary so the complete garment remains comfortably inside the square canvas.
+
+Do NOT shorten, compress or distort the sleeves merely to fit the canvas.
+
+====================================================================================================
+REALISM
+=======
+
+The result must appear to be a genuine professionally photographed physical garment.
+
+Preserve:
+
+• realistic fabric thickness
+• realistic knit or weave structure
+• natural seam depth
+• natural collar and cuff construction
+• authentic embroidery or print integration
+• realistic stitching
+• subtle natural fabric behaviour
+• believable edge definition
+• physically plausible pressed sleeve folds
+
+Avoid:
+
+• CGI appearance
+• illustrated appearance
+• synthetic AI texture
+• melted details
+• duplicated stitching
+• warped seams
+• floating buttons
+• malformed collars
+• fake branding
+• inconsistent patterns
+• unnatural garment geometry
+
+====================================================================================================
+FINAL REJECTION CHECK
+=====================
+
+Reject and regenerate unless ALL conditions below are satisfied:
+
+• exactly one image
+• exactly 1254 × 1254 px
+• garment category is correct
+• silhouette matches actual product
+• source-derived body proportions are preserved
+• colour and undertone match
+• fabric texture matches
+• branding is present and faithful
+• neck label remains present when supported by source
+• loose removable label threads are removed
+• collar or neckline is correct
+• placket construction is correct
+• button count is correct
+• sleeve length matches the original product
+• sleeves remain genuinely short
+• neither sleeve has been lengthened for presentation
+• ONE deliberate dominant presentation fold exists on each sleeve
+• both dominant presentation folds are ruler-straight
+• neither dominant fold curves at any point
+• neither dominant fold follows the natural curved armhole seam
+• both dominant folds are separate from the armhole geometry
+• a physical ruler could visually overlap each entire fold from endpoint to endpoint
+• both folds mirror each other closely
+• sleeves may open outward as needed to maintain fold straightness
+• sleeve angle has not been prioritised above fold straightness
+• sleeve openings remain straight and accurate
+• cuff construction/tipping remains accurate
+• garment is professionally pressed
+• no unwanted wrinkles remain
+• no bunching or puckering
+• left/right presentation is symmetrical
+• bottom hem is straight
+• no temporary tags, clips, threads or lint remain
+• no model, hanger or mannequin visible
+• complete garment remains uncropped
+• background remains exact #EDEBE8 / RGB 237,235,232
+• no background gradient or vignette
+• garment colour remains accurate
+• no invented permanent garment details
+
+====================================================================================================
+FINAL SLEEVE ACCEPTANCE RULE — ABSOLUTE
+=======================================
+
+THE IMAGE FAILS IF:
+
+• SLEEVE LENGTH IS CORRECT BUT THE DOMINANT FOLD IS EVEN SLIGHTLY CURVED.
+
+THE IMAGE ALSO FAILS IF:
+
+• THE DOMINANT FOLD IS STRAIGHT BUT THE SLEEVE LENGTH IS INCORRECT.
+
+THE ONLY ACCEPTABLE RESULT HAS BOTH:
+
+1. THE ORIGINAL SOURCE-DERIVED SHORT SLEEVE LENGTH
+
+AND
+
+2. ONE VISIBLY RULER-STRAIGHT PRESSED PRESENTATION FOLD ON EACH SLEEVE.
+
+THE STRAIGHT FOLD IS A SEPARATE PRESENTATION FOLD AND MUST NOT FOLLOW THE NATURAL CURVED ARMHOLE SEAM.
+
+NO EXCEPTIONS.

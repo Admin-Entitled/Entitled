@@ -1,0 +1,462 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for brand art direction, visual language, lighting, composition and overall ENTITLED aesthetic.
+2. ENTITLED_IMAGE_RULES.md — for all non-negotiable garment fidelity and product-identity rules.
+
+Priority order:
+
+Actual supplied product photographs > ENTITLED_IMAGE_RULES.md > ENTITLED_VISUAL_SYSTEM.md > this prompt > composition/reference images.
+
+This numbered prompt controls only the specific shot and composition requested below.
+
+Do not inherit, reuse or mix composition instructions from any other numbered prompt.
+
+====================================================================================================
+07 — URBAN ARCHITECTURAL EDITORIAL PORTRAIT / T-SHIRT OR POLO T-SHIRT
+=====================================================================
+
+Generate exactly one premium static urban architectural editorial portrait featuring the actual garment.
+
+This image must feel STRUCTURED, STATIC, ARCHITECTURAL and EDITORIAL.
+
+It must NOT resemble Prompt 06.
+
+====================================================================================================
+OUTPUT
+======
+
+• exactly one image
+• square format
+• exactly 1254 × 1254 px
+• ultra-photorealistic
+• exactly one adult male model
+• no collage, caption, border or watermark
+• no added text outside genuine garment branding
+
+====================================================================================================
+CATEGORY AUTO-DETECTION
+=======================
+
+Inspect every supplied actual-product photograph before generation.
+
+Classify the garment as:
+
+• T-SHIRT — crew neck, round neck, V-neck or equivalent neckline without a polo collar and buttoned placket
+
+• POLO T-SHIRT — structured or knitted polo collar with a placket and one or more buttons
+
+Preserve the detected category exactly.
+
+Never convert:
+
+• a T-shirt into a polo
+• a polo into a T-shirt
+• either garment into a Henley, woven shirt, sweatshirt or another category
+• the product into a hybrid garment
+
+====================================================================================================
+SOURCE OF TRUTH
+===============
+
+Use every supplied photograph of the current product as the sole source of truth for:
+
+• garment category
+• colour and undertone
+• silhouette
+• fit
+• proportions
+• shoulder fit
+• body length
+• sleeve length
+• neckline or collar
+• collar tipping
+• placket
+• buttons
+• sleeve cuff construction
+• cuff tipping
+• fabric texture
+• stitching
+• seams
+• chest branding
+• artwork
+• labels
+• genuine trims
+
+Do not use another garment or previous generation as a product reference.
+
+====================================================================================================
+ARTICLE IMMUTABILITY — ABSOLUTE
+===============================
+
+The article is final.
+
+Never:
+
+• redesign
+• recolour
+• resize
+• reshape
+• shorten
+• lengthen
+• tighten
+• loosen
+• modify neckline
+• modify collar
+• modify placket
+• alter button count
+• alter sleeve proportions
+• move branding
+• enlarge branding
+• reduce branding
+• alter genuine artwork
+• add styling details to the garment
+
+The garment must remain the exact supplied article.
+
+====================================================================================================
+MODEL UNIQUENESS
+================
+
+Use an adult male fashion model visually distinct from the models used in Prompts 05 and 06.
+
+Do not repeat:
+
+• face
+• hairstyle
+• ethnicity
+• facial hair
+• body build
+• pose
+• expression
+
+The model should have a controlled editorial presence.
+
+====================================================================================================
+CORE VISUAL IDENTITY — PROMPT 07
+================================
+
+THIS IMAGE IS A STATIC URBAN ARCHITECTURAL PORTRAIT.
+
+The defining characteristics are:
+
+• static model
+• strong three-quarter torso orientation
+• tighter portrait crop
+• contemporary architecture
+• darker / graphite architectural language
+• geometric composition
+• controlled editorial attitude
+
+Do NOT generate:
+
+• walking
+• visible stride
+• arm swing
+• pale classical architecture
+• broad environmental lifestyle framing
+• candid movement
+• a composition resembling Prompt 06
+
+====================================================================================================
+SCENE — DISTINCT FROM PROMPT 06
+===============================
+
+Use contemporary modern architecture.
+
+Preferred materials:
+
+• graphite concrete
+• charcoal architectural stone
+• dark brushed metal
+• smoked glass
+• clean grey concrete
+• minimalist geometric facade
+• deep architectural recesses
+• modern black structural elements
+
+The environment should feel:
+
+• modern
+• metropolitan
+• quiet
+• precise
+• architectural
+• premium
+
+Avoid:
+
+• limestone palace facades
+• classical columns
+• arches associated with Prompt 06
+• Mediterranean stone walkways
+• crowds
+• cars
+• street signage
+• graffiti
+• shopfront branding
+• colourful backgrounds
+
+====================================================================================================
+POSE — STATIC / NON-NEGOTIABLE
+==============================
+
+The model must be standing completely still.
+
+NO WALKING.
+
+NO STRIDE.
+
+NO ARM SWING.
+
+Use a deliberate front three-quarter pose.
+
+Required:
+
+• torso approximately 25–40 degrees from camera
+• shoulders visibly angled
+• model weight settled naturally on one leg
+• one hand may rest naturally in trouser pocket
+• other arm relaxed
+• posture controlled and confident
+• garment chest remains readable
+• logo remains unobstructed
+
+The model may:
+
+• look directly toward camera
+
+OR
+
+• look slightly past camera
+
+Prefer a more deliberate editorial gaze than Prompt 06.
+
+Avoid:
+
+• broad smile
+• exaggerated modelling pose
+• walking posture
+• crossed arms
+• hands covering branding
+• dramatic twisting
+
+====================================================================================================
+OPTIONAL SUNGLASSES
+===================
+
+Sunglasses MAY be used in Prompt 07 if they suit the composition.
+
+If used:
+
+• minimal black or dark frames
+• no visible brand logo
+• understated premium design
+• no oversized fashion-gimmick frames
+
+Do not use other distracting accessories.
+
+====================================================================================================
+GARMENT FIT
+===========
+
+Preserve exactly:
+
+• shoulder fit
+• chest ease
+• waist ease
+• body length
+• sleeve length
+• sleeve opening
+• neckline or collar geometry
+• collar tipping
+• placket length
+• button count
+• cuff construction
+• logo position
+• logo scale
+
+Because the model is static, keep garment folds restrained.
+
+Allow only natural fit folds around:
+
+• waist
+• underarm
+• elbow region
+• lower torso
+
+Do not create excessive movement folds.
+
+====================================================================================================
+STYLING
+=======
+
+Use understated tailored trousers.
+
+Preferred:
+
+• black
+• charcoal
+• graphite
+
+No:
+
+• outer layer
+• jacket
+• overshirt
+• loud footwear
+• bag
+• colourful accessories
+• visible competing brands
+
+Styling should reinforce the dark architectural environment.
+
+====================================================================================================
+CAMERA AND FRAMING — DISTINCT FROM PROMPT 06
+============================================
+
+Use a tighter editorial portrait composition.
+
+Preferred visual equivalent:
+
+• approximately 70–90 mm photographic perspective
+• camera around chest to eye level
+• minimal perspective distortion
+
+Frame primarily:
+
+• head to waist
+
+OR
+
+• head to upper thigh
+
+The model should occupy approximately 78–88% of frame height.
+
+The garment must remain visible from neckline/collar through the lower hem whenever composition permits.
+
+Prioritize:
+
+• torso
+• garment details
+• expression
+• architectural geometry
+
+Do NOT show the wide environmental composition used in Prompt 06.
+
+The subject should feel integrated into strong geometric architecture.
+
+====================================================================================================
+COMPOSITION
+===========
+
+Use deliberate architectural lines.
+
+Possible composition:
+
+• vertical concrete edge behind model
+• dark recess on one side
+• geometric facade panels
+• controlled negative space
+• subtle asymmetry
+• model placed near architectural intersection
+
+The image should feel intentionally designed rather than casually photographed.
+
+Do not use busy backgrounds.
+
+====================================================================================================
+LIGHTING
+========
+
+Use premium controlled urban daylight.
+
+Preferred:
+
+• open shade
+• directional reflected daylight
+• soft architectural shadow
+• restrained contrast
+
+The light should create:
+
+• defined facial structure
+• accurate garment colour
+• crisp collar / neckline
+• visible fabric texture
+• subtle separation from darker background
+
+Avoid:
+
+• hard orange sunlight
+• blown highlights
+• heavy cinematic colour grading
+• unnatural skin smoothing
+• excessive HDR
+
+====================================================================================================
+ENTITLED MOOD
+=============
+
+The image should communicate:
+
+• controlled confidence
+• architectural precision
+• premium metropolitan menswear
+• restraint
+• exclusivity
+• contemporary editorial attitude
+
+Prompt 07 should feel more like a fashion editorial portrait.
+
+Prompt 06 should feel more like a lifestyle moment.
+
+====================================================================================================
+FINAL REJECTION CHECK
+=====================
+
+Reject and regenerate unless:
+
+• exactly one adult male model appears
+• output is exactly 1254 × 1254 px
+• garment identity is preserved
+• garment category is correct
+• garment colour is accurate
+• logo and branding are faithful
+• collar / neckline is accurate
+• placket and buttons are accurate when present
+• sleeve length is accurate
+• cuff / collar tipping is accurate
+• model identity differs from Prompts 05 and 06
+• model is completely static
+• no walking motion appears
+• torso is clearly three-quarter
+• crop is significantly tighter than Prompt 06
+• architecture is modern contemporary graphite / grey rather than pale classical stone
+• environment uses strong geometric lines
+• garment remains unobstructed
+• anatomy is natural
+• styling is restrained
+• image reads as an editorial portrait rather than a lifestyle walking shot
+• image is visually distinct from Prompt 06
+
+FINAL PROMPT 07 IDENTITY:
+
+STATIC
+
+*
+
+TIGHTER PORTRAIT
+
+*
+
+THREE-QUARTER TORSO
+
+*
+
+CONTEMPORARY GRAPHITE ARCHITECTURE
+
+*
+
+CONTROLLED EDITORIAL ATTITUDE

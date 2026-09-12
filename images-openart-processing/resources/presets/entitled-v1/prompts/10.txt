@@ -1,0 +1,165 @@
+MASTER REFERENCES
+
+Before following this prompt, read and obey:
+
+1. ENTITLED_VISUAL_SYSTEM.md — for overall ENTITLED graphic direction only where compatible with this size-chart task.
+2. ENTITLED_IMAGE_RULES.md — for product identity, approved-product-image integrity and non-invention rules.
+
+IMPORTANT — PROMPT 10 INPUT PRIORITY OVERRIDE
+
+For this size-chart task, use supplied inputs in this priority:
+
+1. measurement source image/file — absolute source of truth for sizes, values, units, fit notation and notes
+2. approved final isolated front product image — embed directly and unchanged
+3. official ENTITLED logo asset — use only the supplied original
+4. layout reference — composition/information hierarchy only
+5. ENTITLED_IMAGE_RULES.md
+6. ENTITLED_VISUAL_SYSTEM.md
+7. this prompt
+
+Do not use any other numbered prompt.
+
+Do not regenerate or reinterpret the approved product image.
+
+====================================================================================================
+
+10 — SHOPIFY SIZE CHART / T-SHIRT OR POLO T-SHIRT
+
+Create exactly one deterministic Shopify-ready size-chart graphic.
+
+This is a graphic-composition task, not a garment-generation or garment-redrawing task.
+
+OUTPUT
+
+• exactly one graphic
+• square format
+• exactly 1254 × 1254 px
+• crisp readable typography
+• clean vector-style lines and arrows
+• no decorative collage
+• no watermark
+• no generated replacement logo
+• no generated replacement product image
+
+INPUT INTERPRETATION
+
+Use supplied inputs in this priority:
+
+• layout reference — composition and information hierarchy only
+• approved final isolated front product image — embed directly and unchanged
+• measurement source images or files — exact sizes, values, units, fit notation and notes
+• official ENTITLED logo — use only the supplied original PNG or SVG
+
+APPROVED PRODUCT IMAGE LOCK — ABSOLUTE
+
+Embed the approved isolated front product image directly.
+
+Never:
+
+• regenerate it
+• redraw it
+• recolour it
+• reshape it
+• retouch it
+• remove or alter branding
+• change sleeve arrangement
+• change neckline or collar
+• alter placket or buttons
+• change logo placement
+• replace the product image with an AI recreation
+
+OFFICIAL LOGO LOCK
+
+Use only the supplied original ENTITLED logo asset.
+
+Never:
+
+• retype the logo
+• approximate its font
+• redraw it
+• stretch it
+• alter spacing
+• change orientation
+• generate a replacement
+
+MEASUREMENT DATA LOCK
+
+Copy all measurement data exactly from the supplied source.
+
+Preserve exactly:
+
+• size names
+• size order
+• fit notation
+• width or chest values
+• length values
+• inches and centimetres
+• ranges
+• punctuation
+• asterisks
+• footnotes
+• explanatory notes
+
+Never calculate, convert, round, correct or infer missing values unless explicitly instructed.
+
+If any value is unreadable or conflicting, reject the output rather than guessing.
+
+MEASUREMENT DIAGRAM
+
+Place clean measurement guides over or beside the approved product image.
+
+Use only the measurement concepts supported by the supplied source, such as:
+
+• body length from collar or highest shoulder point to hem
+• chest width or chest size
+• around-body chest notation when specified
+
+Arrows and guide lines must:
+
+• be straight
+• terminate cleanly
+• align to the correct garment points
+• avoid covering important branding
+• remain visually consistent
+
+LAYOUT
+
+• premium minimal ecommerce presentation
+• product image in the upper section
+• official ENTITLED logo in the upper-right or reference-approved position
+• measurement labels near their respective arrows
+• fit notation above the table
+• size table in the lower section
+• footnote beneath the table
+• balanced margins and spacing
+• no overlapping text
+• no clipped cells
+
+TABLE
+
+• exact number of rows and columns required by the supplied data
+• clean black or dark neutral rules
+• consistent cell padding
+• clear hierarchy between headers, units and data
+• all text horizontally and vertically aligned
+• readable at Shopify product-page scale
+
+BACKGROUND
+
+• solid warm white or very light neutral
+• no texture
+• no decorative shadows
+• no props
+
+FINAL QUALITY CONTROL
+
+Reject and regenerate unless:
+
+• approved product image is unchanged
+• official logo is unchanged
+• all size values are exact
+• measurement arrows are correctly placed
+• table is fully readable
+• spelling and punctuation are correct
+• nothing overlaps or clips
+• output is exactly 1254 × 1254 px
