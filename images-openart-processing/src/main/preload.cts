@@ -26,7 +26,7 @@ contextBridge.exposeInMainWorld('openartApp', {
   resume: () => ipcRenderer.invoke('batch:resume'),
   cancel: () => ipcRenderer.invoke('batch:cancel'),
   preset: () => ipcRenderer.invoke('preset:list'),
-  scanProducts: (payload: { root: string; promptNumbers: number[] }) =>
+  scanProducts: (payload: { root: string; promptNumbers: number[]; mode?: 'product-folders' | 'flat-front' }) =>
     ipcRenderer.invoke('products:scan', payload),
   overrideProductRole: (payload: { row: unknown; sourcePath: string; role: string }) =>
     ipcRenderer.invoke('products:role-override', payload),

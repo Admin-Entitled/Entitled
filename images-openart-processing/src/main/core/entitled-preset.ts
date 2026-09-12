@@ -173,6 +173,47 @@ export async function scanEntitledProducts(
   return { rows, summaries };
 }
 
+export async function scanFlatFrontImages(
+  inputRoot: string,
+  preset: EntitledPreset,
+): Promise<{ rows: MappingRow[]; summaries: ProductScanSummary[] }> {
+  const root = path.resolve(inputRoot);
+  const prompt = preset.prompts.find((item) => item.number === 1);
+  if (!prompt) throw new Error('Prompt 01 is unavailable in the selected preset.');
+  const names = (await fs.readdir(root, { withFileTypes: true }))
+    .filter((entry) => entry.isFile() && isVisibleFile(entry.name) && imageExtensions.has(path.extname(entry.name).toLowerCase()))
+    .map((entry) => entry.name)
+    .sort(naturalCompare);
+  const presentation = prompt.referencePath ? { path: prompt.referencePath, name: path.basename(prompt.referencePath) } : undefined;
+  const completePrompt = prompt.ready && preset.imageRulesText && preset.visualSystemText
+    ? compileEntitledProviderPrompt(prompt.text, preset.imageRulesText, preset.visualSystemText, 1).prompt
+    : undefined;
+  const seen = new Set<string>();
+  const rows = names.map((name) => {
+    const product = path.basename(name, path.extname(name));
+    const duplicate = seen.has(product.toLowerCase());
+    seen.add(product.toLowerCase());
+    const image = { path: path.join(root, name), name };
+    const source = { ...image, detectedRole: 'FRONT' as const, role: 'FRONT' as const };
+    const errors = [
+      ...(duplicate ? ['Duplicate SKU name (case-insensitive).'] : []),
+      ...(!prompt.ready ? [prompt.missingReason ?? 'Prompt 01 is unavailable.'] : []),
+      ...(!presentation ? ['Prompt 01 presentation reference is missing.'] : []),
+      ...(completePrompt && completePrompt.length > RUNTIME_PROMPT_SAFETY_CEILING ? [`Final provider prompt exceeds the safety ceiling.`] : []),
+    ];
+    return {
+      id: `flat:${product}:01`, product, order: 1, promptKey: '01', promptFile: path.relative(root, prompt.file),
+      references: [ ...(presentation ? [presentation] : []), image ], outputType: 'standard', presentationReference: presentation,
+      productInputs: [source], sourceImages: [source], includedProductInputs: [source], excludedProductInputs: [],
+      orderedInputs: [ ...(presentation ? [{ order: 1, role: 'presentation' as const, label: 'PRESENTATION REFERENCE', image: presentation }] : []),
+        { order: presentation ? 2 : 1, role: 'product' as const, label: 'PRODUCT SOURCE', image } ],
+      outputName: `${product}.png`, outputGroup: 'Prompt 01', inputMode: 'flat-front', enabled: errors.length === 0,
+      status: errors.length ? 'error' as const : 'valid' as const, errors, completePrompt,
+    } satisfies MappingRow;
+  });
+  return { rows, summaries: [{ product: 'Flat Front-Image Batch', images: rows.map((row) => row.sourceImages![0]), selectedPromptNumbers: [1], jobCount: rows.length, errors: rows.flatMap((row) => row.errors), enabled: true }] };
+}
+
 export function applyEntitledRoleOverride(
   row: MappingRow,
   sourcePath: string,

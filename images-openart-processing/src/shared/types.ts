@@ -87,6 +87,8 @@ export interface MappingRow {
   excludedProductInputs?: ProductSourceImage[];
   orderedInputs: OrderedImageInput[];
   outputName: string;
+  outputGroup?: string;
+  inputMode?: 'product-folders' | 'flat-front';
   enabled: boolean;
   status: 'valid' | 'warning' | 'error';
   errors: string[];

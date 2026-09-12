@@ -144,7 +144,7 @@ export class BatchEngine {
       rows
         .filter((row) => row.enabled)
         .map(async (row): Promise<JobRecord> => {
-          const productDir = path.join(durableOutputRoot, row.product);
+          const productDir = path.join(durableOutputRoot, row.outputGroup ?? row.product);
           const requested = path.join(productDir, row.outputName);
           const outputPath = settings.overwrite
             ? requested

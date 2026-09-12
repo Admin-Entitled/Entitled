@@ -54,8 +54,16 @@ export async function validateBatch(
           `Prompt ${row.promptKey} is ${length} characters; maximum safe length is ${RUNTIME_PROMPT_SAFETY_CEILING}.`,
         );
     }
-    const output = path.join(outputRoot, row.product, row.outputName);
+    const output = path.join(outputRoot, row.outputGroup ?? row.product, row.outputName);
     outputPaths.push(output);
+    if (row.inputMode === 'flat-front' && !settings.overwrite) {
+      try {
+        await fs.access(output);
+        errors.push(`Output already exists for ${row.product}; choose Replace existing to continue.`);
+      } catch {
+        /* new output */
+      }
+    }
     for (const input of row.orderedInputs) {
       const file = path.resolve(input.image.path);
       try {

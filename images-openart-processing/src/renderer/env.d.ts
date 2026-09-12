@@ -34,7 +34,7 @@ declare global {
       resume: () => Promise<void>;
       cancel: () => Promise<void>;
       preset: () => Promise<EntitledPreset>;
-      scanProducts: (payload: { root: string; promptNumbers: number[] }) => Promise<{
+      scanProducts: (payload: { root: string; promptNumbers: number[]; mode?: 'product-folders' | 'flat-front' }) => Promise<{
         rows: MappingRow[];
         summaries: ProductScanSummary[];
       }>;
