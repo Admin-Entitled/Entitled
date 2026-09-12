@@ -88,7 +88,8 @@ export interface MappingRow {
   orderedInputs: OrderedImageInput[];
   outputName: string;
   outputGroup?: string;
-  inputMode?: 'product-folders' | 'flat-front';
+  inputMode?: 'product-folders' | 'flat-front' | 'labeled-batch';
+  sleeveType?: 'SHORT_SLEEVE' | 'LONG_SLEEVE';
   enabled: boolean;
   status: 'valid' | 'warning' | 'error';
   errors: string[];

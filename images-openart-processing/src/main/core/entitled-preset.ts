@@ -214,6 +214,49 @@ export async function scanFlatFrontImages(
   return { rows, summaries: [{ product: 'Flat Front-Image Batch', images: rows.map((row) => row.sourceImages![0]), selectedPromptNumbers: [1], jobCount: rows.length, errors: rows.flatMap((row) => row.errors), enabled: true }] };
 }
 
+export async function scanLabeledBatchFolder(inputRoot: string, preset: EntitledPreset): Promise<{ rows: MappingRow[]; summaries: ProductScanSummary[]; invalidFiles: string[] }> {
+  const root = path.resolve(inputRoot);
+  const prompt = preset.prompts.find((item) => item.number === 1);
+  if (!prompt) throw new Error('Prompt 01 is unavailable.');
+  const entries = await fs.readdir(root, { withFileTypes: true });
+  const invalidFiles: string[] = [];
+  const groups = new Map<string, { sku: string; files: Array<{ name: string; role: ProductImageRole; sleeve?: 'SHORT_SLEEVE' | 'LONG_SLEEVE' }> }>();
+  const rolePattern = /^(.*?)__(FRONT(?:__(SHORT_SLEEVE|LONG_SLEEVE))?|BACK|DETAIL(?:-\d+)?|LABEL(?:_BRANDING)?)$/i;
+  for (const entry of entries) {
+    if (!entry.isFile() || !isVisibleFile(entry.name) || !imageExtensions.has(path.extname(entry.name).toLowerCase())) continue;
+    const stem = path.basename(entry.name, path.extname(entry.name));
+    const match = stem.match(rolePattern);
+    if (!match || !match[1]) { invalidFiles.push(entry.name); continue; }
+    const sku = match[1];
+    const roleText = match[2].toUpperCase();
+    const role: ProductImageRole = roleText.startsWith('FRONT') ? 'FRONT' : roleText.startsWith('BACK') ? 'BACK' : roleText.startsWith('DETAIL') ? 'DETAIL' : 'LABEL_BRANDING';
+    const sleeve = role === 'FRONT' && match[3] ? (match[3].toUpperCase() as 'SHORT_SLEEVE' | 'LONG_SLEEVE') : undefined;
+    const key = sku.toLowerCase();
+    const group = groups.get(key) ?? { sku, files: [] };
+    group.files.push({ name: entry.name, role, sleeve }); groups.set(key, group);
+  }
+  const rows: MappingRow[] = [];
+  for (const group of [...groups.values()].sort((a, b) => naturalCompare(a.sku, b.sku))) {
+    const files = [...group.files].sort((a, b) => naturalCompare(a.name, b.name));
+    const fronts = files.filter((file) => file.role === 'FRONT');
+    const sleeves = [...new Set(fronts.map((file) => file.sleeve).filter(Boolean))] as Array<'SHORT_SLEEVE' | 'LONG_SLEEVE'>;
+    const sleeveType = sleeves.length === 1 ? sleeves[0] : undefined;
+    const errors: string[] = [];
+    if (fronts.length !== 1) errors.push(fronts.length ? 'Duplicate FRONT images.' : 'Missing FRONT image.');
+    if (sleeves.length > 1) errors.push('Contradictory sleeve classifications.');
+    for (const role of ['BACK', 'LABEL_BRANDING'] as ProductImageRole[]) if (files.filter((file) => file.role === role).length > 1) errors.push(`Duplicate unnumbered ${role} files.`);
+    const presentation = prompt.referencePath ? { path: prompt.referencePath, name: path.basename(prompt.referencePath) } : undefined;
+    const front = fronts[0];
+    const source = (file: { name: string; role: ProductImageRole }) => ({ path: path.join(root, file.name), name: file.name });
+    const ordered = [ ...(presentation ? [{ order: 1, role: 'presentation' as const, label: 'PRESENTATION REFERENCE', image: presentation }] : []), ...(front ? [{ order: 2, role: 'product' as const, label: 'PRODUCT FRONT', image: source(front) }] : []), ...files.filter((file) => file.role === 'DETAIL').map((file, index) => ({ order: 3 + index, role: 'product' as const, label: 'PRODUCT DETAIL', image: source(file) })), ...files.filter((file) => file.role === 'LABEL_BRANDING').map((file, index) => ({ order: 3 + files.filter((item) => item.role === 'DETAIL').length + index, role: 'product' as const, label: 'PRODUCT BRANDING', image: source(file) })) ];
+    if (!sleeveType) errors.push('Sleeve type: Review required.');
+    const compiled = sleeveType && prompt.ready && preset.imageRulesText && preset.visualSystemText ? compileEntitledProviderPrompt(prompt.text, preset.imageRulesText, preset.visualSystemText, 1, sleeveType) : undefined;
+    if (!compiled) errors.push('Prompt 01 could not be compiled.'); else if (compiled.length > RUNTIME_PROMPT_SAFETY_CEILING) errors.push('Compiled Prompt 01 exceeds the safety ceiling.');
+    rows.push({ id: `labeled:${group.sku}:01`, product: group.sku, order: 1, promptKey: '01', promptFile: prompt.file, references: ordered.map((item) => item.image), outputType: 'standard', presentationReference: presentation, productInputs: ordered.slice(1).map((item) => item.image), orderedInputs: ordered, outputName: `${group.sku}.png`, outputGroup: 'Prompt 01', inputMode: 'labeled-batch', sleeveType, sourceImages: files.map((file) => ({ ...source(file), detectedRole: file.role, role: file.role })), includedProductInputs: files.filter((file) => file.role !== 'BACK').map((file) => ({ ...source(file), detectedRole: file.role, role: file.role })), excludedProductInputs: files.filter((file) => file.role === 'BACK').map((file) => ({ ...source(file), detectedRole: file.role, role: file.role })), enabled: errors.length === 0, status: errors.length ? 'error' : 'valid', errors, completePrompt: compiled?.prompt });
+  }
+  return { rows, invalidFiles, summaries: [{ product: 'Labeled Batch Folder — Multiple SKUs', images: rows.flatMap((row) => row.sourceImages ?? []), selectedPromptNumbers: [1], jobCount: rows.length, errors: [...invalidFiles.map((file) => `Files requiring correction: ${file}`), ...rows.flatMap((row) => row.errors)], enabled: true }] };
+}
+
 export function applyEntitledRoleOverride(
   row: MappingRow,
   sourcePath: string,

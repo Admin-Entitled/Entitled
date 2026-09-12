@@ -39,7 +39,7 @@ function App() {
   const [outputRoot, setOutputRoot] = useState('');
   const [preset, setPreset] = useState<EntitledPreset>();
   const [selected, setSelected] = useState([1]);
-  const [inputMode, setInputMode] = useState<'product-folders' | 'flat-front'>('product-folders');
+  const [inputMode, setInputMode] = useState<'product-folders' | 'flat-front' | 'labeled-batch'>('product-folders');
   const [rows, setRows] = useState<MappingRow[]>([]);
   const [summaries, setSummaries] = useState<ProductScanSummary[]>([]);
   const [jobs, setJobs] = useState<JobRecord[]>([]);
@@ -165,7 +165,7 @@ function App() {
       setSummaries(result.summaries);
       invalidate();
       setMessage(
-        inputMode === 'flat-front' ? `Discovered ${result.rows.length} front images and ${result.rows.length} independent jobs.` : `Scanned ${result.summaries.length} product folders and ${result.rows.length} jobs.`,
+        inputMode !== 'product-folders' ? `Scanned ${result.rows.length} independent SKUs and jobs.` : `Scanned ${result.summaries.length} product folders and ${result.rows.length} jobs.`,
       );
     } catch (e) {
       setMessage(e instanceof Error ? e.message : 'Scan failed.');
@@ -275,6 +275,7 @@ function App() {
         <div className="mode-choice">
           <label><input type="radio" checked={inputMode === 'product-folders'} onChange={() => { setInputMode('product-folders'); setRows([]); setSummaries([]); invalidate(); }} /> Product Folders</label>
           <label><input type="radio" checked={inputMode === 'flat-front'} onChange={() => { setInputMode('flat-front'); setSelected([1]); setRows([]); setSummaries([]); invalidate(); }} /> Flat Front-Image Batch</label>
+          <label><input type="radio" checked={inputMode === 'labeled-batch'} onChange={() => { setInputMode('labeled-batch'); setSelected([1]); setRows([]); setSummaries([]); invalidate(); }} /> Labeled Batch Folder — Multiple SKUs</label>
         </div>
         <div className="folder-grid">
           <Folder
@@ -293,8 +294,8 @@ function App() {
             <PromptCard
               key={prompt.number}
               prompt={prompt}
-              selected={inputMode === 'flat-front' ? prompt.number === 1 : selected.includes(prompt.number)}
-              disabled={inputMode === 'flat-front' && prompt.number !== 1}
+              selected={inputMode !== 'product-folders' ? prompt.number === 1 : selected.includes(prompt.number)}
+              disabled={inputMode !== 'product-folders' && prompt.number !== 1}
               thumbnail={prompt.referencePath ? previews[prompt.referencePath] : undefined}
               onToggle={() => togglePrompt(prompt)}
             />
@@ -310,10 +311,10 @@ function App() {
         </div>
         {summaries.length === 0 ? (
           <p className="muted">Scan your product input root to review role-aware mappings.</p>
-        ) : inputMode === 'flat-front' ? (
+        ) : inputMode !== 'product-folders' ? (
           <div className="flat-review">
-            <p>{rows.length} images discovered · {validRows.length} images selected · {validRows.length} jobs selected</p>
-            {rows.map((row) => <label className="flat-row" key={row.id}><input type="checkbox" checked={row.enabled} onChange={(e) => { setRows((old) => old.map((item) => item.id === row.id ? { ...item, enabled: e.target.checked } : item)); invalidate(); }} /> <b>{row.product}</b><small>{row.orderedInputs[1]?.image.name} · FRONT · Prompt 01 · 1 job · {row.status}</small></label>)}
+            <p>{rows.length} SKUs discovered · {validRows.length} SKUs selected · {validRows.length} jobs selected</p>
+            {rows.map((row) => <label className="flat-row" key={row.id}><input type="checkbox" checked={row.enabled} onChange={(e) => { setRows((old) => old.map((item) => item.id === row.id ? { ...item, enabled: e.target.checked } : item)); invalidate(); }} /> <b>{row.product}</b><small>Sleeve type: {row.sleeveType?.replace('_', ' ') ?? 'Review required'} · {row.orderedInputs.slice(1).map((item) => item.image.name).join(', ')} · Prompt 01 · {row.status}</small></label>)}
             {!validRows.length && <p className="warning">No valid images selected.</p>}
           </div>
         ) : (
@@ -403,10 +404,10 @@ function App() {
         <div className="modal-backdrop">
           <div className="confirmation-modal">
             <h2>Generate selected images?</h2>
-            <p>Mode: {inputMode === 'flat-front' ? 'Flat Front-Image Batch' : 'Product Folders'}</p>
+            <p>Mode: {inputMode === 'product-folders' ? 'Product Folders' : inputMode === 'flat-front' ? 'Flat Front-Image Batch' : 'Labeled Batch Folder — Multiple SKUs'}</p>
             <p>Products: {new Set(validRows.map((r) => r.product)).size}</p>
             <p>Jobs: {validRows.length}</p>
-            {inputMode === 'flat-front' && <p>Each selected image creates one separate paid OpenArt generation.</p>}
+            {inputMode !== 'product-folders' && <p>Each selected SKU creates one separate paid OpenArt generation.</p>}
             <p>Model: GPT Image 2</p>
             <p>Results folder: {outputRoot}</p>
             <p>OpenArt credits will be used; exact cost is unavailable.</p>

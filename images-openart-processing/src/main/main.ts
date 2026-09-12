@@ -17,6 +17,7 @@ import {
   loadEntitledPreset,
   scanEntitledProducts,
   scanFlatFrontImages,
+  scanLabeledBatchFolder,
 } from './core/entitled-preset.js';
 import { resolveEntitledPresetRoot } from './core/preset-path.js';
 import { createBatchFingerprint } from './core/batch-fingerprint.js';
@@ -198,10 +199,12 @@ if (hasSingleInstanceLock) app.whenReady().then(() => {
   previewRoots.add(path.resolve(entitledPresetRoot()));
   const getPreset = () => (presetCache ??= loadEntitledPreset(entitledPresetRoot()));
   ipcMain.handle('preset:list', () => getPreset());
-  ipcMain.handle('products:scan', async (_, payload: { root: string; promptNumbers: number[]; mode?: 'product-folders' | 'flat-front' }) => {
+  ipcMain.handle('products:scan', async (_, payload: { root: string; promptNumbers: number[]; mode?: 'product-folders' | 'flat-front' | 'labeled-batch' }) => {
     previewRoots.add(await fs.realpath(payload.root));
     const preset = await getPreset();
-    return payload.mode === 'flat-front' ? scanFlatFrontImages(payload.root, preset) : scanEntitledProducts(payload.root, preset, payload.promptNumbers);
+    if (payload.mode === 'flat-front') return scanFlatFrontImages(payload.root, preset);
+    if (payload.mode === 'labeled-batch') return scanLabeledBatchFolder(payload.root, preset);
+    return scanEntitledProducts(payload.root, preset, payload.promptNumbers);
   });
   ipcMain.handle(
     'products:role-override',

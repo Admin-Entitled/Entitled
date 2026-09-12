@@ -258,6 +258,7 @@ export function compileEntitledProviderPrompt(
   imageRules: string,
   visualSystem: string,
   promptNumber: number,
+  sleeveType?: 'SHORT_SLEEVE' | 'LONG_SLEEVE',
 ): CompiledProviderPrompt {
   const roleParts = BASE_RULES.map(([name, text]) => ({ name, text, source: 'wrapper' as const }));
   const ruleParts = selectSections(imageRules, RULE_SECTIONS).map((section) => ({
@@ -268,10 +269,12 @@ export function compileEntitledProviderPrompt(
     ...section,
     source: 'visual' as const,
   }));
-  const selectedPromptSections = selectSections(
+  let selectedPromptSections = selectSections(
     numberedPrompt,
     PROMPT_SECTIONS[promptNumber] ?? [],
   );
+  if (sleeveType === 'LONG_SLEEVE')
+    selectedPromptSections = selectedPromptSections.filter((section) => !/SHORT-SLEEVE|PRIMARY SLEEVE FOLD|FOLD GEOMETRY|STRAIGHT-LINE|RULER TEST|FOLD CONSTRUCTION/i.test(section.name));
   const promptParts = (
     selectedPromptSections.length
       ? selectedPromptSections
@@ -283,7 +286,12 @@ export function compileEntitledProviderPrompt(
         ]
   ).map((section) => ({ ...section, source: 'numbered' as const }));
   const selected = compactUnique([...roleParts, ...ruleParts, ...visualParts, ...promptParts]);
-  const prompt = selected.map((part) => `${part.name}\n${part.text}`).join('\n\n');
+  if (sleeveType) {
+    selected.push({ name: 'PER-SKU PRODUCT AUTHORITY', source: 'wrapper', text: 'Product-source images are the sole authority for garment identity, colour, fabric texture, construction, branding and sleeve geometry. The presentation reference is composition-only. Never copy its garment, colour, texture, sleeve length or sleeve construction.' });
+    selected.push({ name: 'COLOUR AND TEXTURE FIDELITY', source: 'wrapper', text: 'Match the product colour from product sources; preserve undertone, panels, trims, knit/weave, fibre texture, thickness, weight, drape and natural sheen. Do not shift black toward grey, green or blue, cream toward white, or transfer colours between SKUs. Use detail sources for texture and construction and never invent branding.' });
+    selected.push({ name: 'SLEEVE AND ARMHOLE GEOMETRY', source: 'wrapper', text: `Sleeves extend naturally and symmetrically from their armholes on one continuous flat garment plane. Neither sleeve may tuck under, lie above, cross or overlap the torso. Preserve the curved armhole seam with continuous anatomical connection; no detached, duplicated, crossed or impossible-depth sleeves. ${sleeveType === 'LONG_SLEEVE' ? 'This is a full-length long-sleeve product. Preserve both sleeves from shoulder to cuff exactly from the product sources. Never shorten, roll, fold, tuck or convert them, regardless of the short-sleeve garment visible in the presentation reference.' : 'Preserve exact short-sleeve length, width, taper and opening; never lengthen or convert to long sleeves.'}` });
+  }
+  const prompt = compactUnique(selected).map((part) => `${part.name}\n${part.text}`).join('\n\n');
   const selectedNames = new Set(selected.map((part) => normalize(part.name)));
   const omittedSections = parseSections(numberedPrompt)
     .map((section) => section.name)
