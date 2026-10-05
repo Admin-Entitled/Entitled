@@ -1,0 +1,22 @@
+# Free is set to avoid an unexpected bill; upgrade to an always-on paid plan before production use.
+# On a paid plan, add preDeployCommand: npm run migrate to run pending migrations before each deploy.
+# Render provides PORT automatically; the server requires it in production.
+services:
+  - type: web
+    name: entitled-subscriber-api
+    runtime: node
+    plan: free
+    rootDir: member-form-lifecycle
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    buildFilter:
+      paths:
+        - member-form-lifecycle/**
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ALLOWED_ORIGINS
+        value: https://www.entitledclub.com,https://entitledclub.com
+      - key: DATABASE_URL
+        sync: false
