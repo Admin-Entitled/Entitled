@@ -1,0 +1,83 @@
+<dialog
+  class="entitled-subscriber"
+  data-api-base="{{ settings.entitled_subscriber_api_base | default: 'http://localhost:4000' | escape }}"
+  data-homepage="{% if template == 'index' %}true{% else %}false{% endif %}"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="entitled-subscriber-title"
+>
+  <div class="entitled-subscriber__panel">
+    <div class="entitled-subscriber__heading">
+      <div>
+        <p class="entitled-subscriber__eyebrow">ENTITLED</p>
+        <h2 id="entitled-subscriber-title" aria-live="polite" tabindex="-1">Stay in the loop</h2>
+        <p class="entitled-subscriber__intro">New drops. Private updates. Sales. Events.</p>
+      </div>
+      <button class="entitled-subscriber__close" type="button" aria-label="Close signup form">×</button>
+    </div>
+
+    <p class="entitled-subscriber__message" role="status" aria-live="polite" hidden></p>
+
+    <form class="entitled-subscriber__form" novalidate>
+      <div class="entitled-subscriber__fields">
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-name">Name</label>
+          <input id="entitled-subscriber-name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="entitled-subscriber-error-name">
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-name"></span>
+        </div>
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-age">Age</label>
+          <input id="entitled-subscriber-age" name="age" type="number" inputmode="numeric" min="13" max="100" step="1" required aria-describedby="entitled-subscriber-error-age">
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-age"></span>
+        </div>
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-phone">Mobile number</label>
+          <div class="entitled-subscriber__phone">
+            <span aria-hidden="true">+91</span>
+            <input id="entitled-subscriber-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" required aria-describedby="entitled-subscriber-error-phone">
+          </div>
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-phone"></span>
+        </div>
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-city">City</label>
+          <input id="entitled-subscriber-city" name="city" type="text" autocomplete="address-level2" maxlength="100" required aria-describedby="entitled-subscriber-error-city">
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-city"></span>
+        </div>
+        <fieldset class="entitled-subscriber__field entitled-subscriber__types" aria-describedby="entitled-subscriber-error-preferredTypes">
+          <legend>What do you like to wear?</legend>
+          <div class="entitled-subscriber__pills">
+            {% assign entitled_preferred_types = 'Polos,T-Shirts,Shirts,Sweatshirts,Jackets,Lowers' | split: ',' %}
+            {% for type in entitled_preferred_types %}
+              <label class="entitled-subscriber__pill">
+                <input type="checkbox" name="preferredTypes" value="{{ type | escape }}">
+                <span>{{ type | escape }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-preferredTypes"></span>
+        </fieldset>
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-brand">Favourite brand</label>
+          <input id="entitled-subscriber-brand" name="preferredBrand" type="text" maxlength="100" required aria-describedby="entitled-subscriber-error-preferredBrand">
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-preferredBrand"></span>
+        </div>
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-email">Email <span>(optional)</span></label>
+          <input id="entitled-subscriber-email" name="email" type="email" autocomplete="email" maxlength="254" aria-describedby="entitled-subscriber-error-email">
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-email"></span>
+        </div>
+        <div class="entitled-subscriber__field">
+          <label for="entitled-subscriber-source">Where did you hear about us? <span>(optional)</span></label>
+          <input id="entitled-subscriber-source" name="heardAboutUs" type="text" maxlength="200" aria-describedby="entitled-subscriber-error-heardAboutUs">
+          <span class="entitled-subscriber__error" id="entitled-subscriber-error-heardAboutUs"></span>
+        </div>
+      </div>
+      <div class="entitled-subscriber__consent-row">
+        <input id="entitled-subscriber-consent" name="marketingConsent" type="checkbox" required aria-describedby="entitled-subscriber-error-marketingConsent">
+        <label for="entitled-subscriber-consent">I agree to receive promotional updates from Entitled.</label>
+      </div>
+      <span class="entitled-subscriber__error" id="entitled-subscriber-error-marketingConsent"></span>
+      <button class="entitled-subscriber__submit" type="submit">Sign me up</button>
+    </form>
+  </div>
+</dialog>

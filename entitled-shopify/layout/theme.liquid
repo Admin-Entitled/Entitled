@@ -88,6 +88,7 @@
       document.createElement('figcaption');
     </script>
     {{ 'entitled-overrides.css' | asset_url | stylesheet_tag }}
+    {{ 'entitled-subscriber-popup.css' | asset_url | stylesheet_tag }}
   </head>
 
   {% comment %}
@@ -193,6 +194,7 @@
     <script src="{{ 'collection-filters.js' | asset_url }}" defer></script>
     <script src="{{ 'collection-infinite-scroll.js' | asset_url }}" defer></script>
     <script src="{{ 'size-preference.js' | asset_url }}" defer></script>
+    <script src="{{ 'entitled-subscriber-popup.js' | asset_url }}" defer></script>
     <script src="{{ 'buy-now.js' | asset_url }}" defer></script>
 
     {% comment %}
@@ -773,5 +775,8 @@
         });
       });
     </script>
+    {% unless template == 'password' %}
+      {% render 'entitled-subscriber-popup' %}
+    {% endunless %}
   </body>
 </html>

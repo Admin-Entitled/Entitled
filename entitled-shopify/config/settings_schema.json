@@ -1401,6 +1401,18 @@
     ]
   },
   {
+    "name": "Entitled subscriber popup",
+    "settings": [
+      {
+        "type": "text",
+        "id": "entitled_subscriber_api_base",
+        "label": "Subscriber API base URL",
+        "default": "http://localhost:4000",
+        "info": "Public API URL only. Set the deployed API URL here when available."
+      }
+    ]
+  },
+  {
     "name": "Newsletter Popup",
     "settings": [
       {
